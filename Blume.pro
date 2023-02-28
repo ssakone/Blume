@@ -131,20 +131,20 @@ OTHER_FILES += README.md \
                .github/workflows/flatpak.yml \
                .gitignore
 
-TRANSLATIONS = i18n/Blume_ca.ts \
-               i18n/Blume_da.ts \
-               i18n/Blume_de.ts \
-               i18n/Blume_en.ts \
-               i18n/Blume_es.ts \
-               i18n/Blume_fr.ts \
-               i18n/Blume_fy.ts \
-               i18n/Blume_nb.ts \
-               i18n/Blume_nl.ts \
-               i18n/Blume_nn.ts \
-               i18n/Blume_pt_BR.ts \
-               i18n/Blume_ru.ts \
-               i18n/Blume_zh_CN.ts \
-               i18n/Blume_zh_TW.ts
+TRANSLATIONS = i18n/WatchFlower_ca.ts \
+               i18n/WatchFlower_da.ts \
+               i18n/WatchFlower_de.ts \
+               i18n/WatchFlower_en.ts \
+               i18n/WatchFlower_es.ts \
+               i18n/WatchFlower_fr.ts \
+               i18n/WatchFlower_fy.ts \
+               i18n/WatchFlower_nb.ts \
+               i18n/WatchFlower_nl.ts \
+               i18n/WatchFlower_nn.ts \
+               i18n/WatchFlower_pt_BR.ts \
+               i18n/WatchFlower_ru.ts \
+               i18n/WatchFlower_zh_CN.ts \
+               i18n/WatchFlower_zh_TW.ts
 
 lupdate_only {
     SOURCES += qml/*.qml qml/*.js \
