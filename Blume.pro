@@ -1,6 +1,6 @@
-TARGET  = WatchFlower
+TARGET  = Blume
 
-VERSION = 5.0
+VERSION = 0.1
 DEFINES+= APP_NAME=\\\"$$TARGET\\\"
 DEFINES+= APP_VERSION=\\\"$$VERSION\\\"
 
@@ -131,20 +131,20 @@ OTHER_FILES += README.md \
                .github/workflows/flatpak.yml \
                .gitignore
 
-TRANSLATIONS = i18n/watchflower_ca.ts \
-               i18n/watchflower_da.ts \
-               i18n/watchflower_de.ts \
-               i18n/watchflower_en.ts \
-               i18n/watchflower_es.ts \
-               i18n/watchflower_fr.ts \
-               i18n/watchflower_fy.ts \
-               i18n/watchflower_nb.ts \
-               i18n/watchflower_nl.ts \
-               i18n/watchflower_nn.ts \
-               i18n/watchflower_pt_BR.ts \
-               i18n/watchflower_ru.ts \
-               i18n/watchflower_zh_CN.ts \
-               i18n/watchflower_zh_TW.ts
+TRANSLATIONS = i18n/Blume_ca.ts \
+               i18n/Blume_da.ts \
+               i18n/Blume_de.ts \
+               i18n/Blume_en.ts \
+               i18n/Blume_es.ts \
+               i18n/Blume_fr.ts \
+               i18n/Blume_fy.ts \
+               i18n/Blume_nb.ts \
+               i18n/Blume_nl.ts \
+               i18n/Blume_nn.ts \
+               i18n/Blume_pt_BR.ts \
+               i18n/Blume_ru.ts \
+               i18n/Blume_zh_CN.ts \
+               i18n/Blume_zh_TW.ts
 
 lupdate_only {
     SOURCES += qml/*.qml qml/*.js \
@@ -213,7 +213,7 @@ linux:!android {
 macx {
     # Bundle name
     QMAKE_TARGET_BUNDLE_PREFIX = com.emeric
-    QMAKE_BUNDLE = watchflower
+    QMAKE_BUNDLE = Blume
 
     # OS icons
     ICON = $${PWD}/assets/macos/$$lower($${TARGET}).icns
@@ -334,11 +334,11 @@ android {
 
     # Bundle name
     QMAKE_TARGET_BUNDLE_PREFIX = com.emeric
-    QMAKE_BUNDLE = watchflower
+    QMAKE_BUNDLE = Blume
 
-    OTHER_FILES += $${PWD}/assets/android/src/com/emeric/watchflower/WatchFlowerBootServiceBroadcastReceiver.java \
-                   $${PWD}/assets/android/src/com/emeric/watchflower/WatchFlowerAndroidService.java \
-                   $${PWD}/assets/android/src/com/emeric/watchflower/WatchFlowerAndroidNotifier.java \
+    OTHER_FILES += $${PWD}/assets/android/src/com/emeric/blume/BlumeBootServiceBroadcastReceiver.java \
+                   $${PWD}/assets/android/src/com/emeric/blume/BlumeAndroidService.java \
+                   $${PWD}/assets/android/src/com/emeric/blume/BlumeAndroidNotifier.java \
                    $${PWD}/assets/android/src/com/emeric/utils/QShareUtils.java \
                    $${PWD}/assets/android/src/com/emeric/utils/QSharePathResolver.java
 
@@ -357,7 +357,7 @@ ios {
 
     # Bundle name
     QMAKE_TARGET_BUNDLE_PREFIX = com.emeric.ios
-    QMAKE_BUNDLE = watchflower
+    QMAKE_BUNDLE = Blume
 
     # OS infos
     QMAKE_INFO_PLIST = $${PWD}/assets/ios/Info.plist
