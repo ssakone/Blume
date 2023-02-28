@@ -1,5 +1,5 @@
 /*!
- * This file is part of WatchFlower.
+ * This file is part of Blume.
  * Copyright (c) 2022 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
@@ -83,9 +83,9 @@ int main(int argc, char *argv[])
     if (refresh_only)
     {
         QCoreApplication app(argc, argv);
-        app.setApplicationName("WatchFlower");
-        app.setOrganizationName("WatchFlower");
-        app.setOrganizationDomain("WatchFlower");
+        app.setApplicationName("Blume");
+        app.setOrganizationName("Blume");
+        app.setOrganizationDomain("Blume");
 
         SettingsManager *sm = SettingsManager::getInstance();
         DatabaseManager *db = DatabaseManager::getInstance();
@@ -106,9 +106,9 @@ int main(int argc, char *argv[])
     {
 #if defined(Q_OS_ANDROID)
         QAndroidService app(argc, argv);
-        app.setApplicationName("WatchFlower");
-        app.setOrganizationName("WatchFlower");
-        app.setOrganizationDomain("WatchFlower");
+        app.setApplicationName("Blume");
+        app.setOrganizationName("Blume");
+        app.setOrganizationDomain("Blume");
 
         SettingsManager *sm = SettingsManager::getInstance();
         if (sm && sm->getSysTray())
@@ -140,10 +140,10 @@ int main(int argc, char *argv[])
     SingleApplication app(argc, argv);
 
     // Application name
-    app.setApplicationName("WatchFlower");
-    app.setApplicationDisplayName("WatchFlower");
-    app.setOrganizationName("WatchFlower");
-    app.setOrganizationDomain("WatchFlower");
+    app.setApplicationName("Blume");
+    app.setApplicationDisplayName("Blume");
+    app.setOrganizationName("Blume");
+    app.setOrganizationDomain("Blume");
 
 #if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
     QIcon appIcon(":/assets/logos/watchflower.svg");
@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
     DeviceManager *dm = new DeviceManager;
     if (!sm || !st || !mb || !nm || !dm)
     {
-        qWarning() << "Cannot init WatchFlower components!";
+        qWarning() << "Cannot init Blume components!";
         return EXIT_FAILURE;
     }
 
@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
     UtilsLanguage *utilsLanguage = UtilsLanguage::getInstance();
     if (!utilsScreen || !utilsApp || !utilsLanguage)
     {
-        qWarning() << "Cannot init WatchFlower utils!";
+        qWarning() << "Cannot init Blume utils!";
         return EXIT_FAILURE;
     }
 
