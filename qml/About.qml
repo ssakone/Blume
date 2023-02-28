@@ -79,7 +79,7 @@ Loader {
                         spacing: 0
 
                         Text {
-                            text: "WatchFlower"
+                            text: "Blume"
                             color: Theme.colorText
                             font.pixelSize: 28
                         }

@@ -69,7 +69,7 @@ Rectangle {
 
             buttonBack.source = "qrc:/assets/menus/menu_close.svg"
         } else {
-            title.text = "WatchFlower"
+            title.text = "Blume"
             menus.visible = true
 
             if (appContent.state === "DeviceList") {
@@ -138,7 +138,7 @@ Rectangle {
 
         visible: wideMode
 
-        text: "WatchFlower"
+        text: "Blume"
         font.bold: true
         font.pixelSize: Theme.fontSizeHeader
         color: Theme.colorHeaderContent

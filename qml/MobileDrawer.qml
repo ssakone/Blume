@@ -88,7 +88,7 @@ Drawer {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.verticalCenterOffset: 2
 
-                    text: "WatchFlower"
+                    text: "Blume"
                     color: Theme.colorText
                     font.bold: true
                     font.pixelSize: 22

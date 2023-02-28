@@ -31,7 +31,7 @@ import org.qtproject.qt.android.bindings.QtService;
 
 public class WatchFlowerAndroidService extends QtService {
 
-    private static final String TAG = "WatchFlowerAndroidService";
+    private static final String TAG = "BlumeAndroidService";
 
     @Override
     public void onCreate() {

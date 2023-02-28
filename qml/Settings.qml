@@ -657,8 +657,8 @@ Loader {
                     visible: (element_worker.visible && isDesktop)
 
                     text: settingsManager.systray ?
-                              qsTr("WatchFlower will remain active in the notification area after the window is closed, and will automatically refresh sensor data at regular interval.") :
-                              qsTr("WatchFlower is only active while the window is open.")
+                              qsTr("Blume will remain active in the notification area after the window is closed, and will automatically refresh sensor data at regular interval.") :
+                              qsTr("Blume is only active while the window is open.")
                     textFormat: Text.PlainText
                     wrapMode: Text.WordWrap
                     color: Theme.colorSubText
@@ -956,8 +956,8 @@ Loader {
                     visible: element_bluetoothControl.visible
 
                     text: settingsManager.bluetoothControl ?
-                              qsTr("WatchFlower will only operate if your device's Bluetooth is already enabled.") :
-                              qsTr("WatchFlower will enable your device's Bluetooth in order to operate.")
+                              qsTr("Blume will only operate if your device's Bluetooth is already enabled.") :
+                              qsTr("Blume will enable your device's Bluetooth in order to operate.")
                     textFormat: Text.PlainText
                     wrapMode: Text.WordWrap
                     color: Theme.colorSubText

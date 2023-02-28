@@ -13,7 +13,7 @@ Rectangle {
     MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
 
     property int headerHeight: 52
-    property string title: "WatchFlower"
+    property string title: "Blume"
 
     ////////////////////////////////////////////////////////////////////////////
 

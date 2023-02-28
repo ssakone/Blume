@@ -205,7 +205,7 @@ Rectangle {
                             anchors.leftMargin: tutorialPages.margins
 
                             visible: (Qt.platform.os !== "ios")
-                            text: qsTr("WatchFlower <b>might</b> be able to sync sensors in the background. Check out the <b>settings</b> page for instructions.")
+                            text: qsTr("Blume <b>might</b> be able to sync sensors in the background. Check out the <b>settings</b> page for instructions.")
                             textFormat: Text.StyledText
                             color: Theme.colorHeaderContent
                             wrapMode: Text.WrapAtWordBoundaryOrAnywhere

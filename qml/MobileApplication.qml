@@ -432,7 +432,7 @@ ApplicationWindow {
             },
             State {
                 name: "DeviceList"
-                PropertyChanges { target: appHeader; title: "WatchFlower"; }
+                PropertyChanges { target: appHeader; title: "Blume"; }
                 PropertyChanges { target: screenTutorial; visible: false; enabled: false; }
                 PropertyChanges { target: screenDeviceList; visible: true; enabled: true; }
                 PropertyChanges { target: screenDevicePlantSensor; visible: false; enabled: false }

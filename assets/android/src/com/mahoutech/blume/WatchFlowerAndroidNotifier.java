@@ -35,7 +35,7 @@ import android.graphics.Color;
 public class WatchFlowerAndroidNotifier {
 
     private static String channelId = "watchflower_app";
-    private static String channelName = "WatchFlower";
+    private static String channelName = "Blume";
     private static int channelColor = Color.WHITE;
     private static int channelImportance = NotificationManager.IMPORTANCE_DEFAULT;
 
