@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleExecutable</key>
-	<string>WatchFlower</string>
+	<string>Blume</string>
 	<key>CFBundleIconFile</key>
 	<string>watchflower.icns</string>
 	<key>CFBundleGetInfoString</key>
 	<string>Created by Qt/QMake</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.emeric.WatchFlower</string>
+	<string>com.emeric.Blume</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -29,8 +29,8 @@
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>WatchFlower connects to Bluetooth Low Energy sensors.</string>
+	<string>Blume connects to Bluetooth Low Energy sensors.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>WatchFlower connects to Bluetooth Low Energy sensors.</string>
+	<string>Blume connects to Bluetooth Low Energy sensors.</string>
 </dict>
 </plist>
