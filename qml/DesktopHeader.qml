@@ -600,7 +600,7 @@ Rectangle {
                 width: headerHeight
                 height: headerHeight
 
-                source: "qrc:/assets/logos/watchflower_tray_dark.svg"
+                source: "qrc:/assets/logos/blume_tray_dark.svg"
                 colorContent: Theme.colorHeaderContent
                 colorHighlight: Theme.colorHeaderHighlight
 

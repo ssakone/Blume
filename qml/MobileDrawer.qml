@@ -137,7 +137,7 @@ Drawer {
                         anchors.leftMargin: screenPaddingLeft + 16
                         anchors.verticalCenter: parent.verticalCenter
 
-                        source: "qrc:/assets/logos/watchflower_tray_dark.svg"
+                        source: "qrc:/assets/logos/blume_tray_dark.svg"
                         color: Theme.colorText
                     }
                     Text {

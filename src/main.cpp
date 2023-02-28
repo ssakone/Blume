@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain("Blume");
 
 #if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
-    QIcon appIcon(":/assets/logos/watchflower.svg");
+    QIcon appIcon(":/assets/logos/blume.svg");
     app.setWindowIcon(appIcon);
 #endif
 

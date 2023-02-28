@@ -122,9 +122,9 @@ void SystrayManager::initSystray()
         }
 
 #if defined(Q_OS_MACOS)
-        m_sysTrayIcon = new QIcon(":/assets/logos/watchflower_tray_dark.svg");
+        m_sysTrayIcon = new QIcon(":/assets/logos/blume_tray_dark.svg");
 #else
-        m_sysTrayIcon = new QIcon(":/assets/logos/watchflower_tray_dark.svg");
+        m_sysTrayIcon = new QIcon(":/assets/logos/blume_tray_dark.svg");
 #endif
     }
 }
