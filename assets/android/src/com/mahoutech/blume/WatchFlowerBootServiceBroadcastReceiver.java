@@ -19,7 +19,7 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-package com.emeric.watchflower;
+package com.mahoutech.blume;
 
 import android.content.Context;
 import android.content.Intent;

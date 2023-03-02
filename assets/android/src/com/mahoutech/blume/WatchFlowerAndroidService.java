@@ -19,7 +19,7 @@
  * \author    Emeric Grange <emeric.grange@gmail.com>
  */
 
-package com.emeric.watchflower;
+package com.mahoutech.blume;
 
 import java.lang.String;
 import android.util.Log;

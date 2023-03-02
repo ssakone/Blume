@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-package com.emeric.utils;
+package com.mahoutech.utils;
 
 import org.qtproject.qt.android.QtNative;
 
