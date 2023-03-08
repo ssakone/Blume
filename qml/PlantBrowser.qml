@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtSensors
+import SortFilterProxyModel
 
 import Qt5Compat.GraphicalEffects
 
@@ -141,7 +143,7 @@ Loader {
                 selectByMouse: true
                 colorSelectedText: "white"
 
-                onDisplayTextChanged: plantDatabase.filter(displayText)
+                //onDisplayTextChanged: plantDatabase.filter(displayText)
 
                 Row {
                     anchors.right: parent.right
@@ -180,72 +182,396 @@ Loader {
                 }
             }
 
-            ListView {
-                id: plantList
+            Item {
                 anchors.fill: parent
                 anchors.topMargin: 64
                 anchors.leftMargin: 0
                 anchors.rightMargin: 0
 
-                topMargin: 0
-                bottomMargin: 12
-                spacing: 0
+                ListModel {
+                    id: plantOptionModel
 
-                ScrollBar.vertical: ScrollBar {
-                    visible: true
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    policy: ScrollBar.AsNeeded
+                    Component.onCompleted: {
+                        let data = [
+                            {
+
+                                "name": qsTr("Plantes recommandees"),
+                                "icon": "qrc:/assets/icons_custom/thumbs.png",
+                                "image": "",
+                                "action": "",
+                                "style": "darkblue"
+                            },
+                            {
+
+                                "name": qsTr("Identifier la plante"),
+                                "icon": "qrc:/assets/icons_custom/plant_scan.png",
+                                "image": "scan_plant",
+                                "action": "identify",
+                                "style": "lightenYellow"
+                            },
+                            {
+
+                                "name": qsTr("Posemetre"),
+                                "icon": "qrc:/assets/icons_custom/posometre.svg",
+                                "image": "",
+                                "action": "posometre",
+                                "style": "sunrise"
+                            },
+                            {
+
+                                "name": qsTr("Plante fleuries"),
+                                "icon": "",
+                                "image": "qrc:/assets/img/fleure.jpg",
+                                "action": "",
+                                "style": ""
+                            },
+                            {
+
+                                "name": qsTr("Orchidees"),
+                                "icon": "",
+                                "image": "qrc:/assets/img/orchidee.jpg",
+                                "action": "",
+                                "style": ""
+                            },
+                            {
+
+                                "name": qsTr("Cactus et succulentes"),
+                                "icon": "",
+                                "image": "qrc:/assets/img/cactus.jpg",
+                                "action": "",
+                                "style": ""
+                            },
+                            {
+
+                                "name": qsTr("Legumes"),
+                                "icon": "",
+                                "image": "qrc:/assets/img/legume.jpg",
+                                "action": "",
+                                "style": ""
+                            },
+                            {
+
+                                "name": qsTr("Herbes"),
+                                "icon": "",
+                                "image": "qrc:/assets/img/herbe.jpeg",
+                                "action": "",
+                                "style": ""
+                            },
+                            {
+
+                                "name": qsTr("Plantes a feuillage"),
+                                "icon": "",
+                                "image": "qrc:/assets/img/feuillage.jpg",
+                                "action": "",
+                                "style": ""
+                            }
+                        ]
+                        data.forEach(((plant) => append(plant)))
+                    }
                 }
 
-                model: plantDatabase.plantsFiltered
-                delegate: Rectangle {
-                    width: ListView.view.width
-                    height: 40
-
-                    color: (index % 2) ? Theme.colorForeground :Theme.colorBackground
-
-                    Row {
-                        anchors.left: parent.left
-                        anchors.leftMargin: 16
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 16
-
-                        Text {
-                            text: modelData.name
-                            color: Theme.colorText
-                            fontSizeMode: Text.Fit
-                            font.pixelSize: Theme.fontSizeContent
-                            minimumPixelSize: Theme.fontSizeContentSmall
+                SortFilterProxyModel {
+                    id: plantFilter
+                    sourceModel: independant
+                    delayed: true
+                    filters: [
+                        RegExpFilter {
+                            roleName: "name"
+                            pattern: plantSearchBox.displayText
                         }
-                        Text {
-                            visible: modelData.nameCommon
-                            text: "« " + modelData.nameCommon + " »"
-                            color: Theme.colorSubText
-                            fontSizeMode: Text.Fit
-                            font.pixelSize: Theme.fontSizeContent
-                            minimumPixelSize: Theme.fontSizeContentSmall
+                    ]
+                }
+
+                ListModel {
+                    id: independant
+                }
+
+                Component.onCompleted: {
+                    plantDatabase.filter('');
+                    plantDatabase.plants.forEach((i) => independant.append(i))
+                    console.log(plantFilter.count)
+                }
+
+                Flickable {
+                    anchors.fill: parent
+                    contentHeight: _insideColumn.height
+                    clip: true
+                    Column {
+                        id: _insideColumn
+                        width: parent.width
+                        Item {
+                            width: parent.width
+                            height: (3 * ((parent.width - (20)) / 3)) + 30
+                            GridView {
+                                id: gr
+                                interactive: false
+                                anchors.fill: parent
+                                anchors.margins: 10
+                                anchors.rightMargin: 0
+                                anchors.leftMargin: 0
+                                cellWidth: (parent.width - (10)) / 3
+                                cellHeight: cellWidth
+                                model: plantOptionModel
+                                delegate: Item {
+                                    width: (gr.width - (20)) / 3
+                                    height: width
+                                    Rectangle {
+                                        anchors.fill: parent
+                                        anchors.bottomMargin: 35
+                                        anchors.rightMargin: 15
+                                        anchors.leftMargin: 15
+                                        radius: 10
+                                        opacity: mArea.containsMouse ? .8 : 1
+                                        gradient: Gradient {
+                                            orientation: Qt.Horizontal
+                                            GradientStop {
+                                                position: 0.04;
+                                                color: {
+                                                    switch(style) {
+                                                    case "darkblue":
+                                                        return "#2c718a"
+                                                    case "lightenYellow":
+                                                        return "#93d1be"
+                                                    case "sunrise":
+                                                        return "#ffc6a4"
+                                                    default:
+                                                        return "#ccc"
+                                                    }
+                                                }
+                                            }
+                                            GradientStop {
+                                                position: 1.00;
+                                                color: {
+                                                    switch(style) {
+                                                    case "darkblue":
+                                                        return "#143e44"
+                                                    case "lightenYellow":
+                                                        return "#0ca780"
+                                                    case "sunrise":
+                                                        return "#fc9185"
+                                                    default:
+                                                        return "#ccc"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        IconSvg {
+                                            width: 64
+                                            height: 64
+                                            visible: icon !== ""
+                                            anchors.centerIn: parent
+
+                                            source: icon
+                                            color: 'white'
+                                        }
+                                        Image {
+                                            id: img
+                                            visible: image !== ""
+                                            source: image
+                                            anchors.fill: parent
+                                            layer.enabled: true
+                                                layer.effect: OpacityMask {
+                                                    maskSource: Item {
+                                                        width: img.width
+                                                        height: img.height
+                                                        Rectangle {
+                                                            anchors.centerIn: parent
+                                                            width: img.adapt ? img.width : Math.min(img.width, img.height)
+                                                            height: img.adapt ? img.height : width
+                                                            radius: 10
+                                                        }
+                                                    }
+                                                }
+                                        }
+                                        MouseArea {
+                                            id: mArea
+                                            anchors.fill: parent
+                                            enabled: action !== ""
+                                            hoverEnabled: enabled
+                                            onClicked: {
+                                                if (action === "posometre") {
+                                                    posometrePop.open()
+                                                }
+                                                else if (action === "identify") {
+                                                    identifierPop.open()
+                                                }
+                                            }
+                                        }
+                                    }
+                                    Label {
+                                        width: parent.width - 10
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        anchors.bottom: parent.bottom
+                                        anchors.bottomMargin: 3
+                                        height: 28
+                                        wrapMode: Label.Wrap
+                                        font.pixelSize: 12
+                                        font.weight: Font.Medium
+                                        horizontalAlignment: Label.AlignHCenter
+                                        verticalAlignment: Label.AlignVCenter
+                                        text: name
+                                    }
+                                }
+                            }
+                        }
+
+                        ListView {
+                            id: plantList
+                            topMargin: 0
+                            bottomMargin: 12
+                            spacing: 0
+                            interactive: false
+                            width: parent.width
+                            height: count * 40
+
+                            model: plantFilter
+                            delegate: Rectangle {
+                                width: ListView.view.width
+                                height: 40
+
+                                color: (index % 2) ? Theme.colorForeground :Theme.colorBackground
+
+                                Row {
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 16
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    spacing: 16
+
+                                    Text {
+                                        text: model.name
+                                        color: Theme.colorText
+                                        fontSizeMode: Text.Fit
+                                        font.pixelSize: Theme.fontSizeContent
+                                        minimumPixelSize: Theme.fontSizeContentSmall
+                                    }
+                                    Text {
+                                        visible: model.nameCommon
+                                        text: "« " + model.nameCommon + " »"
+                                        color: Theme.colorSubText
+                                        fontSizeMode: Text.Fit
+                                        font.pixelSize: Theme.fontSizeContent
+                                        minimumPixelSize: Theme.fontSizeContentSmall
+                                    }
+                                }
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        plantScreen.currentPlant = model
+                                        plantSearchBox.focus = false
+
+                                        itemPlantBrowser.visible = false
+                                        itemPlantBrowser.enabled = false
+                                        itemPlantViewer.visible = true
+                                        itemPlantViewer.enabled = true
+                                        itemPlantViewer.contentX = 0
+                                        itemPlantViewer.contentY = 0
+                                    }
+                                }
+                            }
+
+                            ItemNoPlants {
+                                visible: (plantList.count <= 0)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Popup {
+            id: posometrePop
+            width: parent.width - 20
+            height: width
+            anchors.centerIn: parent
+            dim: true
+            modal: true
+            onOpened: als.start()
+            onClosed: als.stop()
+            Column {
+                anchors.centerIn: parent
+                spacing: 20
+                IconSvg {
+                    width: 64
+                    height: 64
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    source: "qrc:/assets/icons_custom/posometre.svg"
+                    color: 'black'
+                }
+
+                Label {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "Posometre"
+                    font.weight: Font.Medium
+                }
+                Label {
+                    id: alsV
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: {
+                        switch (als.reading.lightLevel){
+                        case 0:
+                            return "Niveau inconnue"
+                        case 1:
+                            return "Sombre"
+                        case 2:
+                            return "Peu Sombre"
+                        case 3:
+                            return "Lumineux"
+                        case 4:
+                            return "Tres lumineux"
+                        case 5:
+                            return "Ensolleille"
                         }
                     }
 
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            plantScreen.currentPlant = modelData
-                            plantSearchBox.focus = false
+                    font.pixelSize: 44
+                }
+                AmbientLightSensor {
+                    id: als
+                }
+            }
+        }
 
-                            itemPlantBrowser.visible = false
-                            itemPlantBrowser.enabled = false
-                            itemPlantViewer.visible = true
-                            itemPlantViewer.enabled = true
-                            itemPlantViewer.contentX = 0
-                            itemPlantViewer.contentY = 0
-                        }
-                    }
+        Popup {
+            id: identifierPop
+            width: parent.width
+            height: parent.height
+            anchors.centerIn: parent
+            dim: true
+            modal: true
+
+            Column {
+                anchors.centerIn: parent
+                spacing: 20
+                IconSvg {
+                    width: 64
+                    height: 64
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    source: "qrc:/assets/icons_custom/plant_scan.png"
+                    color: 'black'
                 }
 
-                ItemNoPlants {
-                    visible: (plantList.count <= 0)
+                Label {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "Identification de plante"
+                    font.weight: Font.Medium
+                }
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "Camera"
+                    //onClicked: identifierPop.close()
+                }
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "Choisir une image"
+                    //onClicked: identifierPop.close()
+                }
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "Fermer"
+                    onClicked: identifierPop.close()
                 }
             }
         }

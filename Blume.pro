@@ -16,6 +16,7 @@ QT     += qml quick quickcontrols2 svg widgets charts
 # MobileUI and MobileSharing for mobile OS
 include(src/thirdparty/MobileUI/MobileUI.pri)
 include(src/thirdparty/MobileSharing/MobileSharing.pri)
+include(SortFilterProxyModel/SortFilterProxyModel.pri)
 
 # SingleApplication for desktop OS
 include(src/thirdparty/SingleApplication/SingleApplication.pri)
