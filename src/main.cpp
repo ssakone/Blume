@@ -31,6 +31,7 @@
 #include "utils_app.h"
 #include "utils_screen.h"
 #include "utils_language.h"
+#include "image2base64.h"
 #if defined(Q_OS_MACOS)
 #include "utils_os_macosdock.h"
 #endif
@@ -180,6 +181,7 @@ int main(int argc, char *argv[])
 
     // ThemeEngine
     qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "ThemeEngine", 1, 0, "Theme");
+    qmlRegisterType<Image2Base64>("ImageTools", 1, 0, "Image2Base64");
 
     MobileUI::registerQML();
     DeviceUtils::registerQML();

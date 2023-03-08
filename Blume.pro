@@ -71,6 +71,7 @@ SOURCES  += src/main.cpp \
             src/devices/device_esp32_geigercounter.cpp \
             src/devices/device_esp32_higrow.cpp \
             src/devices/device_ess_generic.cpp \
+            src/image2base64.cpp \
             src/thirdparty/RC4/rc4.cpp
 
 HEADERS  += src/SettingsManager.h \
@@ -112,6 +113,7 @@ HEADERS  += src/SettingsManager.h \
             src/devices/device_esp32_geigercounter.h \
             src/devices/device_esp32_higrow.h \
             src/devices/device_ess_generic.h \
+            src/image2base64.h \
             src/thirdparty/RC4/rc4.h
 
 INCLUDEPATH += src/ src/thirdparty/

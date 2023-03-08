@@ -3,6 +3,9 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtSensors
 import SortFilterProxyModel
+import QtMultimedia
+import QtQuick.Dialogs
+import ImageTools
 
 import Qt5Compat.GraphicalEffects
 
@@ -543,7 +546,7 @@ Loader {
 
             Column {
                 anchors.centerIn: parent
-                spacing: 20
+                spacing: 10
                 IconSvg {
                     width: 64
                     height: 64
@@ -558,19 +561,73 @@ Loader {
                     text: "Identification de plante"
                     font.weight: Font.Medium
                 }
-                Button {
+
+                Item {
+                    id: imgAnalysisSurface
+                    property bool loading: false
+                    width: parent.width
+                    height: 260
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: "Camera"
-                    //onClicked: identifierPop.close()
+                    Rectangle {
+                        anchors.fill: parent
+                        border.width: 2
+                        border.color: '#ccc'
+                        opacity: .5
+                    }
+                    Label {
+                        anchors.centerIn: parent
+                        text: 'Import image'
+                        opacity: .4
+                    }
+                    Image {
+                         id: image
+                         anchors.fill: parent
+                         fillMode: Image.PreserveAspectFit
+                     }
+
+                    BusyIndicator {
+                        running: parent.loading
+                        anchors.centerIn: parent
+                    }
+
+                     FileDialog {
+                         id: fileDialog
+                         nameFilters: ["Image file (*.png *.jpg *.jpeg *.gif)"]
+                         onAccepted: image.source = selectedFile
+                     }
                 }
+
                 Button {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: "Choisir une image"
-                    //onClicked: identifierPop.close()
+                    text: "Analyser"
+                    width: 180
+                    height: 45
+                    visible: image.source.toString() !== ""
+                    onClicked: {
+                        imgAnalysisSurface.loading = true
+                        let data = {
+                            "images": [
+                                imgTool.getBase64(image.source.toString().replace("file://", ""))
+                            ]
+                        }
+                    }
+                }
+                Image2Base64 {
+                    id: imgTool
+                }
+
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "Charger une image"
+                    width: 180
+                    height: 45
+                    onClicked: fileDialog.open()
                 }
                 Button {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "Fermer"
+                    width: 120
+                    height: 45
                     onClicked: identifierPop.close()
                 }
             }
