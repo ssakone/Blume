@@ -610,8 +610,10 @@ Loader {
                                 imgTool.getBase64(image.source.toString().replace("file://", ""))
                             ]
                         }
-                        plantBrowser.request("POST", "https://plant.id/api/v2/identify", JSON.stringify(data)).then(function (r) {
+                        plantBrowser.request("POST", "https://plant.id/api/v2/identify", data).then(function (r) {
                             console.log(JSON.stringify(r))
+                        }).catch(function (e) {
+                            console.log(JSON.stringify(e))
                         })
                     }
                 }
