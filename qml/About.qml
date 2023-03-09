@@ -242,7 +242,7 @@ Loader {
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Application by <a href=\"https://emeric.io\">Mahoudev</a>")
+                    text: qsTr("Application by <a href=\"https://mahoudev.com.io\">Mahoudev</a>")
                     textFormat: Text.StyledText
                     onLinkActivated: Qt.openUrlExternally(link)
                     font.pixelSize: Theme.fontSizeContent
