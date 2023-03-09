@@ -1251,7 +1251,7 @@ Grid {
                     anchors.right: parent.right
                     anchors.rightMargin: 8
 
-                    text: qsTr("Please note that WatchFlower should not be your definitive source of information about plant care.")
+                    text: qsTr("Please note that Blume should not be your definitive source of information about plant care.")
                     textFormat: Text.StyledText
                     wrapMode: Text.WordWrap
                     color: Theme.colorSubText

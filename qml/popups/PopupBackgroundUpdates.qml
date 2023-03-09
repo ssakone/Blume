@@ -80,7 +80,7 @@ Popup {
                     Text {
                         width: parent.width
 
-                        text: qsTr("To use the background update feature, the <b>background location permission</b> is required, otherwise WatchFlower can't scan for Bluetooth Low Energy sensors and can't update data when the app is closed.")
+                        text: qsTr("To use the background update feature, the <b>background location permission</b> is required, otherwise Blume can't scan for Bluetooth Low Energy sensors and can't update data when the app is closed.")
                         textFormat: Text.StyledText
                         font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorSubText
@@ -214,7 +214,7 @@ Popup {
                         sourceSize: 20
 
                         onClicked: {
-                            utilsApp.openAndroidAppInfo("com.emeric.watchflower")
+                            utilsApp.openAndroidAppInfo("com.mahoutech.blume")
                         }
                     }
 

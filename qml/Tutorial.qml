@@ -85,7 +85,7 @@ Rectangle {
                             anchors.left: parent.left
                             anchors.leftMargin: tutorialPages.margins
 
-                            text: qsTr("<b>WatchFlower</b> is a plant monitoring application for Xiaomi '<b>Flower Care</b>' or Parrot '<b>Flower Power</b>' sensors.")
+                            text: qsTr("<b>Blume</b> is a plant monitoring application for Xiaomi '<b>Flower Care</b>' or Parrot '<b>Flower Power</b>' sensors.")
                             textFormat: Text.StyledText
                             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                             font.pixelSize: Theme.fontSizeContentBig
@@ -142,7 +142,7 @@ Rectangle {
                             anchors.left: parent.left
                             anchors.leftMargin: tutorialPages.margins
 
-                            text: qsTr("To start using WatchFlower, you'll need to <b>scan</b> for <b>compatible Bluetooth sensors</b> around you.")
+                            text: qsTr("To start using Blume, you'll need to <b>scan</b> for <b>compatible Bluetooth sensors</b> around you.")
                             textFormat: Text.StyledText
                             color: Theme.colorHeaderContent
                             font.pixelSize: Theme.fontSizeContentBig
@@ -191,7 +191,7 @@ Rectangle {
                             anchors.left: parent.left
                             anchors.leftMargin: tutorialPages.margins
 
-                            text: qsTr("Once <b>paired</b>, sensors will periodically <b>sync</b> their data when you use WatchFlower.")
+                            text: qsTr("Once <b>paired</b>, sensors will periodically <b>sync</b> their data when you use Blume.")
                             textFormat: Text.StyledText
                             color: Theme.colorHeaderContent
                             wrapMode: Text.WrapAtWordBoundaryOrAnywhere

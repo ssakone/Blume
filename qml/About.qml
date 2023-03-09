@@ -107,7 +107,7 @@ Loader {
 
                         text: qsTr("WEBSITE")
                         source: "qrc:/assets/icons_material/baseline-insert_link-24px.svg"
-                        onClicked: Qt.openUrlExternally("https://emeric.io/WatchFlower")
+                        onClicked: Qt.openUrlExternally("https://mahoudev.com")
                     }
 
                     ButtonWireframeIconCentered {
@@ -118,19 +118,7 @@ Loader {
 
                         text: qsTr("SUPPORT")
                         source: "qrc:/assets/icons_material/baseline-support-24px.svg"
-                        onClicked: Qt.openUrlExternally("https://emeric.io/WatchFlower/support.html")
-                    }
-
-                    ButtonWireframeIconCentered {
-                        visible: (appWindow.width > 800)
-                        width: 160
-                        sourceSize: 22
-                        fullColor: true
-                        primaryColor: (Theme.currentTheme === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
-
-                        text: qsTr("GitHub")
-                        source: "qrc:/assets/logos/github.svg"
-                        onClicked: Qt.openUrlExternally("https://github.com/emericg/WatchFlower")
+                        onClicked: Qt.openUrlExternally("https://mahoudev.com/contact")
                     }
                 }
 
@@ -168,7 +156,7 @@ Loader {
 
                     text: qsTr("WEBSITE")
                     source: "qrc:/assets/icons_material/baseline-insert_link-24px.svg"
-                    onClicked: Qt.openUrlExternally("https://emeric.io/WatchFlower")
+                    onClicked: Qt.openUrlExternally("https://mahoudev.com")
                 }
                 ButtonWireframeIconCentered {
                     width: ((parent.width - 16) / 2)
@@ -180,7 +168,7 @@ Loader {
 
                     text: qsTr("SUPPORT")
                     source: "qrc:/assets/icons_material/baseline-support-24px.svg"
-                    onClicked: Qt.openUrlExternally("https://emeric.io/WatchFlower/support.html")
+                    onClicked: Qt.openUrlExternally("https://mahoudev.com/contact")
                 }
             }
 
@@ -254,7 +242,7 @@ Loader {
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Application by <a href=\"https://emeric.io\">Emeric Grange</a><br>Visual design by <a href=\"https://dribbble.com/chrisdiaz\">Chris Díaz</a>")
+                    text: qsTr("Application by <a href=\"https://emeric.io\">Mahoudev</a>")
                     textFormat: Text.StyledText
                     onLinkActivated: Qt.openUrlExternally(link)
                     font.pixelSize: Theme.fontSizeContent
@@ -279,72 +267,6 @@ Loader {
 
                     source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
                     color: Theme.colorIcon
-                }
-            }
-
-            ////////
-
-            Item {
-                id: rate
-                height: 48
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-
-                visible: (Qt.platform.os === "android" || Qt.platform.os === "ios")
-
-                IconSvg {
-                    id: rateImg
-                    width: 32
-                    height: 32
-                    anchors.left: parent.left
-                    anchors.leftMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    source: "qrc:/assets/icons_material/baseline-stars-24px.svg"
-                    color: Theme.colorIcon
-                }
-
-                Text {
-                    id: rateTxt
-                    anchors.left: parent.left
-                    anchors.leftMargin: 48
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: qsTr("Rate the application")
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContent
-                    color: Theme.colorText
-                }
-
-                IconSvg {
-                    width: 20
-                    height: 20
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-                    visible: singleColumn
-
-                    source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
-                    color: Theme.colorIcon
-                }
-
-                MouseArea {
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: singleColumn ? parent.right : rateTxt.right
-                    anchors.rightMargin: singleColumn ? 0 : -24
-                    anchors.bottom: parent.bottom
-
-                    onClicked: {
-                        if (Qt.platform.os === "android")
-                            Qt.openUrlExternally("market://details?id=com.emeric.watchflower")
-                        else if (Qt.platform.os === "ios")
-                            Qt.openUrlExternally("itms-apps://itunes.apple.com/app/1476046123")
-                        else
-                            Qt.openUrlExternally("https://github.com/emericg/WatchFlower/stargazers")
-                    }
                 }
             }
 
@@ -496,78 +418,6 @@ Loader {
             }
 
             Item {
-                id: releasenotes
-                height: 32
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-
-                IconSvg {
-                    id: releasenotesImg
-                    width: 24
-                    height: 24
-                    anchors.left: parent.left
-                    anchors.leftMargin: 4
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    source: "qrc:/assets/icons_material/outline-new_releases-24px.svg"
-                    color: Theme.colorIcon
-                }
-
-                Text {
-                    id: releasenotesTxt
-                    anchors.left: parent.left
-                    anchors.leftMargin: 48
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: qsTr("Release notes")
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContent
-                    color: Theme.colorText
-                }
-
-                IconSvg {
-                    width: 20
-                    height: 20
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
-                    color: Theme.colorIcon
-                }
-
-                MouseArea {
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: singleColumn ? parent.right : releasenotesTxt.right
-                    anchors.rightMargin: singleColumn ? 0 : -24
-                    anchors.bottom: parent.bottom
-
-                    onClicked: Qt.openUrlExternally("https://github.com/emericg/WatchFlower/releases")
-                }
-            }
-
-            ////////
-
-            Item {
-                height: 16
-                anchors.left: parent.left
-                anchors.right: parent.right
-
-                Rectangle {
-                    height: 1
-                    color: Theme.colorSeparator
-                    anchors.left: parent.left
-                    anchors.leftMargin: -(screenPaddingLeft + 16)
-                    anchors.right: parent.right
-                    anchors.rightMargin: -(screenPaddingRight + 16)
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-            }
-
-            Item {
                 id: supportedsensors
                 height: 32
                 anchors.left: parent.left
@@ -617,7 +467,7 @@ Loader {
                     anchors.rightMargin: singleColumn ? 0 : -24
                     anchors.bottom: parent.bottom
 
-                    onClicked: Qt.openUrlExternally("https://github.com/emericg/WatchFlower/blob/master/docs/README.md")
+                    onClicked: Qt.openUrlExternally("https://mahoudev.com/app-blume")
                 }
             }
 
