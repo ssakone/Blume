@@ -76,7 +76,7 @@ Grid {
         plantTags.model = currentPlant.tags
 
         // colors
-        itemColorLeaf.visible = (currentPlant.colorsLeaf.length > 0)
+        itemColorLeaf.visible = (currentPlant.colorsLeaf?.length > 0)
         plantColorLeaf.model = currentPlant.colorsLeaf
         itemColorBract.visible = (currentPlant.colorsBract.length > 0)
         plantColorBract.model = currentPlant.colorsBract
