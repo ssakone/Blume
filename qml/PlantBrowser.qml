@@ -711,6 +711,8 @@ Loader {
                                         identifierLayoutView.currentIndex = 1
                                         if (datas.is_plant)
                                             identifedPlantListView.model = datas.suggestions
+                                        else
+                                            identifedPlantListView.model = []
 
                                     }).catch(function (e) {
                                         imgAnalysisSurface.loading = false
