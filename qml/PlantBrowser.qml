@@ -700,7 +700,7 @@ Loader {
                                     imgAnalysisSurface.loading = true
                                     let data = {
                                         "images": [
-                                            imgTool.getBase64(image.source.toString().replace("file://", ""))
+                                            imgTool.getBase64(image.source.toString().replace(Qt.platform.os === "windows" ? "file:///" : "file://", ""))
                                         ]
                                     }
                                     plantBrowser.request("POST", "https://plant.id/api/v2/identify", data).then(function (r) {

@@ -176,10 +176,11 @@ Popup {
                         visible: image.source.toString() !== ""
                         onClicked: {
                             imgAnalysisSurface.loading = true
+                            console.log("Image URL ", image.source.toString())
                             let data = {
                                 "images": [imgTool.getBase64(
                                         image.source.toString().replace(
-                                            "file://", ""))]
+                                            Qt.platform.os === "windows" ? "file:///" : "file://", ""))]
                             }
                             request("POST",
                                     "https://plant.id/api/v2/health_assessment",
