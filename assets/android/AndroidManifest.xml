@@ -5,6 +5,8 @@
     <uses-sdk android:minSdkVersion="31" android:targetSdkVersion="31"/>
 
     <uses-permission android:name="android.permission.CAMERA"  />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- Request legacy Bluetooth permissions (up to Android 11 / SDK 30) -->
     <uses-permission android:name="android.permission.BLUETOOTH"/> <!-- android:maxSdkVersion="30" -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/> <!-- android:maxSdkVersion="30" -->

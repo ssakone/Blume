@@ -546,6 +546,8 @@ Loader {
             height: appWindow.height
             parent: appWindow.contentItem
             padding: 0
+
+
             ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: 0
@@ -648,29 +650,32 @@ Loader {
                                      fillMode: Image.PreserveAspectFit
                                  }
 
-                                CaptureSession {
-                                    camera: Camera {
-                                        id: camera
-                                        Component.onCompleted: start()
-                                    }
-                                    imageCapture: ImageCapture {
-                                         id: imageCapture
-                                         onImageSaved: function (id, path) {
-                                             console.log(path)
-                                             image.source = "file://" + path
-                                             analyserButton.clicked()
-                                         }
-                                         onImageCaptured: function (id, path) {
-        //                                    //image.source = path
-                                             //console.log(StandardPaths.writableLocation(StandardPaths.PicturesLocation))
-                                         }
-                                     }
-                                    videoOutput: videoOutput
-                                }
-
-                                VideoOutput {
-                                    id: videoOutput
+                                Loader {
+                                    id: accessCam
                                     anchors.fill: parent
+                                    active: identifierPop.visible
+                                    sourceComponent: Item {
+                                        property alias imageCap: imageCapture
+                                        anchors.fill: parent
+                                        CaptureSession {
+                                            camera: Camera {
+                                                id: camera
+                                            }
+                                            imageCapture: ImageCapture {
+                                                 id: imageCapture
+                                                 onImageSaved: function (id, path) {
+                                                     image.source = "file://" + path
+                                                     analyserButton.clicked()
+                                                 }
+                                             }
+                                            videoOutput: videoOutput
+                                        }
+
+                                        VideoOutput {
+                                            id: videoOutput
+                                            anchors.fill: parent
+                                        }
+                                    }
                                 }
 
                                 BusyIndicator {
@@ -681,7 +686,15 @@ Loader {
                                  FileDialog {
                                      id: fileDialog
                                      nameFilters: ["Image file (*.png *.jpg *.jpeg *.gif)"]
-                                     onAccepted: image.source = selectedFile
+                                     onAccepted: {
+                                         console.log("OOOO:=> " + fileDialog.currentFile)
+                                        if (Qt.application.os === "windows" || Qt.application.os === "osx" || Qt.application.os === "linux") {
+                                            image.source = selectedFile
+                                        }
+                                        else {
+                                            image.source = currentFile
+                                        }
+                                     }
                                  }
                                  MouseArea {
                                      anchors.fill: parent
@@ -716,7 +729,8 @@ Loader {
 
                                     }).catch(function (e) {
                                         imgAnalysisSurface.loading = false
-                                        console.log(JSON.stringify(e))
+                                        console.log(JSON.stringify(data))
+                                        console.log('Erreur',JSON.stringify(e))
                                     })
                                 }
                             }
@@ -724,34 +738,32 @@ Loader {
                                 id: imgTool
                             }
 
-                            Row {
+                            RowLayout {
                                 Layout.alignment: Qt.AlignHCenter
                                 spacing: 10
                                 ButtonWireframe {
                                     text: "Camera"
-                                    width: 120
-                                    height: 45
+                                    Layout.preferredHeight: 45
                                     onClicked: {
                                         console.log(StandardPaths.writableLocation(StandardPaths.PicturesLocation))
                                         let path = StandardPaths.writableLocation(StandardPaths.PicturesLocation).toString().replace(Qt.application.os === "windows" ? "file:///" : "file://", "")
                                         let ln = (Math.random() % 10 * 100000).toFixed(0)
                                         let filePath = path + "/" + ln + '.jpg'
                                         imgAnalysisSurface.savedImagePath = filePath
-                                        imageCapture.captureToFile(filePath)
+                                        accessCam.item.imageCap.captureToFile(filePath)
                                     }
-                                    //onClicked: fileDialog.open()
                                 }
                                 ButtonWireframe {
                                     text: "Ouvrir"
-                                    width: 120
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 45
                                     height: 45
                                     onClicked: fileDialog.open()
                                 }
                                 ButtonWireframe {
                                     Layout.alignment: Qt.AlignHCenter
                                     text: "Fermer"
-                                    width: 120
-                                    height: 45
+                                    Layout.preferredHeight: 45
                                     onClicked: identifierPop.close()
                                 }
                             }
@@ -1035,7 +1047,7 @@ Loader {
             xhr.onerror = function() {
                 let r = {
                     "status": xhr.status,
-                    "statusText": 'NO CONNECTION, ' + xhr.statusText
+                    "statusText": 'NO CONNECTION, ' + xhr.statusText + xhr.responseText
                 }
                 reject(r)
             }

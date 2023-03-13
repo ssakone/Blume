@@ -17,6 +17,11 @@ Popup {
     height: appWindow.height
     parent: appWindow.contentItem
     padding: 0
+    onOpened:  {
+        camera.start()
+    }
+
+    onClosed: camera.stop()
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 0
@@ -125,29 +130,35 @@ Popup {
                             fillMode: Image.PreserveAspectFit
                         }
 
-                        CaptureSession {
-                            camera: Camera {
-                                id: camera
-                                Component.onCompleted: start()
-                            }
-                            imageCapture: ImageCapture {
-                                 id: imageCapture
-                                 onImageSaved: function (id, path) {
-                                     console.log(path)
-                                     image.source = "file://" + path
-                                     analyserButton.clicked()
-                                 }
-                                 onImageCaptured: function (id, path) {
-//                                    //image.source = path
-                                     //console.log(StandardPaths.writableLocation(StandardPaths.PicturesLocation))
-                                 }
-                             }
-                            videoOutput: videoOutput
-                        }
-
-                        VideoOutput {
-                            id: videoOutput
+                        Loader {
                             anchors.fill: parent
+                            active: desease.visible
+                            sourceComponent: Item {
+                                anchors.fill: parent
+                                CaptureSession {
+                                    camera: Camera {
+                                        id: camera
+                                    }
+                                    imageCapture: ImageCapture {
+                                         id: imageCapture
+                                         onImageSaved: function (id, path) {
+                                             console.log(path)
+                                             image.source = "file://" + path
+                                             analyserButton.clicked()
+                                         }
+                                         onImageCaptured: function (id, path) {
+        //                                    //image.source = path
+                                             //console.log(StandardPaths.writableLocation(StandardPaths.PicturesLocation))
+                                         }
+                                     }
+                                    videoOutput: videoOutput
+                                }
+
+                                VideoOutput {
+                                    id: videoOutput
+                                    anchors.fill: parent
+                                }
+                            }
                         }
 
                         BusyIndicator {
