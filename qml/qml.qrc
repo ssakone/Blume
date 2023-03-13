@@ -31,14 +31,12 @@
         <file>DeviceEnvironmental.qml</file>
         <file>ThemeEngine.qml</file>
         <file>WindowGeometrySaver.qml</file>
-
         <file alias="PopupBackgroundUpdates.qml">popups/PopupBackgroundUpdates.qml</file>
         <file alias="PopupBlacklistDevice.qml">popups/PopupBlacklistDevice.qml</file>
         <file alias="PopupCalibration.qml">popups/PopupCalibration.qml</file>
         <file alias="PopupDate.qml">popups/PopupDate.qml</file>
         <file alias="PopupDeleteData.qml">popups/PopupDeleteData.qml</file>
         <file alias="PopupDeleteDevice.qml">popups/PopupDeleteDevice.qml</file>
-
         <file alias="ActionMenuFixed.qml">components/ActionMenuFixed.qml</file>
         <file alias="AirQualityIndicator.qml">components/AirQualityIndicator.qml</file>
         <file alias="ButtonExperimental.qml">components/ButtonExperimental.qml</file>
@@ -62,5 +60,6 @@
         <file alias="ItemNoPlants.qml">components/ItemNoPlants.qml</file>
         <file alias="ItemNoJournal.qml">components/ItemNoJournal.qml</file>
         <file alias="SectionTitle.qml">components/SectionTitle.qml</file>
+        <file>PlantDesease.qml</file>
     </qresource>
 </RCC>

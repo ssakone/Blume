@@ -20,6 +20,10 @@ Drawer {
         }
     }
 
+    PlantDesease {
+        id: deseasePopup
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     contentItem: Item {
@@ -598,6 +602,42 @@ Drawer {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTr("Plant browser")
+                    font.pixelSize: 13
+                    font.bold: true
+                    color: Theme.colorText
+                }
+            }
+
+            Rectangle {
+                id: rectanglePlantBrowser2
+                height: 48
+                anchors.left: parent.left
+                anchors.right: parent.right
+                color: (appContent.state === "PlantBrowser") ? Theme.colorForeground : Theme.colorBackground
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        deseasePopup.open()
+                    }
+                }
+
+                IconSvg {
+                    width: 24
+                    height: 24
+                    anchors.left: parent.left
+                    anchors.leftMargin: screenPaddingLeft + 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    source: "qrc:/assets/icons_material/outline-local_florist-24px.svg"
+                    color: Theme.colorText
+                }
+                Text {
+                    anchors.left: parent.left
+                    anchors.leftMargin: screenPaddingLeft + 56
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: qsTr("Plant Desease")
                     font.pixelSize: 13
                     font.bold: true
                     color: Theme.colorText

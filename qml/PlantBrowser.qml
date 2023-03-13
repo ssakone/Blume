@@ -6,6 +6,7 @@ import SortFilterProxyModel
 import QtMultimedia
 import QtQuick.Dialogs
 import ImageTools
+import Qt.labs.platform
 
 import Qt5Compat.GraphicalEffects
 
@@ -608,6 +609,7 @@ Loader {
                             spacing: 10
                             Item {
                                 id: imgAnalysisSurface
+                                property string savedImagePath: ""
                                 property bool loading: false
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
@@ -646,6 +648,31 @@ Loader {
                                      fillMode: Image.PreserveAspectFit
                                  }
 
+                                CaptureSession {
+                                    camera: Camera {
+                                        id: camera
+                                        Component.onCompleted: start()
+                                    }
+                                    imageCapture: ImageCapture {
+                                         id: imageCapture
+                                         onImageSaved: function (id, path) {
+                                             console.log(path)
+                                             image.source = "file://" + path
+                                             analyserButton.clicked()
+                                         }
+                                         onImageCaptured: function (id, path) {
+        //                                    //image.source = path
+                                             //console.log(StandardPaths.writableLocation(StandardPaths.PicturesLocation))
+                                         }
+                                     }
+                                    videoOutput: videoOutput
+                                }
+
+                                VideoOutput {
+                                    id: videoOutput
+                                    anchors.fill: parent
+                                }
+
                                 BusyIndicator {
                                     running: parent.loading
                                     anchors.centerIn: parent
@@ -663,6 +690,7 @@ Loader {
                             }
 
                             ButtonWireframe {
+                                id: analyserButton
                                 Layout.alignment: Qt.AlignHCenter
                                 text: "Analyser"
                                 Layout.preferredWidth: 180
@@ -701,6 +729,14 @@ Loader {
                                     text: "Camera"
                                     width: 120
                                     height: 45
+                                    onClicked: {
+                                        console.log(StandardPaths.writableLocation(StandardPaths.PicturesLocation))
+                                        let path = StandardPaths.writableLocation(StandardPaths.PicturesLocation).toString().replace(Qt.application.os === "windows" ? "file:///" : "file://", "")
+                                        let ln = (Math.random() % 10 * 100000).toFixed(0)
+                                        let filePath = path + "/" + ln + '.jpg'
+                                        imgAnalysisSurface.savedImagePath = filePath
+                                        imageCapture.captureToFile(filePath)
+                                    }
                                     //onClicked: fileDialog.open()
                                 }
                                 ButtonWireframe {

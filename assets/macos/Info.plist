@@ -28,6 +28,8 @@
 	<string>NSApplication</string>
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>The microphone is used to record voice memos.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Blume connects to Bluetooth Low Energy sensors.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>

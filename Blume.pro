@@ -382,3 +382,6 @@ ios {
         include($${PWD}/assets/ios/ios_signature.pri)
     }
 }
+
+DISTFILES += \
+    qml/PlantDesease.qml
