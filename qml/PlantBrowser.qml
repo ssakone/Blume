@@ -538,183 +538,257 @@ Loader {
 
         Popup {
             id: identifierPop
-            width: parent.width
-            height: parent.height
-            anchors.centerIn: parent
             dim: true
             modal: true
-
-            StackLayout {
-                id: identifierLayoutView
+            property variant plant_results
+            width: appWindow.width
+            height: appWindow.height
+            parent: appWindow.contentItem
+            padding: 0
+            ColumnLayout {
                 anchors.fill: parent
-                currentIndex: 0
-                Item {
-                    Column {
-                        anchors.centerIn: parent
+                anchors.margins: 0
+                Rectangle {
+                    color: "#00c395"
+                    Layout.preferredHeight: 65
+                    Layout.fillWidth: true
+                    Row {
+                        anchors.verticalCenter: parent.verticalCenter
                         spacing: 10
-                        IconSvg {
-                            width: 64
-                            height: 64
-                            anchors.horizontalCenter: parent.horizontalCenter
+                        Rectangle {
+                            id: buttonBackBg
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: 65
+                            height: 65
+                            radius: height
+                            color: "transparent" //Theme.colorHeaderHighlight
+                            opacity: 1
+                            IconSvg {
+                                id: buttonBack
+                                width: 24
+                                height: width
+                                anchors.centerIn: parent
 
-                            source: "qrc:/assets/icons_custom/plant_scan.png"
-                            color: 'black'
-                        }
-
-                        Label {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: "Identification de plante"
-                            font.weight: Font.Medium
-                        }
-
-                        Item {
-                            id: imgAnalysisSurface
-                            property bool loading: false
-                            width: parent.width
-                            height: 260
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            Rectangle {
+                                source: "qrc:/assets/menus/menu_back.svg"
+                                color: Theme.colorHeaderContent
+                            }
+                            MouseArea {
                                 anchors.fill: parent
-                                border.width: 2
-                                border.color: '#ccc'
-                                opacity: .5
-                            }
-                            Label {
-                                anchors.centerIn: parent
-                                text: 'Import image'
-                                visible: image.source.toString() === ""
-                                opacity: .4
-                            }
-                            Image {
-                                 id: image
-                                 anchors.fill: parent
-                                 fillMode: Image.PreserveAspectFit
-                             }
-
-                            BusyIndicator {
-                                running: parent.loading
-                                anchors.centerIn: parent
-                            }
-
-                             FileDialog {
-                                 id: fileDialog
-                                 nameFilters: ["Image file (*.png *.jpg *.jpeg *.gif)"]
-                                 onAccepted: image.source = selectedFile
-                             }
-                        }
-
-                        Button {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: "Analyser"
-                            width: 180
-                            height: 45
-                            visible: image.source.toString() !== ""
-                            onClicked: {
-                                imgAnalysisSurface.loading = true
-                                let data = {
-                                    "images": [
-                                        imgTool.getBase64(image.source.toString().replace("file://", ""))
-                                    ]
+                                onClicked: {
+                                    if (identifierLayoutView.currentIndex === 0) {
+                                        identifierPop.close()
+                                    } else {
+                                        identifierLayoutView.currentIndex--
+                                    }
                                 }
-                                plantBrowser.request("POST", "https://plant.id/api/v2/identify", data).then(function (r) {
-                                    let datas = JSON.parse(r)
-                                    console.log(r)
-                                    imgAnalysisSurface.loading = false
-                                    identifierLayoutView.currentIndex = 1
-                                    identifedPlantListView.model = datas.suggestions
-
-                                }).catch(function (e) {
-                                    imgAnalysisSurface.loading = false
-                                    console.log(JSON.stringify(e))
-                                })
                             }
-                        }
-                        Image2Base64 {
-                            id: imgTool
-                        }
 
-                        Button {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: "Charger une image"
-                            width: 180
-                            height: 45
-                            onClicked: fileDialog.open()
+                            Behavior on opacity { OpacityAnimator { duration: 333 } }
                         }
-                        Button {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: "Fermer"
-                            width: 120
-                            height: 45
-                            onClicked: identifierPop.close()
+                        Label {
+                            text: identifierLayoutView.currentIndex === 0 ? "Identification de plante" : "Resultat"
+                            font.pixelSize: 21
+                            font.bold: true
+                            font.weight: Font.Medium
+                            color: "white"
+                            anchors.verticalCenter: parent.verticalCenter
                         }
                     }
                 }
-                Item {
-                    ListView {
-                        id: identifedPlantListView
-                        anchors.fill: parent
-                        model: 0
-                        spacing: 5
-                        clip: true
-                        header: Item {
-                            height: 60
-                            width: identifedPlantListView.width
-                            RowLayout {
-                                anchors.fill: parent
-                                Label {
-                                    Layout.fillWidth: true
-                                    Layout.fillHeight: true
-                                    text: "Resultat de l'analyse"
-                                    verticalAlignment: Label.AlignVCenter
-                                    leftPadding: 5
-                                    font.weight: Font.Medium
-                                    font.pixelSize: 16
+
+                StackLayout {
+                    id: identifierLayoutView
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.margins: 10
+                    currentIndex: 0
+                    Item {
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 10
+                            Item {
+                                id: imgAnalysisSurface
+                                property bool loading: false
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                Rectangle {
+                                    anchors.fill: parent
+                                    border.width: 1
+                                    border.color: '#ccc'
+                                    opacity: .2
                                 }
-                                Button {
-                                    Layout.alignment: Qt.AlignVCenter
-                                    text: "Nouvelle recherche"
-                                    Layout.preferredHeight: 35
-                                    onClicked: identifierLayoutView.currentIndex = 0
+                                Column {
+                                    visible: image.source.toString() === ""
+                                    anchors.centerIn: parent
+                                    spacing: 10
+                                    IconSvg {
+                                        width: 64
+                                        height: 64
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        source: "qrc:/assets/icons_custom/plant_scan.png"
+                                        color: 'black'
+                                    }
+                                    Label {
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        width: 140
+                                        wrapMode: Label.Wrap
+                                        font.pixelSize: 16
+                                        horizontalAlignment: Label.AlignHCenter
+                                        text: 'Clickez pour importer une image'
+                                        opacity: .6
+                                    }
+                                }
+
+                                Image {
+                                     id: image
+                                     anchors.fill: parent
+                                     fillMode: Image.PreserveAspectFit
+                                 }
+
+                                BusyIndicator {
+                                    running: parent.loading
+                                    anchors.centerIn: parent
+                                }
+
+                                 FileDialog {
+                                     id: fileDialog
+                                     nameFilters: ["Image file (*.png *.jpg *.jpeg *.gif)"]
+                                     onAccepted: image.source = selectedFile
+                                 }
+                                 MouseArea {
+                                     anchors.fill: parent
+                                     onClicked: fileDialog.open()
+                                 }
+                            }
+
+                            ButtonWireframe {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: "Analyser"
+                                Layout.preferredWidth: 180
+                                Layout.preferredHeight: 45
+                                visible: image.source.toString() !== ""
+                                onClicked: {
+                                    imgAnalysisSurface.loading = true
+                                    let data = {
+                                        "images": [
+                                            imgTool.getBase64(image.source.toString().replace("file://", ""))
+                                        ]
+                                    }
+                                    plantBrowser.request("POST", "https://plant.id/api/v2/identify", data).then(function (r) {
+                                        let datas = JSON.parse(r)
+                                        console.log(r)
+                                        identifierPop.plant_results = datas
+                                        imgAnalysisSurface.loading = false
+                                        identifierLayoutView.currentIndex = 1
+                                        if (datas.is_plant)
+                                            identifedPlantListView.model = datas.suggestions
+
+                                    }).catch(function (e) {
+                                        imgAnalysisSurface.loading = false
+                                        console.log(JSON.stringify(e))
+                                    })
+                                }
+                            }
+                            Image2Base64 {
+                                id: imgTool
+                            }
+
+                            Row {
+                                Layout.alignment: Qt.AlignHCenter
+                                spacing: 10
+                                ButtonWireframe {
+                                    text: "Camera"
+                                    width: 120
+                                    height: 45
+                                    //onClicked: fileDialog.open()
+                                }
+                                ButtonWireframe {
+                                    text: "Ouvrir"
+                                    width: 120
+                                    height: 45
+                                    onClicked: fileDialog.open()
+                                }
+                                ButtonWireframe {
+                                    Layout.alignment: Qt.AlignHCenter
+                                    text: "Fermer"
+                                    width: 120
+                                    height: 45
+                                    onClicked: identifierPop.close()
                                 }
                             }
                         }
-
-                        delegate: ItemDelegate {
-                            text: modelData["plant_name"]
-                            height: 60
-                            width: identifedPlantListView.width
-                            Rectangle {
-                                anchors.right: parent.right
-                                anchors.rightMargin: 10
-                                anchors.verticalCenter: parent.verticalCenter
-                                color: "teal"
-                                radius: width / 2
-                                width: 50
-                                height: width
+                    }
+                    Item {
+                        ListView {
+                            id: identifedPlantListView
+                            anchors.fill: parent
+                            model: 0
+                            spacing: 5
+                            clip: true
+                            header: Column {
+                                width: identifedPlantListView.width
+                                padding: 10
+                                spacing: 3
                                 Label {
-                                    anchors.centerIn: parent
-                                    text: "%1%".arg((modelData["probability"]*100).toFixed(0))
-                                    color: "white"
-                                    font.weight: Font.Bold
+                                    font.pixelSize: 28
+                                    width: 300
+                                    wrapMode: Label.Wrap
+                                    horizontalAlignment: Label.AlignHCenter
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    verticalAlignment: Qt.AlignVCenter
+                                    visible: identifierPop.plant_results?.is_plant
+                                    text: "Plante a <b><font color='green'>%2%</font></b>".arg((identifierPop.plant_results?.is_plant_probability * 100).toFixed(0))
+                                }
+                                Label {
+                                    font.pixelSize: 28
+                                    width: 300
+                                    wrapMode: Label.Wrap
+                                    horizontalAlignment: Label.AlignHCenter
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    verticalAlignment: Qt.AlignVCenter
+                                    visible: !identifierPop.plant_results?.is_plant
+                                    text: "Ceci n'est pas une plante"
                                 }
                             }
-                            onClicked:  {
-                                plantDatabase.filter(modelData["plant_details"]["scientific_name"])
-                                let ps = plantDatabase.plantsFiltered.filter(function (p){
-                                    if (p.name.indexOf(modelData["plant_details"]["scientific_name"]) !== -1)
-                                        return p
-                                })
-                                if (ps.length > 0)
-                                {
-                                    plantScreen.currentPlant = ps[0]
-                                    identifierPop.close()
 
-                                    itemPlantBrowser.visible = false
-                                    itemPlantBrowser.enabled = false
-                                    itemPlantViewer.visible = true
-                                    itemPlantViewer.enabled = true
-                                    itemPlantViewer.contentX = 0
-                                    itemPlantViewer.contentY = 0
+                            delegate: ItemDelegate {
+                                text: modelData["plant_name"]
+                                height: 60
+                                width: identifedPlantListView.width
+                                Rectangle {
+                                    anchors.right: parent.right
+                                    anchors.rightMargin: 10
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    color: "teal"
+                                    radius: width / 2
+                                    width: 50
+                                    height: width
+                                    Label {
+                                        anchors.centerIn: parent
+                                        text: "%1%".arg((modelData["probability"]*100).toFixed(0))
+                                        color: "white"
+                                        font.weight: Font.Bold
+                                    }
+                                }
+                                onClicked:  {
+                                    plantDatabase.filter(modelData["plant_details"]["scientific_name"])
+                                    let ps = plantDatabase.plantsFiltered.filter(function (p){
+                                        if (p.name.indexOf(modelData["plant_details"]["scientific_name"]) !== -1)
+                                            return p
+                                    })
+                                    if (ps.length > 0)
+                                    {
+                                        plantScreen.currentPlant = ps[0]
+                                        identifierPop.close()
+
+                                        itemPlantBrowser.visible = false
+                                        itemPlantBrowser.enabled = false
+                                        itemPlantViewer.visible = true
+                                        itemPlantViewer.enabled = true
+                                        itemPlantViewer.contentX = 0
+                                        itemPlantViewer.contentY = 0
+                                    }
                                 }
                             }
                         }
