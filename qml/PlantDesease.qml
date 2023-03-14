@@ -17,9 +17,6 @@ Popup {
     height: appWindow.height
     parent: appWindow.contentItem
     padding: 0
-    onOpened: {
-        camera.start()
-    }
 
     onClosed: camera.stop()
     ColumnLayout {
@@ -131,9 +128,11 @@ Popup {
                         }
 
                         Loader {
+                            id: cameraLoader
                             anchors.fill: parent
                             active: desease.visible
                             sourceComponent: Item {
+                                property alias imgCapture: imageCapture
                                 anchors.fill: parent
                                 Component.onCompleted: camera.start()
                                 CaptureSession {
@@ -215,13 +214,13 @@ Popup {
                         id: imgTool
                     }
 
-                    Row {
+                    RowLayout {
                         Layout.alignment: Qt.AlignHCenter
                         spacing: 10
                         ButtonWireframe {
                             text: "Camera"
-                            width: 120
-                            height: 45
+                            Layout.preferredHeight: 45
+                            Layout.alignment: Qt.AlignVCenter
                             onClicked: {
                                 console.log(StandardPaths.writableLocation(
                                                 StandardPaths.PicturesLocation))
@@ -234,20 +233,20 @@ Popup {
                                               ) % 10 * 100000).toFixed(0)
                                 let filePath = path + "/" + ln + '.jpg'
                                 imgAnalysisSurface.savedImagePath = filePath
-                                imageCapture.captureToFile(filePath)
+                                 cameraLoader.item.imgCapture.captureToFile(filePath)
                             }
                         }
                         ButtonWireframe {
                             text: "Charger une image"
-                            width: 180
-                            height: 45
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 45
+                            Layout.alignment: Qt.AlignVCenter
                             onClicked: fileDialog.open()
                         }
                         ButtonWireframe {
-                            Layout.alignment: Qt.AlignHCenter
                             text: "Fermer"
-                            width: 120
-                            height: 45
+                            Layout.preferredHeight: 45
+                            Layout.alignment: Qt.AlignVCenter
                             onClicked: desease.close()
                         }
                     }
