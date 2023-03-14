@@ -656,7 +656,7 @@ Loader {
                                     active: identifierPop.visible
                                     sourceComponent: Item {
                                         property alias imageCap: imageCapture
-                                        anchors.fill: parent
+                                        Component.onCompleted: camera.start()
                                         CaptureSession {
                                             camera: Camera {
                                                 id: camera

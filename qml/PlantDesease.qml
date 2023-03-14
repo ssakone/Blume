@@ -17,7 +17,7 @@ Popup {
     height: appWindow.height
     parent: appWindow.contentItem
     padding: 0
-    onOpened:  {
+    onOpened: {
         camera.start()
     }
 
@@ -135,22 +135,19 @@ Popup {
                             active: desease.visible
                             sourceComponent: Item {
                                 anchors.fill: parent
+                                Component.onCompleted: camera.start()
                                 CaptureSession {
                                     camera: Camera {
                                         id: camera
                                     }
                                     imageCapture: ImageCapture {
-                                         id: imageCapture
-                                         onImageSaved: function (id, path) {
-                                             console.log(path)
-                                             image.source = "file://" + path
-                                             analyserButton.clicked()
-                                         }
-                                         onImageCaptured: function (id, path) {
-        //                                    //image.source = path
-                                             //console.log(StandardPaths.writableLocation(StandardPaths.PicturesLocation))
-                                         }
-                                     }
+                                        id: imageCapture
+                                        onImageSaved: function (id, path) {
+                                            console.log(path)
+                                            image.source = "file://" + path
+                                            analyserButton.clicked()
+                                        }
+                                    }
                                     videoOutput: videoOutput
                                 }
 
@@ -191,7 +188,8 @@ Popup {
                             let data = {
                                 "images": [imgTool.getBase64(
                                         image.source.toString().replace(
-                                            Qt.platform.os === "windows" ? "file:///" : "file://", ""))]
+                                            Qt.platform.os === "windows" ? "file:///" : "file://",
+                                            ""))]
                             }
                             request("POST",
                                     "https://plant.id/api/v2/health_assessment",
@@ -225,9 +223,15 @@ Popup {
                             width: 120
                             height: 45
                             onClicked: {
-                                console.log(StandardPaths.writableLocation(StandardPaths.PicturesLocation))
-                                let path = StandardPaths.writableLocation(StandardPaths.PicturesLocation).toString().replace(Qt.application.os === "windows" ? "file:///" : "file://", "")
-                                let ln = (Math.random() % 10 * 100000).toFixed(0)
+                                console.log(StandardPaths.writableLocation(
+                                                StandardPaths.PicturesLocation))
+                                let path = StandardPaths.writableLocation(
+                                        StandardPaths.PicturesLocation).toString(
+                                        ).replace(
+                                        Qt.application.os === "windows" ? "file:///" : "file://",
+                                        "")
+                                let ln = (Math.random(
+                                              ) % 10 * 100000).toFixed(0)
                                 let filePath = path + "/" + ln + '.jpg'
                                 imgAnalysisSurface.savedImagePath = filePath
                                 imageCapture.captureToFile(filePath)
