@@ -330,27 +330,37 @@ Item {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 12
 
-        active: isDesktop
+//        active: isDesktop
         asynchronous: true
 
-        sourceComponent: Row {
+        sourceComponent: RowLayout {
             spacing: 12
+            Layout.alignment: Qt.AlignHCenter
 
             ButtonWireframe {
-                text: qsTr("devices")
+                text: qsTr("Devices")
+                Layout.preferredHeight: 45
+                Layout.alignment: Qt.AlignVCenter
+
                 fullColor: true
                 primaryColor: Theme.colorSecondary
                 onClicked: screenDeviceBrowser.loadScreen()
                 enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
             }
             ButtonWireframe {
-                text: qsTr("plants")
+                text: qsTr("Plants")
+                Layout.preferredHeight: 45
+                Layout.alignment: Qt.AlignVCenter
+
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: screenPlantBrowser.loadScreenFrom("DeviceList")
             }
             ButtonWireframe {
-                text: qsTr("desease")
+                text: qsTr("Deseases")
+                Layout.preferredHeight: 45
+                Layout.alignment: Qt.AlignVCenter
+
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: desease.open()
