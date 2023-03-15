@@ -707,11 +707,11 @@ Loader {
                                                     anchors.fill: parent
                                                 }
 
-                                                Image {
-                                                    anchors.fill: parent
-                                                    source: image.source
-                                                    fillMode: Image.PreserveAspectCrop
-                                                }
+//                                                Image {
+//                                                    anchors.fill: parent
+//                                                    source: image.source
+//                                                    fillMode: Image.PreserveAspectCrop
+//                                                }
                                             }
                                         }
 
