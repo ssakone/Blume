@@ -385,3 +385,4 @@ ios {
 
 DISTFILES += \
     qml/PlantDesease.qml
+android: include(C:/Users/HP/AppData/Local/Android/Sdk/android_openssl/openssl.pri)
