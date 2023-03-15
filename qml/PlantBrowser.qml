@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Material
 import QtQuick.Layouts
 import QtSensors
 import SortFilterProxyModel
@@ -18,7 +19,6 @@ Loader {
     property string entryPoint: "DeviceList"
 
     ////////////////////////////////////////////////////////////////////////////
-
     function loadScreen() {
         // Load the data
         plantDatabase.load()
@@ -55,7 +55,6 @@ Loader {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     active: false
     asynchronous: true
 
@@ -93,7 +92,8 @@ Loader {
         }
 
         function isPlantClicked() {
-            if (itemPlantViewer.visible) return true
+            if (itemPlantViewer.visible)
+                return true
             return false
         }
 
@@ -120,7 +120,6 @@ Loader {
         }
 
         ////////////////
-
         Item {
             id: itemPlantBrowser
             anchors.fill: parent
@@ -148,7 +147,6 @@ Loader {
                 colorSelectedText: "white"
 
                 //onDisplayTextChanged: plantDatabase.filter(displayText)
-
                 Row {
                     anchors.right: parent.right
                     anchors.rightMargin: 12
@@ -158,7 +156,8 @@ Loader {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
 
-                        text: qsTr("%1 plants").arg(((plantSearchBox.displayText) ? plantDatabase.plantCountFiltered : plantDatabase.plantCount))
+                        text: qsTr("%1 plants").arg(
+                                  ((plantSearchBox.displayText) ? plantDatabase.plantCountFiltered : plantDatabase.plantCount))
                         font.pixelSize: Theme.fontSizeContentSmall
                         color: Theme.colorSubText
                     }
@@ -196,81 +195,62 @@ Loader {
                     id: plantOptionModel
 
                     Component.onCompleted: {
-                        let data = [
-                            {
-
-                                "name": qsTr("Plantes recommandees"),
-                                "icon": "qrc:/assets/icons_custom/thumbs.png",
-                                "image": "",
-                                "action": "",
-                                "style": "darkblue"
-                            },
-                            {
-
-                                "name": qsTr("Identifier la plante"),
-                                "icon": "qrc:/assets/icons_custom/plant_scan.png",
-                                "image": "",
-                                "action": "identify",
-                                "style": "lightenYellow"
-                            },
-                            {
-
-                                "name": qsTr("Posemetre"),
-                                "icon": "qrc:/assets/icons_custom/posometre.svg",
-                                "image": "",
-                                "action": "posometre",
-                                "style": "sunrise"
-                            },
-                            {
-
-                                "name": qsTr("Plante fleuries"),
-                                "icon": "",
-                                "image": "qrc:/assets/img/fleure.jpg",
-                                "action": "",
-                                "style": ""
-                            },
-                            {
-
-                                "name": qsTr("Orchidees"),
-                                "icon": "",
-                                "image": "qrc:/assets/img/orchidee.jpg",
-                                "action": "",
-                                "style": ""
-                            },
-                            {
-
-                                "name": qsTr("Cactus et succulentes"),
-                                "icon": "",
-                                "image": "qrc:/assets/img/cactus.jpg",
-                                "action": "",
-                                "style": ""
-                            },
-                            {
-
-                                "name": qsTr("Legumes"),
-                                "icon": "",
-                                "image": "qrc:/assets/img/legume.jpg",
-                                "action": "",
-                                "style": ""
-                            },
-                            {
-
-                                "name": qsTr("Herbes"),
-                                "icon": "",
-                                "image": "qrc:/assets/img/herbe.jpeg",
-                                "action": "",
-                                "style": ""
-                            },
-                            {
-
-                                "name": qsTr("Plantes a feuillage"),
-                                "icon": "",
-                                "image": "qrc:/assets/img/feuillage.jpg",
-                                "action": "",
-                                "style": ""
-                            }
-                        ]
-                        data.forEach(((plant) => append(plant)))
+                        let data = [{
+                                        "name": qsTr("Plantes recommandees"),
+                                        "icon": "qrc:/assets/icons_custom/thumbs.png",
+                                        "image": "",
+                                        "action": "",
+                                        "style": "darkblue"
+                                    }, {
+                                        "name": qsTr("Identifier la plante"),
+                                        "icon": "qrc:/assets/icons_custom/plant_scan.png",
+                                        "image": "",
+                                        "action": "identify",
+                                        "style": "lightenYellow"
+                                    }, {
+                                        "name": qsTr("Posemetre"),
+                                        "icon": "qrc:/assets/icons_custom/posometre.svg",
+                                        "image": "",
+                                        "action": "posometre",
+                                        "style": "sunrise"
+                                    }, {
+                                        "name": qsTr("Plante fleuries"),
+                                        "icon": "",
+                                        "image": "qrc:/assets/img/fleure.jpg",
+                                        "action": "",
+                                        "style": ""
+                                    }, {
+                                        "name": qsTr("Orchidees"),
+                                        "icon": "",
+                                        "image": "qrc:/assets/img/orchidee.jpg",
+                                        "action": "",
+                                        "style": ""
+                                    }, {
+                                        "name": qsTr("Cactus et succulentes"),
+                                        "icon": "",
+                                        "image": "qrc:/assets/img/cactus.jpg",
+                                        "action": "",
+                                        "style": ""
+                                    }, {
+                                        "name": qsTr("Legumes"),
+                                        "icon": "",
+                                        "image": "qrc:/assets/img/legume.jpg",
+                                        "action": "",
+                                        "style": ""
+                                    }, {
+                                        "name": qsTr("Herbes"),
+                                        "icon": "",
+                                        "image": "qrc:/assets/img/herbe.jpeg",
+                                        "action": "",
+                                        "style": ""
+                                    }, {
+                                        "name": qsTr("Plantes a feuillage"),
+                                        "icon": "",
+                                        "image": "qrc:/assets/img/feuillage.jpg",
+                                        "action": "",
+                                        "style": ""
+                                    }]
+                        data.forEach((plant => append(plant)))
                     }
                 }
 
@@ -291,8 +271,8 @@ Loader {
                 }
 
                 Component.onCompleted: {
-                    plantDatabase.filter('');
-                    plantDatabase.plants.forEach((i) => independant.append(i))
+                    plantDatabase.filter('')
+                    plantDatabase.plants.forEach(i => independant.append(i))
                     console.log(plantFilter.count)
                 }
 
@@ -329,9 +309,9 @@ Loader {
                                         gradient: Gradient {
                                             orientation: Qt.Horizontal
                                             GradientStop {
-                                                position: 0.04;
+                                                position: 0.04
                                                 color: {
-                                                    switch(style) {
+                                                    switch (style) {
                                                     case "darkblue":
                                                         return "#2c718a"
                                                     case "lightenYellow":
@@ -344,9 +324,9 @@ Loader {
                                                 }
                                             }
                                             GradientStop {
-                                                position: 1.00;
+                                                position: 1.00
                                                 color: {
-                                                    switch(style) {
+                                                    switch (style) {
                                                     case "darkblue":
                                                         return "#143e44"
                                                     case "lightenYellow":
@@ -374,18 +354,18 @@ Loader {
                                             source: image
                                             anchors.fill: parent
                                             layer.enabled: true
-                                                layer.effect: OpacityMask {
-                                                    maskSource: Item {
-                                                        width: img.width
-                                                        height: img.height
-                                                        Rectangle {
-                                                            anchors.centerIn: parent
-                                                            width: img.adapt ? img.width : Math.min(img.width, img.height)
-                                                            height: img.adapt ? img.height : width
-                                                            radius: 10
-                                                        }
+                                            layer.effect: OpacityMask {
+                                                maskSource: Item {
+                                                    width: img.width
+                                                    height: img.height
+                                                    Rectangle {
+                                                        anchors.centerIn: parent
+                                                        width: img.adapt ? img.width : Math.min(img.width, img.height)
+                                                        height: img.adapt ? img.height : width
+                                                        radius: 10
                                                     }
                                                 }
+                                            }
                                         }
                                         MouseArea {
                                             id: mArea
@@ -395,8 +375,7 @@ Loader {
                                             onClicked: {
                                                 if (action === "posometre") {
                                                     posometrePop.open()
-                                                }
-                                                else if (action === "identify") {
+                                                } else if (action === "identify") {
                                                     identifierPop.open()
                                                 }
                                             }
@@ -433,7 +412,7 @@ Loader {
                                 width: ListView.view.width
                                 height: 40
 
-                                color: (index % 2) ? Theme.colorForeground :Theme.colorBackground
+                                color: (index % 2) ? Theme.colorForeground : Theme.colorBackground
 
                                 Row {
                                     anchors.left: parent.left
@@ -513,7 +492,7 @@ Loader {
                     id: alsV
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: {
-                        switch (als.reading.lightLevel){
+                        switch (als.reading.lightLevel) {
                         case 0:
                             return "Niveau inconnue"
                         case 1:
@@ -547,10 +526,10 @@ Loader {
             parent: appWindow.contentItem
             padding: 0
 
-
             ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: 0
+                spacing: 0
                 Rectangle {
                     color: "#00c395"
                     Layout.preferredHeight: 65
@@ -586,7 +565,11 @@ Loader {
                                 }
                             }
 
-                            Behavior on opacity { OpacityAnimator { duration: 333 } }
+                            Behavior on opacity {
+                                OpacityAnimator {
+                                    duration: 333
+                                }
+                            }
                         }
                         Label {
                             text: identifierLayoutView.currentIndex === 0 ? "Identification de plante" : "Resultat"
@@ -601,80 +584,132 @@ Loader {
 
                 StackLayout {
                     id: identifierLayoutView
+                    property bool viewCamera: false
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    Layout.margins: 10
+                    Layout.margins: 0
                     currentIndex: 0
                     Item {
                         ColumnLayout {
                             anchors.fill: parent
-                            spacing: 10
+                            spacing: 0
+                            TabBar {
+                                id: tabBar
+                                topPadding: 0
+                                Material.background: "#00c395"
+                                Material.foreground: Material.color(Material.Grey, Material.Shade50)
+                                Material.accent: Material.color(Material.Grey, Material.Shade50)
+                                Layout.fillWidth: true
+                                TabButton {
+                                    text: "Fichier"
+                                }
+                                TabButton {
+                                    text: "Camera"
+                                }
+                            }
+
                             Item {
                                 id: imgAnalysisSurface
                                 property string savedImagePath: ""
                                 property bool loading: false
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                Rectangle {
+                                Layout.alignment: Qt.AlignHCenter
+                                StackLayout {
+                                    id: tabView
                                     anchors.fill: parent
-                                    border.width: 1
-                                    border.color: '#ccc'
-                                    opacity: .2
-                                }
-                                Column {
-                                    visible: image.source.toString() === ""
-                                    anchors.centerIn: parent
-                                    spacing: 10
-                                    IconSvg {
-                                        width: 64
-                                        height: 64
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        source: "qrc:/assets/icons_custom/plant_scan.png"
-                                        color: 'black'
-                                    }
-                                    Label {
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        width: 140
-                                        wrapMode: Label.Wrap
-                                        font.pixelSize: 16
-                                        horizontalAlignment: Label.AlignHCenter
-                                        text: 'Clickez pour importer une image'
-                                        opacity: .6
-                                    }
-                                }
-
-                                Image {
-                                     id: image
-                                     anchors.fill: parent
-                                     fillMode: Image.PreserveAspectFit
-                                 }
-
-                                Loader {
-                                    id: accessCam
-                                    anchors.fill: parent
-                                    active: identifierPop.visible
-                                    sourceComponent: Item {
-                                        property alias imageCap: imageCapture
-                                        Component.onCompleted: camera.start()
-                                        CaptureSession {
-                                            camera: Camera {
-                                                id: camera
-                                            }
-                                            imageCapture: ImageCapture {
-                                                 id: imageCapture
-                                                 onImageSaved: function (id, path) {
-                                                     image.source = "file://" + path
-                                                     analyserButton.clicked()
-                                                 }
-                                             }
-                                            videoOutput: videoOutput
+                                    currentIndex: tabBar.currentIndex
+                                    onCurrentIndexChanged: {
+                                        if (currentIndex === 0) {
+                                            accessCam.item.accessCam.stop()
+                                            accessCam.active = false
+                                        } else {
+                                            tm.start()
                                         }
+                                    }
 
-                                        VideoOutput {
-                                            id: videoOutput
+                                    Timer {
+                                        id: tm
+                                        interval: 2500
+                                        onTriggered: {
+                                            accessCam.active = true
+                                            accessCam.item.camera.start()
+                                        }
+                                    }
+
+                                    Item {
+                                        Image {
+                                            id: image
                                             anchors.fill: parent
+                                            fillMode: Image.PreserveAspectCrop
                                         }
+                                        Column {
+                                            visible: image.source.toString() === ""
+                                            anchors.centerIn: parent
+                                            spacing: 10
+                                            IconSvg {
+                                                width: 64
+                                                height: 64
+                                                anchors.horizontalCenter: parent.horizontalCenter
+                                                source: "qrc:/assets/icons_custom/plant_scan.png"
+                                                color: 'black'
+                                            }
+                                            Label {
+                                                anchors.horizontalCenter: parent.horizontalCenter
+                                                width: 140
+                                                wrapMode: Label.Wrap
+                                                font.pixelSize: 16
+                                                horizontalAlignment: Label.AlignHCenter
+                                                text: 'Clickez pour importer une image'
+                                                opacity: .6
+                                            }
+                                        }
+                                    }
+
+                                    Loader {
+                                        id: accessCam
+                                        asynchronous: true
+                                        active: false
+                                        Component {
+                                            id: cameraView
+                                            Item {
+                                                property alias camera: cam
+                                                property alias imgCapture: imageCapture
+                                                anchors.fill: accessCam
+                                                Connections {
+                                                    target: tabBar
+                                                    function onCurrentIndexChanged(index) {
+                                                        if (tabBar.currentIndex === 0) {
+                                                            cam.stop()
+                                                        }
+                                                    }
+                                                }
+                                                CaptureSession {
+                                                    camera: Camera {
+                                                        id: cam
+                                                    }
+
+                                                    imageCapture: ImageCapture {
+                                                        id: imageCapture
+                                                        onImageSaved: function (id, path) {
+                                                            image.source = "file://" + path
+                                                            analyserButton.clicked()
+                                                        }
+                                                        onErrorOccurred: function(id, error, message) {
+                                                            console.log(id, error, message)
+                                                        }
+                                                    }
+                                                    videoOutput: tabBar.currentIndex === 1 ? videoOutput : undefined
+                                                }
+
+                                                VideoOutput {
+                                                    id: videoOutput
+                                                    anchors.fill: parent
+                                                }
+                                            }
+                                        }
+
+                                        sourceComponent: cameraView
                                     }
                                 }
 
@@ -683,23 +718,23 @@ Loader {
                                     anchors.centerIn: parent
                                 }
 
-                                 FileDialog {
-                                     id: fileDialog
-                                     nameFilters: ["Image file (*.png *.jpg *.jpeg *.gif)"]
-                                     onAccepted: {
-                                         console.log("OOOO:=> " + fileDialog.currentFile)
-                                        if (Qt.application.os === "windows" || Qt.application.os === "osx" || Qt.application.os === "linux") {
+                                FileDialog {
+                                    id: fileDialog
+                                    nameFilters: ["Image file (*.png *.jpg *.jpeg *.gif)"]
+                                    onAccepted: {
+                                        console.log("OOOO:=> " + fileDialog.currentFile)
+                                        if (Qt.application.os === "windows" || Qt.application.os === "osx"
+                                                || Qt.application.os === "linux") {
                                             image.source = selectedFile
-                                        }
-                                        else {
+                                        } else {
                                             image.source = currentFile
                                         }
-                                     }
-                                 }
-                                 MouseArea {
-                                     anchors.fill: parent
-                                     onClicked: fileDialog.open()
-                                 }
+                                    }
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: fileDialog.open()
+                                }
                             }
 
                             ButtonWireframe {
@@ -708,30 +743,38 @@ Loader {
                                 text: "Analyser"
                                 Layout.preferredWidth: 180
                                 Layout.preferredHeight: 45
-                                visible: image.source.toString() !== ""
+                                visible: image.source.toString() !== "" || accessCam.active
                                 onClicked: {
-                                    imgAnalysisSurface.loading = true
-                                    let data = {
-                                        "images": [
-                                            imgTool.getBase64(image.source.toString().replace(Qt.platform.os === "windows" ? "file:///" : "file://", ""))
-                                        ]
+                                    if (image.source.toString() !== "") {
+                                        imgAnalysisSurface.loading = true
+                                        let data = {
+                                            "images": [imgTool.getBase64(
+                                                    image.source.toString().replace(
+                                                        Qt.platform.os === "windows" ? "file:///" : "file://", ""))]
+                                        }
+                                        plantBrowser.request("POST", "https://plant.id/api/v2/identify",
+                                                             data).then(function (r) {
+                                                                 let datas = JSON.parse(r)
+                                                                 console.log(r)
+                                                                 identifierPop.plant_results = datas
+                                                                 imgAnalysisSurface.loading = false
+                                                                 identifierLayoutView.currentIndex = 1
+                                                                 if (datas.is_plant)
+                                                                     identifedPlantListView.model = datas.suggestions
+                                                                 else
+                                                                     identifedPlantListView.model = []
+                                                             }).catch(function (e) {
+                                                                 imgAnalysisSurface.loading = false
+                                                                 console.log(JSON.stringify(data))
+                                                                 console.log('Erreur', JSON.stringify(e))
+                                                             })
+                                    } else {
+                                        let path = StandardPaths.writableLocation(StandardPaths.PicturesLocation).toString().replace(Qt.application.os === "windows" ? "file:///" : "file://", "")
+                                        let ln = (Math.random() % 10 * 100000).toFixed(0)
+                                        let filePath = path + "/" + ln + '.jpg'
+                                        imgAnalysisSurface.savedImagePath = filePath
+                                        accessCam.item.imgCapture.captureToFile(filePath)
                                     }
-                                    plantBrowser.request("POST", "https://plant.id/api/v2/identify", data).then(function (r) {
-                                        let datas = JSON.parse(r)
-                                        console.log(r)
-                                        identifierPop.plant_results = datas
-                                        imgAnalysisSurface.loading = false
-                                        identifierLayoutView.currentIndex = 1
-                                        if (datas.is_plant)
-                                            identifedPlantListView.model = datas.suggestions
-                                        else
-                                            identifedPlantListView.model = []
-
-                                    }).catch(function (e) {
-                                        imgAnalysisSurface.loading = false
-                                        console.log(JSON.stringify(data))
-                                        console.log('Erreur',JSON.stringify(e))
-                                    })
                                 }
                             }
                             Image2Base64 {
@@ -739,33 +782,21 @@ Loader {
                             }
 
                             RowLayout {
+                                visible: false
                                 Layout.alignment: Qt.AlignHCenter
                                 spacing: 10
                                 ButtonWireframe {
-                                    text: "Camera"
-                                    Layout.preferredHeight: 45
-                                    onClicked: {
-                                        console.log(StandardPaths.writableLocation(StandardPaths.PicturesLocation))
-                                        let path = StandardPaths.writableLocation(StandardPaths.PicturesLocation).toString().replace(Qt.application.os === "windows" ? "file:///" : "file://", "")
-                                        let ln = (Math.random() % 10 * 100000).toFixed(0)
-                                        let filePath = path + "/" + ln + '.jpg'
-                                        imgAnalysisSurface.savedImagePath = filePath
-                                        accessCam.item.imageCap.captureToFile(filePath)
-                                    }
-                                }
-                                ButtonWireframe {
-                                    text: "Ouvrir"
+                                    text: "Fichier"
                                     Layout.fillWidth: true
                                     Layout.preferredHeight: 45
                                     height: 45
-                                    onClicked: fileDialog.open()
+                                    onClicked: tabView.currentIndex = 1 //fileDialog.open()
                                 }
-                                ButtonWireframe {
-                                    Layout.alignment: Qt.AlignHCenter
-                                    text: "Fermer"
-                                    Layout.preferredHeight: 45
-                                    onClicked: identifierPop.close()
-                                }
+                            }
+
+                            Item {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
                             }
                         }
                     }
@@ -788,7 +819,8 @@ Loader {
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     verticalAlignment: Qt.AlignVCenter
                                     visible: identifierPop.plant_results?.is_plant
-                                    text: "Plante a <b><font color='green'>%2%</font></b>".arg((identifierPop.plant_results?.is_plant_probability * 100).toFixed(0))
+                                    text: "Plante a <b><font color='green'>%2%</font></b>".arg(
+                                              (identifierPop.plant_results?.is_plant_probability * 100).toFixed(0))
                                 }
                                 Label {
                                     font.pixelSize: 28
@@ -816,19 +848,18 @@ Loader {
                                     height: width
                                     Label {
                                         anchors.centerIn: parent
-                                        text: "%1%".arg((modelData["probability"]*100).toFixed(0))
+                                        text: "%1%".arg((modelData["probability"] * 100).toFixed(0))
                                         color: "white"
                                         font.weight: Font.Bold
                                     }
                                 }
-                                onClicked:  {
+                                onClicked: {
                                     plantDatabase.filter(modelData["plant_details"]["scientific_name"])
-                                    let ps = plantDatabase.plantsFiltered.filter(function (p){
+                                    let ps = plantDatabase.plantsFiltered.filter(function (p) {
                                         if (p.name.indexOf(modelData["plant_details"]["scientific_name"]) !== -1)
                                             return p
                                     })
-                                    if (ps.length > 0)
-                                    {
+                                    if (ps.length > 0) {
                                         plantScreen.currentPlant = ps[0]
                                         identifierPop.close()
 
@@ -848,7 +879,6 @@ Loader {
         }
 
         ////////////////////////////////////////////////////////////////////
-
         Flickable {
             id: itemPlantViewer
             anchors.fill: parent
@@ -865,7 +895,9 @@ Loader {
             contentHeight: (uiMode === 1) ? plantScreen.height : -1
 
             boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
-            ScrollBar.vertical: ScrollBar { visible: false }
+            ScrollBar.vertical: ScrollBar {
+                visible: false
+            }
 
             function setPlant() {
                 plantScreen.currentPlant = currentDevice.plant
@@ -882,7 +914,6 @@ Loader {
         }
 
         ////////////////////////////////////////////////////////////////////
-
         Rectangle {
             id: plantSelector_desktop
             anchors.top: parent.top
@@ -893,10 +924,8 @@ Loader {
             height: 52
             color: headerUnicolor ? Theme.colorBackground : Theme.colorForeground
 
-            visible: (!singleColumn &&
-                      appContent.state === "PlantBrowser" &&
-                      screenPlantBrowser.entryPoint === "DevicePlantSensor" &&
-                      isPlantClicked())
+            visible: (!singleColumn && appContent.state === "PlantBrowser"
+                      && screenPlantBrowser.entryPoint === "DevicePlantSensor" && isPlantClicked())
 
             Text {
                 anchors.left: parent.left
@@ -928,8 +957,8 @@ Loader {
                     source: "qrc:/assets/icons_material/baseline-check_circle-24px.svg"
 
                     onClicked: {
-                         selectedDevice.setPlantName(plantScreen.currentPlant.name)
-                         appContent.state = "DevicePlantSensor"
+                        selectedDevice.setPlantName(plantScreen.currentPlant.name)
+                        appContent.state = "DevicePlantSensor"
                     }
                 }
                 ButtonWireframe {
@@ -960,7 +989,6 @@ Loader {
         }
 
         ////////
-
         Rectangle {
             id: plantSelector_mobile
             anchors.left: parent.left
@@ -970,10 +998,8 @@ Loader {
             z: 5
             height: 52
             color: Theme.colorForeground
-            visible: (singleColumn &&
-                      appContent.state === "PlantBrowser" &&
-                      screenPlantBrowser.entryPoint === "DevicePlantSensor" &&
-                      isPlantClicked())
+            visible: (singleColumn && appContent.state === "PlantBrowser"
+                      && screenPlantBrowser.entryPoint === "DevicePlantSensor" && isPlantClicked())
 
             RowLayout {
                 anchors.left: parent.left
@@ -996,8 +1022,8 @@ Loader {
                     source: "qrc:/assets/icons_material/baseline-check_circle-24px.svg"
 
                     onClicked: {
-                         selectedDevice.setPlantName(plantScreen.currentPlant.name)
-                         appContent.state = "DevicePlantSensor"
+                        selectedDevice.setPlantName(plantScreen.currentPlant.name)
+                        appContent.state = "DevicePlantSensor"
                     }
                 }
                 ButtonWireframe {
@@ -1015,7 +1041,6 @@ Loader {
                 }
             }
         }
-
 
         ////////////////////////////////////////////////////////////////////
     }
@@ -1044,7 +1069,7 @@ Loader {
                     reject(r)
                 }
             }
-            xhr.onerror = function() {
+            xhr.onerror = function () {
                 let r = {
                     "status": xhr.status,
                     "statusText": 'NO CONNECTION, ' + xhr.statusText + xhr.responseText
@@ -1082,4 +1107,3 @@ Loader {
         return fetch(query)
     }
 }
-

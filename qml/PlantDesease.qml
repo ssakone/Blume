@@ -124,6 +124,8 @@ Popup {
                         Image {
                             id: image
                             anchors.fill: parent
+                            smooth: false
+                            antialiasing: false
                             fillMode: Image.PreserveAspectFit
                         }
 
@@ -222,8 +224,6 @@ Popup {
                             Layout.preferredHeight: 45
                             Layout.alignment: Qt.AlignVCenter
                             onClicked: {
-                                console.log(StandardPaths.writableLocation(
-                                                StandardPaths.PicturesLocation))
                                 let path = StandardPaths.writableLocation(
                                         StandardPaths.PicturesLocation).toString(
                                         ).replace(
@@ -270,7 +270,7 @@ Popup {
                             horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
-                            visible: desease.analyseResults?.is_plant
+                            visible: desease.analyseResults?.is_plant  ?? false
                             text: "Plante en bonne sante <b><font color='%1'>%2</font></b>".arg(
                                       desease.analyseResults?.health_assessment.is_healthy_probability > 0.8 ? "green" : "red").arg(
                                       desease.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "Oui" : "Non")
