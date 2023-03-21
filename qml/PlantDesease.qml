@@ -28,6 +28,8 @@ Popup {
     onClosed:  {
         if (accessCam.active)
             accessCam.active = false
+        tabView.currentIndex = 0
+        tabBar.currentIndex = 0
     }
 
     ColumnLayout {
