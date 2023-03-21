@@ -25,6 +25,11 @@ Popup {
     parent: appWindow.contentItem
     padding: 0
 
+    onClosed:  {
+        if (accessCam.active)
+            accessCam.active = false
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 0
@@ -92,6 +97,16 @@ Popup {
             Layout.fillHeight: true
             Layout.margins: 0
             currentIndex: 0
+            onCurrentIndexChanged: {
+                if (currentIndex != 1) {
+                    if (accessCam.active)
+                    {
+                        tabView.currentIndex = 0
+                        tabBar.currentIndex = 0
+                        accessCam.active = false
+                    }
+                }
+            }
             Item {
 
                 Column {
@@ -182,7 +197,7 @@ Popup {
 
                             Timer {
                                 id: tm
-                                interval: 1000
+                                interval: 500
                                 onTriggered: {
                                     accessCam.active = true
                                     if (accessCam.status === Loader.Ready) {

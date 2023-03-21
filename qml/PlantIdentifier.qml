@@ -24,6 +24,12 @@ Popup {
     height: appWindow.height
     parent: appWindow.contentItem
     padding: 0
+    onClosed:  {
+        if (accessCam.active)
+            accessCam.active = false
+        tabBar.currentIndex = 0
+        identifierLayoutView.currentIndex
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -88,6 +94,15 @@ Popup {
             Layout.fillHeight: true
             Layout.margins: 0
             currentIndex: 0
+            onCurrentIndexChanged: {
+                if (accessCam.active)
+                {
+                    tabView.currentIndex = 0
+                    tabBar.currentIndex = 0
+                    accessCam.active = false
+                }
+            }
+
             Item {
                 ColumnLayout {
                     anchors.fill: parent
