@@ -1,0 +1,45 @@
+# File auto generated with CMake qt_generate_qmldir. Run CMake to regenerate if files changed.
+
+module qml.components_generic
+
+ActionMenuItem 1.0 ActionMenuItem.qml
+ActionMenu_bottom 1.0 ActionMenu_bottom.qml
+ActionMenu_floating 1.0 ActionMenu_floating.qml
+AndroidButton 1.0 AndroidButton.qml
+AndroidButtonIcon 1.0 AndroidButtonIcon.qml
+AndroidTextField 1.0 AndroidTextField.qml
+ButtonCompactable 1.0 ButtonCompactable.qml
+ButtonImage 1.0 ButtonImage.qml
+ButtonText 1.0 ButtonText.qml
+ButtonWireframe 1.0 ButtonWireframe.qml
+ButtonWireframeIcon 1.0 ButtonWireframeIcon.qml
+ButtonWireframeIconCentered 1.0 ButtonWireframeIconCentered.qml
+CsdLinux 1.0 CsdLinux.qml
+CsdMac 1.0 CsdMac.qml
+CsdWindows 1.0 CsdWindows.qml
+DataBarCompact 1.0 DataBarCompact.qml
+DataBarSolid 1.0 DataBarSolid.qml
+DatePicker6 1.0 DatePicker6.qml
+DesktopHeaderItem 1.0 DesktopHeaderItem.qml
+DesktopSidebarItem 1.0 DesktopSidebarItem.qml
+IconSvg 1.0 IconSvg.qml
+ItemBadge 1.0 ItemBadge.qml
+ItemTag 1.0 ItemTag.qml
+ItemTagButton 1.0 ItemTagButton.qml
+MiddleSliderArrow 1.0 MiddleSliderArrow.qml
+MobileMenuItem_horizontal 1.0 MobileMenuItem_horizontal.qml
+MobileMenuItem_vertical 1.0 MobileMenuItem_vertical.qml
+ProgressArc 1.0 ProgressArc.qml
+ProgressCircle 1.0 ProgressCircle.qml
+RangeSliderArrow 1.0 RangeSliderArrow.qml
+RangeSliderValue 1.0 RangeSliderValue.qml
+RangeSliderValueSolid 1.0 RangeSliderValueSolid.qml
+RoundButtonIcon 1.0 RoundButtonIcon.qml
+RoundButtonText 1.0 RoundButtonText.qml
+SelectorMenu 1.0 SelectorMenu.qml
+SelectorMenuItem 1.0 SelectorMenuItem.qml
+SimpleShadow6 1.0 SimpleShadow6.qml
+SliderArrow 1.0 SliderArrow.qml
+SliderValueSolid 1.0 SliderValueSolid.qml
+SwipeArea 1.0 SwipeArea.qml
+ToolTipFlat 1.0 ToolTipFlat.qml
