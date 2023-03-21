@@ -123,7 +123,8 @@ RESOURCES   += qml/qml.qrc \
                i18n/i18n.qrc \
                assets/assets.qrc \
                assets/devices.qrc \
-               assets/plants.qrc
+               assets/plants.qrc \
+               blume.qrc
 
 OTHER_FILES += README.md \
                deploy_linux.sh \
@@ -384,5 +385,7 @@ ios {
 }
 
 DISTFILES += \
-    qml/PlantDesease.qml
+    qml/PlantDesease.qml \
+    qml/PlantIdentifier.qml \
+    qml/PosometreDialog.qml
 android: include(C:/Users/HP/AppData/Local/Android/Sdk/android_openssl/openssl.pri)
