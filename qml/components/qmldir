@@ -11,6 +11,7 @@ ChartPlantDataAio 1.0 ChartPlantDataAio.qml
 ChartThermometerMinMax 1.0 ChartThermometerMinMax.qml
 ChartThermometerMinMaxBar 1.0 ChartThermometerMinMaxBar.qml
 singleton Icons 1.0 Icons.qml
+singleton Http 1.0 Http.qml
 IndicatorsCompact 1.0 IndicatorsCompact.qml
 IndicatorsSolid 1.0 IndicatorsSolid.qml
 ItemBannerSync 1.0 ItemBannerSync.qml
