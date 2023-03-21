@@ -25,10 +25,7 @@ Popup {
     parent: appWindow.contentItem
     padding: 0
     onClosed:  {
-        if (accessCam.active)
-            accessCam.active = false
         tabBar.currentIndex = 0
-        identifierLayoutView.currentIndex
     }
 
     ColumnLayout {
