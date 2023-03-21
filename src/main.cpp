@@ -183,12 +183,16 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "ThemeEngine", 1, 0, "Theme");
     qmlRegisterType<Image2Base64>("ImageTools", 1, 0, "Image2Base64");
 
+    qmlRegisterSingletonType(QUrl("qrc:/qml/components/Icons.qml"), "MaterialIcons", 1, 0, "MaterialIcons");
+
+
     MobileUI::registerQML();
     DeviceUtils::registerQML();
     JournalUtils::registerQML();
 
     // Then we start the UI
     QQmlApplicationEngine engine;
+    engine.addImportPath("qrc:/qml/");
     QQmlContext *engine_context = engine.rootContext();
 
     engine_context->setContextProperty("deviceManager", dm);
