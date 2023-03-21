@@ -61,5 +61,10 @@
         <file alias="ItemNoJournal.qml">components/ItemNoJournal.qml</file>
         <file alias="SectionTitle.qml">components/SectionTitle.qml</file>
         <file>PlantDesease.qml</file>
+        <file>PlantIdentifier.qml</file>
+        <file>PosometreDialog.qml</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>PosometreDialog.qml</file>
     </qresource>
 </RCC>
