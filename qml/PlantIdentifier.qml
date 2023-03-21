@@ -61,7 +61,11 @@ Popup {
                         onClicked: {
                             if (identifierLayoutView.currentIndex === 0) {
                                 identifierPop.close()
-                            } else {
+                            } else if (identifierLayoutView.currentIndex === 1) {
+                                tabBar.currentIndex = 0
+                                identifierLayoutView.currentIndex = 0
+                            }
+                            else {
                                 identifierLayoutView.currentIndex--
                             }
                         }
@@ -94,10 +98,9 @@ Popup {
             onCurrentIndexChanged: {
                 if (accessCam.active)
                 {
-                    tabView.currentIndex = 0
-                    tabBar.currentIndex = 0
                     accessCam.active = false
                 }
+                tabBar.currentIndex = 0
             }
 
             Item {
