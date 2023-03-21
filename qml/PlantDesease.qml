@@ -1,27 +1,34 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Material
 import QtQuick.Layouts
-import QtQuick.Dialogs
-import QtSensors
 import SortFilterProxyModel
 import QtMultimedia
+import QtQuick.Dialogs
 import ImageTools
 import Qt.labs.platform
 
+import Qt5Compat.GraphicalEffects
+
 import ThemeEngine 1.0
 
+import MaterialIcons
+import "components"
+
 Popup {
-    id: desease
+    id: planteDeseasePopup
+    dim: true
+    modal: true
     property variant analyseResults
     width: appWindow.width
     height: appWindow.height
     parent: appWindow.contentItem
     padding: 0
 
-    onClosed: camera.stop()
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 0
+        spacing: 0
         Rectangle {
             color: "#00c395"
             Layout.preferredHeight: 65
@@ -50,8 +57,12 @@ Popup {
                         anchors.fill: parent
                         onClicked: {
                             if (identifierLayoutView.currentIndex === 0) {
-                                desease.close()
-                            } else {
+                                planteDeseasePopup.close()
+                            } else if (identifierLayoutView.currentIndex === 3) {
+                                identifierLayoutView.currentIndex = 0
+                            }
+
+                            else {
                                 identifierLayoutView.currentIndex--
                             }
                         }
@@ -64,7 +75,7 @@ Popup {
                     }
                 }
                 Label {
-                    text: identifierLayoutView.currentIndex === 0 ? "Etat de la plante" : "Resultat"
+                    text: identifierLayoutView.currentIndex === 0 ? "Plant Desease" : identifierLayoutView.currentIndex === 1 ? "Analyse de plante" :  "Resultat"
                     font.pixelSize: 21
                     font.bold: true
                     font.weight: Font.Medium
@@ -76,86 +87,220 @@ Popup {
 
         StackLayout {
             id: identifierLayoutView
-            Layout.fillHeight: true
+            property bool viewCamera: false
             Layout.fillWidth: true
-            Layout.margins: 10
+            Layout.fillHeight: true
+            Layout.margins: 0
             currentIndex: 0
             Item {
+
+                Column {
+                    width: parent.width - 10
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    topPadding: 20
+                    spacing: 20
+                    Image {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: 112
+                        height: 112
+                        opacity: .4
+                        source: Icons.palmTree
+                    }
+
+                    ColumnLayout {
+                        width: parent.width / 2
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        spacing: 5
+                        NiceButton {
+                            text: "Analyser une plantes"
+                            Layout.preferredHeight: 60
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignHCenter
+                            Layout.maximumWidth: 300
+                            icon.source: Icons.magnify
+                            onClicked: {
+                                identifierLayoutView.currentIndex++
+                            }
+                        }
+                        NiceButton {
+                            text: "Encyclopedie des maladies"
+                            icon.source: Icons.tree
+                            Layout.alignment: Qt.AlignHCenter
+                            Layout.preferredHeight: 60
+                            Layout.fillWidth: true
+                            Layout.maximumWidth: 300
+                            onClicked: identifierLayoutView.currentIndex = 3
+                        }
+                    }
+                }
+
+            }
+
+            Item {
                 ColumnLayout {
-                    anchors.centerIn: parent
                     anchors.fill: parent
-                    spacing: 10
+                    spacing: 2
+                    TabBar {
+                        id: tabBar
+                        topPadding: 0
+                        visible: identifierLayoutView.currentIndex !== 0
+                        Material.background: "#00c395"
+                        Material.foreground: Material.color(Material.Grey, Material.Shade50)
+                        Material.accent: Material.color(Material.Grey, Material.Shade50)
+                        Layout.fillWidth: true
+                        TabButton {
+                            text: "Fichier"
+                            onClicked: tabView.currentIndex = 0
+                        }
+                        TabButton {
+                            text: "Camera"
+                            onClicked: tabView.currentIndex = 1
+                        }
+                        onCurrentIndexChanged: {
+                            image.source = ""
+                        }
+                    }
 
                     Item {
                         id: imgAnalysisSurface
                         property string savedImagePath: ""
                         property bool loading: false
-                        Layout.fillWidth: true
                         Layout.fillHeight: true
-                        Rectangle {
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignHCenter
+                        StackLayout {
+                            id: tabView
                             anchors.fill: parent
-                            border.width: 1
-                            border.color: '#ccc'
-                            opacity: .3
-                        }
-                        Column {
-                            visible: image.source.toString() === ""
-                            anchors.centerIn: parent
-                            spacing: 10
-                            IconSvg {
-                                width: 64
-                                height: 64
-                                anchors.horizontalCenter: parent.horizontalCenter
+                            onCurrentIndexChanged: {
+                                if (currentIndex === 1) {
+                                    tm.start()
 
-                                source: "qrc:/assets/icons_custom/plant_scan.png"
-                                color: 'black'
+                                } else {
+                                    accessCam.active = false
+                                }
                             }
-                            Label {
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                width: 140
-                                wrapMode: Label.Wrap
-                                font.pixelSize: 16
-                                horizontalAlignment: Label.AlignHCenter
-                                text: 'Clickez pour importer une image'
-                                opacity: .6
-                            }
-                        }
 
-                        Image {
-                            id: image
-                            anchors.fill: parent
-                            smooth: false
-                            antialiasing: false
-                            fillMode: Image.PreserveAspectFit
-                        }
-
-                        Loader {
-                            id: cameraLoader
-                            anchors.fill: parent
-                            active: desease.visible
-                            sourceComponent: Item {
-                                property alias imgCapture: imageCapture
-                                anchors.fill: parent
-                                Component.onCompleted: camera.start()
-                                CaptureSession {
-                                    camera: Camera {
-                                        id: camera
+                            Timer {
+                                id: tm
+                                interval: 1000
+                                onTriggered: {
+                                    accessCam.active = true
+                                    if (accessCam.status === Loader.Ready) {
+                                        accessCam.item.camera.start()
+                                    } else {
+                                        start()
                                     }
-                                    imageCapture: ImageCapture {
-                                        id: imageCapture
-                                        onImageSaved: function (id, path) {
-                                            console.log(path)
-                                            image.source = "file://" + path
-                                            analyserButton.clicked()
+                                }
+                            }
+
+                            Item {
+                                Image {
+                                    id: image
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                }
+                                Column {
+                                    visible: image.source.toString() === ""
+                                    anchors.centerIn: parent
+                                    spacing: 10
+                                    IconSvg {
+                                        width: 64
+                                        height: 64
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        source: Icons.fileDocument
+                                        opacity: .5
+                                        color: 'black'
+                                    }
+                                    Label {
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        width: 140
+                                        wrapMode: Label.Wrap
+                                        font.pixelSize: 16
+                                        horizontalAlignment: Label.AlignHCenter
+                                        text: 'Clickez pour importer une image'
+                                        opacity: .6
+                                    }
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: fileDialog.open()
+                                }
+                            }
+
+                            Loader {
+                                id: accessCam
+                                asynchronous: true
+                                active: false
+
+                                Component {
+                                    id: cameraView
+                                    Item {
+                                        id: control
+                                        property alias camera: cam
+                                        property alias imgCapture: imageCapture
+                                        property alias image_view: image2
+                                        anchors.fill: accessCam
+                                        Connections {
+                                            target: tabBar
+                                            function onCurrentIndexChanged(index) {
+                                                if (tabBar.currentIndex !== 1) {
+                                                    cam.stop()
+                                                }
+                                            }
+                                        }
+                                        CaptureSession {
+                                            camera: Camera {
+                                                id: cam
+                                            }
+
+                                            imageCapture: ImageCapture {
+                                                id: imageCapture
+                                                onImageSaved: function (id, path) {
+                                                    image.source = "file://" + path
+                                                    image2.source = "file://" + path
+                                                    image2.visible = true
+                                                    analyserButton.clicked()
+                                                }
+                                                onErrorOccurred: function(id, error, message) {
+                                                    console.log(id, error, message)
+                                                }
+                                            }
+                                            videoOutput: tabView.currentIndex === 1 ? videoOutput : null
+                                        }
+
+                                        Rectangle {
+                                            width: (parent.width / 2) + 40
+                                            height: width
+                                            radius: width / 3
+                                            y: 20
+                                            anchors.horizontalCenter: parent.horizontalCenter
+                                            border.color: "#00c395"
+                                            border.width: 6
+                                            ClipRRect {
+                                                anchors.fill: parent
+                                                anchors.margins: 5
+                                                radius: parent.radius
+                                                VideoOutput {
+                                                    id: videoOutput
+                                                    width: control.width
+                                                    height: width
+                                                    anchors.centerIn: parent
+                                                }
+                                                Image {
+                                                    id: image2
+                                                    visible: false
+                                                    width: control.width / 2
+                                                    height: width
+                                                    anchors.centerIn: parent
+                                                    source: image.source
+                                                    fillMode: Image.PreserveAspectCrop
+                                                }
+                                            }
                                         }
                                     }
-                                    videoOutput: videoOutput
                                 }
 
-                                VideoOutput {
-                                    id: videoOutput
-                                    anchors.fill: parent
-                                }
+                                sourceComponent: cameraView
                             }
                         }
 
@@ -167,88 +312,110 @@ Popup {
                         FileDialog {
                             id: fileDialog
                             nameFilters: ["Image file (*.png *.jpg *.jpeg *.gif)"]
-                            onAccepted: image.source = selectedFile
+                            onAccepted: {
+                                if (Qt.application.os === "windows" || Qt.application.os === "osx"
+                                        || Qt.application.os === "linux") {
+                                    image.source = selectedFile
+                                } else {
+                                    image.source = currentFile
+                                }
+                            }
+                        }
+                    }
+
+
+                    RowLayout {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 60
+                        Layout.rightMargin: 10
+                        Layout.leftMargin: 10
+
+                        Item {
+                            Layout.fillWidth: true
                         }
 
-                        MouseArea {
-                            anchors.fill: parent
+                        NiceButton {
+                            id: control
+                            Layout.preferredHeight: 60
+                            Layout.preferredWidth: 120
+                            Layout.alignment: Qt.AlignHCenter
+                            visible: tabView.currentIndex === 0
+                            icon.source: Icons.imageArea
+                            text: "Ouvrir"
                             onClicked: fileDialog.open()
                         }
-                    }
 
-                    ButtonWireframe {
-                        id: analyserButton
-                        Layout.alignment: Qt.AlignHCenter
-                        text: "Analyser"
-                        Layout.preferredWidth: 180
-                        Layout.preferredHeight: 45
-                        visible: image.source.toString() !== ""
-                        onClicked: {
-                            imgAnalysisSurface.loading = true
-                            console.log("Image URL ", image.source.toString())
-                            let data = {
-                                "images": [imgTool.getBase64(
-                                        image.source.toString().replace(
-                                            Qt.platform.os === "windows" ? "file:///" : "file://",
-                                            ""))]
+                        NiceButton {
+                            text: "Nouveau"
+                            Layout.preferredHeight: 60
+                            Layout.preferredWidth: 120
+                            visible: tabView.currentIndex === 1 && accessCam.item?.image_view.visible === true
+                            height: 45
+                            onClicked: {
+                                if (accessCam.item.image_view.visible) {
+                                    accessCam.item.image_view.visible = false
+                                } else {
+                                    analyserButton.clicked()
+                                }
                             }
-                            request("POST",
-                                    "https://plant.id/api/v2/health_assessment",
-                                    data).then(function (r) {
-                                        let datas = JSON.parse(r)
-                                        console.log(r)
-                                        desease.analyseResults = datas
-                                        imgAnalysisSurface.loading = false
-                                        identifierLayoutView.currentIndex = 1
-                                        if (datas.is_plant) {
-                                            identifedPlantListView.model
-                                                    = datas.health_assessment.diseases
-                                        } else {
-                                            identifedPlantListView.model = []
-                                        }
-                                    }).catch(function (e) {
-                                        imgAnalysisSurface.loading = false
-                                        console.log(JSON.stringify(e))
-                                    })
+                        }
+
+                        NiceButton {
+                            id: analyserButton
+                            Layout.alignment: Qt.AlignHCenter
+                            text: "Analyser"
+                            icon.source: Icons.magnify
+                            Layout.preferredWidth: 180
+                            Layout.preferredHeight: 60
+                            visible: image.source.toString() !== "" || accessCam.active
+                            onClicked: {
+                                if (image.source.toString() !== "") {
+                                    imgAnalysisSurface.loading = true
+                                    let data = {
+                                        "images": [imgTool.getBase64(
+                                                image.source.toString().replace(
+                                                    Qt.platform.os === "windows" ? "file:///" : "file://", ""))]
+                                    }
+                                    request("POST",
+                                            "https://plant.id/api/v2/health_assessment",
+                                            data).then(function (r) {
+                                                let datas = JSON.parse(r)
+                                                console.log(r)
+                                                planteDeseasePopup.analyseResults = datas
+                                                imgAnalysisSurface.loading = false
+                                                identifierLayoutView.currentIndex = 2
+                                                if (datas.is_plant) {
+                                                    identifedPlantListView.model
+                                                            = datas.health_assessment.diseases
+                                                } else {
+                                                    identifedPlantListView.model = []
+                                                }
+                                            }).catch(function (e) {
+                                                imgAnalysisSurface.loading = false
+                                                console.log(JSON.stringify(e))
+                                            })
+                                } else {
+                                    let path = StandardPaths.writableLocation(StandardPaths.PicturesLocation).toString().replace(Qt.application.os === "windows" ? "file:///" : "file://", "")
+                                    let ln = (Math.random() % 10 * 100000).toFixed(0)
+                                    let filePath = path + "/" + ln + '.jpg'
+                                    imgAnalysisSurface.savedImagePath = filePath
+                                    accessCam.item.imgCapture.captureToFile(filePath)
+                                }
+                            }
+                        }
+                        Item {
+                            Layout.fillWidth: true
+
                         }
                     }
+
                     Image2Base64 {
                         id: imgTool
                     }
 
-                    RowLayout {
-                        Layout.alignment: Qt.AlignHCenter
-                        spacing: 10
-                        ButtonWireframe {
-                            text: "Camera"
-                            Layout.preferredHeight: 45
-                            Layout.alignment: Qt.AlignVCenter
-                            onClicked: {
-                                let path = StandardPaths.writableLocation(
-                                        StandardPaths.PicturesLocation).toString(
-                                        ).replace(
-                                        Qt.application.os === "windows" ? "file:///" : "file://",
-                                        "")
-                                let ln = (Math.random(
-                                              ) % 10 * 100000).toFixed(0)
-                                let filePath = path + "/" + ln + '.jpg'
-                                imgAnalysisSurface.savedImagePath = filePath
-                                 cameraLoader.item.imgCapture.captureToFile(filePath)
-                            }
-                        }
-                        ButtonWireframe {
-                            text: "Charger une image"
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 45
-                            Layout.alignment: Qt.AlignVCenter
-                            onClicked: fileDialog.open()
-                        }
-                        ButtonWireframe {
-                            text: "Fermer"
-                            Layout.preferredHeight: 45
-                            Layout.alignment: Qt.AlignVCenter
-                            onClicked: desease.close()
-                        }
+                    Item {
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
                     }
                 }
             }
@@ -270,10 +437,10 @@ Popup {
                             horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
-                            visible: desease.analyseResults?.is_plant  ?? false
+                            visible: planteDeseasePopup.analyseResults?.is_plant  ?? false
                             text: "Plante en bonne sante <b><font color='%1'>%2</font></b>".arg(
-                                      desease.analyseResults?.health_assessment.is_healthy_probability > 0.8 ? "green" : "red").arg(
-                                      desease.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "Oui" : "Non")
+                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.8 ? "green" : "red").arg(
+                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "Oui" : "Non")
                         }
                         Label {
                             font.pixelSize: 28
@@ -311,9 +478,27 @@ Popup {
                     }
                 }
             }
+            Item {
+                ListView {
+                    id: lView
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    model: 10
+                    delegate: Rectangle {
+                        height: 50
+                        width: lView.width
+                        color: index % 2 === 0 ? Qt.darker("gray", .55) : "white"
+                        Label {
+                            anchors.verticalCenter: parent.verticalCenter
+                            x: 10
+                            font.pixelSize: 14
+                            text: "Maladie " + index
+                        }
+                    }
+                }
+            }
         }
     }
-
     function fetch(opts) {
         return new Promise(function (resolve, reject) {
             var xhr = new XMLHttpRequest()
@@ -342,7 +527,7 @@ Popup {
             xhr.onerror = function () {
                 let r = {
                     "status": xhr.status,
-                    "statusText": 'NO CONNECTION, ' + xhr.statusText
+                    "statusText": 'NO CONNECTION, ' + xhr.statusText + xhr.responseText
                 }
                 reject(r)
             }
