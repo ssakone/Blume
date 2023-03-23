@@ -9,6 +9,8 @@ import QtQuick.Dialogs
 import ImageTools
 import Qt.labs.platform
 
+import "components" as Components
+
 import Qt5Compat.GraphicalEffects
 
 import ThemeEngine 1.0
@@ -131,12 +133,23 @@ Loader {
                 color: Theme.colorBackground
             }
 
+            Image {
+                y: 20
+                x: 16
+                source: Components.Icons.close
+                visible: plantListView.visible
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: plantListView.close()
+                }
+            }
+
             TextFieldThemed {
                 id: plantSearchBox
                 anchors.top: parent.top
                 anchors.topMargin: 14
                 anchors.left: parent.left
-                anchors.leftMargin: 12
+                anchors.leftMargin: plantListView.visible ? 52 : 12
                 anchors.right: parent.right
                 anchors.rightMargin: 12
 
@@ -182,6 +195,10 @@ Loader {
                         source: "qrc:/assets/icons_material/baseline-search-24px.svg"
                         color: Theme.colorText
                     }
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: plantListView.open()
                 }
             }
 
@@ -268,12 +285,6 @@ Loader {
 
                 ListModel {
                     id: independant
-                }
-
-                Component.onCompleted: {
-                    plantDatabase.filter('')
-                    plantDatabase.plants.forEach(i => independant.append(i))
-                    console.log(plantFilter.count)
                 }
 
                 Flickable {
@@ -398,66 +409,84 @@ Loader {
                             }
                         }
 
-                        ListView {
-                            id: plantList
-                            topMargin: 0
-                            bottomMargin: 12
-                            spacing: 0
-                            interactive: false
-                            width: parent.width
-                            height: count * 40
 
-                            model: plantFilter
-                            delegate: Rectangle {
-                                width: ListView.view.width
-                                height: 40
+                    }
+                }
+            }
+        }
 
-                                color: (index % 2) ? Theme.colorForeground : Theme.colorBackground
+        Popup {
+            id: plantListView
+            width: parent.width
+            height: parent.height - 40
+            y: 70
 
-                                Row {
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 16
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    spacing: 16
+            onOpened: {
+                plantDatabase.filter('')
+                plantDatabase.plants.forEach(i => independant.append(i))
+            }
 
-                                    Text {
-                                        text: model.name
-                                        color: Theme.colorText
-                                        fontSizeMode: Text.Fit
-                                        font.pixelSize: Theme.fontSizeContent
-                                        minimumPixelSize: Theme.fontSizeContentSmall
-                                    }
-                                    Text {
-                                        visible: model.nameCommon
-                                        text: "« " + model.nameCommon + " »"
-                                        color: Theme.colorSubText
-                                        fontSizeMode: Text.Fit
-                                        font.pixelSize: Theme.fontSizeContent
-                                        minimumPixelSize: Theme.fontSizeContentSmall
-                                    }
-                                }
+            background: Rectangle {
+                radius: 18
+                opacity: .95
+            }
 
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        plantScreen.currentPlant = model
-                                        plantSearchBox.focus = false
+            closePolicy: Popup.NoAutoClose
+            ListView {
+                id: plantList
+                topMargin: 0
+                bottomMargin: 32
+                spacing: 0
+                clip: true
+                anchors.fill: parent
+                model: plantFilter
+                delegate: Rectangle {
+                    width: ListView.view.width
+                    height: 40
 
-                                        itemPlantBrowser.visible = false
-                                        itemPlantBrowser.enabled = false
-                                        itemPlantViewer.visible = true
-                                        itemPlantViewer.enabled = true
-                                        itemPlantViewer.contentX = 0
-                                        itemPlantViewer.contentY = 0
-                                    }
-                                }
-                            }
+                    color: (index % 2) ? Theme.colorForeground : Theme.colorBackground
 
-                            ItemNoPlants {
-                                visible: (plantList.count <= 0)
-                            }
+                    Row {
+                        anchors.left: parent.left
+                        anchors.leftMargin: 16
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 16
+
+                        Text {
+                            text: model.name
+                            color: Theme.colorText
+                            fontSizeMode: Text.Fit
+                            font.pixelSize: Theme.fontSizeContent
+                            minimumPixelSize: Theme.fontSizeContentSmall
+                        }
+                        Text {
+                            visible: model.nameCommon
+                            text: "« " + model.nameCommon + " »"
+                            color: Theme.colorSubText
+                            fontSizeMode: Text.Fit
+                            font.pixelSize: Theme.fontSizeContent
+                            minimumPixelSize: Theme.fontSizeContentSmall
                         }
                     }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            plantScreen.currentPlant = model
+                            plantSearchBox.focus = false
+
+                            itemPlantBrowser.visible = false
+                            itemPlantBrowser.enabled = false
+                            itemPlantViewer.visible = true
+                            itemPlantViewer.enabled = true
+                            itemPlantViewer.contentX = 0
+                            itemPlantViewer.contentY = 0
+                        }
+                    }
+                }
+
+                ItemNoPlants {
+                    visible: (plantList.count <= 0)
                 }
             }
         }
