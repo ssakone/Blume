@@ -36,6 +36,7 @@
         <file alias="PopupCalibration.qml">popups/PopupCalibration.qml</file>
         <file alias="PopupDate.qml">popups/PopupDate.qml</file>
         <file alias="PopupDeleteData.qml">popups/PopupDeleteData.qml</file>
+        <file alias="PopupLocationNotification.qml">popups/PopupLocationNotification.qml</file>
         <file alias="PopupDeleteDevice.qml">popups/PopupDeleteDevice.qml</file>
         <file alias="ActionMenuFixed.qml">components/ActionMenuFixed.qml</file>
         <file alias="AirQualityIndicator.qml">components/AirQualityIndicator.qml</file>
@@ -63,6 +64,7 @@
         <file>PlantDesease.qml</file>
         <file>PlantIdentifier.qml</file>
         <file>PosometreDialog.qml</file>
+        <file>popups/PopupLocationNotification.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>
