@@ -50,7 +50,8 @@ Item {
 
     function checkStatus() {
         if (!utilsApp.checkMobileBleLocationPermission()) {
-            utilsApp.getMobileBleLocationPermission()
+            popupLocationNotification.open()
+            // utilsApp.getMobileBleLocationPermission()
         }
 
         if (deviceManager.hasDevices) {
@@ -120,6 +121,11 @@ Item {
 
     PopupDeleteDevice {
         id: confirmDeleteDevice
+        onConfirmed: removeSelectedDevice()
+    }
+
+    PopupLocationNotification {
+        id: popupLocationNotification
         onConfirmed: removeSelectedDevice()
     }
 
