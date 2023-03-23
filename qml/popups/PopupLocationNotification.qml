@@ -45,7 +45,7 @@ Popup {
             Text {
                 width: parent.width
 
-                text: qsTr("Blume utilise la location pour identifier les capteurs aux alentours, et mettre les informations des plantes à jour même quand l'application est fermée.", "", screenDeviceList.selectionCount)
+                text: qsTr("Blume utilise la localisation pour identifier les capteurs aux alentours, et mettre les informations des plantes à jour même quand l'application est fermée.", "", screenDeviceList.selectionCount)
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContentVeryBig
                 color: Theme.colorText
@@ -55,7 +55,7 @@ Popup {
             Text {
                 width: parent.width
 
-                text: qsTr("Cela nécessaire pour accéder à l'application", "", screenDeviceList.selectionCount)
+                text: qsTr("Cela est nécessaire pour accéder à l'application", "", screenDeviceList.selectionCount)
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorSubText
@@ -64,7 +64,7 @@ Popup {
             Text {
                 width: parent.width
 
-                text: qsTr("Votre position n'est ni communiquée ni stockée à des tiers.", "", screenDeviceList.selectionCount)
+                text: qsTr("Votre position n'est ni stockée ni communiquée à des tiers.", "", screenDeviceList.selectionCount)
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorSubText
