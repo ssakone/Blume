@@ -198,7 +198,10 @@ Loader {
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: plantListView.open()
+                    onClicked: {
+                        plantListView.open()
+                        plantSearchBox.forceActiveFocus()
+                    }
                 }
             }
 
@@ -481,6 +484,7 @@ Loader {
                             itemPlantViewer.enabled = true
                             itemPlantViewer.contentX = 0
                             itemPlantViewer.contentY = 0
+                            plantListView.close()
                         }
                     }
                 }
