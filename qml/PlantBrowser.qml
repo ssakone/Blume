@@ -160,6 +160,14 @@ Loader {
                 colorSelectedText: "white"
 
                 //onDisplayTextChanged: plantDatabase.filter(displayText)
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        plantListView.open()
+                        plantSearchBox.forceActiveFocus()
+                    }
+                }
                 Row {
                     anchors.right: parent.right
                     anchors.rightMargin: 12
@@ -194,13 +202,6 @@ Loader {
 
                         source: "qrc:/assets/icons_material/baseline-search-24px.svg"
                         color: Theme.colorText
-                    }
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        plantListView.open()
-                        plantSearchBox.forceActiveFocus()
                     }
                 }
             }
