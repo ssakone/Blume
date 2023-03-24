@@ -456,7 +456,7 @@ Popup {
                             verticalAlignment: Qt.AlignVCenter
                             visible: planteDeseasePopup.analyseResults?.is_plant  ?? false
                             text: "Plante en bonne sante <b><font color='%1'>%2</font></b>".arg(
-                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.8 ? "green" : "red").arg(
+                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "green" : "red").arg(
                                       planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "Oui" : "Non")
                         }
                         Label {
