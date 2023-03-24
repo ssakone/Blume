@@ -7386,5 +7386,8 @@
         <file>icons/svg/zodiac-scorpio.svg</file>
         <file>icons/svg/zodiac-taurus.svg</file>
         <file>icons/svg/zodiac-virgo.svg</file>
+        <file>tutorial/api-identity.svg</file>
+        <file>tutorial/api-health-status.svg</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>
