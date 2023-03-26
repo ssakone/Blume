@@ -168,6 +168,7 @@ Loader {
                         plantSearchBox.forceActiveFocus()
                     }
                 }
+
                 Row {
                     anchors.right: parent.right
                     anchors.rightMargin: 12

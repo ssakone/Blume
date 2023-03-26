@@ -6,7 +6,7 @@ DEFINES+= APP_VERSION=\\\"$$VERSION\\\"
 
 CONFIG += c++17
 QT     += core bluetooth sql
-QT     += qml quick quickcontrols2 svg widgets charts
+QT     += qml quick quickcontrols2 svg widgets charts multimedia
 
 # Validate Qt version
 !versionAtLeast(QT_VERSION, 6.3) : error("You need at least Qt version 6.3 for $${TARGET}")
