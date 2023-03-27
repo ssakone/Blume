@@ -37,9 +37,9 @@ Popup {
         id: indicator_model
         ListElement { level: 5; l_color: "red"; label: "Ensolleilé" }
         ListElement { level: 4; l_color: "yellow"; label: "Très lumineux"  }
-        ListElement { level: 3; l_color: "blue"; label: "Lumineux"  }
-        ListElement { level: 2; l_color: "gray"; label: "Peu sombre"  }
-        ListElement { level: 1; l_color: "maroon"; label: "Sombre" }
+        ListElement { level: 3; l_color: "orange"; label: "Lumineux"  }
+        ListElement { level: 2; l_color: "white"; label: "Peu sombre"  }
+        ListElement { level: 1; l_color: "gray"; label: "Sombre" }
         ListElement { level: 0; l_color: "black"; label: "Très sombre"  }
     }
 
