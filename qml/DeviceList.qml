@@ -332,32 +332,22 @@ Item {
 
     Loader {
         anchors.right: parent.right
-        anchors.rightMargin: 12
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 12
 
-//        active: isDesktop
         asynchronous: true
 
         sourceComponent: RowLayout {
-            spacing: 12
+            spacing: 0
             Layout.alignment: Qt.AlignHCenter
 
-            ButtonWireframe {
-                text: qsTr("Devices")
-                Layout.preferredHeight: 45
-                Layout.alignment: Qt.AlignVCenter
 
-                fullColor: true
-                primaryColor: Theme.colorSecondary
-                onClicked: screenDeviceBrowser.loadScreen()
-                enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
-            }
             ButtonWireframe {
                 text: qsTr("Plants")
                 Layout.preferredHeight: 45
                 Layout.alignment: Qt.AlignVCenter
+                Layout.preferredWidth: screenDeviceList.width / 3
 
+                componentRadius: 0
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: screenPlantBrowser.loadScreenFrom("DeviceList")
@@ -366,10 +356,25 @@ Item {
                 text: qsTr("Deseases")
                 Layout.preferredHeight: 45
                 Layout.alignment: Qt.AlignVCenter
+                Layout.preferredWidth: screenDeviceList.width / 3
 
+                componentRadius: 0
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: desease.open()
+            }
+            ButtonWireframe {
+                text: qsTr("Devices")
+                Layout.preferredHeight: 45
+                Layout.alignment: Qt.AlignVCenter
+                Layout.fillWidth: true
+                Layout.preferredWidth: screenDeviceList.width / 3
+
+                componentRadius: 0
+                fullColor: true
+                primaryColor: Theme.colorPrimary
+                onClicked: screenDeviceBrowser.loadScreen()
+                enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
             }
         }
     }
