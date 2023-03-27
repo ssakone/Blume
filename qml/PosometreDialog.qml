@@ -24,7 +24,6 @@ Popup {
     onClosed: als.stop()
 
     property variant sensor: als.reading
-    property int indicator_total_levels: 6
     property int indicator_height: 35 //(width / indicator_total_levels) - 100
     property int indicator_width: 100
 
@@ -38,9 +37,8 @@ Popup {
         ListElement { level: 5; l_color: "red"; label: "Ensolleilé" }
         ListElement { level: 4; l_color: "yellow"; label: "Très lumineux"  }
         ListElement { level: 3; l_color: "orange"; label: "Lumineux"  }
-        ListElement { level: 2; l_color: "white"; label: "Peu sombre"  }
+        ListElement { level: 2; l_color: "white"; label: "Normal"  }
         ListElement { level: 1; l_color: "gray"; label: "Sombre" }
-        ListElement { level: 0; l_color: "black"; label: "Très sombre"  }
     }
 
     ColumnLayout {
@@ -97,7 +95,7 @@ Popup {
                     Rectangle {
 
                         id: indicatorLevel
-                        height: (indicatorRect.height / indicator_model.count) + 1 // To clip because of radius on parent Rectangle
+                        height: Math.min((indicatorRect.height / indicator_model.count), 50) + 1 // To clip because of radius on parent Rectangle
                         width: indicator_width + 50 // To ensure overflow_x
                         Layout.fillWidth: true
                         color: (sensor != null && level <= sensor.lightLevel) ? l_color : Qt.rgba(0, 0, 0, 0)
