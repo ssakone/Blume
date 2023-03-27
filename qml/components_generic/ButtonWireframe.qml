@@ -32,6 +32,9 @@ T.Button {
     // animation
     property bool hoverAnimation: isDesktop
 
+    // radius
+    property int componentRadius: Theme.componentRadius
+
     ////////////////////////////////////////////////////////////////////////////
 
     MouseArea {
@@ -71,7 +74,7 @@ T.Button {
         implicitWidth: 80
         implicitHeight: Theme.componentHeight
 
-        radius: Theme.componentRadius
+        radius: componentRadius
         opacity: enabled ? (control.down && !control.hoverAnimation ? 0.8 : 1.0) : 0.4
         color: control.fullColor ? control.primaryColor : control.secondaryColor
         border.width: Theme.componentBorderWidth
