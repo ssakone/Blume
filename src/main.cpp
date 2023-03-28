@@ -36,6 +36,10 @@
 #include "utils_os_macosdock.h"
 #endif
 
+#if defined(Q_OS_IOS)
+#include "imagepicker.h"
+#endif
+
 #include <MobileUI/MobileUI.h>
 #include <MobileSharing/MobileSharing.h>
 #include <SingleApplication/SingleApplication.h>
@@ -204,7 +208,11 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("utilsLanguage", utilsLanguage);
     engine_context->setContextProperty("utilsScreen", utilsScreen);
     engine_context->setContextProperty("startMinimized", (start_minimized || sm->getMinimized()));
-
+#if defined(Q_OS_IOS)
+    qmlRegisterType<ImagePicker>("ImagePicker", 1, 0, "ImagePicker");
+#else
+    qmlRegisterType<Image2Base64>("ImagePicker", 1, 0, "ImagePicker");
+#endif
     // Load the main view
 #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS) || defined(FORCE_MOBILE_UI)
     ShareUtils *utilsShare = new ShareUtils();
