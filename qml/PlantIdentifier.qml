@@ -6,6 +6,7 @@ import SortFilterProxyModel
 import QtMultimedia
 import QtQuick.Dialogs
 import ImageTools
+import ImagePicker
 import Qt.labs.platform
 
 import Qt5Compat.GraphicalEffects
@@ -34,48 +35,30 @@ Popup {
         spacing: 0
         Rectangle {
             color: "#00c395"
-            Layout.preferredHeight: 65
+            Layout.preferredHeight: Qt.platform.os == 'ios' ? 90 : 65
             Layout.fillWidth: true
-            Row {
+            RowLayout {
+                width: parent.width
+                anchors.verticalCenterOffset: Qt.platform.os == 'ios' ? 20 : 0
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 10
-                Rectangle {
+                AppBarButton {
                     id: buttonBackBg
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 65
-                    height: 65
-                    radius: height
-                    color: "transparent" //Theme.colorHeaderHighlight
-                    opacity: 1
-                    IconSvg {
-                        id: buttonBack
-                        width: 24
-                        height: width
-                        anchors.centerIn: parent
-
-                        source: "qrc:/assets/menus/menu_back.svg"
-                        color: Theme.colorHeaderContent
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            if (identifierLayoutView.currentIndex === 0) {
-                                identifierPop.close()
-                            } else if (identifierLayoutView.currentIndex === 1) {
-                                tabBar.currentIndex = 0
-                                identifierLayoutView.currentIndex = 0
-                            }
-                            else {
-                                identifierLayoutView.currentIndex--
-                            }
+                    icon: "qrc:/assets/menus/menu_back.svg"
+                    onClicked: {
+                        if (identifierLayoutView.currentIndex === 0) {
+                            identifierPop.close()
+                        } else if (identifierLayoutView.currentIndex === 1) {
+                            tabBar.currentIndex = 0
+                            identifierLayoutView.currentIndex = 0
+                        }
+                        else {
+                            identifierLayoutView.currentIndex--
                         }
                     }
-
-                    Behavior on opacity {
-                        OpacityAnimator {
-                            duration: 333
-                        }
-                    }
+                    Layout.preferredHeight: 64
+                    Layout.preferredWidth: 64
+                    Layout.alignment: Qt.AlignVCenter
                 }
                 Label {
                     text: identifierLayoutView.currentIndex === 0 ? "Identification de plante" : "Resultat"
@@ -83,7 +66,16 @@ Popup {
                     font.bold: true
                     font.weight: Font.Medium
                     color: "white"
-                    anchors.verticalCenter: parent.verticalCenter
+                    Layout.alignment: Qt.AlignVCenter
+                    Layout.fillWidth: true
+                }
+                AppBarButton {
+                    icon:  Icons.camera
+                    visible: Qt.platform.os == 'ios'
+                    onClicked: imgPicker.openCamera()
+                    Layout.preferredHeight: 64
+                    Layout.preferredWidth: 64
+                    Layout.alignment: Qt.AlignVCenter
                 }
             }
         }
@@ -114,11 +106,13 @@ Popup {
                         Material.foreground: Material.color(Material.Grey, Material.Shade50)
                         Material.accent: Material.color(Material.Grey, Material.Shade50)
                         Layout.fillWidth: true
+                        visible:  Qt.platform.os !== 'ios'
                         TabButton {
                             text: "Fichier"
                         }
                         TabButton {
                             text: "Camera"
+                            visible: Qt.platform.os !== 'ios'
                         }
                         onCurrentIndexChanged: {
                             image.source = ""
@@ -187,7 +181,13 @@ Popup {
                                 }
                                 MouseArea {
                                     anchors.fill: parent
-                                    onClicked: fileDialog.open()
+                                    onClicked: {
+                                        if (Qt.platform.os === 'ios') {
+                                            imgPicker.openPicker()
+                                        } else {
+                                            fileDialog.open()
+                                        }
+                                    }
                                 }
                             }
 
@@ -225,8 +225,11 @@ Popup {
                                                     image2.visible = true
                                                     analyserButton.clicked()
                                                 }
+                                                onImageCaptured: function (id, path) {
+                                                    image2.source = imageCapture.preview
+                                                }
+
                                                 onErrorOccurred: function(id, error, message) {
-                                                    console.log(id, error, message)
                                                 }
                                             }
                                             videoOutput: tabBar.currentIndex === 1 ? videoOutput : null
@@ -246,7 +249,7 @@ Popup {
                                                 radius: parent.radius
                                                 VideoOutput {
                                                     id: videoOutput
-                                                    width: control.width
+                                                    width: control.width + 50
                                                     height: width
                                                     anchors.centerIn: parent
                                                 }
@@ -261,11 +264,8 @@ Popup {
                                                 }
                                             }
                                         }
-
-
                                     }
                                 }
-
                                 sourceComponent: cameraView
                             }
                         }
@@ -294,22 +294,47 @@ Popup {
                         Layout.fillWidth: true
                         Layout.preferredHeight: 60
                         Layout.rightMargin: 10
-                        Layout.leftMargin: 10
+                        Layout.leftMargin: 5
 
                         Item {
                             Layout.fillWidth: true
                         }
 
-                        NiceButton {
-                            id: control
-                            Layout.preferredHeight: 60
-                            Layout.preferredWidth: 120
-                            Layout.alignment: Qt.AlignHCenter
-                            visible: tabBar.currentIndex === 0
-                            icon.source: Icons.imageArea
-                            text: "Ouvrir"
-                            onClicked: fileDialog.open()
+                        ImagePicker {
+                            id: imgPicker
+                            onCapturedImage: function (path) {
+                                image.source = "file://" + path
+                            }
                         }
+
+//                        NiceButton {
+//                            Layout.preferredHeight: 60
+//                            Layout.preferredWidth: 120
+//                            Layout.alignment: Qt.AlignHCenter
+//                            visible: tabView.currentIndex === 0 && Qt.platform.os == 'ios'
+//                            icon.source: Icons.imageArea
+//                            text: "Gallery"
+//                            onClicked: {
+//                                if (Qt.platform.os === 'ios') {
+//                                    imgPicker.openPicker()
+//                                } else {
+//                                    fileDialog.open()
+//                                }
+//                            }
+//                        }
+
+//                        NiceButton {
+//                            id: control
+//                            Layout.preferredHeight: 60
+//                            Layout.preferredWidth: 120
+//                            Layout.alignment: Qt.AlignHCenter
+//                            visible: tabBar.currentIndex === 0 && Qt.platform.os !== 'ios'
+//                            icon.source: Icons.imageArea
+//                            text: "Ouvrir"
+//                            onClicked: {
+//                                fileDialog.open()
+//                            }
+//                        }
 
                         NiceButton {
                             text: "Nouveau"
@@ -331,7 +356,7 @@ Popup {
                             Layout.alignment: Qt.AlignHCenter
                             text: "Analyser"
                             icon.source: Icons.magnify
-                            Layout.preferredWidth: 180
+                            Layout.preferredWidth: Qt.platform.os === 'ios' ? 120 : 180
                             Layout.preferredHeight: 60
                             visible: image.source.toString() !== "" || accessCam.active
                             onClicked: {
