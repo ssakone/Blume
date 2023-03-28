@@ -16,57 +16,148 @@ import ThemeEngine 1.0
 Popup {
     id: posometrePop
     width: parent.width - 20
-    height: width
+    height: width + 50
     anchors.centerIn: parent
     dim: true
     modal: true
     onOpened: als.start()
     onClosed: als.stop()
-    Column {
-        anchors.centerIn: parent
+
+    property variant sensor: als.reading
+    property int indicator_height: 35 //(width / indicator_total_levels) - 100
+    property int indicator_width: 100
+
+    background: Rectangle {
+        color: Theme.colorPrimary
+        radius: 20
+    }
+
+    ListModel {
+        id: indicator_model
+        ListElement { level: 5; l_color: "red"; label: "Ensolleilé" }
+        ListElement { level: 4; l_color: "yellow"; label: "Très lumineux"  }
+        ListElement { level: 3; l_color: "orange"; label: "Lumineux"  }
+        ListElement { level: 2; l_color: "white"; label: "Normal"  }
+        ListElement { level: 1; l_color: "gray"; label: "Sombre" }
+    }
+
+    ColumnLayout {
+        anchors.fill: parent
         spacing: 20
-        IconSvg {
-            width: 64
-            height: 64
-            anchors.horizontalCenter: parent.horizontalCenter
 
-            source: "qrc:/assets/icons_custom/posometre.svg"
-            color: 'black'
-        }
-
-        Label {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: "Posometre"
-            font.weight: Font.Medium
-        }
-        Label {
-            id: alsV
-            anchors.horizontalCenter: parent.horizontalCenter
-            wrapMode: Label.Wrap
-            width: parent.width - 20
-            horizontalAlignment: Label.AlignHCenter
-            text: {
-                if (als.reading != null){
-                    switch (als.reading.lightLevel) {
-                        case 0:
-                            return "Niveau inconnue"
-                        case 1:
-                            return "Sombre"
-                        case 2:
-                            return "Peu Sombre"
-                        case 3:
-                            return "Lumineux"
-                        case 4:
-                            return "Tres lumineux"
-                        case 5:
-                            return "Ensolleille"
-                    }
-                }
-                return "Information sensor indisponible"
+        Column {
+            Layout.alignment: Qt.AlignHCenter
+            IconSvg {
+                width: 64
+                height: 64
+                source: "qrc:/assets/icons_custom/posometre.svg"
+                color: 'black'
             }
 
-            font.pixelSize: 44
+            Label {
+                text: "Posometre"
+                font.weight: Font.Medium
+            }
+
         }
+
+
+
+        Rectangle {
+            id: indicatorRect
+
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignHCenter
+
+            color: Qt.rgba(0, 0, 0, 0)
+            radius: 20
+            clip: true
+
+            ListView {
+                id: indicatorBar
+                Layout.fillHeight: true
+                height: parent.height + 20
+                model: indicator_model
+
+                delegate: RowLayout {
+                    required property string label
+                    required property int level
+                    required property color l_color
+
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth: true
+
+                    Item {
+                        width: 20
+                        Layout.fillWidth: true
+                    }
+                    Rectangle {
+
+                        id: indicatorLevel
+                        height: Math.min((indicatorRect.height / indicator_model.count), 50) + 1 // To clip because of radius on parent Rectangle
+                        width: indicator_width + 50 // To ensure overflow_x
+                        Layout.fillWidth: true
+                        color: (sensor != null && level <= sensor.lightLevel) ? l_color : Qt.rgba(0, 0, 0, 0)
+                        radius: 5
+
+                        Rectangle {
+                            height: 1
+                            width: parent.width
+                            color: "white"
+                            Layout.alignment: Qt.AlignBottom
+                        }
+
+                    }
+                    Item {
+                        width: 10
+                        Layout.fillWidth: true
+                    }
+
+                    Text {
+                        text: label
+                        color: "white"
+                        Layout.alignment: Qt.AlignVCenter
+                        Layout.fillWidth: true
+                    }
+                }
+            }
+
+        }
+
+
+
+
+
+//        Label {
+//            id: alsV
+//            anchors.horizontalCenter: parent.horizontalCenter
+//            wrapMode: Label.WordWrap
+////            width: parent.width - 20
+//            horizontalAlignment: Label.AlignHCenter
+//            text: {
+//                if (als.reading != null){
+//                    console.log(JSON.stringify(als.reading))
+//                    switch (als.reading.lightLevel) {
+//                        case 0:
+//                            return "Niveau inconnue"
+//                        case 1:
+//                            return "Sombre"
+//                        case 2:
+//                            return "Peu Sombre"
+//                        case 3:
+//                            return "Lumineux"
+//                        case 4:
+//                            return "Tres lumineux"
+//                        case 5:
+//                            return "Ensolleille"
+//                    }
+//                }
+//                return "Information sensor indisponible"
+//            }
+
+//            font.pixelSize: 44
+//        }
         AmbientLightSensor {
             id: als
         }
