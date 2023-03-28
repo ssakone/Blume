@@ -216,7 +216,7 @@ linux:!android {
 
 macx {
     # Bundle name
-    QMAKE_TARGET_BUNDLE_PREFIX = com.emeric
+    QMAKE_TARGET_BUNDLE_PREFIX = com.mahoutech
     QMAKE_BUNDLE = Blume
 
     # OS icons
@@ -356,12 +356,17 @@ android {
 ios {
     #QMAKE_IOS_DEPLOYMENT_TARGET = 11.0
     #message("QMAKE_IOS_DEPLOYMENT_TARGET: $$QMAKE_IOS_DEPLOYMENT_TARGET")
+    HEADERS += src/imagepicker.h
 
     CONFIG += no_autoqmake
 
     # Bundle name
-    QMAKE_TARGET_BUNDLE_PREFIX = com.emeric.ios
+    QMAKE_TARGET_BUNDLE_PREFIX = com.mahoutech
     QMAKE_BUNDLE = Blume
+
+    ENTITLEMENTS.name = CODE_SIGN_ENTITLEMENTS
+    ENTITLEMENTS.value = $${PWD}/assets/ios/$$lower($${TARGET}).entitlements
+    QMAKE_MAC_XCODE_SETTINGS += ENTITLEMENTS
 
     # OS infos
     QMAKE_INFO_PLIST = $${PWD}/assets/ios/Info.plist
@@ -375,6 +380,7 @@ ios {
     AppLaunchScreen.files += $${PWD}/assets/ios/AppLaunchScreen.storyboard
     QMAKE_BUNDLE_DATA += AppLaunchScreen
 
+
     # iOS developer settings
     exists($${PWD}/assets/ios/ios_signature.pri) {
         # Must contain values for:
@@ -382,6 +388,9 @@ ios {
         # QMAKE_PROVISIONING_PROFILE
         include($${PWD}/assets/ios/ios_signature.pri)
     }
+    OBJECTIVE_SOURCES += src/imagepicker.mm
+    LIBS += -framework UIKit
+    LIBS += -framework MobileCoreServices
 }
 
 DISTFILES += \
