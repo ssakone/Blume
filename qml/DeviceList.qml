@@ -343,7 +343,7 @@ Item {
 
             ButtonWireframe {
                 text: qsTr("Plants")
-                Layout.preferredHeight: 45
+                Layout.preferredHeight: 65
                 Layout.alignment: Qt.AlignVCenter
                 Layout.preferredWidth: screenDeviceList.width / 3
 
@@ -354,7 +354,7 @@ Item {
             }
             ButtonWireframe {
                 text: qsTr("Deseases")
-                Layout.preferredHeight: 45
+                Layout.preferredHeight: 65
                 Layout.alignment: Qt.AlignVCenter
                 Layout.preferredWidth: screenDeviceList.width / 3
 
@@ -365,7 +365,7 @@ Item {
             }
             ButtonWireframe {
                 text: qsTr("Devices")
-                Layout.preferredHeight: 45
+                Layout.preferredHeight: 65
                 Layout.alignment: Qt.AlignVCenter
                 Layout.fillWidth: true
                 Layout.preferredWidth: screenDeviceList.width / 3
