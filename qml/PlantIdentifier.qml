@@ -28,6 +28,10 @@ Popup {
         tabBar.currentIndex = 0
     }
 
+    PlantIdentifierDetails {
+        id: resultIdentifierDetailPopup
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 0
@@ -340,12 +344,14 @@ Popup {
                                     let data = {
                                         "images": [imgTool.getBase64(
                                                 image.source.toString().replace(
-                                                    Qt.platform.os === "windows" ? "file:///" : "file://", ""))]
+                                                    Qt.platform.os === "windows" ? "file:///" : "file://", ""))],
+                                        "modifiers": ["crops_fast", "similar_images"],
+                                        "plant_details": ["common_names", "taxonomy", "url", "wiki_description", "wiki_image", "wiki_images", "edible_parts", "propagation_methods"]
                                     }
                                     request("POST", "https://plant.id/api/v2/identify",
                                                          data).then(function (r) {
                                                              let datas = JSON.parse(r)
-                                                             console.log(r)
+//                                                             console.log(r)
                                                              identifierPop.plant_results = datas
                                                              imgAnalysisSurface.loading = false
                                                              identifierLayoutView.currentIndex = 1
@@ -407,15 +413,14 @@ Popup {
                         padding: 10
                         spacing: 3
                         Label {
-                            font.pixelSize: 28
+                            font.pixelSize: 18
                             width: 300
                             wrapMode: Label.Wrap
                             horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
                             visible: identifierPop.plant_results?.is_plant ?? false
-                            text: "Plante a <b><font color='green'>%2%</font></b>".arg(
-                                      (identifierPop.plant_results?.is_plant_probability * 100).toFixed(0))
+                            text: "Un de ces résultats devrait correspondre à vos recherches"
                         }
                         Label {
                             font.pixelSize: 28
@@ -430,41 +435,63 @@ Popup {
                     }
 
                     delegate: ItemDelegate {
-                        text: modelData["plant_name"]
-                        height: 60
+                        required property int index
+                        required property variant modelData
+
+                        Column {
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.leftMargin: 10
+                            spacing: 10
+                            Label {
+                                text: modelData["plant_name"]
+                                font.pixelSize: 16
+                            }
+                            Label {
+                                text: modelData["plant_details"]["common_names"][0]
+                            }
+                        }
+
+                        height: 100
                         width: identifedPlantListView.width
+
+
                         Rectangle {
                             anchors.right: parent.right
                             anchors.rightMargin: 10
                             anchors.verticalCenter: parent.verticalCenter
                             color: "teal"
-                            radius: width / 2
-                            width: 50
+                            radius: 20
+                            width: 80
                             height: width
-                            Label {
-                                anchors.centerIn: parent
-                                text: "%1%".arg((modelData["probability"] * 100).toFixed(0))
-                                color: "white"
-                                font.weight: Font.Bold
+                            clip: true
+                            Image {
+                                source: modelData["plant_details"]["wiki_image"]["value"]
+                                height: parent.height
+                                width: parent.width
                             }
                         }
-                        onClicked: {
-                            plantDatabase.filter(modelData["plant_details"]["scientific_name"])
-                            let ps = plantDatabase.plantsFiltered.filter(function (p) {
-                                if (p.name.indexOf(modelData["plant_details"]["scientific_name"]) !== -1)
-                                    return p
-                            })
-                            if (ps.length > 0) {
-                                plantScreen.currentPlant = ps[0]
-                                identifierPop.close()
 
-                                itemPlantBrowser.visible = false
-                                itemPlantBrowser.enabled = false
-                                itemPlantViewer.visible = true
-                                itemPlantViewer.enabled = true
-                                itemPlantViewer.contentX = 0
-                                itemPlantViewer.contentY = 0
-                            }
+                        onClicked: {
+//                                identifierPop.close()
+                            resultIdentifierDetailPopup.plant_data = modelData
+                                resultIdentifierDetailPopup.open()
+//                            plantDatabase.filter(modelData["plant_details"]["scientific_name"])
+//                            let ps = plantDatabase.plantsFiltered.filter(function (p) {
+//                                if (p.name.indexOf(modelData["plant_details"]["scientific_name"]) !== -1)
+//                                    return p
+//                            })
+//                            if (ps.length > 0) {
+//                                plantScreen.currentPlant = ps[0]
+//                                identifierPop.close()
+
+//                                itemPlantBrowser.visible = false
+//                                itemPlantBrowser.enabled = false
+//                                itemPlantViewer.visible = true
+//                                itemPlantViewer.enabled = true
+//                                itemPlantViewer.contentX = 0
+//                                itemPlantViewer.contentY = 0
+//                            }
                         }
                     }
                 }
