@@ -32,6 +32,10 @@ Popup {
         tabBar.currentIndex = 0
     }
 
+    PlantDeseaseDetails {
+        id: resultDeseaseDetailPopup
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 0
@@ -391,16 +395,19 @@ Popup {
                                     let data = {
                                         "images": [imgTool.getBase64(
                                                 image.source.toString().replace(
-                                                    Qt.platform.os === "windows" ? "file:///" : "file://", ""))]
+                                                    Qt.platform.os === "windows" ? "file:///" : "file://", ""))],
+                                        "disease_details": ["cause", "treatment", "common_names", "classification", "description", "url" ],
+                                        "language": "fr",
                                     }
                                     request("POST",
                                             "https://plant.id/api/v2/health_assessment",
                                             data).then(function (r) {
                                                 let datas = JSON.parse(r)
-                                                console.log(r)
+//                                                console.log(r)
                                                 planteDeseasePopup.analyseResults = datas
                                                 imgAnalysisSurface.loading = false
                                                 identifierLayoutView.currentIndex = 2
+                                                console.log(datas.health_assessment.diseases[0]['similar_images'])
                                                 if (datas.is_plant && planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability < 0.7 ) {
                                                     identifedPlantListView.model
                                                             = datas.health_assessment.diseases
@@ -505,6 +512,10 @@ Popup {
                                 color: "white"
                                 font.weight: Font.Bold
                             }
+                        }
+                        onClicked: {
+                            resultDeseaseDetailPopup.desease_data = modelData
+                            resultDeseaseDetailPopup.open()
                         }
                     }
                 }
