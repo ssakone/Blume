@@ -99,7 +99,7 @@ Popup {
             clip: true
             Image {
                 source: details['wiki_image']['value']
-                fillMode: Image.PreserveAspectFit
+                fillMode: Image.PreserveAspectCrop
             }
         }
 
