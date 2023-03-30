@@ -339,6 +339,11 @@ android {
     # Bundle name
     QMAKE_TARGET_BUNDLE_PREFIX = com.emeric
     QMAKE_BUNDLE = Blume
+    SOURCES +=  src/android_tools/QAndroidAppPermissions.cpp \
+                src/android_tools/QtAndroidTools.cpp
+
+    HEADERS +=  src/android_tools/QAndroidAppPermissions.h \
+                src/android_tools/QtAndroidTools.h
 
     OTHER_FILES += $${PWD}/assets/android/src/com/emeric/blume/BlumeBootServiceBroadcastReceiver.java \
                    $${PWD}/assets/android/src/com/emeric/blume/BlumeAndroidService.java \
@@ -362,7 +367,7 @@ ios {
 
     # Bundle name
     QMAKE_TARGET_BUNDLE_PREFIX = com.mahoutech
-    QMAKE_BUNDLE = Blume
+    QMAKE_BUNDLE = blume
 
     ENTITLEMENTS.name = CODE_SIGN_ENTITLEMENTS
     ENTITLEMENTS.value = $${PWD}/assets/ios/$$lower($${TARGET}).entitlements

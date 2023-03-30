@@ -8,7 +8,7 @@ import QtQuick.Dialogs
 import ImageTools
 import ImagePicker
 import Qt.labs.platform
-
+import QtAndroidTools
 import Qt5Compat.GraphicalEffects
 
 import ThemeEngine 1.0
@@ -71,11 +71,40 @@ Popup {
                 }
                 AppBarButton {
                     icon:  Icons.camera
-                    visible: Qt.platform.os == 'ios'
-                    onClicked: imgPicker.openCamera()
+                    visible: Qt.platform.os == 'ios' || Qt.platform.os == 'android'
+                    onClicked: {
+                        if (Qt.platform.os === 'ios') {
+                            imgPicker.openCamera()
+                        } else {
+                            androidToolsLoader.item.openCamera()
+                        }
+                    }
+
                     Layout.preferredHeight: 64
                     Layout.preferredWidth: 64
                     Layout.alignment: Qt.AlignVCenter
+                }
+                Loader {
+                    id: androidToolsLoader
+                    active: Qt.platform.os === "android"
+                    sourceComponent: Component {
+                        Item {
+                            function openCamera() {
+                                QtAndroidAppPermissions.openCamera()
+                            }
+                            function openGallery() {
+                                QtAndroidAppPermissions.openGallery()
+                            }
+
+                            Connections {
+                                target: QtAndroidAppPermissions
+                                function onImageSelected(path) {
+                                    image.source = ""
+                                    image.source = "file://" + path
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -106,7 +135,7 @@ Popup {
                         Material.foreground: Material.color(Material.Grey, Material.Shade50)
                         Material.accent: Material.color(Material.Grey, Material.Shade50)
                         Layout.fillWidth: true
-                        visible:  Qt.platform.os !== 'ios'
+                        visible:  Qt.platform.os !== 'ios' && Qt.platform.os !== 'android'
                         TabButton {
                             text: "Fichier"
                         }
@@ -184,7 +213,10 @@ Popup {
                                     onClicked: {
                                         if (Qt.platform.os === 'ios') {
                                             imgPicker.openPicker()
-                                        } else {
+                                        } else if (Qt.platform.os === 'android') {
+                                            androidToolsLoader.item.openGallery()
+                                        }
+                                        else {
                                             fileDialog.open()
                                         }
                                     }
@@ -306,22 +338,6 @@ Popup {
                                 image.source = "file://" + path
                             }
                         }
-
-//                        NiceButton {
-//                            Layout.preferredHeight: 60
-//                            Layout.preferredWidth: 120
-//                            Layout.alignment: Qt.AlignHCenter
-//                            visible: tabView.currentIndex === 0 && Qt.platform.os == 'ios'
-//                            icon.source: Icons.imageArea
-//                            text: "Gallery"
-//                            onClicked: {
-//                                if (Qt.platform.os === 'ios') {
-//                                    imgPicker.openPicker()
-//                                } else {
-//                                    fileDialog.open()
-//                                }
-//                            }
-//                        }
 
 //                        NiceButton {
 //                            id: control

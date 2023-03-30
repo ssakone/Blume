@@ -8,6 +8,7 @@ import QtQuick.Dialogs
 import ImageTools
 import ImagePicker
 import Qt.labs.platform
+import QtAndroidTools
 
 import Qt5Compat.GraphicalEffects
 
@@ -75,11 +76,38 @@ Popup {
                 }
                 AppBarButton {
                     icon:  Icons.camera
-                    visible: Qt.platform.os == 'ios' && identifierLayoutView.currentIndex === 1
-                    onClicked: imgPicker.openCamera()
+                    visible: Qt.platform.os == 'ios' || Qt.platform.os == 'android' && identifierLayoutView.currentIndex === 1
+                    onClicked: {
+                        if (Qt.platform.os === 'ios') {
+                            imgPicker.openCamera()
+                        } else {
+                            androidToolsLoader.item.openCamera()
+                        }
+                    }
                     Layout.preferredHeight: 64
                     Layout.preferredWidth: 64
                     Layout.alignment: Qt.AlignVCenter
+                }
+                Loader {
+                    id: androidToolsLoader
+                    active: Qt.platform.os === "android"
+                    sourceComponent: Component {
+                        Item {
+                            function openCamera() {
+                                QtAndroidAppPermissions.openCamera()
+                            }
+                            function openGallery() {
+                                QtAndroidAppPermissions.openGallery()
+                            }
+
+                            Connections {
+                                target: QtAndroidAppPermissions
+                                function onImageSelected(path) {
+                                    image.source = "file://" + path + "?" + Math.random()
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -151,7 +179,7 @@ Popup {
                     TabBar {
                         id: tabBar
                         topPadding: 0
-                        visible: identifierLayoutView.currentIndex !== 0 && Qt.platform.os !== 'ios'
+                        visible:  Qt.platform.os !== 'ios' && Qt.platform.os !== 'android'
                         Material.background: "#00c395"
                         Material.foreground: Material.color(Material.Grey, Material.Shade50)
                         Material.accent: Material.color(Material.Grey, Material.Shade50)
@@ -235,7 +263,10 @@ Popup {
                                     onClicked: {
                                         if (Qt.platform.os === 'ios') {
                                             imgPicker.openPicker()
-                                        } else {
+                                        } else if (Qt.platform.os === 'android') {
+                                            androidToolsLoader.item.openGallery()
+                                        }
+                                        else {
                                             fileDialog.open()
                                         }
                                     }
@@ -355,21 +386,6 @@ Popup {
                                 image.source = "file://" + path
                             }
                         }
-//                        NiceButton {
-//                            Layout.preferredHeight: 60
-//                            Layout.preferredWidth: 120
-//                            Layout.alignment: Qt.AlignHCenter
-//                            visible: tabView.currentIndex === 0
-//                            icon.source: Icons.imageArea
-//                            text: Qt.platform.os == 'ios' ? "Camera" : "Ouvrir"
-//                            onClicked: {
-//                                if (Qt.platform.os === 'ios') {
-//                                    imgPicker.openCamera()
-//                                } else {
-//                                    fileDialog.open()
-//                                }
-//                            }
-//                        }
 
                         NiceButton {
                             text: "Nouveau"
@@ -475,7 +491,12 @@ Popup {
                             horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
-                            visible: !desease.analyseResults?.is_plant
+                            visible: {
+                                if(desease !== undefined)
+                                    return !desease.analyseResults?.is_plant
+                                else return false
+                            }
+
                             text: "Ceci n'est pas une plante"
                         }
                     }

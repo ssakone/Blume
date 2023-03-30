@@ -62,6 +62,7 @@ Loader {
 
     sourceComponent: Item {
         function backAction() {
+            console.log("HOULA")
             if (isPlantClicked()) {
                 itemPlantBrowser.visible = true
                 itemPlantBrowser.enabled = true
