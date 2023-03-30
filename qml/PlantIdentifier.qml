@@ -356,7 +356,7 @@ Popup {
                                                              imgAnalysisSurface.loading = false
                                                              identifierLayoutView.currentIndex = 1
                                                              if (datas.is_plant)
-                                                                 identifedPlantListView.model = datas.suggestions
+                                                                 identifedPlantListView.model = datas.suggestions.slice(0, 3)
                                                              else
                                                                  identifedPlantListView.model = []
                                                          }).catch(function (e) {
