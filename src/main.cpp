@@ -40,6 +40,10 @@
 #include "imagepicker.h"
 #endif
 
+#if defined(Q_OS_ANDROID)
+#include "android_tools/QtAndroidTools.h"
+#endif
+
 #include <MobileUI/MobileUI.h>
 #include <MobileSharing/MobileSharing.h>
 #include <SingleApplication/SingleApplication.h>
@@ -182,6 +186,11 @@ int main(int argc, char *argv[])
 
     // Translate the application
     utilsLanguage->loadLanguage(sm->getAppLanguage());
+#if defined(Q_OS_ANDROID)
+    QtAndroidTools::initializeQmlTools();
+#else
+    qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "QtAndroidTools", 1, 0, "Theme");
+#endif
 
     // ThemeEngine
     qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "ThemeEngine", 1, 0, "Theme");
