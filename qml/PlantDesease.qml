@@ -401,7 +401,7 @@ Popup {
                                                 planteDeseasePopup.analyseResults = datas
                                                 imgAnalysisSurface.loading = false
                                                 identifierLayoutView.currentIndex = 2
-                                                if (datas.is_plant) {
+                                                if (datas.is_plant && planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability < 0.7 ) {
                                                     identifedPlantListView.model
                                                             = datas.health_assessment.diseases
                                                 } else {
@@ -448,16 +448,30 @@ Popup {
                         padding: 10
                         spacing: 3
                         Label {
-                            font.pixelSize: 28
+                            font.pixelSize: 24
                             width: 300
                             wrapMode: Label.Wrap
                             horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
                             visible: planteDeseasePopup.analyseResults?.is_plant  ?? false
-                            text: "Plante en bonne sante <b><font color='%1'>%2</font></b>".arg(
-                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "green" : "red").arg(
-                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "Oui" : "Non")
+                            text: qsTr(planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.7 ?
+                                           "<font color='green'> Votre plante est en bonne santé</font>" :
+                                           (planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.4) ? "Votre plante semble en bonne santé" : "<font color='red'>Votre plante est malade</font>" )
+//                            text: "Plante en bonne sante ? <b><font color='%1'>%2</font></b>".arg(
+//                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "green" : "red").arg(
+//                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "Oui" : "Non")
+                        }
+                        Label {
+                            font.pixelSize: 16
+                            font.weight: Font.Light
+                            width: 300
+                            wrapMode: Label.Wrap
+                            horizontalAlignment: Label.AlignHCenter
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            verticalAlignment: Qt.AlignVCenter
+                            visible: desease.analyseResults?.is_plant && planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability < 0.4
+                            text: "Quelques maladies détectées"
                         }
                         Label {
                             font.pixelSize: 28
