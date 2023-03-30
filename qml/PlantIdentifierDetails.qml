@@ -99,79 +99,60 @@ Popup {
             clip: true
             Image {
                 source: details['wiki_image']['value']
-                fillMode: Image.PreserveAspectCrop
+                fillMode: Image.PreserveAspectFit
             }
         }
-// How to make a carousel ?
-//        Rectangle {
-//            height: 50
-//            Layout.fillWidth: true
-//            RowLayout {
-//                Layout.alignment: Qt.AlignHCenter
-//                height: parent.height
-//                Repeater {
-//                    model: model_images
-//                    delegate: IconImage {
-//                        required property variant value
-//                        source: value
-//                        width: 50
-//                        height: 50
-//                        fillMode: Image.PreserveAspectCrop
-//                        Component.onCompleted: console.log(value)
-//                    }
-//                }
-//            }
-//        }
 
 
         ColumnLayout {
-            Layout.fillHeight: true
-//            Layout.fillWidth: true
-            width: resultIdentifierDetailPop.width - 40
+//            width: resultIdentifierDetailPop.width - 40
 
             Layout.leftMargin: 20
-//            Layout.rightMargin: 20
 
+            spacing: 10
 
-            spacing: 15
+            ColumnLayout {
+                spacing: 3
+                Label {
+                    text: plant_data['plant_name']
+                    font.pixelSize: 28
+                    color: Material.color(Material.Grey, Material.Shade800)
+                    font.weight: Font.DemiBold
+                }
 
-            Label {
-                text: plant_data['plant_name']
-                font.pixelSize: 28
-                color: Material.color(Material.Grey, Material.Shade800)
-                font.weight: Font.DemiBold
-            }
+                RowLayout {
+                    Repeater {
+                        model: details['common_names']
+                        delegate: Label {
+                            required property int index
+                            required property variant modelData
 
-            RowLayout {
-                Layout.fillWidth: true
-                Repeater {
-                    model: details['common_names']
-                    delegate: Label {
-                        required property int index
-                        required property variant modelData
-
-                        text: modelData + (index < details['common_names'].length ? ", " : "")
+                            text: modelData + (index < details['common_names'].length ? ", " : "")
+                        }
                     }
                 }
+
             }
+
 
 
             Flickable {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 80
+                flickableDirection: Flickable.HorizontalFlick
+
                 RowLayout {
-                    Layout.fillWidth: true
-                    clip: true
                     Rectangle {
                         Layout.preferredHeight: 80
-                        Layout.preferredWidth: 230
+                        Layout.fillWidth: true
+                        width: edibility_col.width + 20
                         color: "white" //Material.color(Material.Grey, Material.Shade100)
                         radius: 10
 
                         ColumnLayout {
+                            id: edibility_col
                             Layout.fillWidth: true
                             Layout.fillHeight: true
-                            width: parent.width
 
                             RowLayout {
                                 Layout.alignment: Qt.AlignHCenter
@@ -225,15 +206,17 @@ Popup {
                     }
                     Rectangle {
                         Layout.preferredHeight: 80
-                        Layout.preferredWidth: 230
+                        Layout.fillWidth: true
+                        width: propagation_methods_col.width + 20
                         color: "white"
                         radius: 10
                         visible: details['propagation_methods'] !== null
 
                         ColumnLayout {
+                            id: propagation_methods_col
                             Layout.fillWidth: true
                             Layout.fillHeight: true
-                            width: parent.width
+
                             Text {
                                 text: qsTr("Méthode de propagation")
                                 font.pixelSize: 16
@@ -256,26 +239,15 @@ Popup {
 
                         }
                     }
-
-                    Item {
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                        Layout.preferredWidth: 50
-                    }
                 }
 
             }
 
 
-            Rectangle {
-                Layout.fillWidth: true
-                width: 300 //resultIdentifierDetailPop.width - 200
 
-                Text {
-                    text: details['wiki_description']['value']
-                    color: "white"
-//                    Layout.alignment: Qt.AlignHCenter
-                }
+            Text {
+                text: details['wiki_description']['value']
+                color: "white"
             }
 
 
