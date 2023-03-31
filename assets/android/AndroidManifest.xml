@@ -9,6 +9,7 @@
 
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- Request legacy Bluetooth permissions (up to Android 11 / SDK 30) -->
     <uses-permission android:name="android.permission.BLUETOOTH"/> <!-- android:maxSdkVersion="30" -->
@@ -58,9 +59,22 @@
             <meta-data android:name="android.app.splash_screen_drawable_landscape" android:resource="@drawable/splashscreen_land"/>
             <meta-data android:name="android.app.splash_screen_sticky" android:value="true"/>
         </activity>
+        <activity android:name="org.qtproject.qt.android.QtNative" />
+        <activity android:name="com.mahoutech.blume.ImagePicker" />
+        <activity android:name="com.mahoutech.blume.GalleryPicker" />
         <!-- Handle outgoing urls -->
         <provider android:name="androidx.core.content.FileProvider" android:authorities="com.mahoutech.blume.fileprovider" android:exported="false" android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/filepaths"/>
+        </provider>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.mahoutech.blume.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
         </provider>
         <!-- Android service(s) -->
         <receiver android:exported="true" android:name=".WatchFlowerBootServiceBroadcastReceiver">

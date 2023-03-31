@@ -62,6 +62,7 @@ Loader {
 
     sourceComponent: Item {
         function backAction() {
+            console.log("HOULA")
             if (isPlantClicked()) {
                 itemPlantBrowser.visible = true
                 itemPlantBrowser.enabled = true
@@ -158,11 +159,17 @@ Loader {
                 placeholderText: qsTr("Search for plants")
                 selectByMouse: true
                 colorSelectedText: "white"
+                onDisplayTextChanged: {
+                    if (displayText != '') {
+                        plantListView.open()
+                    }
+                }
 
                 //onDisplayTextChanged: plantDatabase.filter(displayText)
 
                 MouseArea {
                     anchors.fill: parent
+                    anchors.rightMargin: 70
                     onClicked: {
                         plantListView.open()
                         plantSearchBox.forceActiveFocus()
@@ -413,8 +420,6 @@ Loader {
                                 }
                             }
                         }
-
-
                     }
                 }
             }
