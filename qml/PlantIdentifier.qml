@@ -10,7 +10,7 @@ import ImagePicker
 import Qt.labs.platform
 import QtAndroidTools
 import Qt5Compat.GraphicalEffects
-
+import QtPositioning
 import ThemeEngine 1.0
 
 import MaterialIcons
@@ -31,6 +31,13 @@ Popup {
 
     PlantIdentifierDetails {
         id: resultIdentifierDetailPopup
+    }
+
+
+    PositionSource {
+        id: gps
+        active: true
+        preferredPositioningMethods : PositionSource.SatellitePositioningMethods
     }
 
     ColumnLayout {
@@ -387,7 +394,9 @@ Popup {
                                                 image.source.toString().replace(
                                                     Qt.platform.os === "windows" ? "file:///" : "file://", ""))],
                                         "modifiers": ["crops_fast", "similar_images"],
-                                        "plant_details": ["common_names", "taxonomy", "url", "wiki_description", "wiki_image", "wiki_images", "edible_parts", "propagation_methods"]
+                                        "plant_details": ["common_names", "taxonomy", "url", "wiki_description", "wiki_image", "wiki_images", "edible_parts", "propagation_methods"],
+                                        "longitude": gps.position.coordinate.longitude,
+                                        "latitude": gps.position.coordinate.latitude
                                     }
                                     request("POST", "https://plant.id/api/v2/identify",
                                                          data).then(function (r) {

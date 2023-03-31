@@ -9,7 +9,7 @@ import ImageTools
 import ImagePicker
 import Qt.labs.platform
 import QtAndroidTools
-
+import QtPositioning
 import Qt5Compat.GraphicalEffects
 
 import ThemeEngine 1.0
@@ -36,6 +36,12 @@ Popup {
 
     PlantDeseaseDetails {
         id: resultDeseaseDetailPopup
+    }
+
+    PositionSource  {
+        id: gps
+        active: true
+        preferredPositioningMethods : PositionSource.SatellitePositioningMethods
     }
 
     ColumnLayout {
@@ -424,6 +430,8 @@ Popup {
                                         "disease_details": ["cause", "treatment", "common_names", "classification", "description", "url" ],
                                         "modifiers": ["similar_images"],
                                         "language": "fr",
+                                        "longitude": gps.position.coordinate.longitude,
+                                        "latitude": gps.position.coordinate.latitude
                                     }
                                     request("POST",
                                             "https://plant.id/api/v2/health_assessment",
