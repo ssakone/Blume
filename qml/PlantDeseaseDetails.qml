@@ -37,322 +37,335 @@ Popup {
 
         console.warn("Data in ", JSON.stringify(desease_data))
     }
-    ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 0
-        spacing: 0
-        Rectangle {
-            color: "#00c395"
-            Layout.preferredHeight: 65
-            Layout.fillWidth: true
-            Row {
-                anchors.verticalCenter: parent.verticalCenter
-                Rectangle {
-                    id: buttonBackBg
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 65
-                    height: 65
-                    radius: height
-                    color: "transparent" //Theme.colorHeaderHighlight
-                    opacity: 1
-                    IconSvg {
-                        id: buttonBack
-                        width: 24
-                        height: width
-                        anchors.centerIn: parent
-
-                        source: "qrc:/assets/menus/menu_back.svg"
-                        color: Theme.colorHeaderContent
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            resultDeseaseDetailPop.close()
-                        }
-                    }
-
-                    Behavior on opacity {
-                        OpacityAnimator {
-                            duration: 333
-                        }
-                    }
-                }
-                Label {
-                    text: "Retour"
-                    font.pixelSize: 21
-                    font.bold: true
-                    font.weight: Font.Medium
-                    color: "white"
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-            }
-        }
-
-        ListModel {
-            id: model_images
-        }
-
-        Rectangle {
-            height: resultDeseaseDetailPop.height / 3
-            Layout.fillWidth: true
-            clip: true
-            Image {
-                source: desease_data['similar_images'][0]['url']
-                fillMode: Image.PreserveAspectCrop
-            }
-        }
-
 
         ColumnLayout {
-//            width: resultDeseaseDetailPop.width - 40
-
-            Layout.leftMargin: 20
-
-            spacing: 10
-
-            ColumnLayout {
-                spacing: 3
-                Label {
-                    text: desease_data['name']
-                    font.pixelSize: 28
-                    color: Material.color(Material.Grey, Material.Shade800)
-                    font.weight: Font.DemiBold
-                }
-
-                RowLayout {
-                    Repeater {
-                        model: details['common_names']
-                        delegate: Label {
-                            required property int index
-                            required property variant modelData
-
-                            text: modelData + (index < details['common_names'].length ? ", " : "")
-                        }
-                    }
-                }
-
-            }
-
-
-            Text {
-                text: details['description']
-                color: "white"
-            }
-
+            anchors.fill: parent
+            anchors.margins: 0
+            spacing: 0
             Rectangle {
-                Layout.preferredHeight: 80
+                color: "#00c395"
+                Layout.preferredHeight: 65
                 Layout.fillWidth: true
-                width: propagation_methods_col.width + 20
-                color: "white"
-                radius: 10
+                Row {
+                    anchors.verticalCenter: parent.verticalCenter
+                    Rectangle {
+                        id: buttonBackBg
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 65
+                        height: 65
+                        radius: height
+                        color: "transparent" //Theme.colorHeaderHighlight
+                        opacity: 1
+                        IconSvg {
+                            id: buttonBack
+                            width: 24
+                            height: width
+                            anchors.centerIn: parent
 
-                ColumnLayout {
-                    id: propagation_methods_col
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
+                            source: "qrc:/assets/menus/menu_back.svg"
+                            color: Theme.colorHeaderContent
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                resultDeseaseDetailPop.close()
+                            }
+                        }
 
-                    Text {
-                        text: qsTr("Cause")
-                        font.pixelSize: 16
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    Text {
-                        text: qsTr("Inconnue")
-                        font.pixelSize: 14
-                        Layout.alignment: Qt.AlignHCenter
-                        visible: details['cause'] === null
-                    }
-
-                    RowLayout {
-                        Layout.alignment: Qt.AlignCenter
-                        Repeater {
-                            model: details['cause']
-                            delegate: Text {
-                                required property int index
-                                required property variant modelData
-                                text: modelData
-                                font.pixelSize: 14
-                                Layout.margins: 20
+                        Behavior on opacity {
+                            OpacityAnimator {
+                                duration: 333
                             }
                         }
                     }
-
+                    Label {
+                        text: "Retour"
+                        font.pixelSize: 21
+                        font.bold: true
+                        font.weight: Font.Medium
+                        color: "white"
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
                 }
             }
 
-            Label {
-                text: "Traitements"
-                font.pixelSize: 24
+            ListModel {
+                id: model_images
             }
 
-            ListView {
-                height: treatment_col.height
-                Layout.fillWidth: true
-                flickableDirection: Flickable.VerticalFlick
+            ScrollView {
+//                width: resultDeseaseDetailPop.width
+                height: resultDeseaseDetailPop.height
 
-                ColumnLayout {
-                    id: treatment_col
-                    Rectangle {
-                        Layout.preferredHeight: treat_prevention_col.height
-                        Layout.fillWidth: true
-                        width: treat_prevention_col.width + 40
-                        color: "white"
-                        radius: 10
+                ScrollView {
+//                    width: resultDeseaseDetailPop.width
+                    height: resultDeseaseDetailPop.height - 65
+                    leftPadding: 10
+                    rightPadding: 10
+
+                    ColumnLayout {
+                        spacing: 10
+
+                        Rectangle {
+                            height: resultDeseaseDetailPop.height / 3
+                             width: resultDeseaseDetailPop.width
+        //                    Layout.fillWidth: true
+                            clip: true
+                            Image {
+                                source: desease_data['similar_images'][0]['url']
+                                fillMode: Image.PreserveAspectCrop
+                            }
+                        }
 
                         ColumnLayout {
-                            id: treat_prevention_col
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-
-                            RowLayout {
-                                Layout.alignment: Qt.AlignLeft
-                                Text {
-                                    text: qsTr("Prévention")
-                                    font.pixelSize: 16
-                                    Layout.alignment: Qt.AlignHCenter
-                                }
-                                IconImage {
-                                    source: "qrc:/assets/icons_material/duotone-emoji_objects-24px.svg"
-                                    width: 25
-                                    height: 25
-                                    color: Theme.colorPrimary
-                                }
+                            spacing: 3
+                            Label {
+                                text: desease_data['name']
+                                font.pixelSize: 28
+                                color: "white"
+                                font.weight: Font.DemiBold
                             }
 
-                            ColumnLayout {
-//                                Layout.alignment: Qt.AlignHCenter
+                            RowLayout {
                                 Repeater {
-                                    model: details['treatment']['prevention']
-                                    delegate: Text {
+                                    model: details['common_names']
+                                    delegate: Label {
                                         required property int index
                                         required property variant modelData
-                                        text: '- ' + modelData
-                                        font.pixelSize: 14
-                                        Layout.margins: 20
+
+                                        text: modelData + (index < details['common_names'].length ? ", " : "")
                                     }
                                 }
                             }
 
                         }
-                    }
-                    Rectangle {
-                        Layout.preferredHeight: treat_chemical_col.height
-                        Layout.fillWidth: true
-                        width: treat_chemical_col.width + 20
-                        color: "white"
-                        radius: 10
+
+
+                        Text {
+                            text: details['description']
+                            color: "white"
+                            wrapMode: Text.Wrap
+                            Layout.maximumWidth: resultDeseaseDetailPop.width - 40
+                        }
+
+                        Label {
+                            text: "Cause"
+                            font.pixelSize: 24
+                        }
+
 
                         ColumnLayout {
-                            id: treat_chemical_col
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
+                            Layout.leftMargin: 20
+                            Layout.rightMargin: 20
+                            Layout.bottomMargin: 20
 
-                            RowLayout {
-                                Layout.alignment: Qt.AlignLeft
+                            Rectangle {
+                                Layout.preferredHeight: 50
+                                width: resultDeseaseDetailPop.width - 40
+                                color: "white"
+                                radius: 10
+
                                 Text {
-                                    text: qsTr("Traitement chimique")
-                                    font.pixelSize: 16
+                                    text: details['cause'] || "Inconnue"
+                                    font.pixelSize: 14
+                                    color: Material.color(Material.Grey, Material.Shade800)
+
                                     Layout.alignment: Qt.AlignHCenter
-                                }
-                                IconImage {
-                                    source: "qrc:/assets/icons_material/duotone-emoji_objects-24px.svg"
-                                    width: 25
-                                    height: 25
-                                    color: Theme.colorPrimary
+                                    Layout.topMargin: 20
                                 }
                             }
-
-                            ColumnLayout {
-                                Layout.alignment: Qt.AlignHCenter
-                                Repeater {
-                                    model: details['treatment']['chemical']
-                                    delegate: Text {
-                                        required property int index
-                                        required property variant modelData
-                                        text: '- ' + modelData
-                                        font.pixelSize: 14
-                                        Layout.margins: 20
-                                    }
-                                }
-                            }
-
                         }
-                    }
-                    Rectangle {
-                        Layout.preferredHeight: treat_biological_col.height
-                        Layout.fillWidth: true
-                        width: treat_biological_col.width + 20
-                        color: "white"
-                        radius: 10
+
+                        Label {
+                            text: "Traitements"
+                            font.pixelSize: 24
+                        }
+
 
                         ColumnLayout {
-                            id: treat_biological_col
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
+                            id: treatment_col
+                            Layout.leftMargin: 20
+                            Layout.rightMargin: 20
 
-                            RowLayout {
-                                Layout.alignment: Qt.AlignLeft
-                                Text {
-                                    text: qsTr("Traitement biologique")
-                                    font.pixelSize: 16
-                                    Layout.alignment: Qt.AlignHCenter
-                                }
-                                IconImage {
-                                    source: "qrc:/assets/icons_material/duotone-emoji_objects-24px.svg"
-                                    width: 25
-                                    height: 25
-                                    color: Theme.colorPrimary
-                                }
-                            }
+                            spacing: 5
+                            Rectangle {
+                                Layout.preferredHeight: treat_prevention_col.height
+                                width: resultDeseaseDetailPop.width - 40
+                                radius: 10
 
-                            ColumnLayout {
-                                Layout.alignment: Qt.AlignHCenter
-                                Repeater {
-                                    model: details['treatment']['biological']
-                                    delegate: Text {
-                                        required property int index
-                                        required property variant modelData
-                                        text: '- ' + modelData
-                                        font.pixelSize: 14
-                                        Layout.margins: 20
+                                ColumnLayout {
+                                    id: treat_prevention_col
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+
+                                    RowLayout {
+                                        Layout.alignment: Qt.AlignLeft
+                                        IconImage {
+                                            source: "qrc:/assets/icons_material/duotone-emoji_objects-24px.svg"
+                                            width: 25
+                                            height: 25
+                                            color: Theme.colorPrimary
+                                        }
+                                        Text {
+                                            text: qsTr("Prévention")
+                                            font.pixelSize: 16
+                                            Layout.alignment: Qt.AlignHCenter
+                                        }
                                     }
+
+                                    ColumnLayout {
+                                        spacing: 2
+                                        Repeater {
+                                            model: details['treatment']['prevention']
+                                            delegate: Text {
+                                                required property int index
+                                                required property variant modelData
+                                                text: '  - ' + modelData
+                                                color: Material.color(Material.Grey, Material.Shade800)
+                                                font.pixelSize: 14
+                                                wrapMode: Text.Wrap
+                                                Layout.maximumWidth: treat_prevention_col.parent.width - 10
+                                                Layout.bottomMargin: 10
+                                                Layout.leftMargin: 5
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                            Rectangle {
+                                Layout.preferredHeight: treat_chemical_col.height
+                                width: resultDeseaseDetailPop.width - 40
+                                radius: 10
+
+                                ColumnLayout {
+                                    id: treat_chemical_col
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+
+                                    RowLayout {
+                                        Layout.alignment: Qt.AlignLeft
+                                        IconImage {
+                                            source: "qrc:/assets/icons_material/duotone-emoji_objects-24px.svg"
+                                            width: 25
+                                            height: 25
+                                            color: Theme.colorPrimary
+                                        }
+                                        Text {
+                                            text: qsTr("Traitement chimique")
+                                            font.pixelSize: 16
+                                            Layout.alignment: Qt.AlignHCenter
+                                        }
+                                    }
+
+                                    ColumnLayout {
+                                        spacing: 2
+                                        Repeater {
+                                            model: details['treatment']['chemical']
+                                            delegate: Text {
+                                                required property int index
+                                                required property variant modelData
+                                                text: '  - ' + modelData
+                                                color: Material.color(Material.Grey, Material.Shade800)
+                                                font.pixelSize: 14
+                                                wrapMode: Text.Wrap
+                                                Layout.maximumWidth: treat_prevention_col.parent.width - 10
+                                                Layout.bottomMargin: 10
+                                                Layout.leftMargin: 5
+                                            }
+                                        }
+                                    }
+
                                 }
                             }
 
+                            Rectangle {
+                                Layout.preferredHeight: treat_prevention_col.height
+                                width: resultDeseaseDetailPop.width - 40
+                                radius: 10
+
+                                ColumnLayout {
+                                    id: treat_biological_col
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+
+                                    RowLayout {
+                                        Layout.alignment: Qt.AlignLeft
+                                        IconImage {
+                                            source: "qrc:/assets/icons_material/duotone-emoji_objects-24px.svg"
+                                            width: 25
+                                            height: 25
+                                            color: Theme.colorPrimary
+                                        }
+                                        Text {
+                                            text: qsTr("Traitement biologique")
+                                            font.pixelSize: 16
+                                            Layout.alignment: Qt.AlignHCenter
+                                        }
+                                    }
+
+                                    ColumnLayout {
+                                        spacing: 2
+                                        Repeater {
+                                            model: details['treatment']['biological']
+                                            delegate: Text {
+                                                required property int index
+                                                required property variant modelData
+                                                text: '  - ' + modelData
+                                                color: Material.color(Material.Grey, Material.Shade800)
+                                                font.pixelSize: 14
+                                                wrapMode: Text.Wrap
+                                                Layout.maximumWidth: treat_biological_col.parent.width - 10
+                                                Layout.bottomMargin: 10
+                                                Layout.leftMargin: 5
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
                         }
+
+
+
+
+
+                        RowLayout {
+                            Layout.alignment: Qt.AlignHCenter
+                            Label {
+                                text: "Plus d'informations sur Wikipédia"
+                                color: "white"
+                                font.pixelSize: 16
+                            }
+
+                            IconSvg {
+                                source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
+                                color: "white"
+                                width: 25
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: Qt.openUrlExternally(details['url'])
+                                }
+                            }
+
+                            Item {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                            }
+                        }
+                        Item {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                        }
+
                     }
 
                 }
-
-            }
-
-
-
-
-            RowLayout {
-
-                ButtonWireframe {
-                    text: "Wikipédia"
-                    Layout.preferredHeight: 45
-                    fullColor: true
-                    primaryColor: "white"
-                    fulltextColor: Theme.colorPrimary
-                    onClicked: Qt.openUrlExternally(details['url'])
-                }
-
-                Item {
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                }
-            }
-
-            Item {
-                Layout.fillHeight: true
-                Layout.fillWidth: true
             }
 
         }
 
-    }
+
+
 }

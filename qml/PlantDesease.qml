@@ -422,6 +422,7 @@ Popup {
                                                 image.source.toString().replace(
                                                     Qt.platform.os === "windows" ? "file:///" : "file://", ""))],
                                         "disease_details": ["cause", "treatment", "common_names", "classification", "description", "url" ],
+                                        "modifiers": ["similar_images"],
                                         "language": "fr",
                                     }
                                     request("POST",
