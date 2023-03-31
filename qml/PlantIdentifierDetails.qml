@@ -38,6 +38,7 @@ Popup {
 
 //        console.warn("Data in ", data)
     }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 0
@@ -93,19 +94,19 @@ Popup {
             id: model_images
         }
 
-        Rectangle {
-            height: resultIdentifierDetailPop.height / 3
-            Layout.fillWidth: true
-            clip: true
-            Image {
-                source: details['wiki_image']['value']
-                fillMode: Image.PreserveAspectCrop
+
+            Rectangle {
+                height: resultIdentifierDetailPop.height / 3
+                Layout.fillWidth: true
+                clip: true
+                Image {
+                    source: details['wiki_image']['value']
+                    fillMode: Image.PreserveAspectCrop
+                }
             }
-        }
 
 
         ColumnLayout {
-//            width: resultIdentifierDetailPop.width - 40
 
             Layout.leftMargin: 20
 
@@ -116,11 +117,13 @@ Popup {
                 Label {
                     text: plant_data['plant_name']
                     font.pixelSize: 28
-                    color: Material.color(Material.Grey, Material.Shade800)
+                    color: "white"
                     font.weight: Font.DemiBold
                 }
 
                 RowLayout {
+                    Layout.maximumWidth: resultIdentifierDetailPop.width - 40
+
                     Repeater {
                         model: details['common_names']
                         delegate: Label {
@@ -130,21 +133,23 @@ Popup {
                             text: modelData + (index < details['common_names'].length ? ", " : "")
                         }
                     }
+                    Item {
+                        Layout.fillHeight: true
+                    }
                 }
 
             }
 
 
 
-            Flickable {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 80
-                flickableDirection: Flickable.HorizontalFlick
+            ScrollView {
+                width: resultIdentifierDetailPop.width - 40
 
                 RowLayout {
+                    spacing: 20
+
                     Rectangle {
                         Layout.preferredHeight: 80
-                        Layout.fillWidth: true
                         width: edibility_col.width + 20
                         color: "white" //Material.color(Material.Grey, Material.Shade100)
                         radius: 10
@@ -206,7 +211,6 @@ Popup {
                     }
                     Rectangle {
                         Layout.preferredHeight: 80
-                        Layout.fillWidth: true
                         width: propagation_methods_col.width + 20
                         color: "white"
                         radius: 10
@@ -239,27 +243,38 @@ Popup {
 
                         }
                     }
+
                 }
 
             }
 
 
 
-            Text {
+            Label {
                 text: details['wiki_description']['value']
                 color: "white"
+                Layout.maximumWidth: resultIdentifierDetailPop.width - 40
+                wrapMode: Text.Wrap
             }
 
 
             RowLayout {
 
-                ButtonWireframe {
-                    text: "Wikipédia"
-                    Layout.preferredHeight: 45
-                    fullColor: true
-                    primaryColor: "white"
-                    fulltextColor: Theme.colorPrimary
-                    onClicked: Qt.openUrlExternally(details['url'])
+                Label {
+                    text: "Plus d'informations sur Wikipédia"
+                    color: "white"
+                    font.pixelSize: 16
+                }
+
+                IconSvg {
+                    source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
+                    color: "white"
+                    width: 25
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: Qt.openUrlExternally(details['url'])
+                    }
                 }
 
                 Item {
@@ -276,4 +291,6 @@ Popup {
         }
 
     }
+
+
 }

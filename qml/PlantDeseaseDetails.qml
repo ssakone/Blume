@@ -145,7 +145,6 @@ Popup {
                 width: propagation_methods_col.width + 20
                 color: "white"
                 radius: 10
-                visible: details['cause'] !== null
 
                 ColumnLayout {
                     id: propagation_methods_col
@@ -156,6 +155,13 @@ Popup {
                         text: qsTr("Cause")
                         font.pixelSize: 16
                         Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    Text {
+                        text: qsTr("Inconnue")
+                        font.pixelSize: 14
+                        Layout.alignment: Qt.AlignHCenter
+                        visible: details['cause'] === null
                     }
 
                     RowLayout {
@@ -180,14 +186,15 @@ Popup {
                 font.pixelSize: 24
             }
 
-            Flickable {
+            ListView {
+                height: treatment_col.height
                 Layout.fillWidth: true
                 flickableDirection: Flickable.VerticalFlick
 
                 ColumnLayout {
-
+                    id: treatment_col
                     Rectangle {
-                        Layout.preferredHeight: 80
+                        Layout.preferredHeight: treat_prevention_col.height
                         Layout.fillWidth: true
                         width: treat_prevention_col.width + 40
                         color: "white"
@@ -199,7 +206,7 @@ Popup {
                             Layout.fillHeight: true
 
                             RowLayout {
-                                Layout.alignment: Qt.AlignHCenter
+                                Layout.alignment: Qt.AlignLeft
                                 Text {
                                     text: qsTr("Prévention")
                                     font.pixelSize: 16
@@ -230,7 +237,7 @@ Popup {
                         }
                     }
                     Rectangle {
-                        Layout.preferredHeight: 80
+                        Layout.preferredHeight: treat_chemical_col.height
                         Layout.fillWidth: true
                         width: treat_chemical_col.width + 20
                         color: "white"
@@ -242,7 +249,7 @@ Popup {
                             Layout.fillHeight: true
 
                             RowLayout {
-                                Layout.alignment: Qt.AlignHCenter
+                                Layout.alignment: Qt.AlignLeft
                                 Text {
                                     text: qsTr("Traitement chimique")
                                     font.pixelSize: 16
@@ -273,7 +280,7 @@ Popup {
                         }
                     }
                     Rectangle {
-                        Layout.preferredHeight: 80
+                        Layout.preferredHeight: treat_biological_col.height
                         Layout.fillWidth: true
                         width: treat_biological_col.width + 20
                         color: "white"
@@ -285,7 +292,7 @@ Popup {
                             Layout.fillHeight: true
 
                             RowLayout {
-                                Layout.alignment: Qt.AlignHCenter
+                                Layout.alignment: Qt.AlignLeft
                                 Text {
                                     text: qsTr("Traitement biologique")
                                     font.pixelSize: 16
