@@ -66,7 +66,19 @@ Popup {
                     Layout.alignment: Qt.AlignVCenter
                 }
                 Label {
-                    text: identifierLayoutView.currentIndex === 0 ? "Maladie des plantes" : identifierLayoutView.currentIndex === 1 ? "Analyse de plante" :  "Resultat"
+                    text: {
+                        switch (identifierLayoutView.currentIndex) {
+                        case 0:
+                            return "Maladie des plantes"
+                        case 1:
+                            return "Analyse de plante"
+                        case 2:
+                            return "Resultat de l'analyse"
+                        case 3:
+                            return "Encyclopedie des plantes"
+                        }
+                    }
+
                     font.pixelSize: 21
                     font.bold: true
                     font.weight: Font.Medium
@@ -76,7 +88,7 @@ Popup {
                 }
                 AppBarButton {
                     icon:  Icons.camera
-                    visible: Qt.platform.os == 'ios' || Qt.platform.os == 'android' && identifierLayoutView.currentIndex === 1
+                    visible: (Qt.platform.os == 'ios' || Qt.platform.os == 'android') && identifierLayoutView.currentIndex === 1
                     onClicked: {
                         if (Qt.platform.os === 'ios') {
                             imgPicker.openCamera()
@@ -136,37 +148,137 @@ Popup {
                     anchors.horizontalCenter: parent.horizontalCenter
                     topPadding: 20
                     spacing: 20
-                    Image {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        width: 112
-                        height: 112
-                        opacity: .4
-                        source: Icons.palmTree
-                    }
+                    Item {
+                        width: parent.width
+                        height: (3 * ((parent.width - (20)) / 3)) + 30
+                        ListModel {
+                            id: optionModel
 
-                    ColumnLayout {
-                        width: parent.width / 2
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        spacing: 5
-                        NiceButton {
-                            text: "Analyser une plantes"
-                            Layout.preferredHeight: 60
-                            Layout.fillWidth: true
-                            Layout.alignment: Qt.AlignHCenter
-                            Layout.maximumWidth: 340
-                            icon.source: Icons.magnify
-                            onClicked: {
-                                identifierLayoutView.currentIndex++
+                            Component.onCompleted: {
+                                let data = [{
+                                                "name": qsTr("Analyser une plantes"),
+                                                "icon": Icons.magnifyScan,
+                                                "image": "",
+                                                "action": "analyser",
+                                                "style": "darkblue"
+                                            }, {
+                                                "name": qsTr("Encyclopedie des maladies"),
+                                                "icon": Icons.bookOpenOutline,
+                                                "image": "",
+                                                "action": "encyclopedie",
+                                                "style": "lightenYellow"
+                                            },]
+                                data.forEach((plant => append(plant)))
                             }
                         }
-                        NiceButton {
-                            text: "Encyclopedie des maladies"
-                            icon.source: Icons.tree
-                            Layout.alignment: Qt.AlignHCenter
-                            Layout.preferredHeight: 60
-                            Layout.fillWidth: true
-                            Layout.maximumWidth: 340
-                            onClicked: identifierLayoutView.currentIndex = 3
+                        GridView {
+                            id: gr
+                            y: 10
+                            interactive: false
+                            width: parent.width
+                            height: parent.height - 20
+                            cellWidth: (parent.width - (10)) / 2.5
+                            cellHeight: cellWidth
+                            model: optionModel
+                            delegate: Item {
+                                width: (gr.width - (20)) / 2.5
+                                height: width
+                                Rectangle {
+                                    anchors.fill: parent
+                                    anchors.bottomMargin: 35
+                                    anchors.rightMargin: 15
+                                    anchors.leftMargin: 15
+                                    radius: 10
+                                    opacity: mArea.containsMouse ? .8 : 1
+                                    gradient: Gradient {
+                                        orientation: Qt.Horizontal
+                                        GradientStop {
+                                            position: 0.04
+                                            color: {
+                                                switch (style) {
+                                                case "darkblue":
+                                                    return "#2c718a"
+                                                case "lightenYellow":
+                                                    return "#93d1be"
+                                                case "sunrise":
+                                                    return "#ffc6a4"
+                                                default:
+                                                    return "#ccc"
+                                                }
+                                            }
+                                        }
+                                        GradientStop {
+                                            position: 1.00
+                                            color: {
+                                                switch (style) {
+                                                case "darkblue":
+                                                    return "#143e44"
+                                                case "lightenYellow":
+                                                    return "#0ca780"
+                                                case "sunrise":
+                                                    return "#fc9185"
+                                                default:
+                                                    return "#ccc"
+                                                }
+                                            }
+                                        }
+                                    }
+                                    IconSvg {
+                                        width: 64
+                                        height: 64
+                                        visible: icon !== ""
+                                        anchors.centerIn: parent
+
+                                        source: icon
+                                        color: 'white'
+                                    }
+                                    Image {
+                                        id: img
+                                        visible: image.toString() !== ""
+                                        source: image
+                                        anchors.fill: parent
+                                        layer.enabled: true
+                                        layer.effect: OpacityMask {
+                                            maskSource: Item {
+                                                width: img.width
+                                                height: img.height
+                                                Rectangle {
+                                                    anchors.centerIn: parent
+                                                    width: img.adapt ? img.width : Math.min(img.width, img.height)
+                                                    height: img.adapt ? img.height : width
+                                                    radius: 10
+                                                }
+                                            }
+                                        }
+                                    }
+                                    MouseArea {
+                                        id: mArea
+                                        anchors.fill: parent
+                                        enabled: action !== ""
+                                        hoverEnabled: enabled
+                                        onClicked: {
+                                            if (action === "analyser") {
+                                                identifierLayoutView.currentIndex++
+                                            } else if (action === "encyclopedie") {
+                                                identifierLayoutView.currentIndex = 3
+                                            }
+                                        }
+                                    }
+                                }
+                                Label {
+                                    width: parent.width - 10
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    anchors.bottom: parent.bottom
+                                    anchors.bottomMargin: 3
+                                    height: 28
+                                    wrapMode: Label.Wrap
+                                    font.pixelSize: 12
+                                    font.weight: Font.Medium
+                                    horizontalAlignment: Label.AlignHCenter
+                                    verticalAlignment: Label.AlignVCenter
+                                    text: name
+                                }
+                            }
                         }
                     }
                 }
@@ -345,7 +457,6 @@ Popup {
                                         }
                                     }
                                 }
-
                                 sourceComponent: cameraView
                             }
                         }
@@ -526,24 +637,83 @@ Popup {
                 }
             }
             Item {
+                ListModel {
+                    id: maladiesModel
+
+                    ListElement { nom: "Oïdium"; sousDescription: "Champignon blanc sur les feuilles"; dangerosite: 0.5 }
+                    ListElement { nom: "Mildiou"; sousDescription: "Taches jaunes ou brunes sur les feuilles"; dangerosite: 0.6 }
+                    ListElement { nom: "Tavelure"; sousDescription: "Taches brunes sur les fruits et les feuilles"; dangerosite: 0.5 }
+                    ListElement { nom: "Rouille"; sousDescription: "Pustules orangées sur les feuilles"; dangerosite: 0.6 }
+                    ListElement { nom: "Pourriture grise"; sousDescription: "Moisissure grise sur les fruits"; dangerosite: 0.7 }
+                    ListElement { nom: "Anthracnose"; sousDescription: "Lésions noires sur les feuilles"; dangerosite: 0.4 }
+                    ListElement { nom: "Chancre"; sousDescription: "Lésions sur les branches et troncs"; dangerosite: 0.7 }
+                    ListElement { nom: "Fusariose"; sousDescription: "Pourriture des racines et du collet"; dangerosite: 0.8 }
+                    ListElement { nom: "Nécrose"; sousDescription: "Mort des tissus végétaux"; dangerosite: 0.6 }
+                    ListElement { nom: "Verticilliose"; sousDescription: "Flétrissement et décoloration des feuilles"; dangerosite: 0.7 }
+                    ListElement { nom: "Bactériose"; sousDescription: "Pourriture bactérienne des tissus"; dangerosite: 0.8 }
+                    ListElement { nom: "Virose"; sousDescription: "Infection virale des plantes"; dangerosite: 0.7 }
+                    ListElement { nom: "Jaunisse"; sousDescription: "Décoloration jaune des feuilles"; dangerosite: 0.5 }
+                    ListElement { nom: "Sclérotiniose"; sousDescription: "Pourriture des tiges et des racines"; dangerosite: 0.6 }
+                    ListElement { nom: "Phytophthora"; sousDescription: "Pourriture des racines"; dangerosite: 0.8 }
+                    ListElement { nom: "Rhizoctone"; sousDescription: "Pourriture des racines et du collet"; dangerosite: 0.7 }
+                }
+
                 ListView {
-                    id: lView
+                    id: listView
                     anchors.fill: parent
                     anchors.margins: 10
-                    model: 10
+                    model: maladiesModel
                     clip: true
                     delegate: Rectangle {
-                        height: 50
-                        width: lView.width
-                        color: index % 2 === 0 ? Qt.darker("gray", .55) : "white"
+                        height: 70
+                        width: listView.width
+                        Rectangle {
+                            anchors.bottom: parent.bottom
+                            height: 1
+                            color: "#ccc"
+                            width: parent.width - 20
+                            opacity: .4
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            visible: index !== maladiesModel.count - 1
+                        }
+
                         Label {
+                            id: titleLabel
+                            anchors.top: parent.top
+                            anchors.topMargin: 15
+                            anchors.left: parent.left
+                            anchors.leftMargin: 10
+                            font.pixelSize: 21
+                            font.weight: Font.Medium
+                            text: nom
+                        }
+
+                        Label {
+                            anchors.top: titleLabel.bottom
+                            anchors.left: parent.left
+                            anchors.leftMargin: 10
+                            font.pixelSize: 12
+                            color: "gray"
+                            text: sousDescription
+                        }
+
+                        Rectangle {
+                            id: dangerositeCercle
                             anchors.verticalCenter: parent.verticalCenter
-                            x: 10
-                            font.pixelSize: 14
-                            text: "Maladie " + index
+                            anchors.right: parent.right
+                            anchors.rightMargin: 10
+                            height: 30
+                            width: 30
+                            radius: 15
+                            color: listView.getColorForDangerosite(dangerosite)
                         }
                     }
+                    function getColorForDangerosite(dangerosite) {
+                        return Qt.rgba(1.0, 1.0 - dangerosite, 1.0 - dangerosite, 1.0)
+                    }
                 }
+
+
             }
         }
     }

@@ -71,7 +71,7 @@ Popup {
                 }
                 AppBarButton {
                     icon:  Icons.camera
-                    visible: Qt.platform.os == 'ios' || Qt.platform.os == 'android'
+                    visible: (Qt.platform.os == 'ios' || Qt.platform.os == 'android') && identifierLayoutView.currentIndex === 0
                     onClicked: {
                         if (Qt.platform.os === 'ios') {
                             imgPicker.openCamera()
@@ -338,19 +338,6 @@ Popup {
                                 image.source = "file://" + path
                             }
                         }
-
-//                        NiceButton {
-//                            id: control
-//                            Layout.preferredHeight: 60
-//                            Layout.preferredWidth: 120
-//                            Layout.alignment: Qt.AlignHCenter
-//                            visible: tabBar.currentIndex === 0 && Qt.platform.os !== 'ios'
-//                            icon.source: Icons.imageArea
-//                            text: "Ouvrir"
-//                            onClicked: {
-//                                fileDialog.open()
-//                            }
-//                        }
 
                         NiceButton {
                             text: "Nouveau"

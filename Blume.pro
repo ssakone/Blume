@@ -361,7 +361,7 @@ android {
 ios {
     #QMAKE_IOS_DEPLOYMENT_TARGET = 11.0
     #message("QMAKE_IOS_DEPLOYMENT_TARGET: $$QMAKE_IOS_DEPLOYMENT_TARGET")
-    HEADERS += src/imagepicker.h
+    HEADERS += src/imagepicker.h \
 
     CONFIG += no_autoqmake
 
@@ -393,7 +393,7 @@ ios {
         # QMAKE_PROVISIONING_PROFILE
         include($${PWD}/assets/ios/ios_signature.pri)
     }
-    OBJECTIVE_SOURCES += src/imagepicker.mm
+    OBJECTIVE_SOURCES += src/imagepicker.mm 
     LIBS += -framework UIKit
     LIBS += -framework MobileCoreServices
 }

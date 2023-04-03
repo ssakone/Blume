@@ -160,7 +160,7 @@ ApplicationWindow {
         statusbarColor: isLoading ? "white" : Theme.colorStatusbar
         navbarColor: {
             if (isLoading) return "white"
-            if (appContent.state === "Tutorial") return Theme.colorHeader
+            if (appContent.state === "Tutorial" || appContent.state === "DeviceList") return Theme.colorHeader
             return Theme.colorBackground
         }
     }
