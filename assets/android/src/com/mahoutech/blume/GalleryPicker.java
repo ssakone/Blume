@@ -55,8 +55,8 @@ public class GalleryPicker extends Activity {
             
             System.out.println(photoUri);
             done(path);
-            finish();
         }
+        finish();
     }
 
     public String getPathFromURI(Uri contentUri) {

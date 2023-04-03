@@ -34,6 +34,10 @@ Popup {
         tabBar.currentIndex = 0
     }
 
+    onOpened: {
+        image.source = ""
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 0
