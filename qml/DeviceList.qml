@@ -366,12 +366,7 @@ Item {
             Layout.alignment: Qt.AlignHCenter
 
             ButtonWireframe {
-<<<<<<< HEAD
-                text: qsTr("Plants")
-                Layout.preferredHeight: 65
-=======
                 Layout.preferredHeight: 70
->>>>>>> ios_comptability
                 Layout.alignment: Qt.AlignVCenter
                 Layout.fillWidth: true
 
@@ -431,13 +426,8 @@ Item {
 //            }
 
             ButtonWireframe {
-<<<<<<< HEAD
-                text: qsTr("Deseases")
-                Layout.preferredHeight: 65
-=======
                 //text: qsTr("Deseases")
                 Layout.preferredHeight: 70
->>>>>>> ios_comptability
                 Layout.alignment: Qt.AlignVCenter
                 Layout.fillWidth: true
 
@@ -463,22 +453,7 @@ Item {
                 primaryColor: Theme.colorPrimary
                 onClicked: desease.open()
             }
-<<<<<<< HEAD
-            ButtonWireframe {
-                text: qsTr("Devices")
-                Layout.preferredHeight: 65
-                Layout.alignment: Qt.AlignVCenter
-                Layout.fillWidth: true
-                Layout.preferredWidth: screenDeviceList.width / 3
 
-                componentRadius: 0
-                fullColor: true
-                primaryColor: Theme.colorPrimary
-                onClicked: screenDeviceBrowser.loadScreen()
-                enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
-            }
-=======
->>>>>>> ios_comptability
         }
     }
 
