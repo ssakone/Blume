@@ -381,9 +381,10 @@ Popup {
                                                 image.source.toString().replace(
                                                     Qt.platform.os === "windows" ? "file:///" : "file://", ""))],
                                         "modifiers": ["crops_fast", "similar_images"],
+                                        "language": "fr",
                                         "plant_details": ["common_names", "taxonomy", "url", "wiki_description", "wiki_image", "wiki_images", "edible_parts", "propagation_methods"],
                                         "longitude": gps.position.coordinate.longitude,
-                                        "latitude": gps.position.coordinate.latitude
+                                        "latitude": gps.position.coordinate.latitude,
                                     }
                                     request("POST", "https://plant.id/api/v2/identify",
                                                          data).then(function (r) {
@@ -457,7 +458,7 @@ Popup {
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
                             visible: identifierPop.plant_results?.is_plant ?? false
-                            text: "Un de ces résultats devrait correspondre à vos recherches"
+                            text: "Un de ces résultats devrait correspondre à votre recherche"
                         }
                         Label {
                             font.pixelSize: 28
