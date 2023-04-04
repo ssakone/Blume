@@ -453,7 +453,6 @@ Item {
                 primaryColor: Theme.colorPrimary
                 onClicked: desease.open()
             }
-
         }
     }
 

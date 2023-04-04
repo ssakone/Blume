@@ -28,6 +28,9 @@ Popup {
     onClosed:  {
         tabBar.currentIndex = 0
     }
+    onOpened: {
+        image.source = ""
+    }
 
     PlantIdentifierDetails {
         id: resultIdentifierDetailPopup

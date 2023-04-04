@@ -34,6 +34,11 @@ Popup {
         tabBar.currentIndex = 0
     }
 
+
+    onOpened: {
+        image.source = ""
+    }
+
     PlantDeseaseDetails {
         id: resultDeseaseDetailPopup
     }
