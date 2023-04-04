@@ -66,6 +66,8 @@
         <file>PlantIdentifier.qml</file>
         <file>PosometreDialog.qml</file>
         <file>popups/PopupLocationNotification.qml</file>
+        <file>PlantIdentifierDetails.qml</file>
+        <file>PlantDeseaseDetails.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>
