@@ -335,7 +335,16 @@ Item {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    Timer {
+        id: retryScan
+        interval: 333
+        running: false
+        repeat: false
+        onTriggered: scan()
+    }
+
     RoundButton {
+        visible: deviceManager.hasDevices
         icon.source: Icons.plusThick
         icon.width: 32
         icon.height: 32
@@ -350,7 +359,14 @@ Item {
         Material.elevation: 0
         Material.background: Theme.colorPrimary
         Material.foreground: Material.color(Material.Grey, Material.Shade50)
-        onClicked: screenDeviceBrowser.loadScreen()
+        onClicked: {
+            if (utilsApp.checkMobileBleLocationPermission()) {
+                scan()
+            } else {
+                utilsApp.getMobileBleLocationPermission()
+                retryScan.start()
+            }
+        }
         enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
     }
 
@@ -523,4 +539,14 @@ Item {
         return fetch(query)
     }
     ////////////////////////////////////////////////////////////////////////////
+
+    function scan() {
+        if (!deviceManager.updating) {
+            if (deviceManager.scanning) {
+                deviceManager.scanDevices_stop()
+            } else {
+                deviceManager.scanDevices_start()
+            }
+        } else console.warn("deviceManager.updating")
+    }
 }

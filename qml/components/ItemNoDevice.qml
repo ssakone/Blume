@@ -18,12 +18,9 @@ Item {
 
     function scan() {
         if (!deviceManager.updating) {
-            console.warn("!!!deviceManager.updating")
             if (deviceManager.scanning) {
-                console.warn("deviceManager.scanning")
                 deviceManager.scanDevices_stop()
             } else {
-                console.warn("!!deviceManager.scanning")
                 deviceManager.scanDevices_start()
             }
         } else console.warn("deviceManager.updating")
@@ -124,18 +121,11 @@ Item {
                 primaryColor: Theme.colorPrimary
 
                 onClicked: {
-                    console.log("Click captures")
                     if (utilsApp.checkMobileBleLocationPermission()) {
-                        console.log("First is setup")
                         scan()
-                        console.log("!!!!!First is setup")
                     } else {
-                        console.log("Second is setup")
                         utilsApp.getMobileBleLocationPermission()
-                        console.log("!!Second is setup")
                         retryScan.start()
-                        console.log("!!!!!!!Second is setup")
-                        
                     }
                 }
             }
