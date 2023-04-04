@@ -311,11 +311,10 @@ Loader {
                             height: (3 * ((parent.width - (20)) / 3)) + 30
                             GridView {
                                 id: gr
+                                y: 10
                                 interactive: false
-                                anchors.fill: parent
-                                anchors.margins: 10
-                                anchors.rightMargin: 0
-                                anchors.leftMargin: 0
+                                width: parent.width
+                                height: parent.height - 20
                                 cellWidth: (parent.width - (10)) / 3
                                 cellHeight: cellWidth
                                 model: plantOptionModel

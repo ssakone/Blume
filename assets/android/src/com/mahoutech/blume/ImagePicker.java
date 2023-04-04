@@ -42,8 +42,8 @@ public class ImagePicker extends Activity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             System.out.println("finish");
             done(imageFilePath);
-            finish();
         }
+        finish();
     }
 
     public File getPhotoFileUri(String fileName) {
