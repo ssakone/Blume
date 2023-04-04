@@ -11,7 +11,7 @@ public:
     explicit Image2Base64(QObject *parent = nullptr);
     Q_INVOKABLE QString getBase64(QString imgSource);
 signals:
-
+    void capturedImage(QString imagePath);
 };
 
 #endif // IMAGE2BASE64_H

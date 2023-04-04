@@ -216,7 +216,7 @@ linux:!android {
 
 macx {
     # Bundle name
-    QMAKE_TARGET_BUNDLE_PREFIX = com.emeric
+    QMAKE_TARGET_BUNDLE_PREFIX = com.mahoutech
     QMAKE_BUNDLE = Blume
 
     # OS icons
@@ -339,6 +339,11 @@ android {
     # Bundle name
     QMAKE_TARGET_BUNDLE_PREFIX = com.emeric
     QMAKE_BUNDLE = Blume
+    SOURCES +=  src/android_tools/QAndroidAppPermissions.cpp \
+                src/android_tools/QtAndroidTools.cpp
+
+    HEADERS +=  src/android_tools/QAndroidAppPermissions.h \
+                src/android_tools/QtAndroidTools.h
 
     OTHER_FILES += $${PWD}/assets/android/src/com/emeric/blume/BlumeBootServiceBroadcastReceiver.java \
                    $${PWD}/assets/android/src/com/emeric/blume/BlumeAndroidService.java \
@@ -356,12 +361,17 @@ android {
 ios {
     #QMAKE_IOS_DEPLOYMENT_TARGET = 11.0
     #message("QMAKE_IOS_DEPLOYMENT_TARGET: $$QMAKE_IOS_DEPLOYMENT_TARGET")
+    HEADERS += src/imagepicker.h \
 
     CONFIG += no_autoqmake
 
     # Bundle name
-    QMAKE_TARGET_BUNDLE_PREFIX = com.emeric.ios
-    QMAKE_BUNDLE = Blume
+    QMAKE_TARGET_BUNDLE_PREFIX = com.mahoutech
+    QMAKE_BUNDLE = blume
+
+    ENTITLEMENTS.name = CODE_SIGN_ENTITLEMENTS
+    ENTITLEMENTS.value = $${PWD}/assets/ios/$$lower($${TARGET}).entitlements
+    QMAKE_MAC_XCODE_SETTINGS += ENTITLEMENTS
 
     # OS infos
     QMAKE_INFO_PLIST = $${PWD}/assets/ios/Info.plist
@@ -375,6 +385,7 @@ ios {
     AppLaunchScreen.files += $${PWD}/assets/ios/AppLaunchScreen.storyboard
     QMAKE_BUNDLE_DATA += AppLaunchScreen
 
+
     # iOS developer settings
     exists($${PWD}/assets/ios/ios_signature.pri) {
         # Must contain values for:
@@ -382,10 +393,14 @@ ios {
         # QMAKE_PROVISIONING_PROFILE
         include($${PWD}/assets/ios/ios_signature.pri)
     }
+    OBJECTIVE_SOURCES += src/imagepicker.mm 
+    LIBS += -framework UIKit
+    LIBS += -framework MobileCoreServices
 }
 
 DISTFILES += \
     qml/PlantDesease.qml \
+    qml/PlantDeseaseDetails.qml \
     qml/PlantIdentifier.qml \
     qml/PosometreDialog.qml
 android: include(C:/Users/HP/AppData/Local/Android/Sdk/android_openssl/openssl.pri)

@@ -6,8 +6,10 @@ import SortFilterProxyModel
 import QtMultimedia
 import QtQuick.Dialogs
 import ImageTools
+import ImagePicker
 import Qt.labs.platform
-
+import QtAndroidTools
+import QtPositioning
 import Qt5Compat.GraphicalEffects
 
 import ThemeEngine 1.0
@@ -32,62 +34,107 @@ Popup {
         tabBar.currentIndex = 0
     }
 
+
+    onOpened: {
+        image.source = ""
+    }
+
+    PlantDeseaseDetails {
+        id: resultDeseaseDetailPopup
+    }
+
+    PositionSource  {
+        id: gps
+        active: true
+        preferredPositioningMethods : PositionSource.SatellitePositioningMethods
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 0
         spacing: 0
         Rectangle {
             color: "#00c395"
-            Layout.preferredHeight: 65
+            Layout.preferredHeight: Qt.platform.os == 'ios' ? 90 : 65
             Layout.fillWidth: true
-            Row {
+            RowLayout {
+                width: parent.width
+                anchors.verticalCenterOffset: Qt.platform.os == 'ios' ? 20 : 0
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 10
-                Rectangle {
+                AppBarButton {
                     id: buttonBackBg
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 65
-                    height: 65
-                    radius: height
-                    color: "transparent" //Theme.colorHeaderHighlight
-                    opacity: 1
-                    IconSvg {
-                        id: buttonBack
-                        width: 24
-                        height: width
-                        anchors.centerIn: parent
+                    icon: "qrc:/assets/menus/menu_back.svg"
+                    onClicked: {
+                        if (identifierLayoutView.currentIndex === 0) {
+                            planteDeseasePopup.close()
+                        } else if (identifierLayoutView.currentIndex === 3) {
+                            identifierLayoutView.currentIndex = 0
+                        }
 
-                        source: "qrc:/assets/menus/menu_back.svg"
-                        color: Theme.colorHeaderContent
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            if (identifierLayoutView.currentIndex === 0) {
-                                planteDeseasePopup.close()
-                            } else if (identifierLayoutView.currentIndex === 3) {
-                                identifierLayoutView.currentIndex = 0
-                            }
-
-                            else {
-                                identifierLayoutView.currentIndex--
-                            }
+                        else {
+                            identifierLayoutView.currentIndex--
                         }
                     }
-
-                    Behavior on opacity {
-                        OpacityAnimator {
-                            duration: 333
-                        }
-                    }
+                    Layout.preferredHeight: 64
+                    Layout.preferredWidth: 64
+                    Layout.alignment: Qt.AlignVCenter
                 }
                 Label {
-                    text: identifierLayoutView.currentIndex === 0 ? "Plant Desease" : identifierLayoutView.currentIndex === 1 ? "Analyse de plante" :  "Resultat"
+                    text: {
+                        switch (identifierLayoutView.currentIndex) {
+                        case 0:
+                            return "Maladie des plantes"
+                        case 1:
+                            return "Analyse de plante"
+                        case 2:
+                            return "Resultat de l'analyse"
+                        case 3:
+                            return "Encyclopedie des plantes"
+                        }
+                    }
+
                     font.pixelSize: 21
                     font.bold: true
                     font.weight: Font.Medium
                     color: "white"
-                    anchors.verticalCenter: parent.verticalCenter
+                    Layout.alignment: Qt.AlignVCenter
+                    Layout.fillWidth: true
+                }
+                AppBarButton {
+                    icon:  Icons.camera
+                    visible: (Qt.platform.os == 'ios' || Qt.platform.os == 'android') && identifierLayoutView.currentIndex === 1
+                    onClicked: {
+                        if (Qt.platform.os === 'ios') {
+                            imgPicker.openCamera()
+                        } else {
+                            androidToolsLoader.item.openCamera()
+                        }
+                    }
+                    Layout.preferredHeight: 64
+                    Layout.preferredWidth: 64
+                    Layout.alignment: Qt.AlignVCenter
+                }
+                Loader {
+                    id: androidToolsLoader
+                    active: Qt.platform.os === "android"
+                    sourceComponent: Component {
+                        Item {
+                            function openCamera() {
+                                QtAndroidAppPermissions.openCamera()
+                            }
+                            function openGallery() {
+                                QtAndroidAppPermissions.openGallery()
+                            }
+
+                            Connections {
+                                target: QtAndroidAppPermissions
+                                function onImageSelected(path) {
+                                    image.source = "file://" + path + "?" + Math.random()
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -116,41 +163,140 @@ Popup {
                     anchors.horizontalCenter: parent.horizontalCenter
                     topPadding: 20
                     spacing: 20
-                    Image {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        width: 112
-                        height: 112
-                        opacity: .4
-                        source: Icons.palmTree
-                    }
+                    Item {
+                        width: parent.width
+                        height: (3 * ((parent.width - (20)) / 3)) + 30
+                        ListModel {
+                            id: optionModel
 
-                    ColumnLayout {
-                        width: parent.width / 2
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        spacing: 5
-                        NiceButton {
-                            text: "Analyser une plantes"
-                            Layout.preferredHeight: 60
-                            Layout.fillWidth: true
-                            Layout.alignment: Qt.AlignHCenter
-                            Layout.maximumWidth: 300
-                            icon.source: Icons.magnify
-                            onClicked: {
-                                identifierLayoutView.currentIndex++
+                            Component.onCompleted: {
+                                let data = [{
+                                                "name": qsTr("Analyser une plantes"),
+                                                "icon": Icons.magnifyScan,
+                                                "image": "",
+                                                "action": "analyser",
+                                                "style": "darkblue"
+                                            }, {
+                                                "name": qsTr("Encyclopedie des maladies"),
+                                                "icon": Icons.bookOpenOutline,
+                                                "image": "",
+                                                "action": "encyclopedie",
+                                                "style": "lightenYellow"
+                                            },]
+                                data.forEach((plant => append(plant)))
                             }
                         }
-                        NiceButton {
-                            text: "Encyclopedie des maladies"
-                            icon.source: Icons.tree
-                            Layout.alignment: Qt.AlignHCenter
-                            Layout.preferredHeight: 60
-                            Layout.fillWidth: true
-                            Layout.maximumWidth: 300
-                            onClicked: identifierLayoutView.currentIndex = 3
+                        GridView {
+                            id: gr
+                            y: 10
+                            interactive: false
+                            width: parent.width
+                            height: parent.height - 20
+                            cellWidth: (parent.width - (10)) / 2.5
+                            cellHeight: cellWidth
+                            model: optionModel
+                            delegate: Item {
+                                width: (gr.width - (20)) / 2.5
+                                height: width
+                                Rectangle {
+                                    anchors.fill: parent
+                                    anchors.bottomMargin: 35
+                                    anchors.rightMargin: 15
+                                    anchors.leftMargin: 15
+                                    radius: 10
+                                    opacity: mArea.containsMouse ? .8 : 1
+                                    gradient: Gradient {
+                                        orientation: Qt.Horizontal
+                                        GradientStop {
+                                            position: 0.04
+                                            color: {
+                                                switch (style) {
+                                                case "darkblue":
+                                                    return "#2c718a"
+                                                case "lightenYellow":
+                                                    return "#93d1be"
+                                                case "sunrise":
+                                                    return "#ffc6a4"
+                                                default:
+                                                    return "#ccc"
+                                                }
+                                            }
+                                        }
+                                        GradientStop {
+                                            position: 1.00
+                                            color: {
+                                                switch (style) {
+                                                case "darkblue":
+                                                    return "#143e44"
+                                                case "lightenYellow":
+                                                    return "#0ca780"
+                                                case "sunrise":
+                                                    return "#fc9185"
+                                                default:
+                                                    return "#ccc"
+                                                }
+                                            }
+                                        }
+                                    }
+                                    IconSvg {
+                                        width: 64
+                                        height: 64
+                                        visible: icon !== ""
+                                        anchors.centerIn: parent
+
+                                        source: icon
+                                        color: 'white'
+                                    }
+                                    Image {
+                                        id: img
+                                        visible: image.toString() !== ""
+                                        source: image
+                                        anchors.fill: parent
+                                        layer.enabled: true
+                                        layer.effect: OpacityMask {
+                                            maskSource: Item {
+                                                width: img.width
+                                                height: img.height
+                                                Rectangle {
+                                                    anchors.centerIn: parent
+                                                    width: img.adapt ? img.width : Math.min(img.width, img.height)
+                                                    height: img.adapt ? img.height : width
+                                                    radius: 10
+                                                }
+                                            }
+                                        }
+                                    }
+                                    MouseArea {
+                                        id: mArea
+                                        anchors.fill: parent
+                                        enabled: action !== ""
+                                        hoverEnabled: enabled
+                                        onClicked: {
+                                            if (action === "analyser") {
+                                                identifierLayoutView.currentIndex++
+                                            } else if (action === "encyclopedie") {
+                                                identifierLayoutView.currentIndex = 3
+                                            }
+                                        }
+                                    }
+                                }
+                                Label {
+                                    width: parent.width - 10
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    anchors.bottom: parent.bottom
+                                    anchors.bottomMargin: 3
+                                    height: 28
+                                    wrapMode: Label.Wrap
+                                    font.pixelSize: 12
+                                    font.weight: Font.Medium
+                                    horizontalAlignment: Label.AlignHCenter
+                                    verticalAlignment: Label.AlignVCenter
+                                    text: name
+                                }
+                            }
                         }
                     }
                 }
-
             }
 
             Item {
@@ -160,7 +306,7 @@ Popup {
                     TabBar {
                         id: tabBar
                         topPadding: 0
-                        visible: identifierLayoutView.currentIndex !== 0
+                        visible:  Qt.platform.os !== 'ios' && Qt.platform.os !== 'android'
                         Material.background: "#00c395"
                         Material.foreground: Material.color(Material.Grey, Material.Shade50)
                         Material.accent: Material.color(Material.Grey, Material.Shade50)
@@ -171,6 +317,7 @@ Popup {
                         }
                         TabButton {
                             text: "Camera"
+                            visible: Qt.platform.os !== 'ios'
                             onClicked: tabView.currentIndex = 1
                         }
                         onCurrentIndexChanged: {
@@ -240,7 +387,16 @@ Popup {
                                 }
                                 MouseArea {
                                     anchors.fill: parent
-                                    onClicked: fileDialog.open()
+                                    onClicked: {
+                                        if (Qt.platform.os === 'ios') {
+                                            imgPicker.openPicker()
+                                        } else if (Qt.platform.os === 'android') {
+                                            androidToolsLoader.item.openGallery()
+                                        }
+                                        else {
+                                            fileDialog.open()
+                                        }
+                                    }
                                 }
                             }
 
@@ -316,7 +472,6 @@ Popup {
                                         }
                                     }
                                 }
-
                                 sourceComponent: cameraView
                             }
                         }
@@ -345,21 +500,17 @@ Popup {
                         Layout.fillWidth: true
                         Layout.preferredHeight: 60
                         Layout.rightMargin: 10
-                        Layout.leftMargin: 10
+                        Layout.leftMargin: 0
 
                         Item {
                             Layout.fillWidth: true
                         }
 
-                        NiceButton {
-                            id: control
-                            Layout.preferredHeight: 60
-                            Layout.preferredWidth: 120
-                            Layout.alignment: Qt.AlignHCenter
-                            visible: tabView.currentIndex === 0
-                            icon.source: Icons.imageArea
-                            text: "Ouvrir"
-                            onClicked: fileDialog.open()
+                        ImagePicker {
+                            id: imgPicker
+                            onCapturedImage: function (path) {
+                                image.source = "file://" + path
+                            }
                         }
 
                         NiceButton {
@@ -382,7 +533,7 @@ Popup {
                             Layout.alignment: Qt.AlignHCenter
                             text: "Analyser"
                             icon.source: Icons.magnify
-                            Layout.preferredWidth: 180
+                            Layout.preferredWidth: Qt.platform.os === 'ios' ? 120 : 180
                             Layout.preferredHeight: 60
                             visible: image.source.toString() !== "" || accessCam.active
                             onClicked: {
@@ -391,17 +542,23 @@ Popup {
                                     let data = {
                                         "images": [imgTool.getBase64(
                                                 image.source.toString().replace(
-                                                    Qt.platform.os === "windows" ? "file:///" : "file://", ""))]
+                                                    Qt.platform.os === "windows" ? "file:///" : "file://", ""))],
+                                        "disease_details": ["cause", "treatment", "common_names", "classification", "description", "url" ],
+                                        "modifiers": ["similar_images"],
+                                        "language": "fr",
+                                        "longitude": gps.position.coordinate.longitude,
+                                        "latitude": gps.position.coordinate.latitude
                                     }
                                     request("POST",
                                             "https://plant.id/api/v2/health_assessment",
                                             data).then(function (r) {
                                                 let datas = JSON.parse(r)
-                                                console.log(r)
+//                                                console.log(r)
                                                 planteDeseasePopup.analyseResults = datas
                                                 imgAnalysisSurface.loading = false
                                                 identifierLayoutView.currentIndex = 2
-                                                if (datas.is_plant) {
+                                                console.log(datas.health_assessment.diseases[0]['similar_images'])
+                                                if (datas.is_plant && planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability < 0.7 ) {
                                                     identifedPlantListView.model
                                                             = datas.health_assessment.diseases
                                                 } else {
@@ -448,16 +605,30 @@ Popup {
                         padding: 10
                         spacing: 3
                         Label {
-                            font.pixelSize: 28
+                            font.pixelSize: 24
                             width: 300
                             wrapMode: Label.Wrap
                             horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
                             visible: planteDeseasePopup.analyseResults?.is_plant  ?? false
-                            text: "Plante en bonne sante <b><font color='%1'>%2</font></b>".arg(
-                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "green" : "red").arg(
-                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "Oui" : "Non")
+                            text: qsTr(planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.7 ?
+                                           "<font color='green'> Votre plante est en bonne santé</font>" :
+                                           (planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.4) ? "Votre plante semble en bonne santé" : "<font color='red'>Votre plante est malade</font>" )
+//                            text: "Plante en bonne sante ? <b><font color='%1'>%2</font></b>".arg(
+//                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "green" : "red").arg(
+//                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "Oui" : "Non")
+                        }
+                        Label {
+                            font.pixelSize: 16
+                            font.weight: Font.Light
+                            width: 300
+                            wrapMode: Label.Wrap
+                            horizontalAlignment: Label.AlignHCenter
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            verticalAlignment: Qt.AlignVCenter
+                            visible: desease.analyseResults?.is_plant && planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability < 0.4
+                            text: "Quelques maladies détectées"
                         }
                         Label {
                             font.pixelSize: 28
@@ -466,7 +637,12 @@ Popup {
                             horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
-                            visible: !desease.analyseResults?.is_plant
+                            visible: {
+                                if(desease !== undefined)
+                                    return !desease.analyseResults?.is_plant
+                                else return false
+                            }
+
                             text: "Ceci n'est pas une plante"
                         }
                     }
@@ -492,27 +668,91 @@ Popup {
                                 font.weight: Font.Bold
                             }
                         }
+                        onClicked: {
+                            resultDeseaseDetailPopup.desease_data = modelData
+                            resultDeseaseDetailPopup.open()
+                        }
                     }
                 }
             }
             Item {
+                ListModel {
+                    id: maladiesModel
+
+                    ListElement { nom: "Oïdium"; sousDescription: "Champignon blanc sur les feuilles"; dangerosite: 0.5 }
+                    ListElement { nom: "Mildiou"; sousDescription: "Taches jaunes ou brunes sur les feuilles"; dangerosite: 0.6 }
+                    ListElement { nom: "Tavelure"; sousDescription: "Taches brunes sur les fruits et les feuilles"; dangerosite: 0.5 }
+                    ListElement { nom: "Rouille"; sousDescription: "Pustules orangées sur les feuilles"; dangerosite: 0.6 }
+                    ListElement { nom: "Pourriture grise"; sousDescription: "Moisissure grise sur les fruits"; dangerosite: 0.7 }
+                    ListElement { nom: "Anthracnose"; sousDescription: "Lésions noires sur les feuilles"; dangerosite: 0.4 }
+                    ListElement { nom: "Chancre"; sousDescription: "Lésions sur les branches et troncs"; dangerosite: 0.7 }
+                    ListElement { nom: "Fusariose"; sousDescription: "Pourriture des racines et du collet"; dangerosite: 0.8 }
+                    ListElement { nom: "Nécrose"; sousDescription: "Mort des tissus végétaux"; dangerosite: 0.6 }
+                    ListElement { nom: "Verticilliose"; sousDescription: "Flétrissement et décoloration des feuilles"; dangerosite: 0.7 }
+                    ListElement { nom: "Bactériose"; sousDescription: "Pourriture bactérienne des tissus"; dangerosite: 0.8 }
+                    ListElement { nom: "Virose"; sousDescription: "Infection virale des plantes"; dangerosite: 0.7 }
+                    ListElement { nom: "Jaunisse"; sousDescription: "Décoloration jaune des feuilles"; dangerosite: 0.5 }
+                    ListElement { nom: "Sclérotiniose"; sousDescription: "Pourriture des tiges et des racines"; dangerosite: 0.6 }
+                    ListElement { nom: "Phytophthora"; sousDescription: "Pourriture des racines"; dangerosite: 0.8 }
+                    ListElement { nom: "Rhizoctone"; sousDescription: "Pourriture des racines et du collet"; dangerosite: 0.7 }
+                }
+
                 ListView {
-                    id: lView
+                    id: listView
                     anchors.fill: parent
                     anchors.margins: 10
-                    model: 10
+                    model: maladiesModel
+                    clip: true
                     delegate: Rectangle {
-                        height: 50
-                        width: lView.width
-                        color: index % 2 === 0 ? Qt.darker("gray", .55) : "white"
+                        height: 70
+                        width: listView.width
+                        Rectangle {
+                            anchors.bottom: parent.bottom
+                            height: 1
+                            color: "#ccc"
+                            width: parent.width - 20
+                            opacity: .4
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            visible: index !== maladiesModel.count - 1
+                        }
+
                         Label {
+                            id: titleLabel
+                            anchors.top: parent.top
+                            anchors.topMargin: 15
+                            anchors.left: parent.left
+                            anchors.leftMargin: 10
+                            font.pixelSize: 21
+                            font.weight: Font.Medium
+                            text: nom
+                        }
+
+                        Label {
+                            anchors.top: titleLabel.bottom
+                            anchors.left: parent.left
+                            anchors.leftMargin: 10
+                            font.pixelSize: 12
+                            color: "gray"
+                            text: sousDescription
+                        }
+
+                        Rectangle {
+                            id: dangerositeCercle
                             anchors.verticalCenter: parent.verticalCenter
-                            x: 10
-                            font.pixelSize: 14
-                            text: "Maladie " + index
+                            anchors.right: parent.right
+                            anchors.rightMargin: 10
+                            height: 30
+                            width: 30
+                            radius: 15
+                            color: listView.getColorForDangerosite(dangerosite)
                         }
                     }
+                    function getColorForDangerosite(dangerosite) {
+                        return Qt.rgba(1.0, 1.0 - dangerosite, 1.0 - dangerosite, 1.0)
+                    }
                 }
+
+
             }
         }
     }

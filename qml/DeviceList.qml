@@ -6,6 +6,7 @@ import QtSensors
 import SortFilterProxyModel
 import QtMultimedia
 import ImageTools
+import "components"
 
 import ThemeEngine 1.0
 
@@ -57,6 +58,8 @@ Item {
         if (deviceManager.hasDevices) {
             // The sensor list is shown
             loaderStatus.source = ""
+            loaderStatus.visible = false
+            loaderDeviceList.visible = true
 
             if (!deviceManager.bluetooth) {
                 rectangleBluetoothStatus.setBluetoothWarning()
@@ -67,6 +70,8 @@ Item {
             }
         } else {
             // The sensor list is not populated
+            loaderStatus.visible = true
+            loaderDeviceList.visible = false
             rectangleBluetoothStatus.hide()
 
             if (!deviceManager.bluetooth) {
@@ -330,9 +335,45 @@ Item {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    Timer {
+        id: retryScan
+        interval: 333
+        running: false
+        repeat: false
+        onTriggered: scan()
+    }
+
+    RoundButton {
+        visible: deviceManager.hasDevices
+        icon.source: Icons.plusThick
+        icon.width: 32
+        icon.height: 32
+        width: Qt.platform.os === "android" ? 90 : 70
+        height: Qt.platform.os === "android" ? 90 : 70
+        anchors.right: parent.right
+        anchors.rightMargin: 20
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 90
+        palette.button: Theme.colorPrimary
+        palette.buttonText: "white"
+        Material.elevation: 0
+        Material.background: Theme.colorPrimary
+        Material.foreground: Material.color(Material.Grey, Material.Shade50)
+        onClicked: {
+            if (utilsApp.checkMobileBleLocationPermission()) {
+                scan()
+            } else {
+                utilsApp.getMobileBleLocationPermission()
+                retryScan.start()
+            }
+        }
+        enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
+    }
+
     Loader {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+        width: parent.width
 
         asynchronous: true
 
@@ -340,41 +381,93 @@ Item {
             spacing: 0
             Layout.alignment: Qt.AlignHCenter
 
-
             ButtonWireframe {
-                text: qsTr("Plants")
-                Layout.preferredHeight: 45
+                Layout.preferredHeight: 70
                 Layout.alignment: Qt.AlignVCenter
-                Layout.preferredWidth: screenDeviceList.width / 3
+                Layout.fillWidth: true
+
+                Column {
+                    width: parent.width
+                    anchors.verticalCenter: parent.verticalCenter
+                    ColorImage {
+                        source: "qrc:/assets/icons_material/outline-local_florist-24px.svg"
+                        width: 32
+                        height: 32
+                        color: "white"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+                    Label {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        color: "white"
+                        text: qsTr("Plants")
+                    }
+                }
 
                 componentRadius: 0
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: screenPlantBrowser.loadScreenFrom("DeviceList")
             }
+
+//            ButtonWireframe {
+//                Layout.preferredHeight: 70
+//                Layout.alignment: Qt.AlignVCenter
+//                Layout.fillWidth: true
+//                Layout.preferredWidth: screenDeviceList.width / 3
+
+//                Rectangle {
+//                    y: 0.8
+//                    width: parent.width
+//                    height: 4
+//                    radius: 2
+//                }
+
+//                Column {
+//                    width: parent.width
+//                    anchors.verticalCenter: parent.verticalCenter
+//                    ColorImage {
+//                        source: Icons.devices
+//                        width: 32
+//                        height: 32
+//                        color: "white"
+//                        anchors.horizontalCenter: parent.horizontalCenter
+//                    }
+//                }
+
+//                componentRadius: 0
+//                fullColor: true
+//                primaryColor: Theme.colorPrimary
+//                onClicked: screenDeviceBrowser.loadScreen()
+//                enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
+//            }
+
             ButtonWireframe {
-                text: qsTr("Deseases")
-                Layout.preferredHeight: 45
+                //text: qsTr("Deseases")
+                Layout.preferredHeight: 70
                 Layout.alignment: Qt.AlignVCenter
-                Layout.preferredWidth: screenDeviceList.width / 3
+                Layout.fillWidth: true
+
+                Column {
+                    width: parent.width
+                    anchors.verticalCenter: parent.verticalCenter
+                    ColorImage {
+                        source: Icons.sproutOutline
+                        width: 32
+                        height: 32
+                        color: "white"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+                    Label {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: qsTr("Desease")
+                        color: "white"
+                    }
+                }
 
                 componentRadius: 0
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: desease.open()
-            }
-            ButtonWireframe {
-                text: qsTr("Devices")
-                Layout.preferredHeight: 45
-                Layout.alignment: Qt.AlignVCenter
-                Layout.fillWidth: true
-                Layout.preferredWidth: screenDeviceList.width / 3
-
-                componentRadius: 0
-                fullColor: true
-                primaryColor: Theme.colorPrimary
-                onClicked: screenDeviceBrowser.loadScreen()
-                enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
             }
         }
     }
@@ -446,4 +539,14 @@ Item {
         return fetch(query)
     }
     ////////////////////////////////////////////////////////////////////////////
+
+    function scan() {
+        if (!deviceManager.updating) {
+            if (deviceManager.scanning) {
+                deviceManager.scanDevices_stop()
+            } else {
+                deviceManager.scanDevices_start()
+            }
+        } else console.warn("deviceManager.updating")
+    }
 }
