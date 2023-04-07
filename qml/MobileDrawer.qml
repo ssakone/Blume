@@ -535,20 +535,13 @@ Drawer {
                     id: availableDevice
                     iconSource: Icons.bluetooth
                     color: buttonScan.enabled ? Theme.colorText : Theme.colorSubText
-                    text: qsTr("Search bluetooth devices")
+                    text: qsTr("Bluetooth devices")
                     enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
                     onClicked: {
-                        if (utilsApp.checkMobileBleLocationPermission()) {
-                            parent.scan()
-                        } else {
-                            utilsApp.getMobileBleLocationPermission()
-                            retryScan.start()
-                        }
+                        screenDeviceBrowser.loadScreen()
                         appDrawer.close()
                     }
                 }
-
-                ////////
             }
         }
 

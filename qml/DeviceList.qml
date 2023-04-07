@@ -361,7 +361,26 @@ Page {
         Material.elevation: 0
         Material.background: Theme.colorPrimary
         Material.foreground: Material.color(Material.Grey, Material.Shade50)
-        //deviceManager.scanning
+        Timer {
+            running: deviceManager.scanning
+            interval: 100
+            onRunningChanged: {
+                if (!running)
+                    parent.opacity = 1
+            }
+
+            onTriggered: {
+                if (parent.opacity == 1) {
+                    parent.opacity = 0.6
+                }
+                else {
+                    parent.opacity = 1
+                }
+            }
+        }
+
+        Behavior on opacity { NumberAnimation { duration: 100 } }
+
         onClicked: {
             if (deviceManager.scanning) {
                 deviceManager.scanDevices_stop()
