@@ -32,8 +32,8 @@ Popup {
             accessCam.active = false
         tabView.currentIndex = 0
         tabBar.currentIndex = 0
+        image.source = ""
     }
-
 
     onOpened: {
         image.source = ""
@@ -130,7 +130,8 @@ Popup {
                             Connections {
                                 target: QtAndroidAppPermissions
                                 function onImageSelected(path) {
-                                    image.source = "file://" + path + "?" + Math.random()
+                                    image.source = "file://?" + Math.random()
+                                    image.source = "file://" + path
                                 }
                             }
                         }
