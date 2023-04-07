@@ -94,9 +94,9 @@ Popup {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: indicatorBar.width - 2
                     height: Math.min((indicatorRect.height / indicator_model.count), 50) + 1
-                    //Layout.fillWidth: true // sensor !== null  && level <= sensor.lightLevel
-                    visible: level <= 4
-                    color: (level <= 4) ? l_color : Qt.rgba(0, 0, 0, 0)
+                    //Layout.fillWidth: true //
+                    visible: sensor != null  && level <= sensor.lightLevel
+                    color: (sensor != null  && level <= sensor.lightLevel) ? l_color : Qt.rgba(0, 0, 0, 0)
                     radius: 0
                     ColorImage {
                         anchors.verticalCenter: parent.verticalCenter
@@ -104,7 +104,7 @@ Popup {
                         anchors.rightMargin: 15
                         source: Icons.torch
                         color: textColor
-                        visible: level === 4
+                        visible: level === sensor.lightLevel
                     }
 
                     Text {
