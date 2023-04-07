@@ -36,11 +36,11 @@ Popup {
 
     ListModel {
         id: indicator_model
-        ListElement { level: 5; l_color: "red"; label: "Ensolleilé" }
-        ListElement { level: 4; l_color: "yellow"; label: "Très lumineux"  }
-        ListElement { level: 3; l_color: "orange"; label: "Lumineux"  }
-        ListElement { level: 2; l_color: "white"; label: "Normal"  }
-        ListElement { level: 1; l_color: "gray"; label: "Sombre" }
+        ListElement { level: 5; l_color: "red"; textColor: 'white'; label: "Ensolleilé" }
+        ListElement { level: 4; l_color: "yellow"; textColor: 'black'; label: "Très lumineux"  }
+        ListElement { level: 3; l_color: "orange"; textColor: 'black'; label: "Lumineux"  }
+        ListElement { level: 2; l_color: "white"; textColor: 'black'; label: "Normal"  }
+        ListElement { level: 1; l_color: "gray"; textColor: 'black'; label: "Sombre" }
     }
 
     ColumnLayout {
@@ -52,12 +52,14 @@ Popup {
             IconSvg {
                 width: 64
                 height: 64
+                anchors.horizontalCenter: parent.horizontalCenter
                 source: "qrc:/assets/icons_custom/posometre.svg"
                 color: 'black'
             }
 
             Label {
                 text: "Posometre"
+                anchors.horizontalCenter: parent.horizontalCenter
                 font.weight: Font.Medium
             }
         }
@@ -69,63 +71,59 @@ Popup {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter
 
-            color: Qt.rgba(0, 0, 0, 0)
+            color: "white"
+            border.color: 'gray'
             radius: 20
             clip: true
 
             ListView {
                 id: indicatorBar
-                Layout.fillHeight: true
-                height: parent.height + 20
+                height: parent.height
+                width: parent.width
                 model: indicator_model
+                anchors.bottom: parent.bottom
+                interactive: false
+                clip: true
 
-                delegate: RowLayout {
+                delegate: Rectangle {
+                    id: indicatorLevel
                     required property string label
                     required property int level
                     required property color l_color
-
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.fillWidth: true
-
-                    Item {
-                        width: 20
-                        Layout.fillWidth: true
-                    }
-                    Rectangle {
-
-                        id: indicatorLevel
-                        height: Math.min((indicatorRect.height / indicator_model.count), 50) + 1 // To clip because of radius on parent Rectangle
-                        width: indicator_width + 50 // To ensure overflow_x
-                        Layout.fillWidth: true
-                        color: (sensor != null && level <= sensor.lightLevel) ? l_color : Qt.rgba(0, 0, 0, 0)
-                        radius: 5
-
-                        Rectangle {
-                            height: 1
-                            width: parent.width
-                            color: "white"
-                            Layout.alignment: Qt.AlignBottom
-                        }
-
-                    }
-                    Item {
-                        width: 10
-                        Layout.fillWidth: true
+                    required property color textColor
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: indicatorBar.width - 2
+                    height: Math.min((indicatorRect.height / indicator_model.count), 50) + 1
+                    //Layout.fillWidth: true // sensor !== null  && level <= sensor.lightLevel
+                    visible: level <= 4
+                    color: (level <= 4) ? l_color : Qt.rgba(0, 0, 0, 0)
+                    radius: 0
+                    ColorImage {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 15
+                        source: Icons.torch
+                        color: textColor
+                        visible: level === 4
                     }
 
                     Text {
                         text: label
-                        color: "white"
+                        color: textColor
                         Layout.alignment: Qt.AlignVCenter
-                        Layout.fillWidth: true
+                        anchors.verticalCenter: parent.verticalCenter
+                        x: 10
+                    }
+
+                    Rectangle {
+                        height: 1
+                        width: parent.width
+                        color: "white"
+                        anchors.bottom: parent.bottom
                     }
                 }
             }
-
         }
-
-
-
 
 
 //        Label {
@@ -136,7 +134,7 @@ Popup {
 //            horizontalAlignment: Label.AlignHCenter
 //            text: {
 //                if (als.reading != null){
-//                    console.log(JSON.stringify(als.reading))
+//                   console.log(JSON.stringify(als.reading))
 //                    switch (als.reading.lightLevel) {
 //                        case 0:
 //                            return "Niveau inconnue"
