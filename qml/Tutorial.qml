@@ -85,7 +85,7 @@ Rectangle {
                             anchors.left: parent.left
                             anchors.leftMargin: tutorialPages.margins
 
-                            text: qsTr("<b>Blume</b> is a plant monitoring application for Xiaomi '<b>Flower Care</b>' or Parrot '<b>Flower Power</b>' sensors.")
+                            text: qsTr("<b>Blume</b> is a plant monitoring application for these following sensors.")
                             textFormat: Text.StyledText
                             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                             font.pixelSize: Theme.fontSizeContentBig
@@ -121,6 +121,73 @@ Rectangle {
                             primaryColor: Theme.colorHeaderHighlight
                             text: qsTr("Supported sensors")
                             source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
+                            onClicked: Qt.openUrlExternally("https://mahoudev.com/shop")
+                        }
+                    }
+                }
+
+                Item {
+                    id: page5
+
+                    Column {
+                        anchors.right: parent.right
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 32
+
+                        Text {
+                            anchors.right: parent.right
+                            anchors.rightMargin: tutorialPages.margins
+                            anchors.left: parent.left
+                            anchors.leftMargin: tutorialPages.margins
+
+                            text: qsTr("<b>Blume</b> offers plant identification service.")
+                            textFormat: Text.StyledText
+                            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                            font.pixelSize: Theme.fontSizeContentBig
+                            color: Theme.colorHeaderContent
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                        IconSvg {
+                            width: tutorialPages.width * (tutorialPages.height > tutorialPages.width ? 0.95 : 0.5)
+                            height: width*0.55
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            source: "qrc:/assets/tutorial/api-identity.svg"
+                            fillMode: Image.PreserveAspectFit
+                        }
+                    }
+                }
+
+                Item {
+                    id: page6
+
+                    Column {
+                        anchors.right: parent.right
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 32
+
+                        Text {
+                            anchors.right: parent.right
+                            anchors.rightMargin: tutorialPages.margins
+                            anchors.left: parent.left
+                            anchors.leftMargin: tutorialPages.margins
+
+                            text: qsTr("<b>Blume</b> also offers plant health status detection service.")
+                            textFormat: Text.StyledText
+                            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                            font.pixelSize: Theme.fontSizeContentBig
+                            color: Theme.colorHeaderContent
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                        IconSvg {
+                            width: tutorialPages.width * (tutorialPages.height > tutorialPages.width ? 0.95 : 0.5)
+                            height: width*0.55
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            source: "qrc:/assets/tutorial/api-health-status.svg"
+                            fillMode: Image.PreserveAspectFit
                         }
                     }
                 }

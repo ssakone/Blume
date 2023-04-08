@@ -1,0 +1,32 @@
+# File auto generated with CMake qt_generate_qmldir. Run CMake to regenerate if files changed.
+
+module qml.components
+
+ActionMenuFixed 1.0 ActionMenuFixed.qml
+AirQualityIndicator 1.0 AirQualityIndicator.qml
+AppBarButton 1.0 AppBarButton.qml
+ButtonExperimental 1.0 ButtonExperimental.qml
+ChartEnvironmentalVoc 1.0 ChartEnvironmentalVoc.qml
+ChartHistory 1.0 ChartHistory.qml
+ChartPlantDataAio 1.0 ChartPlantDataAio.qml
+ChartThermometerMinMax 1.0 ChartThermometerMinMax.qml
+ChartThermometerMinMaxBar 1.0 ChartThermometerMinMaxBar.qml
+ClipRRect 1.0 ClipRRect.qml
+singleton Http 1.0 Http.qml
+singleton Icons 1.0 Icons.qml
+IndicatorsCompact 1.0 IndicatorsCompact.qml
+IndicatorsSolid 1.0 IndicatorsSolid.qml
+ItemBannerSync 1.0 ItemBannerSync.qml
+ItemEnvBox 1.0 ItemEnvBox.qml
+ItemLoadData 1.0 ItemLoadData.qml
+ItemNoBluetooth 1.0 ItemNoBluetooth.qml
+ItemNoData 1.0 ItemNoData.qml
+ItemNoDevice 1.0 ItemNoDevice.qml
+ItemNoDeviceNearby 1.0 ItemNoDeviceNearby.qml
+ItemNoJournal 1.0 ItemNoJournal.qml
+ItemNoPermission 1.0 ItemNoPermission.qml
+ItemNoPlant 1.0 ItemNoPlant.qml
+ItemNoPlants 1.0 ItemNoPlants.qml
+ItemWeatherBox 1.0 ItemWeatherBox.qml
+NiceButton 1.0 NiceButton.qml
+SectionTitle 1.0 SectionTitle.qml

@@ -20,7 +20,6 @@
         <file alias="SelectorMenuItem.qml">components_generic/SelectorMenuItem.qml</file>
         <file alias="SliderValueSolid.qml">components_generic/SliderValueSolid.qml</file>
         <file alias="ToolTipFlat.qml">components_generic/ToolTipFlat.qml</file>
-
         <file alias="CheckBoxThemed.qml">components_themed/CheckBoxThemed.qml</file>
         <file alias="ComboBoxThemed.qml">components_themed/ComboBoxThemed.qml</file>
         <file alias="PageIndicatorThemed.qml">components_themed/PageIndicatorThemed.qml</file>
@@ -30,12 +29,19 @@
         <file alias="SwitchThemedMobile.qml">components_themed/SwitchThemed_mobile.qml</file>
         <file alias="TextAreaThemed.qml">components_themed/TextAreaThemed.qml</file>
         <file alias="TextFieldThemed.qml">components_themed/TextFieldThemed.qml</file>
+        <file>components/Icons.qml</file>
+        <file>components/NiceButton.qml</file>
+        <file>components/ClipRRect.qml</file>
+        <file>components/AppBarButton.qml</file>
     </qresource>
-
     <qresource prefix="/js">
         <file alias="UtilsNumber.js">components_js/UtilsNumber.js</file>
         <file alias="UtilsDeviceSensors.js">components_js/UtilsDeviceSensors.js</file>
         <file alias="UtilsPlantDatabase.js">components_js/UtilsPlantDatabase.js</file>
         <file alias="UtilsPlantJournal.js">components_js/UtilsPlantJournal.js</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>components/NiceButton.qml</file>
+        <file>components/AppBarButton.qml</file>
     </qresource>
 </RCC>

@@ -4,6 +4,7 @@ import QtQuick.Window
 
 import ThemeEngine 1.0
 import MobileUI 1.0
+import QtAndroidTools
 
 ApplicationWindow {
     id: appWindow
@@ -13,6 +14,36 @@ ApplicationWindow {
     flags: (Qt.platform.os === "android") ? Qt.Window : Qt.Window | Qt.MaximizeUsingFullscreenGeometryHint
     color: Theme.colorBackground
     visible: true
+    readonly property var permissionsNameList: ["android.permission.READ_MEDIA_IMAGES", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.CAMERA", "android.permission.INTERNET", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.BLUETOOTH_ADMIN", "android.permission.BLUETOOTH"]
+    Loader {
+        active: Qt.platform.os === "android"
+        sourceComponent: Component {
+            Item {
+                Connections {
+                    target: QtAndroidAppPermissions
+                    function onRequestPermissionsResults(results)
+                    {
+                        for(var i = 0; i < results.length; i++)
+                        {
+                            if(results[i].granted === true)
+                            {
+                                console.log(results[i].name, true)
+                            }
+                            else
+                            {
+                                if(QtAndroidAppPermissions.shouldShowRequestPermissionInfo(results[i].name) !== true)
+                                {
+                                    console.log(results[i].name, false);
+                                }
+                            }
+                        }
+                    }
+                }
+                Component.onCompleted: QtAndroidAppPermissions.requestPermissions(permissionsNameList)
+            }
+        }
+    }
+
 
     property bool isHdpi: (utilsScreen.screenDpi > 128)
     property bool isDesktop: (Qt.platform.os !== "ios" && Qt.platform.os !== "android")
@@ -129,7 +160,7 @@ ApplicationWindow {
         statusbarColor: isLoading ? "white" : Theme.colorStatusbar
         navbarColor: {
             if (isLoading) return "white"
-            if (appContent.state === "Tutorial") return Theme.colorHeader
+            if (appContent.state === "Tutorial" || appContent.state === "DeviceList") return Theme.colorHeader
             return Theme.colorBackground
         }
     }
@@ -152,15 +183,6 @@ ApplicationWindow {
     Component.onCompleted: {
         handleNotchesTimer.restart()
         mobileUI.isLoading = false
-
-        // SSL TEST
-
-        request("GET",  "http://monip.org/").then(function(e) {
-            console.log(JSON.stringify(e))
-        }).catch(function(err) {
-            console.log(JSON.stringify(err))
-        })
-
     }
 
     function fetch(opts) {

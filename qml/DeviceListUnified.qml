@@ -52,7 +52,7 @@ Item {
         anchors.topMargin: singleColumn ? 0 : 8
         anchors.leftMargin: 6
         anchors.rightMargin: 6
-        anchors.bottomMargin: singleColumn ? 0 : 8
+        anchors.bottomMargin: 70 + devicesView.cellHeight
 
         property bool bigWidget: (!isHdpi || (isTablet && width >= 480))
 

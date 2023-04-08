@@ -23,7 +23,7 @@ Item {
             } else {
                 deviceManager.scanDevices_start()
             }
-        }
+        } else console.warn("deviceManager.updating")
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -73,33 +73,22 @@ Item {
                 Text {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    visible: (Qt.platform.os === "android")
+                    visible: (Qt.platform.os === "android" && !utilsApp.checkMobileBleLocationPermission())
 
-                    text: qsTr("On Android 6+, scanning for Bluetooth Low Energy devices requires <b>location permission</b>.")
+                    text: qsTr("Authorization to use Location is required to connect to the sensors </b>.")
                     textFormat: Text.StyledText
                     font.pixelSize: Theme.fontSizeContentSmall
                     color: Theme.colorSubText
                     wrapMode: Text.WordWrap
                     horizontalAlignment: Text.AlignHCenter
                 }
-                Text {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    visible: (Qt.platform.os === "android" && !utilsApp.isMobileGpsEnabled())
-
-                    text: qsTr("Some Android devices also require the actual <b>GPS to be turned on</b>.")
-                    textFormat: Text.StyledText
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorSubText
-                    wrapMode: Text.WordWrap
-                    horizontalAlignment: Text.AlignHCenter
-                }
+                
                 Text {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     visible: (Qt.platform.os === "android")
 
-                    text: qsTr("The application is neither using nor storing your location. Sorry for the inconvenience.")
+                    text: qsTr("The application is neither using nor storing your location")
                     textFormat: Text.PlainText
                     font.pixelSize: Theme.fontSizeContentSmall
                     color: Theme.colorSubText
@@ -123,57 +112,20 @@ Item {
 
             ////////
 
-            Grid {
+            ButtonWireframe {
+                id: btn2
                 anchors.horizontalCenter: parent.horizontalCenter
-                spacing: 16
 
-                rows: 2
-                columns: singleColumn ? 1 : 2
+                text: qsTr("Launch detection")
+                fullColor: true
+                primaryColor: Theme.colorPrimary
 
-                Item {
-                    width: singleColumn ? column.width : btn1.width
-                    height: 40
-
-                    ButtonWireframeIcon {
-                        id: btn1
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        visible: (Qt.platform.os === "android" || Qt.platform.os === "ios")
-
-                        text: qsTr("Official information")
-                        primaryColor: Theme.colorSubText
-                        sourceSize: 20
-                        source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
-
-                        onClicked: {
-                            if (Qt.platform.os === "android") {
-                                Qt.openUrlExternally("https://developer.android.com/guide/topics/connectivity/bluetooth/permissions#declare-android11-or-lower")
-                            } else if (Qt.platform.os === "ios") {
-                                Qt.openUrlExternally("https://support.apple.com/HT210578")
-                            }
-                        }
-                    }
-                }
-
-                Item {
-                    width: singleColumn ? column.width : btn2.width
-                    height: 40
-
-                    ButtonWireframe {
-                        id: btn2
-                        anchors.horizontalCenter: parent.horizontalCenter
-
-                        text: qsTr("Launch detection")
-                        fullColor: true
-                        primaryColor: Theme.colorPrimary
-
-                        onClicked: {
-                            if (utilsApp.checkMobileBleLocationPermission()) {
-                                scan()
-                            } else {
-                                utilsApp.getMobileBleLocationPermission()
-                                retryScan.start()
-                            }
-                        }
+                onClicked: {
+                    if (utilsApp.checkMobileBleLocationPermission()) {
+                        scan()
+                    } else {
+                        utilsApp.getMobileBleLocationPermission()
+                        retryScan.start()
                     }
                 }
             }

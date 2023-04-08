@@ -36,6 +36,14 @@
 #include "utils_os_macosdock.h"
 #endif
 
+#if defined(Q_OS_IOS)
+#include "imagepicker.h"
+#endif
+
+#if defined(Q_OS_ANDROID)
+#include "android_tools/QtAndroidTools.h"
+#endif
+
 #include <MobileUI/MobileUI.h>
 #include <MobileSharing/MobileSharing.h>
 #include <SingleApplication/SingleApplication.h>
@@ -178,10 +186,18 @@ int main(int argc, char *argv[])
 
     // Translate the application
     utilsLanguage->loadLanguage(sm->getAppLanguage());
+#if defined(Q_OS_ANDROID)
+    QtAndroidTools::initializeQmlTools();
+#else
+    qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "QtAndroidTools", 1, 0, "Theme");
+#endif
 
     // ThemeEngine
     qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "ThemeEngine", 1, 0, "Theme");
     qmlRegisterType<Image2Base64>("ImageTools", 1, 0, "Image2Base64");
+
+    qmlRegisterSingletonType(QUrl("qrc:/qml/components/Icons.qml"), "MaterialIcons", 1, 0, "MaterialIcons");
+
 
     MobileUI::registerQML();
     DeviceUtils::registerQML();
@@ -189,6 +205,7 @@ int main(int argc, char *argv[])
 
     // Then we start the UI
     QQmlApplicationEngine engine;
+    engine.addImportPath("qrc:/qml/");
     QQmlContext *engine_context = engine.rootContext();
 
     engine_context->setContextProperty("deviceManager", dm);
@@ -200,7 +217,11 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("utilsLanguage", utilsLanguage);
     engine_context->setContextProperty("utilsScreen", utilsScreen);
     engine_context->setContextProperty("startMinimized", (start_minimized || sm->getMinimized()));
-
+#if defined(Q_OS_IOS)
+    qmlRegisterType<ImagePicker>("ImagePicker", 1, 0, "ImagePicker");
+#else
+    qmlRegisterType<Image2Base64>("ImagePicker", 1, 0, "ImagePicker");
+#endif
     // Load the main view
 #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS) || defined(FORCE_MOBILE_UI)
     ShareUtils *utilsShare = new ShareUtils();

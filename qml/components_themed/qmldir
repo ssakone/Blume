@@ -1,0 +1,29 @@
+# File auto generated with CMake qt_generate_qmldir. Run CMake to regenerate if files changed.
+
+module qml.components_themed
+
+ButtonIconThemed 1.0 ButtonIconThemed.qml
+ButtonThemed 1.0 ButtonThemed.qml
+CheckBoxThemed 1.0 CheckBoxThemed.qml
+ComboBoxThemed 1.0 ComboBoxThemed.qml
+DialThemed 1.0 DialThemed.qml
+MiddleSliderThemed 1.0 MiddleSliderThemed.qml
+PageIndicatorThemed 1.0 PageIndicatorThemed.qml
+ProgressBarThemed 1.0 ProgressBarThemed.qml
+RadioButtonThemed 1.0 RadioButtonThemed.qml
+RangeSliderThemed 1.0 RangeSliderThemed.qml
+RoundButtonIconThemed 1.0 RoundButtonIconThemed.qml
+RoundButtonThemed 1.0 RoundButtonThemed.qml
+ScrollBarThemed 1.0 ScrollBarThemed.qml
+ScrollBarThemed_h 1.0 ScrollBarThemed_h.qml
+ScrollBarThemed_v 1.0 ScrollBarThemed_v.qml
+SelectorMenuThemed 1.0 SelectorMenuThemed.qml
+SelectorMenuThemedItem 1.0 SelectorMenuThemedItem.qml
+SliderThemed 1.0 SliderThemed.qml
+SpinBoxThemed 1.0 SpinBoxThemed.qml
+SwitchThemed_desktop 1.0 SwitchThemed_desktop.qml
+SwitchThemed_mobile 1.0 SwitchThemed_mobile.qml
+TextAreaThemed 1.0 TextAreaThemed.qml
+TextFieldThemed 1.0 TextFieldThemed.qml
+ToolTipThemed 1.0 ToolTipThemed.qml
+TumblerThemed 1.0 TumblerThemed.qml

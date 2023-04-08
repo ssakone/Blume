@@ -1,0 +1,12 @@
+# File auto generated with CMake qt_generate_qmldir. Run CMake to regenerate if files changed.
+
+module qml.popups
+
+PopupBackgroundUpdates 1.0 PopupBackgroundUpdates.qml
+PopupBlacklistDevice 1.0 PopupBlacklistDevice.qml
+PopupCalibration 1.0 PopupCalibration.qml
+PopupDate 1.0 PopupDate.qml
+PopupDeleteData 1.0 PopupDeleteData.qml
+PopupDeleteDevice 1.0 PopupDeleteDevice.qml
+PopupLocationNotification 1.0 PopupLocationNotification.qml
+PopupMacAddress 1.0 PopupMacAddress.qml

@@ -1,11 +1,13 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Material
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import QtSensors
 import SortFilterProxyModel
 import QtMultimedia
 import ImageTools
+import "components"
 
 import ThemeEngine 1.0
 
@@ -50,12 +52,15 @@ Item {
 
     function checkStatus() {
         if (!utilsApp.checkMobileBleLocationPermission()) {
-            //utilsApp.getMobileBleLocationPermission()
+            popupLocationNotification.open()
+            // utilsApp.getMobileBleLocationPermission()
         }
 
         if (deviceManager.hasDevices) {
             // The sensor list is shown
             loaderStatus.source = ""
+            loaderStatus.visible = false
+            loaderDeviceList.visible = true
 
             if (!deviceManager.bluetooth) {
                 rectangleBluetoothStatus.setBluetoothWarning()
@@ -66,6 +71,8 @@ Item {
             }
         } else {
             // The sensor list is not populated
+            loaderStatus.visible = true
+            loaderDeviceList.visible = false
             rectangleBluetoothStatus.hide()
 
             if (!deviceManager.bluetooth) {
@@ -120,6 +127,11 @@ Item {
 
     PopupDeleteDevice {
         id: confirmDeleteDevice
+        onConfirmed: removeSelectedDevice()
+    }
+
+    PopupLocationNotification {
+        id: popupLocationNotification
         onConfirmed: removeSelectedDevice()
     }
 
@@ -324,33 +336,136 @@ Item {
 
     ////////////////////////////////////////////////////////////////////////////
 
+    Timer {
+        id: retryScan
+        interval: 333
+        running: false
+        repeat: false
+        onTriggered: scan()
+    }
+
+    RoundButton {
+        visible: deviceManager.hasDevices
+        icon.source: Icons.plusThick
+        icon.width: 32
+        icon.height: 32
+        width: Qt.platform.os === "android" ? 90 : 70
+        height: Qt.platform.os === "android" ? 90 : 70
+        anchors.right: parent.right
+        anchors.rightMargin: 20
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 90
+        palette.button: Theme.colorPrimary
+        palette.buttonText: "white"
+        Material.elevation: 0
+        Material.background: Theme.colorPrimary
+        Material.foreground: Material.color(Material.Grey, Material.Shade50)
+        onClicked: {
+            if (utilsApp.checkMobileBleLocationPermission()) {
+                scan()
+            } else {
+                utilsApp.getMobileBleLocationPermission()
+                retryScan.start()
+            }
+        }
+        enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
+    }
+
     Loader {
         anchors.right: parent.right
-        anchors.rightMargin: 12
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 12
+        width: parent.width
 
-        active: isDesktop
         asynchronous: true
 
-        sourceComponent: Row {
-            spacing: 12
+        sourceComponent: RowLayout {
+            spacing: 0
+            Layout.alignment: Qt.AlignHCenter
 
             ButtonWireframe {
-                text: qsTr("devices")
-                fullColor: true
-                primaryColor: Theme.colorSecondary
-                onClicked: screenDeviceBrowser.loadScreen()
-                enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
-            }
-            ButtonWireframe {
-                text: qsTr("plants")
+                Layout.preferredHeight: 70
+                Layout.alignment: Qt.AlignVCenter
+                Layout.fillWidth: true
+
+                Column {
+                    width: parent.width
+                    anchors.verticalCenter: parent.verticalCenter
+                    ColorImage {
+                        source: "qrc:/assets/icons_material/outline-local_florist-24px.svg"
+                        width: 32
+                        height: 32
+                        color: "white"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+                    Label {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        color: "white"
+                        text: qsTr("Plants")
+                    }
+                }
+
+                componentRadius: 0
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: screenPlantBrowser.loadScreenFrom("DeviceList")
             }
+
+//            ButtonWireframe {
+//                Layout.preferredHeight: 70
+//                Layout.alignment: Qt.AlignVCenter
+//                Layout.fillWidth: true
+//                Layout.preferredWidth: screenDeviceList.width / 3
+
+//                Rectangle {
+//                    y: 0.8
+//                    width: parent.width
+//                    height: 4
+//                    radius: 2
+//                }
+
+//                Column {
+//                    width: parent.width
+//                    anchors.verticalCenter: parent.verticalCenter
+//                    ColorImage {
+//                        source: Icons.devices
+//                        width: 32
+//                        height: 32
+//                        color: "white"
+//                        anchors.horizontalCenter: parent.horizontalCenter
+//                    }
+//                }
+
+//                componentRadius: 0
+//                fullColor: true
+//                primaryColor: Theme.colorPrimary
+//                onClicked: screenDeviceBrowser.loadScreen()
+//                enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
+//            }
+
             ButtonWireframe {
-                text: qsTr("desease")
+                //text: qsTr("Deseases")
+                Layout.preferredHeight: 70
+                Layout.alignment: Qt.AlignVCenter
+                Layout.fillWidth: true
+
+                Column {
+                    width: parent.width
+                    anchors.verticalCenter: parent.verticalCenter
+                    ColorImage {
+                        source: Icons.sproutOutline
+                        width: 32
+                        height: 32
+                        color: "white"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+                    Label {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: qsTr("Desease")
+                        color: "white"
+                    }
+                }
+
+                componentRadius: 0
                 fullColor: true
                 primaryColor: Theme.colorPrimary
                 onClicked: desease.open()
@@ -425,4 +540,14 @@ Item {
         return fetch(query)
     }
     ////////////////////////////////////////////////////////////////////////////
+
+    function scan() {
+        if (!deviceManager.updating) {
+            if (deviceManager.scanning) {
+                deviceManager.scanDevices_stop()
+            } else {
+                deviceManager.scanDevices_start()
+            }
+        } else console.warn("deviceManager.updating")
+    }
 }

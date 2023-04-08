@@ -36,6 +36,7 @@
         <file alias="PopupCalibration.qml">popups/PopupCalibration.qml</file>
         <file alias="PopupDate.qml">popups/PopupDate.qml</file>
         <file alias="PopupDeleteData.qml">popups/PopupDeleteData.qml</file>
+        <file alias="PopupLocationNotification.qml">popups/PopupLocationNotification.qml</file>
         <file alias="PopupDeleteDevice.qml">popups/PopupDeleteDevice.qml</file>
         <file alias="ActionMenuFixed.qml">components/ActionMenuFixed.qml</file>
         <file alias="AirQualityIndicator.qml">components/AirQualityIndicator.qml</file>
@@ -57,9 +58,18 @@
         <file alias="ItemNoDeviceNearby.qml">components/ItemNoDeviceNearby.qml</file>
         <file alias="ItemNoPermission.qml">components/ItemNoPermission.qml</file>
         <file alias="ItemNoPlant.qml">components/ItemNoPlant.qml</file>
+        <file alias="NiceButton.qml">components/NiceButton.qml</file>
         <file alias="ItemNoPlants.qml">components/ItemNoPlants.qml</file>
         <file alias="ItemNoJournal.qml">components/ItemNoJournal.qml</file>
         <file alias="SectionTitle.qml">components/SectionTitle.qml</file>
         <file>PlantDesease.qml</file>
+        <file>PlantIdentifier.qml</file>
+        <file>PosometreDialog.qml</file>
+        <file>popups/PopupLocationNotification.qml</file>
+        <file>PlantIdentifierDetails.qml</file>
+        <file>PlantDeseaseDetails.qml</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>PosometreDialog.qml</file>
     </qresource>
 </RCC>

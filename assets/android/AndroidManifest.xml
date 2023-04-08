@@ -1,15 +1,16 @@
 <?xml version="1.0"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.mahoutech.blume" android:installLocation="auto" android:versionCode="3" android:versionName="0.1">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.mahoutech.blume" android:installLocation="auto" android:versionCode="15" android:versionName="0.1">
 
     <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:smallScreens="true"/>
-    <uses-sdk android:minSdkVersion="31" android:targetSdkVersion="31"/>
+    <uses-sdk android:minSdkVersion="28" android:targetSdkVersion="31"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
-    <uses-permission android:name="android.permission.CAMERA"  />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- Request legacy Bluetooth permissions (up to Android 11 / SDK 30) -->
     <uses-permission android:name="android.permission.BLUETOOTH"/> <!-- android:maxSdkVersion="30" -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/> <!-- android:maxSdkVersion="30" -->
@@ -57,10 +58,36 @@
             <meta-data android:name="android.app.splash_screen_drawable_portrait" android:resource="@drawable/splashscreen_port"/>
             <meta-data android:name="android.app.splash_screen_drawable_landscape" android:resource="@drawable/splashscreen_land"/>
             <meta-data android:name="android.app.splash_screen_sticky" android:value="true"/>
+            <meta-data android:name="android.app.splash_screen_drawable" android:resource="@drawable/splashscreen"/>
+            <meta-data android:name="android.app.splash_screen_drawable_portrait" android:resource="@drawable/splashscreen_port"/>
+            <meta-data android:name="android.app.splash_screen_drawable_landscape" android:resource="@drawable/splashscreen_land"/>
+            <meta-data android:name="android.app.splash_screen_sticky" android:value="true"/>
+        </activity>
+        <activity android:name="org.qtproject.qt.android.QtNative" android:label="Blume" android:screenOrientation="unspecified" android:theme="@style/splashScreenTheme">
+            <meta-data android:name="android.app.splash_screen_drawable" android:resource="@drawable/splashscreen"/>
+            <meta-data android:name="android.app.splash_screen_drawable_portrait" android:resource="@drawable/splashscreen_port"/>
+            <meta-data android:name="android.app.splash_screen_drawable_landscape" android:resource="@drawable/splashscreen_land"/>
+            <meta-data android:name="android.app.splash_screen_sticky" android:value="true"/>
+        </activity>
+        <activity android:name="com.mahoutech.blume.ImagePicker" android:label="Blume" android:screenOrientation="unspecified" android:theme="@style/splashScreenTheme">
+            <meta-data android:name="android.app.splash_screen_drawable" android:resource="@drawable/splashscreen"/>
+            <meta-data android:name="android.app.splash_screen_drawable_portrait" android:resource="@drawable/splashscreen_port"/>
+            <meta-data android:name="android.app.splash_screen_drawable_landscape" android:resource="@drawable/splashscreen_land"/>
+            <meta-data android:name="android.app.splash_screen_sticky" android:value="true"/>
+        </activity>
+        <activity android:name="com.mahoutech.blume.GalleryPicker" android:label="Blume" android:screenOrientation="unspecified" android:theme="@style/splashScreenTheme">
+            <meta-data android:name="android.app.splash_screen_drawable" android:resource="@drawable/splashscreen"/>
+            <meta-data android:name="android.app.splash_screen_drawable_portrait" android:resource="@drawable/splashscreen_port"/>
+            <meta-data android:name="android.app.splash_screen_drawable_landscape" android:resource="@drawable/splashscreen_land"/>
+            <meta-data android:name="android.app.splash_screen_sticky" android:value="true"/>
         </activity>
         <!-- Handle outgoing urls -->
         <provider android:name="androidx.core.content.FileProvider" android:authorities="com.mahoutech.blume.fileprovider" android:exported="false" android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/filepaths"/>
+        </provider>
+
+        <provider android:name="androidx.core.content.FileProvider" android:authorities="com.mahoutech.blume.fileprovider" android:grantUriPermissions="true" android:exported="false">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths"/>
         </provider>
         <!-- Android service(s) -->
         <receiver android:exported="true" android:name=".WatchFlowerBootServiceBroadcastReceiver">
