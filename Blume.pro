@@ -402,5 +402,6 @@ DISTFILES += \
     qml/PlantDesease.qml \
     qml/PlantDeseaseDetails.qml \
     qml/PlantIdentifier.qml \
+    qml/PlantScreenDetails.qml \
     qml/PosometreDialog.qml
 android: include(C:/Users/HP/AppData/Local/Android/Sdk/android_openssl/openssl.pri)

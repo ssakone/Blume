@@ -246,37 +246,37 @@ Loader {
                                         "name": qsTr("Plante fleuries"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/fleure.jpg",
-                                        "action": "",
+                                        "action": "categorie_plantes_fleuries",
                                         "style": ""
                                     }, {
                                         "name": qsTr("Orchidees"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/orchidee.jpg",
-                                        "action": "",
+                                        "action": "categorie_plantes_orchidee",
                                         "style": ""
                                     }, {
                                         "name": qsTr("Cactus et succulentes"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/cactus.jpg",
-                                        "action": "",
+                                        "action": "categorie_plantes_cactus_succulentes",
                                         "style": ""
                                     }, {
                                         "name": qsTr("Legumes"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/legume.jpg",
-                                        "action": "",
+                                        "action": "categorie_plantes_legumes",
                                         "style": ""
                                     }, {
                                         "name": qsTr("Herbes"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/herbe.jpeg",
-                                        "action": "",
+                                        "action": "categorie_plantes_herbes",
                                         "style": ""
                                     }, {
                                         "name": qsTr("Plantes a feuillage"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/feuillage.jpg",
-                                        "action": "",
+                                        "action": "categorie_plantes_feuillage",
                                         "style": ""
                                     }]
                         data.forEach((plant => append(plant)))
@@ -399,7 +399,21 @@ Loader {
                                                     posometrePop.open()
                                                 } else if (action === "identify") {
                                                     identifierPop.open()
+                                                } else {
+                                                    let title = ""
+                                                    let pk = 0
+                                                    if (action === "categorie_plantes_herbes") {title = "Les herbes"; pk = 1}
+                                                    else if (action === "categorie_plantes_legumes") {title = "Les légumes"; pk = 2}
+                                                    else if (action === "categorie_plantes_orchidee") {title = "Les orchidées"; pk = 3}
+                                                    else if (action === "categorie_plantes_fleuries") {title = "Les plantes fleuries"; pk = 4}
+                                                    else if (action === "categorie_plantes_cactus_succulentes") {title = "Les cactus et succculentes"; pk = 5}
+                                                    else if (action === "categorie_plantes_feuillage") {title = "Les plantes à feuillage"; pk = 6}
+
+                                                    plantListByCategory.title = title
+                                                    plantListByCategory.category_id = pk
+                                                    plantListByCategory.open()
                                                 }
+
                                             }
                                         }
                                     }
@@ -501,9 +515,14 @@ Loader {
             }
         }
 
+        PlantBrowseCategory {
+            id: plantListByCategory
+        }
+
         PosometreDialog {
             id: posometrePop
         }
+
 
         PlantIdentifier {
             id: identifierPop
