@@ -7,13 +7,15 @@ Rectangle {
     id: root
     width: parent.width
     height: main.height
-    color: accrodion_color
+    color: content_color
+    radius: 10
 
 
     property bool is_opened: false
     property string header: ""
     property string content: ""
-    property color accrodion_color: "white"
+    property color content_color: "#f5faf7"
+    property color header_color: "#edeff2"
 
 
     property string header_icon_src: "qrc:/assets/icons_material/baseline-info-24px.svg"
@@ -28,20 +30,20 @@ Rectangle {
 
     ColumnLayout {
         id: main
-        Layout.fillWidth: true
-//        width: parent.width
-//        anchors.fill: parent
+        width: parent.width
         spacing: 0
 
         Rectangle {
 
-            width: parent.width
-            height: header_content.height + 20
+            Layout.preferredWidth: parent.width
+            Layout.preferredHeight: header_content.height + 20
+            color: header_color
 
             radius: 10
             RowLayout {
                 id: header_content
-                anchors.fill: parent
+                width: parent.width
+                anchors.verticalCenter: parent.verticalCenter
                 IconSvg {
                     source: header_icon_src
                     width: 60
@@ -54,7 +56,6 @@ Rectangle {
                 }
                 Item {
                     Layout.fillWidth: true
-                    height: 10
                 }
 
                 IconSvg {
@@ -68,12 +69,16 @@ Rectangle {
 
         Label {
             text: content
-
             visible: is_opened
-            width: parent.width -20
-            Layout.maximumWidth: width
-            Layout.leftMargin: 10
             wrapMode: Text.Wrap
+
+            font.pixelSize: 14
+            font.weight: Font.Light
+
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.leftMargin: 10
+            Layout.rightMargin: 10
         }
     }
 

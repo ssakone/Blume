@@ -15,12 +15,15 @@ import ThemeEngine 1.0
 
 Popup {
     id: listCategoryPlants
-    width: parent.width
-    height: parent.height
-    x: -10
+
+    parent: appWindow.contentItem
+    width: appWindow.width
+    height: appWindow.height
+    padding: 0
 
     property string title: "Catégorie"
     property int category_id
+
     onOpened: {
         if(listCategoryPlants.category_id) {
             Components.Http.fetch({
@@ -46,7 +49,6 @@ Popup {
 
 
     background: Rectangle {
-        radius: 18
     }
 
     closePolicy: Popup.NoAutoClose
@@ -56,16 +58,15 @@ Popup {
     }
 
     Rectangle {
+        id: header
         color: "#00c395"
         height: 65
-//        Layout.fillWidth: true
         width: listCategoryPlants.width
-        y: -70
         RowLayout {
             anchors.verticalCenter: parent.verticalCenter
             Rectangle {
                 id: buttonBackBg
-                anchors.verticalCenter: parent.verticalCenter
+                Layout.alignment: Qt.AlignVCenter
                 width: 65
                 height: 65
                 radius: height
@@ -104,19 +105,21 @@ Popup {
         }
     }
 
-    Label {
-        text: title
-        font.pixelSize: 35
-        font.weight: Font.Light
-    }
+
 
     ListView {
         id: plantList
-        bottomMargin: 32
         spacing: 0
         clip: true
         anchors.fill: parent
+        anchors.topMargin: header.height
         model: categoryModel
+
+        header: Label {
+            text: title
+            font.pixelSize: 35
+            font.weight: Font.Light
+        }
 
         delegate: Rectangle {
             width: ListView.view.width
@@ -134,7 +137,7 @@ Popup {
                     text: model.name_scientific
                     color: Theme.colorText
                     fontSizeMode: Text.Fit
-                    font.pixelSize: 14
+                    font.pixelSize: 16
                     minimumPixelSize: Theme.fontSizeContentSmall
                 }
                 Text {

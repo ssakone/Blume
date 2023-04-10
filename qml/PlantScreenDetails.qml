@@ -9,499 +9,330 @@ import "components"
 
 Popup {
     id: plantScreenDetailsPopup
+
+    parent: appWindow.contentItem
     width: appWindow.width
     height: appWindow.height
 
-    x: -30
+    padding: 0
 
     property variant plant: ({})
 
-    background: Rectangle {
-        radius: 18
-    }
+    background: Rectangle {}
 
-    onOpened: console.log(" plant--- ",  plant.sites, plant.name_scientific, plant['name_scientific'], plant.sites !== null)
-
-    Rectangle {
-        color: "#00c395"
-        height: 65
-        width: plantScreenDetailsPopup.width
-        y: -70
-        RowLayout {
-            anchors.verticalCenter: parent.verticalCenter
-            Rectangle {
-                id: buttonBackBg
-                Layout.alignment: Qt.AlignVCenter
-                width: 65
-                height: 65
-                radius: height
-                color: "transparent" //Theme.colorHeaderHighlight
-                opacity: 1
-                IconSvg {
-                    id: buttonBack
-                    width: 24
-                    height: width
-                    anchors.centerIn: parent
-
-                    source: "qrc:/assets/menus/menu_back.svg"
-                    color: Theme.colorHeaderContent
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        plantScreenDetailsPopup.close()
-                    }
-                }
-
-                Behavior on opacity {
-                    OpacityAnimator {
-                        duration: 333
-                    }
-                }
-            }
-            Label {
-                text: "Retour"
-                font.pixelSize: 21
-                font.bold: true
-                font.weight: Font.Medium
-                color: "white"
-                Layout.alignment: Qt.AlignVCenter
-            }
+    ListModel {
+        id: modelImagesPlantes
+        Component.onCompleted: {
+            console.log("----------", plant["images_plantes"], JSON.stringify(plant["images_plantes"]), typeof plant["images_plantes"])
         }
     }
 
-    ScrollView {
-        height: plantScreenDetailsPopup.height
-        ColumnLayout {
-            width: plantScreenDetailsPopup.width - 10
+    onOpened: {
+        console.log("----------", plant["images_plantes"], JSON.stringify(plant["images_plantes"]), typeof plant["images_plantes"])
+    }
+
+    ColumnLayout {
+        anchors.fill: parent
+
+
+        Rectangle {
+            id: header
+            color: "#00c395"
+            height: 65
+            width: plantScreenDetailsPopup.width
+            RowLayout {
+                anchors.verticalCenter: parent.verticalCenter
+                Rectangle {
+                    id: buttonBackBg
+                    Layout.alignment: Qt.AlignVCenter
+                    width: 65
+                    height: 65
+                    radius: height
+                    color: "transparent" //Theme.colorHeaderHighlight
+                    opacity: 1
+                    IconSvg {
+                        id: buttonBack
+                        width: 24
+                        height: width
+                        anchors.centerIn: parent
+
+                        source: "qrc:/assets/menus/menu_back.svg"
+                        color: Theme.colorHeaderContent
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            plantScreenDetailsPopup.close()
+                        }
+                    }
+
+                    Behavior on opacity {
+                        OpacityAnimator {
+                            duration: 333
+                        }
+                    }
+                }
+                Label {
+                    text: "Retour"
+                    font.pixelSize: 21
+                    font.bold: true
+                    font.weight: Font.Medium
+                    color: "white"
+                    Layout.alignment: Qt.AlignVCenter
+                }
+            }
+        }
+
+        Flickable {
+            y: header.height
+            contentHeight: mainContent.height
+            contentWidth: plantScreenDetailsPopup.width - 20
+            Layout.fillHeight: true
+            Layout.fillWidth: true
             Layout.leftMargin: 10
             Layout.rightMargin: 10
 
-            spacing: 10
+            boundsBehavior: Flickable.StopAtBounds
+            clip: true
 
-            Rectangle {
-                Layout.minimumHeight: 110
-                Layout.leftMargin: 25
-                width: parent.width - 35
-                color: Theme.colorPrimary
-                radius: 15
-                ColumnLayout {
-                    id: col_header
-                    anchors.fill: parent
+            ColumnLayout {
+                id: mainContent
+                width: plantScreenDetailsPopup.width - 20
+                Layout.leftMargin: 10
+                Layout.rightMargin: 10
+
+                spacing: 10
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.minimumHeight: 110
+
                     Layout.leftMargin: 10
                     Layout.rightMargin: 10
-                    Label {
-                        text: plant.name_scientific
-                        font.pixelSize: 24
-                        font.weight: Font.DemiBold
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-                    Rectangle {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 40
-                        radius: 15
-                        color: Qt.rgba(0, 0, 0, 0) // '#72dae8'
+
+
+                    color: Theme.colorPrimary
+                    radius: 15
+                    ColumnLayout {
+                        id: col_header
+                        anchors.fill: parent
                         Layout.leftMargin: 10
-                        RowLayout {
+                        Layout.rightMargin: 10
+                        Label {
+                            text: plant.name_scientific
+                            font.pixelSize: 24
+                            font.weight: Font.DemiBold
+                            Layout.alignment: Qt.AlignHCenter
+                        }
+                        Rectangle {
+                            Layout.fillWidth: true
                             Layout.preferredHeight: 40
-                            Label {
-                                text: "Nom botanique: "
-                                font.pixelSize: 14
-                                color: "white"
-                            }
-                            Label {
-                                text: "Caldiusm"
-                                font.pixelSize: 18
-                                font.weight: Font.DemiBold
-                                color: "white"
-                            }
+                            radius: 15
+                            color: Qt.rgba(0, 0, 0, 0) // '#72dae8'
+                            Layout.leftMargin: 10
+                            RowLayout {
+                                Layout.preferredHeight: 40
+                                Label {
+                                    text: "Nom botanique: "
+                                    font.pixelSize: 14
+                                    color: "white"
+                                }
+                                Label {
+                                    text: "Caldiusm"
+                                    font.pixelSize: 18
+                                    font.weight: Font.DemiBold
+                                    color: "white"
+                                }
 
+                            }
                         }
-                    }
-                    Rectangle {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 40
-                        Layout.leftMargin: 10
-                        radius: 15
-                        color: Qt.rgba(0, 0, 0, 0)
-                        RowLayout {
+                        Rectangle {
+                            Layout.fillWidth: true
                             Layout.preferredHeight: 40
-                            Label {
-                                text: "Nom commun: "
-                                font.pixelSize: 14
-                                color: "white"
-                            }
-                            Label {
-                                text: "Caldiusm"
-                                font.pixelSize: 18
-                                font.weight: Font.DemiBold
-                                color: "white"
-                            }
+                            Layout.leftMargin: 10
+                            radius: 15
+                            color: Qt.rgba(0, 0, 0, 0)
+                            RowLayout {
+                                Layout.preferredHeight: 40
+                                Label {
+                                    text: "Nom commun: "
+                                    font.pixelSize: 14
+                                    color: "white"
+                                }
+                                Label {
+                                    text: "Caldiusm"
+                                    font.pixelSize: 18
+                                    font.weight: Font.DemiBold
+                                    color: "white"
+                                }
 
+                            }
                         }
                     }
                 }
-            }
 
-            ScrollView {
-                width: plantScreenDetailsPopup.width - 30
-                RowLayout {
-                   spacing: 7
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 2
 
-                    Rectangle {
-                        width: 120
-                        height: 70
-                        radius: 15
-                        color: '#d3dbd8'
-                        ColumnLayout {
-                            anchors.fill: parent
-
-                            spacing: 5
-                            Label {
-                                text: "Soin"
-                                font.pixelSize: 16
-                                font.weight: Font.DemiBold
-                                Layout.alignment: Qt.AlignHCenter
-                            }
-                            Label {
-                                text: "Medium"
-                                font.pixelSize: 14
-                                Layout.alignment: Qt.AlignHCenter
-                            }
-                        }
+                    TableLine {
+                        title: "Type de plante"
+                        description: plant['taill_adulte'] || ""
                     }
 
-                    Rectangle {
-                        width: 120
-                        height: 70
-                        radius: 15
-                        color: '#d3dbd8'
-                        ColumnLayout {
-                            anchors.fill: parent
-
-                            spacing: 5
-                            Label {
-                                text: "Soin"
-                                font.pixelSize: 16
-                                font.weight: Font.DemiBold
-                                Layout.alignment: Qt.AlignHCenter
-                            }
-                            Label {
-                                text: "Medium"
-                                font.pixelSize: 14
-                                Layout.alignment: Qt.AlignHCenter
-                            }
-                        }
+                    TableLine {
+                        color: "#e4f0ea"
+                        title: "Exposition au soleil"
+                        description:  plant['exposition_au_soleil'] || ""
                     }
 
-                    Rectangle {
-                        width: 120
-                        height: 70
-                        radius: 15
-                        color: '#d3dbd8'
-                        ColumnLayout {
-                            anchors.fill: parent
-
-                            spacing: 5
-                            Label {
-                                text: "Soin"
-                                font.pixelSize: 16
-                                font.weight: Font.DemiBold
-                                Layout.alignment: Qt.AlignHCenter
-                            }
-                            Label {
-                                text: "Medium"
-                                font.pixelSize: 14
-                                Layout.alignment: Qt.AlignHCenter
-                            }
-                        }
+                    TableLine {
+                        title: "Type de sol"
+                        description: plant['type_de_sol'] || ""
                     }
 
+                    TableLine {
+                        color: "#e4f0ea"
+                        title: "Couleur"
+                        description: plant['couleur'] || ""
+                    }
+
+                    TableLine {
+                        title: "Période de floraison"
+                        description: plant['periode_de_floraison'] || ""
+                    }
+
+                    TableLine {
+                        color: "#e4f0ea"
+                        title: "Zone de rusticité"
+                        description: plant['zone_de_rusticite'] || ""
+                    }
+
+                    TableLine {
+                        title: "PH"
+                        description: plant['ph'] || ""
+                    }
+
+                    TableLine {
+                        color: "#e4f0ea"
+                        title: "Toxicité"
+                        description: plant['toxicity'] ? 'Plante toxique' : 'Non toxique'
+                    }
 
                 }
 
-            }
 
-
-            ColumnLayout {
-                width: parent.width
-                spacing: 0
 
                 Rectangle {
-                    width: parent.width
-                    Layout.minimumHeight: 40
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 250
 
-                    color: Theme.colorPrimary
-                    radius: 5
+                    color: "#edeff2"
+                    radius: 10
 
-                    RowLayout {
-                        Layout.fillWidth: true
-                        width: parent.width
-                        Layout.alignment: Qt.AlignVCenter
+                    ColumnLayout {
+                        anchors.fill: parent
+                        spacing: 5
+
                         Label {
-                            text: "Type de plante"
-                            color: "white"
-                            font.pixelSize: 14
-
-                            width: parent.width / 2
-                            horizontalAlignment: Text.AlignLeft
-                            Layout.maximumWidth: width
-                            wrapMode: Text.Wrap
-                        }
-                        Label {
-                            text: plant["sites"]
-
-                            color: "white"
-                            font.pixelSize: 14
-                            font.weight: Font.DemiBold
-
-                            width: parent.width / 2
-                            horizontalAlignment: Text.AlignLeft
-                            Layout.maximumWidth: width
-                            wrapMode: Text.Wrap
-                        }
-                    }
-                }
-
-                Rectangle {
-                    width: parent.width
-                    Layout.minimumHeight: 40
-
-
-                    RowLayout {
-                        width: parent.width
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignVCenter
-                        Label {
-                            text: "Exposition au soleil"
-                            font.pixelSize: 14
+                            text: "Galerie de photos"
                             color: Theme.colorPrimary
-
-                            width: parent.width / 2
-                            Layout.alignment: Qt.AlignVCenter
-                            Layout.maximumWidth: width
+                            font.pixelSize: 24
+                            Layout.leftMargin: 20
                         }
-                        Label {
-                            text: plant['exposition_au_soleil']
-                            color: Theme.colorPrimary
-                            font.pixelSize: 14
-                            font.weight: Font.DemiBold
 
-                            width: parent.width / 2
-                            Layout.maximumWidth: width
-                            Layout.alignment: Qt.AlignVCenter
+                        SwipeView {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+
+//                            Repeater {
+//                                model: modelImagesPlantes
+//                                delegate: Label {
+//                                    text: model.directus_files_id
+//                                    font.pixelSize: 24
+//                                }
+//                            }
+
+//                            Image {
+//                                source: "qrc:/assets/img/fleure.jpg"
+//                            }
+//                            Image {
+//                                source: "qrc:/assets/img/cactus.jpg"
+//                            }
+
                         }
-                    }
-                }
 
-                Rectangle {
-                    width: parent.width
-                    Layout.minimumHeight: 40
-
-                    color: Theme.colorPrimary
-                    radius: 5
-
-                    RowLayout {
-                        Layout.fillWidth: true
-                        width: parent.width
-                        Layout.alignment: Qt.AlignVCenter
-                        Label {
-                            text: "Type de sol"
-                            color: "white"
-                            font.pixelSize: 14
-
-                            width: parent.width / 2
-                            horizontalAlignment: Text.AlignLeft
-                            Layout.maximumWidth: width
-                            wrapMode: Text.Wrap
-                        }
-                        Label {
-                            text: plant['type_de_sol']
-                            color: "white"
-                            font.pixelSize: 14
-                            font.weight: Font.DemiBold
-
-                            width: parent.width / 2
-                            horizontalAlignment: Text.AlignLeft
-                            Layout.maximumWidth: width
-                            wrapMode: Text.Wrap
-                        }
-                    }
-                }
-
-                Rectangle {
-                    width: parent.width
-                    Layout.minimumHeight: 40
-
-
-                    RowLayout {
-                        width: parent.width
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignVCenter
-                        Label {
-                            text: "Couleur"
-                            font.pixelSize: 14
-                            color: Theme.colorPrimary
-
-                            width: parent.width / 2
-                            Layout.alignment: Qt.AlignVCenter
-                            Layout.maximumWidth: width
-                        }
-                        Label {
-                            text: plant['couleur']
-                            color: Theme.colorPrimary
-                            font.pixelSize: 14
-                            font.weight: Font.DemiBold
-
-                            width: parent.width / 2
-                            Layout.maximumWidth: width
-                            Layout.alignment: Qt.AlignVCenter
-                        }
-                    }
-                }
-
-                Rectangle {
-                    width: parent.width
-                    Layout.minimumHeight: 40
-
-                    color: Theme.colorPrimary
-                    radius: 5
-
-                    RowLayout {
-                        Layout.fillWidth: true
-                        width: parent.width
-                        Layout.alignment: Qt.AlignVCenter
-                        Label {
-                            text: "Zonee de rusticité"
-                            color: "white"
-                            font.pixelSize: 14
-
-                            width: parent.width / 2
-                            horizontalAlignment: Text.AlignLeft
-                            Layout.maximumWidth: width
-                            wrapMode: Text.Wrap
-                        }
-                        Label {
-                            text: plant['zone_de_rusticite']
-                            color: "white"
-                            font.pixelSize: 14
-                            font.weight: Font.DemiBold
-
-                            width: parent.width / 2
-                            horizontalAlignment: Text.AlignLeft
-                            Layout.maximumWidth: width
-                            wrapMode: Text.Wrap
-                        }
-                    }
-                }
-
-                Rectangle {
-                    width: parent.width
-                    Layout.minimumHeight: 40
-
-
-                    RowLayout {
-                        width: parent.width
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignVCenter
-                        Label {
-                            text: "Toxicité"
-                            font.pixelSize: 14
-                            color: Theme.colorPrimary
-
-                            width: parent.width / 2
-                            Layout.alignment: Qt.AlignVCenter
-                            Layout.maximumWidth: width
-                        }
-                        Label {
-                            text: plant['toxicity'] ? 'Plante toxique' : 'Non toxique'
-                            color: Theme.colorPrimary
-                            font.pixelSize: 14
-                            font.weight: Font.DemiBold
-
-                            width: parent.width / 2
-                            Layout.maximumWidth: width
-                            Layout.alignment: Qt.AlignVCenter
-                        }
-                    }
-                }
-
-                Rectangle {
-                    width: parent.width
-                    Layout.minimumHeight: 40
-
-                    color: Theme.colorPrimary
-                    radius: 5
-
-                    RowLayout {
-                        Layout.fillWidth: true
-                        width: parent.width
-                        Layout.alignment: Qt.AlignVCenter
-                        Label {
-                            text: "PH"
-                            color: "white"
-                            font.pixelSize: 14
-
-                            width: parent.width / 2
-                            horizontalAlignment: Text.AlignLeft
-                            Layout.maximumWidth: width
-                            wrapMode: Text.Wrap
-                        }
-                        Label {
-                            text: plant['ph']
-                            color: "white"
-                            font.pixelSize: 14
-                            font.weight: Font.DemiBold
-
-                            width: parent.width / 2
-                            horizontalAlignment: Text.AlignLeft
-                            Layout.maximumWidth: width
-                            wrapMode: Text.Wrap
-                        }
                     }
                 }
 
 
-            }
 
-            ScrollView {
-                width: plantScreenDetailsPopup.width
-                ListView {
-                    layoutDirection: Qt.Horizontal
-                    spacing: 5
-                    model: plant['images_plantes']
-                    delegate: Label {
-                        text: modelData
+                Column {
+                    Layout.fillWidth: true
+
+                    spacing: 15
+
+
+                    Accordion {
+                        header: "Présentation des plantes"
+                        content: plant['description'] || ""
                     }
-                }
-            }
-
-            ColumnLayout {
-                width: plantScreenDetailsPopup.width - 30
-                spacing: 5
 
 
-                Accordion {
-                    header: "Présentation des plantes"
-                    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ut mi eu dui pellentesque convallis quis vitae enim. Aliquam cursus fringilla est, vel interdum eros lobortis at. Duis id libero sem. Praesent turpis sapien, hendrerit eu ipsum in, suscipit euismod velit. Nulla ultricies venenatis eros eu ultrices. Etiam ut mauris non purus convallis pretium. Aliquam eget justo vel tortor blandit pulvinar. Pellentesque malesuada id justo ut eleifend. Duis dolor quam, vulputate sed libero et, volutpat vestibulum nibh. Cras interdum leo vel lorem lacinia, ac accumsan tellus pulvinar. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus risus lectus, volutpat et erat convallis, iaculis elementum sem. "
+                    Accordion {
+                        header: "Comment cultiver"
+                        content: plant['comment_cultiver'] || ""
+                    }
 
-                }
+                    Accordion {
+                        header: "Luminosité"
+                        content: plant['description_luminosite'] || ""
+                    }
 
+                    Accordion {
+                        header: "Sol"
+                        content: plant['description_sol'] || ""
+                    }
 
-                Accordion {
-                    header: "Présentation des plantes"
-                    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ut mi eu dui pellentesque convallis quis vitae enim. Aliquam cursus fringilla est, vel interdum eros lobortis at. Duis id libero sem. Praesent turpis sapien, hendrerit eu ipsum in, suscipit euismod velit. Nulla ultricies venenatis eros eu ultrices. Etiam ut mauris non purus convallis pretium. Aliquam eget justo vel tortor blandit pulvinar. Pellentesque malesuada id justo ut eleifend. Duis dolor quam, vulputate sed libero et, volutpat vestibulum nibh. Cras interdum leo vel lorem lacinia, ac accumsan tellus pulvinar. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus risus lectus, volutpat et erat convallis, iaculis elementum sem. "
+                    Accordion {
+                        header: "Luminosité"
+                        content: plant['description_luminosite'] || ""
+                    }
 
-                }
+                    Accordion {
+                        header: "Arrosage"
+                        content: plant['description_arrosage'] || ""
+                    }
 
-                Accordion {
-                    header: "Présentation des plantes"
-                    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ut mi eu dui pellentesque convallis quis vitae enim. Aliquam cursus fringilla est, vel interdum eros lobortis at. Duis id libero sem. Praesent turpis sapien, hendrerit eu ipsum in, suscipit euismod velit. Nulla ultricies venenatis eros eu ultrices. Etiam ut mauris non purus convallis pretium. Aliquam eget justo vel tortor blandit pulvinar. Pellentesque malesuada id justo ut eleifend. Duis dolor quam, vulputate sed libero et, volutpat vestibulum nibh. Cras interdum leo vel lorem lacinia, ac accumsan tellus pulvinar. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus risus lectus, volutpat et erat convallis, iaculis elementum sem. "
+                    Accordion {
+                        header: "Température & humidité"
+                        content: plant['description_temperature_humidite'] || ""
+                    }
+
+                    Accordion {
+                        header: "Mise en pot et rampotage"
+                        content: plant['description_mise_en_pot_et_rampotage'] || ""
+                    }
+                    Accordion {
+                        header: "Température & humidité"
+                        content: plant['description_temperature_humidite'] || ""
+                    }
+                    Accordion {
+                        header: "Multiplication"
+                        content: plant['description_multiplication'] || ""
+                    }
+                    Accordion {
+                        header: "Parasites et maladies"
+                        content: plant['description_parasites_maladies'] || ""
+                    }
+
 
                 }
 
             }
+
         }
-
     }
+
+
 }
