@@ -14,7 +14,7 @@ Rectangle {
     property bool is_opened: false
     property string header: ""
     property string content: ""
-    property color content_color: "#f5faf7"
+    property color content_color: "#f0f0f0"
     property color header_color: "#edeff2"
 
 
@@ -22,6 +22,8 @@ Rectangle {
     property string closed_icon_src: "qrc:/assets/icons_material/baseline-chevron_right-24px.svg"
     property string opened_icon_src:  "qrc:/assets/icons_material/baseline-close-24px.svg"
     property string content_text: ""
+
+    property int expanded_height_min: 60
 
     MouseArea {
         anchors.fill: parent
@@ -77,6 +79,7 @@ Rectangle {
 
             Layout.fillHeight: true
             Layout.fillWidth: true
+            Layout.minimumHeight: expanded_height_min
             Layout.leftMargin: 10
             Layout.rightMargin: 10
         }

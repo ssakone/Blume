@@ -7388,6 +7388,7 @@
         <file>icons/svg/zodiac-virgo.svg</file>
         <file>tutorial/api-identity.svg</file>
         <file>tutorial/api-health-status.svg</file>
+        <file>icons_material/camera.svg</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

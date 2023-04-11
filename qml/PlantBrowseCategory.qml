@@ -23,22 +23,20 @@ Popup {
 
     property string title: "Catégorie"
     property int category_id
+    property variant plants_list: ([])
 
     onOpened: {
         if(listCategoryPlants.category_id) {
             Components.Http.fetch({
                 method: 'GET',
-                url: "https://blume.mahoudev.com/items/Plantes?filter[categorie][id][_eq]=" + category_id,
+                url: "https://blume.mahoudev.com/items/Plantes?fields[]=*.*&filter[categorie][id][_eq]=" + category_id,
             }).then(response => {
-                        let data = JSON.parse(response).data
-                        console.log("Fetched data")
-//                        console.log(data, Object.keys(data).slice(0, 10), JSON.stringify(data))
-                data.forEach(item => categoryModel.append(item))
+                    let data = JSON.parse(response).data
+                    console.log("Fetched data")
+                    plants_list = data
+                    data.forEach(item => categoryModel.append(item))
             })
         }
-
-//        categoryModel.filter('')
-//        categoryModel.plants.forEach(i => independant.append(i))
     }
 
     onClosed: {
@@ -119,44 +117,77 @@ Popup {
             text: title
             font.pixelSize: 35
             font.weight: Font.Light
+            anchors.leftMargin: 15
         }
 
-        delegate: Rectangle {
+        delegate: ItemDelegate {
+            required property variant model
+            required property int index
+
             width: ListView.view.width
-            height: 40
+            height: 80
 
-            color: (index % 2) ? Theme.colorForeground : Theme.colorBackground
+            background: Rectangle {
+                color: (index % 2 ) ? "white" : "#f0f0f0"
+            }
 
-            Row {
+            Image {
+                id: leftImg
+                source: "qrc:/assets/img/feuillage.jpg"
+                height: 60
+                width: height
+
                 anchors.left: parent.left
-                anchors.leftMargin: 16
+                anchors.leftMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 16
+            }
+
+            Column {
+                anchors.left: leftImg.right
+                anchors.leftMargin: 20
+                anchors.verticalCenter: parent.verticalCenter
 
                 Text {
                     text: model.name_scientific
                     color: Theme.colorText
                     fontSizeMode: Text.Fit
-                    font.pixelSize: 16
+                    font.pixelSize: 18
                     minimumPixelSize: Theme.fontSizeContentSmall
                 }
                 Text {
-                    visible: model.noms_communs !== null
-                    text: "« " + (model.noms_communs ? model.noms_communs[0] : "" ) + " »"
+                    text: {
+                        if(model.noms_communs) {
+
+                            console.log("Exixsting ", model.noms_communs)
+                            let t = plants_list.find(item => item.id === model.id)
+                            return model.noms_communs ? ( t.noms_communs[0] + (t.noms_communs[1] ? `, ${t.noms_communs[1]}` : "") ) : ""
+                        }
+                        return ""
+                    }
+
                     color: Theme.colorSubText
                     fontSizeMode: Text.Fit
-                    font.pixelSize: Theme.fontSizeContent
+                    font.pixelSize: 14
                     minimumPixelSize: Theme.fontSizeContentSmall
                 }
             }
 
             MouseArea {
                 anchors.fill: parent
+                cursorShape: "PointingHandCursor"
+
                 onClicked: {
-                    plantScreenDetailsPopup.plant = model
-                    plantScreenDetailsPopup.open()
+                    for(let i = plants_list.length - 1;  i >= 0; i--) {
+                        let item = plants_list[i]
+                        if(item.id === model.id) {
+                            plantScreenDetailsPopup.plant = item
+                            plantScreenDetailsPopup.open()
+                            break;
+                        }
+                    }
                 }
             }
+
         }
 
         ItemNoPlants {

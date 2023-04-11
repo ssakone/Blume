@@ -12,6 +12,7 @@ Rectangle {
     radius: width
     color: Theme.colorForeground
 
+    property string text: "No plants found..."
     signal clicked()
 
     IconSvg {
@@ -31,7 +32,7 @@ Rectangle {
         anchors.topMargin: 20
         anchors.horizontalCenter: parent.horizontalCenter
 
-        text: qsTr("No plants found...")
+        text: qsTr(text)
         textFormat: Text.PlainText
         font.pixelSize: Theme.fontSizeContentBig
         color: Theme.colorText

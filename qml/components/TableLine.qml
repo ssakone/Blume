@@ -7,11 +7,12 @@ Rectangle {
     Layout.minimumHeight: _row.height + 20
 
     color: bgColor
-    radius: 5
+    radius: componentRadius
 
     property color bgColor: "#edeff2"
     property string title: ""
     property string description: ""
+    property int componentRadius: 5
 
     RowLayout {
         id: _row
@@ -23,9 +24,13 @@ Rectangle {
 
             Layout.topMargin: 5
             Layout.leftMargin: 7
-            Layout.minimumWidth: 150
+            Layout.minimumWidth: appWindow.width / 3
             wrapMode: Text.Wrap
             Layout.alignment: Qt.AlignTop
+        }
+
+        Item {
+            Layout.preferredWidth: 20
         }
 
         Label {
