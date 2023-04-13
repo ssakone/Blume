@@ -99,11 +99,45 @@ Popup {
                     width: resultDeseaseDetailPop.width
                     clip: true
                     color: "#f0f0f0"
-                    Image {
-                        source: desease_data['similar_images'][0]['url']
-                        fillMode: Image.PreserveAspectCrop
+
+                    SwipeView {
                         anchors.fill: parent
+
+                        Repeater {
+                            model: desease_data['similar_images']
+                            delegate: Image {
+                                source: modelData.url
+                            }
+                        }
+
                     }
+
+                    RowLayout {
+                        width: parent.width
+                        anchors.bottom: parent.bottom
+                        anchors.bottomMargin: 10
+                        spacing: 10
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+
+                        Repeater {
+                            model: 3
+                            delegate: Rectangle {
+                                width: 10
+                                height: 10
+                                radius: 5
+                                color: "black"
+                            }
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+                    }
+
+
                 }
 
                 ColumnLayout {
