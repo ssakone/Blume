@@ -27,6 +27,95 @@ Popup {
     parent: appWindow.contentItem
     padding: 0
 
+    property variant form_schema: [
+        {
+            group_title: "Exposition et température",
+            fields: [
+                {
+                    label: "De combien d'ensoleillement bénéficie votre plante chaque jour ?",
+                    is_required: true,
+                    placeholder: "6h de lumière naturelle indirecte"
+                },
+                {
+                    label: "Quelles sont les température de son environnement ?",
+                    is_required: false,
+                    placeholder: "Journée: +24°C, Nuit: +1°C"
+                },
+            ]
+        },
+
+        {
+            group_title: "Parasites et maladies",
+            fields: [
+                {
+                    label: "Y a-t-il des toiles ou des insectes sur la plante ou dans la terre ?",
+                    is_required: false,
+                    placeholder: "Insectes blancs sous les feuilles"
+                },
+                {
+                    label: "Quelles sont les température de son environnement ?",
+                    is_required: false,
+                    placeholder: "Journée: +24°C, Nuit: +1°C"
+                },
+            ]
+        },
+
+        {
+            group_title: "Arrosage",
+            fields: [
+                {
+                    label: "A quelle fréquence arrosez-vous votre plante ?",
+                    is_required: false,
+                    placeholder: "1 à 2 fois par semaine"
+                },
+                {
+                    label: "Quelle quantité d'eau utilisez-vous ?",
+                    is_required: false,
+                    placeholder: "Un verre et demi"
+                },
+                {
+                    label: "Laissez-vous la terre sécher entre les arrosages ?",
+                    is_required: false,
+                    placeholder: "Oui, les premiers centimètres"
+                },
+                {
+                    label: "Le fond du pot est-il percé ?",
+                    is_required: false,
+                    placeholder: "Oui"
+                },
+            ]
+        },
+
+        {
+            group_title: "Rempotage et engrais",
+            fields: [
+                {
+                    label: "A quelle fréquence arrosez-vous votre plante ?",
+                    is_required: false,
+                    placeholder: "1 à 2 fois par semaine"
+                },
+                {
+                    label: "Quelle quantité d'eau utilisez-vous ?",
+                    is_required: false,
+                    placeholder: "Un verre et demi"
+                },
+                {
+                    label: "Laissez-vous la terre sécher entre les arrosages ?",
+                    is_required: false,
+                    placeholder: "Oui, les premiers centimètres"
+                },
+                {
+                    label: "Le fond du pot est-il percé ?",
+                    is_required: false,
+                    placeholder: "Oui"
+                },
+            ]
+        }
+
+
+    ]
+
+
     onClosed:  {
         if (accessCam.active)
             accessCam.active = false
@@ -68,7 +157,7 @@ Popup {
                     onClicked: {
                         if (identifierLayoutView.currentIndex === 0) {
                             planteDeseasePopup.close()
-                        } else if (identifierLayoutView.currentIndex === 3) {
+                        } else if (identifierLayoutView.currentIndex === 4) {
                             identifierLayoutView.currentIndex = 0
                         }
 
@@ -91,6 +180,12 @@ Popup {
                             return "Resultat de l'analyse"
                         case 3:
                             return "Encyclopedie des plantes"
+                        case 4:
+                            return "FAQ"
+                        case 5:
+                            return "Contacter un expert"
+
+                        default: return "Non trouvé"
                         }
                     }
 
@@ -137,6 +232,7 @@ Popup {
                         }
                     }
                 }
+
             }
         }
 
@@ -171,19 +267,29 @@ Popup {
                             id: optionModel
 
                             Component.onCompleted: {
-                                let data = [{
-                                                "name": qsTr("Analyser une plantes"),
-                                                "icon": Icons.magnifyScan,
-                                                "image": "",
-                                                "action": "analyser",
-                                                "style": "darkblue"
-                                            }, {
-                                                "name": qsTr("Encyclopedie des maladies"),
-                                                "icon": Icons.bookOpenOutline,
-                                                "image": "",
-                                                "action": "encyclopedie",
-                                                "style": "lightenYellow"
-                                            },]
+                                let data = [
+                                    {
+                                        "name": qsTr("Analyser une plantes"),
+                                        "icon": Icons.magnifyScan,
+                                        "image": "",
+                                        "action": "analyser",
+                                        "style": "darkblue"
+                                    }, 
+                                    {
+                                        "name": qsTr("Encyclopedie des maladies"),
+                                        "icon": Icons.bookOpenOutline,
+                                        "image": "",
+                                        "action": "encyclopedie",
+                                        "style": "lightenYellow"
+                                    },
+                                    {
+                                        "name": qsTr("Contacter des experts"),
+                                        "icon": Icons.helpCircle,
+                                        "image": "",
+                                        "action": "faq",
+                                        "style": "lightenYellow"
+                                    }
+                                ]
                                 data.forEach((plant => append(plant)))
                             }
                         }
@@ -277,6 +383,8 @@ Popup {
                                                 identifierLayoutView.currentIndex++
                                             } else if (action === "encyclopedie") {
                                                 identifierLayoutView.currentIndex = 3
+                                            } else if (action === "faq") {
+                                                identifierLayoutView.currentIndex = 4
                                             }
                                         }
                                     }
@@ -753,6 +861,315 @@ Popup {
                     }
                 }
 
+
+            }
+
+            Item {
+                clip: true
+
+                Flickable {
+                    anchors.fill: parent
+                    width: parent.width
+                    height: parent.height
+                    contentHeight: colHeadFaqSimple.height
+                    ColumnLayout {
+                        id: colHeadFaqSimple
+                        anchors.fill: parent
+
+                        spacing: 20
+
+                        Label {
+                            text: "Foire aux questions"
+                            color : Theme.colorPrimary
+                            font.pixelSize: 32
+                            wrapMode: Text.Wrap
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignHCenter
+                        }
+
+                        Column {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+
+                            spacing: 1
+
+                            Repeater {
+                                model: 12
+                                delegate: Accordion {
+                                    header_color: "#eaeaeaea" // Theme.colorPrimary
+                                    content_color_expanded: "white"
+                                    header_radius: 0
+                                    header: "Questions " + index
+
+                                    contentItems: [
+                                        Label {
+                                            text: "Sed at orci accumsan, pretium lorem sed, varius erat. Nunc id urna vitae diam laoreet maximus in at sapien. Maecenas eu massa augue. Proin nisi risus, consectetur sit amet efficitur eget, pharetra in felis. Quisque pretium neque nulla, eu pretium est hendrerit nec. Cras quis scelerisque neque. Nunc dignissim sem nec est vehicula congue. Donec sapien metus, lacinia vel sapien vitae, consectetur dictum ipsum. Nulla sagittis ante eget sem vestibulum cursus. "
+                                            wrapMode: Text.Wrap
+
+                                            font.pixelSize: 14
+                                            font.weight: Font.Light
+
+                                            Layout.fillHeight: true
+                                            Layout.fillWidth: true
+                                            Layout.leftMargin: 10
+                                            Layout.rightMargin: 10
+                                            Layout.bottomMargin: 20
+                                        }
+
+                                    ]
+                                }
+                            }
+                        }
+
+
+                    }
+                }
+
+                ButtonWireframe {
+                    text: "Contacter un expert"
+                    componentRadius: 15
+                    fullColor: Theme.colorPrimary
+                    fulltextColor: "white"
+                    onClicked: identifierLayoutView.currentIndex ++
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 20
+
+                    anchors.right: parent.right
+                    anchors.rightMargin: 20
+                }
+            }
+
+            Item {
+                Rectangle {
+                    id: head
+                    height: identifierLayoutView.height / 3
+                    width: parent.width
+                    color: Theme.colorPrimary
+
+                    ColumnLayout {
+                        anchors.fill: parent
+
+                        anchors.leftMargin: 10
+                        anchors.rightMargin: 10
+
+                        Label {
+                            text: "Demander à un botaniste"
+                            color :"white"
+                            font.pixelSize: 32
+                            wrapMode: Text.Wrap
+                            Layout.fillWidth: true
+                        }
+
+                        Label {
+                            text: "Vous receverez un diagnostic et un plan de soin dans les trois jours après avoire rempli ce formulaire"
+                            color :"white"
+                            font.pixelSize: 16
+                            font.weight: Font.Light
+                            Layout.fillWidth: true
+                            wrapMode: Text.Wrap
+                        }
+                        Item {
+                            Layout.fillHeight: true
+                        }
+                    }
+
+                }
+
+                Flickable {
+                    anchors.fill: parent
+                    width: parent.width
+                    height: parent.height
+
+                    contentHeight: 2000
+
+                    ColumnLayout {
+                        id: colHeadFaqForm
+                        anchors.fill: parent
+
+                        Item {
+                            Layout.preferredHeight: head.height - 60
+                        }
+
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            color: "white"
+                            radius: 50
+
+                            ColumnLayout {
+                                anchors.fill: parent
+
+                                anchors.topMargin: 30
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 15
+
+                                spacing: 30
+
+                                ColumnLayout {
+                                    Layout.fillWidth: true
+                                    Label {
+                                        text: "Ajouter des images"
+                                        font {
+                                            pixelSize: 16
+                                            weight: Font.Bold
+                                        }
+
+                                        Layout.fillWidth: true
+                                        wrapMode: Text.Wrap
+                                    }
+
+                                    Label {
+                                        text: "Photographiez la plante entière ainsi que les parties qui semblent malades"
+                                        font.weight: Font.Light
+                                        Layout.fillWidth: true
+                                        wrapMode: Text.Wrap
+                                    }
+
+                                    RowLayout {
+                                        Layout.fillWidth: true
+                                        spacing: 10
+                                        Item {
+                                            Layout.fillWidth: true
+                                        }
+
+                                        Repeater {
+                                            model: 4
+                                            ImagePickerArea {
+                                                Layout.preferredHeight: 70
+                                                Layout.preferredWidth: 70
+                                            }
+                                        }
+
+                                        Item {
+                                            Layout.fillWidth: true
+                                        }
+                                    }
+                                }
+
+                                ColumnLayout {
+                                    Layout.fillWidth: true
+                                    Label {
+                                        text: "Décrivez le problème"
+                                        font {
+                                            pixelSize: 16
+                                            weight: Font.Bold
+                                        }
+
+                                        Layout.fillWidth: true
+                                        wrapMode: Text.Wrap
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillWidth: true
+                                        Layout.preferredHeight: 120
+                                        radius: 15
+                                        border {
+                                            width: 1
+                                            color: "#ccc"
+                                        }
+                                        TextEdit {
+                                            anchors.fill: parent
+                                            padding: 7
+                                            font {
+                                                pixelSize: 14
+                                                weight: Font.Light
+                                            }
+                                            wrapMode: Text.Wrap
+                                            clip: true
+                                        }
+                                    }
+
+                                }
+
+                                Repeater {
+                                    model: form_schema
+                                    delegate: ColumnLayout {
+                                        required property variant modelData
+
+                                        Layout.fillWidth: true
+                                        spacing: 15
+
+                                        Row {
+                                            Layout.fillWidth: true
+                                            spacing: 10
+
+                                            IconSvg {
+                                                source: "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+                                                width: 30
+                                                height: 30
+                                                color: Theme.colorPrimary
+                                                anchors.verticalCenter: parent.verticalCenter
+                                            }
+
+                                            Label {
+                                                text: modelData.group_title
+                                                font {
+                                                    pixelSize: 13
+                                                    weight: Font.Bold
+                                                    capitalization: Font.AllUppercase
+                                                }
+                                                color: Theme.colorPrimary
+                                                anchors.verticalCenter: parent.verticalCenter
+                                                Layout.fillWidth: true
+                                                wrapMode: Text.Wrap
+                                            }
+                                        }
+
+                                        Repeater {
+                                            model: modelData.fields
+                                            delegate: ColumnLayout {
+                                                required property variant modelData
+                                                Layout.fillWidth: true
+                                                spacing: 7
+                                                Label {
+                                                    text: (modelData.is_required ? "* " : "") + modelData.label
+                                                    font {
+                                                        pixelSize: 16
+                                                        weight: Font.Bold
+                                                    }
+                                                    Layout.fillWidth: true
+                                                    wrapMode: Text.Wrap
+                                                }
+                                                Rectangle {
+                                                    Layout.fillWidth: true
+                                                    Layout.preferredHeight: 50
+                                                    radius: 10
+                                                    border {
+                                                        width: 1
+                                                        color: "#ccc"
+                                                    }
+                                                    TextInput {
+                                                        anchors.fill: parent
+                                                        anchors.verticalCenter: parent.verticalCenter
+                                                        verticalAlignment: Text.AlignVCenter
+                                                        padding: 5
+                                                        text: modelData.fields[0].placeholder
+
+                                                        font {
+                                                            pixelSize: 14
+                                                            weight: Font.Light
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+
+                                        }
+
+                                    }
+                                }
+
+                                Item {
+                                    Layout.preferredHeight: 70
+                                }
+                            }
+
+
+                        }
+                    }
+
+
+                }
 
             }
         }

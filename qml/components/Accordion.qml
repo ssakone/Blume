@@ -7,15 +7,22 @@ Rectangle {
     id: root
     width: parent.width
     height: main.height
-    color: content_color
+    color: is_opened ? content_color_expanded : content_color
     radius: 10
 
 
     property bool is_opened: false
     property string header: ""
     property string content: ""
-    property color content_color: "#f0f0f0"
+
     property color header_color: "#edeff2"
+    property color header_color_expanded: "#ccc"
+
+    property color content_color: "#f0f0f0"
+    property color content_color_expanded: "#edeff2"
+
+    property int header_radius: 10
+    property alias contentItems: trueContent.children
 
 
     property string header_icon_src: "qrc:/assets/icons_material/baseline-info-24px.svg"
@@ -24,6 +31,12 @@ Rectangle {
     property string content_text: ""
 
     property int expanded_height_min: 60
+
+    Component.onCompleted: {
+        contentItems.forEach((item, index) => {
+                            main.children[index] = item
+        })
+    }
 
     MouseArea {
         anchors.fill: parent
@@ -39,9 +52,9 @@ Rectangle {
 
             Layout.preferredWidth: parent.width
             Layout.preferredHeight: header_content.height + 20
-            color: header_color
+            color: is_opened ? header_color_expanded : header_color
 
-            radius: 10
+            radius: header_radius
             RowLayout {
                 id: header_content
                 width: parent.width
@@ -69,19 +82,13 @@ Rectangle {
 
         }
 
-        Label {
-            text: content
+        ColumnLayout {
+            id: trueContent
             visible: is_opened
-            wrapMode: Text.Wrap
+            enabled: is_opened
 
-            font.pixelSize: 14
-            font.weight: Font.Light
-
-            Layout.fillHeight: true
             Layout.fillWidth: true
-            Layout.minimumHeight: expanded_height_min
-            Layout.leftMargin: 10
-            Layout.rightMargin: 10
+
         }
     }
 

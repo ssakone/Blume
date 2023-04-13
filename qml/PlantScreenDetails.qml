@@ -528,45 +528,204 @@ Popup {
 
                             Accordion {
                                 header: "Présentation des plantes"
-                                content: plant['description'] || ""
+                                contentItems: [
+                                    Label {
+                                        text: plant['description'] || ""
+                                        wrapMode: Text.Wrap
+
+                                        font.pixelSize: 14
+                                        font.weight: Font.Light
+
+                                        Layout.fillHeight: true
+                                        Layout.fillWidth: true
+                                        Layout.leftMargin: 10
+                                        Layout.rightMargin: 10
+                                    }
+                                ]
                             }
 
 
                             Accordion {
                                 header: "Comment cultiver"
-                                content: plant['comment_cultiver'] || ""
+                                contentItems: [
+                                    Label {
+                                        text: plant['comment_cultiver'] || ""
+                                        wrapMode: Text.Wrap
+
+                                        font.pixelSize: 14
+                                        font.weight: Font.Light
+
+                                        Layout.fillHeight: true
+                                        Layout.fillWidth: true
+                                        Layout.leftMargin: 10
+                                        Layout.rightMargin: 10
+                                    }
+                                ]
                             }
 
                             Accordion {
                                 header: "Luminosité"
-                                content: plant['description_luminosite'] || ""
+                                contentItems: [
+                                    Label {
+                                        text: plant['description_luminosite'] || ""
+                                        wrapMode: Text.Wrap
+
+                                        font.pixelSize: 14
+                                        font.weight: Font.Light
+
+                                        Layout.fillHeight: true
+                                        Layout.fillWidth: true
+                                        Layout.leftMargin: 10
+                                        Layout.rightMargin: 10
+                                    }
+                                ]
                             }
 
                             Accordion {
                                 header: "Sol"
-                                content: plant['description_sol'] || ""
+                                contentItems: [
+                                    Label {
+                                        text: plant['description_sol'] || ""
+                                        wrapMode: Text.Wrap
+
+                                        font.pixelSize: 14
+                                        font.weight: Font.Light
+
+                                        Layout.fillHeight: true
+                                        Layout.fillWidth: true
+                                        Layout.leftMargin: 10
+                                        Layout.rightMargin: 10
+                                    }
+                                ]
                             }
 
 
                             Accordion {
                                 header: "Température & humidité"
-                                content: plant['description_temperature_humidite'] || ""
+                                contentItems: [
+                                    Label {
+                                        text: plant['description_temperature_humidite'] || ""
+                                        wrapMode: Text.Wrap
+
+                                        font.pixelSize: 14
+                                        font.weight: Font.Light
+
+                                        Layout.fillHeight: true
+                                        Layout.fillWidth: true
+                                        Layout.leftMargin: 10
+                                        Layout.rightMargin: 10
+                                    }
+                                ]
                             }
 
                             Accordion {
                                 header: "Mise en pot et rampotage"
-                                content: plant['description_mise_en_pot_et_rampotage'] || ""
+                                contentItems: [
+                                    Label {
+                                        text: plant['description_mise_en_pot_et_rampotage'] || ""
+                                        wrapMode: Text.Wrap
+
+                                        font.pixelSize: 14
+                                        font.weight: Font.Light
+
+                                        Layout.fillHeight: true
+                                        Layout.fillWidth: true
+                                        Layout.leftMargin: 10
+                                        Layout.rightMargin: 10
+                                    }
+                                ]
                             }
 
                             Accordion {
                                 header: "Multiplication"
-                                content: plant['description_multiplication'] || ""
+                                contentItems: [
+                                    Label {
+                                        text: plant['description_multiplication'] || ""
+                                        wrapMode: Text.Wrap
+
+                                        font.pixelSize: 14
+                                        font.weight: Font.Light
+
+                                        Layout.fillHeight: true
+                                        Layout.fillWidth: true
+                                        Layout.leftMargin: 10
+                                        Layout.rightMargin: 10
+                                    }
+                                ]
                             }
 
                             Accordion {
                                 header: "Parasites et maladies"
-                                content: plant['description_parasites_maladies'] || ""
+                                contentItems: [
+                                    Label {
+                                        text: plant['description'] || ""
+                                        wrapMode: Text.Wrap
+
+                                        font.pixelSize: 14
+                                        font.weight: Font.Light
+
+                                        Layout.fillHeight: true
+                                        Layout.fillWidth: true
+                                        Layout.leftMargin: 10
+                                        Layout.rightMargin: 10
+                                    },
+
+                                    Rectangle {
+                                        Layout.fillWidth: true
+                                        Layout.preferredHeight: plantScreenDetailsPopup.height / 3
+
+                                        color: "#f0f0f0"
+                                        radius: 10
+                                        clip: true
+
+                                        ColumnLayout {
+                                            anchors.fill: parent
+                                            spacing: 2
+
+                                            RowLayout {
+                                                Layout.preferredHeight: 30
+                                                Layout.fillWidth: true
+
+                                                Item {
+                                                    Layout.fillWidth: true
+                                                }
+
+                                                Repeater {
+                                                    model : plant['images_maladies']
+                                                    delegate: Rectangle {
+                                                        width: 10
+                                                        height: 10
+                                                        radius: 10
+                                                        color: "black"
+                                                    }
+                                                }
+
+                                                Item {
+                                                    Layout.fillWidth: true
+                                                }
+                                            }
+
+
+                                            SwipeView {
+                                                Layout.fillWidth: true
+                                                Layout.fillHeight: true
+
+                                                Repeater {
+                                                    model: plant['images_maladies']
+                                                    delegate: Image {
+                                                        source: "https://blume.mahoudev.com/assets/"+model.modelData.directus_files_id
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                    }
+
+
+                                ]
+
                             }
+
                         }
 
                         Item {

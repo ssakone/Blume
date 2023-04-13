@@ -64,6 +64,7 @@
         <file alias="SectionTitle.qml">components/SectionTitle.qml</file>
         <file alias="Accordion.qml">components/Accordion.qml</file>
         <file alias="TableLine.qml">components/TableLine.qml</file>
+        <file alias="ImagePickerArea.qml">components/ImagePickerArea.qml</file>
         <file>PlantDesease.qml</file>
         <file>PlantIdentifier.qml</file>
         <file>PosometreDialog.qml</file>
@@ -72,6 +73,7 @@
         <file>PlantDeseaseDetails.qml</file>
         <file>PlantBrowseCategory.qml</file>
         <file>PlantScreenDetails.qml</file>
+        <file>FAQ.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>

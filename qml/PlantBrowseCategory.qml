@@ -6,7 +6,6 @@ import QtSensors
 import SortFilterProxyModel
 import QtQuick.Dialogs
 import Qt.labs.platform
-
 import "components" as Components
 
 import Qt5Compat.GraphicalEffects
@@ -23,7 +22,7 @@ Popup {
 
     property string title: "Catégorie"
     property int category_id
-    property variant plants_list: ([])
+    property variant plants_list: []
 
     onOpened: {
         if(listCategoryPlants.category_id) {
@@ -31,10 +30,8 @@ Popup {
                 method: 'GET',
                 url: "https://blume.mahoudev.com/items/Plantes?fields[]=*.*&filter[categorie][id][_eq]=" + category_id,
             }).then(response => {
-                    let data = JSON.parse(response).data
-                    console.log("Fetched data")
-                    plants_list = data
-                    data.forEach(item => categoryModel.append(item))
+                let data = JSON.parse(response).data
+                plants_list = data
             })
         }
     }
@@ -42,7 +39,6 @@ Popup {
     onClosed: {
         listCategoryPlants.title = ""
         listCategoryPlants.category_id = 0
-        categoryModel.clear()
     }
 
 
@@ -50,10 +46,6 @@ Popup {
     }
 
     closePolicy: Popup.NoAutoClose
-
-    ListModel {
-        id: categoryModel
-    }
 
     Rectangle {
         id: header
@@ -111,7 +103,7 @@ Popup {
         clip: true
         anchors.fill: parent
         anchors.topMargin: header.height
-        model: categoryModel
+        model: plants_list
 
         header: Label {
             text: title
@@ -121,7 +113,7 @@ Popup {
         }
 
         delegate: ItemDelegate {
-            required property variant model
+            required property variant modelData
             required property int index
 
             width: ListView.view.width
@@ -148,7 +140,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 Text {
-                    text: model.name_scientific
+                    text: modelData.name_scientific
                     color: Theme.colorText
                     fontSizeMode: Text.Fit
                     font.pixelSize: 18
@@ -156,11 +148,8 @@ Popup {
                 }
                 Text {
                     text: {
-                        if(model.noms_communs) {
-
-                            console.log("Exixsting ", model.noms_communs)
-                            let t = plants_list.find(item => item.id === model.id)
-                            return model.noms_communs ? ( t.noms_communs[0] + (t.noms_communs[1] ? `, ${t.noms_communs[1]}` : "") ) : ""
+                        if(modelData.noms_communs) {
+                            return modelData.noms_communs ? ( modelData.noms_communs[0] + (modelData.noms_communs[1] ? `, ${modelData.noms_communs[1]}` : "") ) : ""
                         }
                         return ""
                     }
@@ -177,21 +166,16 @@ Popup {
                 cursorShape: "PointingHandCursor"
 
                 onClicked: {
-                    for(let i = plants_list.length - 1;  i >= 0; i--) {
-                        let item = plants_list[i]
-                        if(item.id === model.id) {
-                            plantScreenDetailsPopup.plant = item
-                            plantScreenDetailsPopup.open()
-                            break;
-                        }
-                    }
+                    console.log(JSON.stringify(modelData))
+                    plantScreenDetailsPopup.plant = modelData
+                    plantScreenDetailsPopup.open()
                 }
             }
 
         }
 
         ItemNoPlants {
-            visible: (categoryModel.count <= 0)
+            visible: (plants_list.length <= 0)
         }
     }
 
