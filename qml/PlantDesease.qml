@@ -785,6 +785,27 @@ Popup {
                 }
             }
             Item {
+                id: itemListAllDeseases
+                property variant fetched_deseases: []
+
+                PlantDeseaseDetails {
+                    id: deseaseDetailPopup
+                    header_hidden: true
+                    parent: parent
+                }
+
+                Component.onCompleted: {
+                    Http.fetch({
+                        method: 'GET',
+                        url: "https://blume.mahoudev.com/items/Maladies?fields[]=*.*",
+                    }).then(response => {
+                        let data = JSON.parse(response).data
+                        console.log(data)
+                        fetched_deseases = data
+                    })
+                }
+
+
                 ListModel {
                     id: maladiesModel
 
@@ -810,11 +831,36 @@ Popup {
                     id: listView
                     anchors.fill: parent
                     anchors.margins: 10
-                    model: maladiesModel
+                    model: itemListAllDeseases.fetched_deseases
                     clip: true
-                    delegate: Rectangle {
+                    delegate: ItemDelegate {
+                        required property variant modelData
+                        required property int index
+
                         height: 70
                         width: listView.width
+                        onClicked: {
+                            let formated = {}
+                            let desease_details = {
+                                common_names: modelData.noms_communs,
+                                treatment: {
+                                    prevention: modelData.traitement_preventif || "",
+                                    chemical: modelData.traitement_chimique || "",
+                                    biological: modelData.traitement_biologique || "",
+                                },
+                                description: modelData.description,
+                                cause: modelData.cause
+                            }
+
+                            formated['name'] = modelData.nom_scientifique
+                            formated['similar_images'] = modelData.images.map(item => ({url: "https://blume.mahoudev.com/assets/"+item.directus_files_id}) )
+                            formated['disease_details'] = desease_details
+
+                            console.log(JSON.stringify(formated))
+                            deseaseDetailPopup.desease_data = formated
+                            deseaseDetailPopup.open()
+                        }
+
                         Rectangle {
                             anchors.bottom: parent.bottom
                             height: 1
@@ -833,7 +879,7 @@ Popup {
                             anchors.leftMargin: 10
                             font.pixelSize: 21
                             font.weight: Font.Medium
-                            text: nom
+                            text: modelData['nom_scientifique']
                         }
 
                         Label {
@@ -842,22 +888,21 @@ Popup {
                             anchors.leftMargin: 10
                             font.pixelSize: 12
                             color: "gray"
-                            text: sousDescription
+                            text: modelData['noms_communs'] ? modelData['noms_communs'][0] : ""
                         }
 
-                        Rectangle {
+                        ClipRRect {
                             id: dangerositeCercle
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.right: parent.right
                             anchors.rightMargin: 10
-                            height: 30
-                            width: 30
-                            radius: 15
-                            color: listView.getColorForDangerosite(dangerosite)
+                            height: 50
+                            width: 50
+                            radius: 25
+                            Image {
+                                source: modelData['images'].length === 0 ? null : ("https://blume.mahoudev.com/assets/" + modelData['images'][0].directus_files_id )
+                            }
                         }
-                    }
-                    function getColorForDangerosite(dangerosite) {
-                        return Qt.rgba(1.0, 1.0 - dangerosite, 1.0 - dangerosite, 1.0)
                     }
                 }
 
@@ -1130,6 +1175,7 @@ Popup {
                                                     Layout.fillWidth: true
                                                     wrapMode: Text.Wrap
                                                 }
+
                                                 Rectangle {
                                                     Layout.fillWidth: true
                                                     Layout.preferredHeight: 50
@@ -1139,16 +1185,30 @@ Popup {
                                                         color: "#ccc"
                                                     }
                                                     TextInput {
+                                                        id: textInput
                                                         anchors.fill: parent
                                                         anchors.verticalCenter: parent.verticalCenter
                                                         verticalAlignment: Text.AlignVCenter
                                                         padding: 5
-                                                        text: modelData.fields[0].placeholder
 
                                                         font {
                                                             pixelSize: 14
                                                             weight: Font.Light
                                                         }
+                                                    }
+                                                    Label {
+                                                        text: modelData?.placeholder
+                                                        color: "#aaa"
+                                                        font {
+                                                            pixelSize: 14
+                                                            weight: Font.Light
+                                                        }
+                                                        visible: textInput.text === ""
+                                                        anchors.fill: parent
+                                                        anchors.leftMargin: 5
+                                                        anchors.verticalCenter: parent.verticalCenter
+                                                        verticalAlignment: Text.AlignVCenter
+                                                        wrapMode: Text.Wrap
                                                     }
                                                 }
 
