@@ -63,12 +63,18 @@
         <file alias="ItemNoPlants.qml">components/ItemNoPlants.qml</file>
         <file alias="ItemNoJournal.qml">components/ItemNoJournal.qml</file>
         <file alias="SectionTitle.qml">components/SectionTitle.qml</file>
+        <file alias="Accordion.qml">components/Accordion.qml</file>
+        <file alias="TableLine.qml">components/TableLine.qml</file>
+        <file alias="ImagePickerArea.qml">components/ImagePickerArea.qml</file>
         <file>PlantDesease.qml</file>
         <file>PlantIdentifier.qml</file>
         <file>PosometreDialog.qml</file>
         <file>popups/PopupLocationNotification.qml</file>
         <file>PlantIdentifierDetails.qml</file>
         <file>PlantDeseaseDetails.qml</file>
+        <file>PlantBrowseCategory.qml</file>
+        <file>PlantScreenDetails.qml</file>
+        <file>FAQ.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>

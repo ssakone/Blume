@@ -416,7 +416,7 @@ Page {
                     Label {
                         anchors.horizontalCenter: parent.horizontalCenter
                         color: "white"
-                        text: qsTr("Plants")
+                        text: qsTr("Plantes")
                     }
                 }
 
@@ -459,7 +459,6 @@ Page {
 //            }
 
             ButtonWireframe {
-                //text: qsTr("Deseases")
                 Layout.preferredHeight: 70
                 Layout.alignment: Qt.AlignVCenter
                 Layout.fillWidth: true
@@ -476,7 +475,7 @@ Page {
                     }
                     Label {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: qsTr("Desease")
+                        text: qsTr("Santé")
                         color: "white"
                     }
                 }

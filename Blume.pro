@@ -401,10 +401,14 @@ ios {
 }
 
 DISTFILES += \
-        qml/PlantDesease.qml \
-        qml/PlantDeseaseDetails.qml \
-        qml/PlantIdentifier.qml \
-        qml/PosometreDialog.qml
-
+    qml/FAQ.qml \
+    qml/PlantDesease.qml \
+    qml/PlantDeseaseDetails.qml \
+    qml/PlantIdentifier.qml \
+    qml/PlantScreenDetails.qml \
+    qml/PosometreDialog.qml \
+    qml/components/ImagePickerArea.qml \
+    qml/components_generic/Carousel.qml
+    
 # android: include(C:/Users/HP/AppData/Local/Android/Sdk/android_openssl/openssl.pri)
-android: include(/Users/mac/Library/Android/sdk/android_openssl/openssl.pri)
+android: include(/Users/mac/Library/Android/sdk/android_openssl/openssl.pri
