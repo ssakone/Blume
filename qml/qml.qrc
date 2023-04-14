@@ -38,6 +38,7 @@
         <file alias="PopupDeleteData.qml">popups/PopupDeleteData.qml</file>
         <file alias="PopupLocationNotification.qml">popups/PopupLocationNotification.qml</file>
         <file alias="PopupDeleteDevice.qml">popups/PopupDeleteDevice.qml</file>
+        <file alias="DrawerItem.qml">components/DrawerItem.qml</file>
         <file alias="ActionMenuFixed.qml">components/ActionMenuFixed.qml</file>
         <file alias="AirQualityIndicator.qml">components/AirQualityIndicator.qml</file>
         <file alias="ButtonExperimental.qml">components/ButtonExperimental.qml</file>
