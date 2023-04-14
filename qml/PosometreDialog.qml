@@ -23,24 +23,34 @@ Popup {
     padding: 0
     dim: true
     modal: true
-    onOpened: {
-        als.start()
-        posometreTimer.start()
-
-    }
+    onOpened: switch (Qt.platform.os) {
+              case "android":
+                  als.start()
+                  break;
+              case "ios":
+                  cameraLoader.active = true
+                  cameraLoader.item.camera.start()
+                  posometreTimer.start()
+                  break;
+              }
 
     function start() {
-        videoOutput.grabToImage((function (im) {
-            p_camera.getGamma(im)
-        }))
+        videoOutput1.grabToImage(image => p_camera.getGamma(image))
     }
 
-    onClosed: als.stop()
+    onClosed: {
+        switch (Qt.platform.os) {
+          case "android":
+              als.stop()
+              break
+          case "ios":
+              timer2.stop()
+              break
+          }
+
+    }
 
     property variant sensor: als.reading
-    property int indicator_height: 35 //(width / indicator_total_levels) - 100
-    property int indicator_width: 100
-    property real averageBrightness: 0.0
 
     background: Rectangle {
         color: Theme.colorPrimary
@@ -50,17 +60,16 @@ Popup {
     Timer {
         id: timer2
         repeat: true
-        interval: 500
-        onTriggered: {
-            posometrePop.start()
-        }
+        running: false
+        interval: 600
+        onTriggered: posometrePop.start()
     }
 
     Timer {
         id: posometreTimer
-        interval: 500
+        interval: 600
+        running: false
         onTriggered: {
-            sessionCam.camera.start()
             timer2.start()
         }
     }
@@ -90,6 +99,10 @@ Popup {
                 anchors.verticalCenterOffset: Qt.platform.os == 'ios' ? 15 : 0
                 anchors.verticalCenter: parent.verticalCenter
                 text: "Posometre"
+                font.pixelSize: 24
+                font.weight: Font.Bold
+                color: "white"
+                leftPadding: 60
             }
         }
 
@@ -97,13 +110,13 @@ Popup {
             anchors.fill: parent
             spacing: 20
 
-            Item {
-                Layout.preferredHeight: "80"
+            Column {
                 Layout.fillWidth: true
                 Label {
-                    anchors.verticalCenter: parent.verticalCenter
-                    x: 10
-                    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non eros fringilla, scelerisque est aliquam, facilisis odio. Duis hendrerit eu purus eu consequat. Aliquam a dolor quis enim lacinia porta eu rutrum urna. In nec magna lacus. Pellentesque a tempor felis, ut pellentesque nulla. Ut vestibulum efficitur justo ac efficitur. Etiam consectetur porta posuere. Nunc ut ipsum sed augue interdum interdum. Donec dictum, quam et accumsan interdum, felis lorem iaculis lorem, eu aliquam quam quam id odio. Sed pellentesque placerat nibh sed elementum. Integer laoreet arcu sed ex dictum, in lacinia nulla rhoncus."
+                    width: parent.width - 50
+                    padding: 16
+                    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non eros fringilla, scelerisque est aliquam, facilisis odio."
+                    wrapMode: Label.Wrap
                 }
             }
 
@@ -116,19 +129,6 @@ Popup {
 
                 color: "white"
                 clip: true
-                VideoOutput {
-                     id: videoOutput
-                     x: 10000
-                     y: 10000
-                     width: parent.width
-                     height: parent.height
-                     fillMode: Image.PreserveAspectCrop
-                     MouseArea {
-                          anchors.fill: parent;
-                          onClicked: posometrePop.start()
-                      }
-                 }
-
                 Rectangle {
                     id: gl
                     width: 60
@@ -143,12 +143,10 @@ Popup {
                         property real radius: width / 2
                         anchors.bottom: parent.bottom
                         width: 60
-                        height:  (sensor.lightLevel * gl.height) / 6
+                        height: (sensor.lightLevel * gl.height) / 6
 
                         Behavior on height {
-                            SmoothedAnimation {
-
-                            }
+                            SmoothedAnimation {}
                         }
 
                         Rectangle {
@@ -220,15 +218,30 @@ Popup {
                         }
                     }
                 }
-
-                CaptureSession {
-                    id: sessionCam
-                     camera: Camera {
-                         id: camera
-                     }
-                     videoOutput: videoOutput
+                VideoOutput {
+                    id: videoOutput1
+                    x: 10000
+                    y: 10000
+                    width: parent.width
+                    height: parent.height
+                    fillMode: Image.PreserveAspectCrop
                 }
 
+                Loader {
+                    id: cameraLoader
+                    width: 1
+                    height: 1
+                    active: Qt.platform.os === "ios"
+                    sourceComponent:  Component {
+                        CaptureSession {
+                            Component.onCompleted: camera.start()
+                            camera: Camera {
+                                id: camera
+                            }
+                            videoOutput: videoOutput1
+                        }
+                    }
+                }
             }
 
             AmbientLightSensor {
@@ -239,20 +252,44 @@ Popup {
 
     PosometreCamera {
         id: p_camera
-        onLighnessValue: function(value) {
-            console.log(value)
-            sensor = {"lightLevel": value}
+        onLighnessValue: function (value) {
+            sensor = {
+                "lightLevel": value
+            }
         }
     }
 
     ListModel {
         id: indicator_model
-        ListElement { level: 5; l_color: "red"; textColor: 'white'; label: "Ensolleilé" }
-        ListElement { level: 4; l_color: "yellow"; textColor: 'black'; label: "Très lumineux"  }
-        ListElement { level: 3; l_color: "orange"; textColor: 'black'; label: "Lumineux"  }
-        ListElement { level: 2; l_color: "white"; textColor: 'black'; label: "Normal"  }
-        ListElement { level: 1; l_color: "gray"; textColor: 'black'; label: "Sombre" }
+        ListElement {
+            level: 5
+            l_color: "red"
+            textColor: 'white'
+            label: "Ensolleilé"
+        }
+        ListElement {
+            level: 4
+            l_color: "yellow"
+            textColor: 'black'
+            label: "Très lumineux"
+        }
+        ListElement {
+            level: 3
+            l_color: "orange"
+            textColor: 'black'
+            label: "Lumineux"
+        }
+        ListElement {
+            level: 2
+            l_color: "white"
+            textColor: 'black'
+            label: "Normal"
+        }
+        ListElement {
+            level: 1
+            l_color: "gray"
+            textColor: 'black'
+            label: "Sombre"
+        }
     }
-
-
 }
