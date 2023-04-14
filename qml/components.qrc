@@ -34,16 +34,13 @@
         <file>components/NiceButton.qml</file>
         <file>components/ClipRRect.qml</file>
         <file>components/AppBarButton.qml</file>
+        <file>components/AppBar.qml</file>
     </qresource>
     <qresource prefix="/js">
         <file alias="UtilsNumber.js">components_js/UtilsNumber.js</file>
         <file alias="UtilsDeviceSensors.js">components_js/UtilsDeviceSensors.js</file>
         <file alias="UtilsPlantDatabase.js">components_js/UtilsPlantDatabase.js</file>
         <file alias="UtilsPlantJournal.js">components_js/UtilsPlantJournal.js</file>
-    </qresource>
-    <qresource prefix="/">
-        <file>components/NiceButton.qml</file>
-        <file>components/AppBarButton.qml</file>
     </qresource>
 </RCC>
 

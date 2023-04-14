@@ -10,6 +10,7 @@ import ImageTools
 import Qt.labs.platform
 
 import "components" as Components
+import "pages/Plant" as PlantPages
 
 import Qt5Compat.GraphicalEffects
 
@@ -81,7 +82,8 @@ Loader {
 
         function forwardAction() {
             if (appContent.state === "PlantBrowser") {
-                if (typeof plantScreen.currentPlant !== "undefined" && plantScreen.currentPlant) {
+                if (typeof plantScreen.currentPlant !== "undefined"
+                        && plantScreen.currentPlant) {
                     plantSearchBox.focus = false
                     itemPlantBrowser.visible = false
                     itemPlantBrowser.enabled = false
@@ -166,7 +168,6 @@ Loader {
                 }
 
                 //onDisplayTextChanged: plantDatabase.filter(displayText)
-
                 MouseArea {
                     anchors.fill: parent
                     anchors.rightMargin: 70
@@ -382,7 +383,9 @@ Loader {
                                                     height: img.height
                                                     Rectangle {
                                                         anchors.centerIn: parent
-                                                        width: img.adapt ? img.width : Math.min(img.width, img.height)
+                                                        width: img.adapt ? img.width : Math.min(
+                                                                               img.width,
+                                                                               img.height)
                                                         height: img.adapt ? img.height : width
                                                         radius: 10
                                                     }
@@ -398,22 +401,40 @@ Loader {
                                                 if (action === "posometre") {
                                                     posometrePop.open()
                                                 } else if (action === "identify") {
-                                                    identifierPop.open()
+                                                    //identifierPop.open()
+                                                    appContent.openStackView(
+                                                                identifierPop)
                                                 } else {
                                                     let title = ""
                                                     let pk = 0
-                                                    if (action === "categorie_plantes_herbes") {title = "Les herbes"; pk = 1}
-                                                    else if (action === "categorie_plantes_legumes") {title = "Les légumes"; pk = 2}
-                                                    else if (action === "categorie_plantes_orchidee") {title = "Les orchidées"; pk = 3}
-                                                    else if (action === "categorie_plantes_fleuries") {title = "Les plantes fleuries"; pk = 4}
-                                                    else if (action === "categorie_plantes_cactus_succulentes") {title = "Les cactus et succculentes"; pk = 5}
-                                                    else if (action === "categorie_plantes_feuillage") {title = "Les plantes à feuillage"; pk = 6}
+                                                    if (action === "categorie_plantes_herbes") {
+                                                        title = "Les herbes"
+                                                        pk = 1
+                                                    } else if (action
+                                                               === "categorie_plantes_legumes") {
+                                                        title = "Les légumes"
+                                                        pk = 2
+                                                    } else if (action
+                                                               === "categorie_plantes_orchidee") {
+                                                        title = "Les orchidées"
+                                                        pk = 3
+                                                    } else if (action
+                                                               === "categorie_plantes_fleuries") {
+                                                        title = "Les plantes fleuries"
+                                                        pk = 4
+                                                    } else if (action === "categorie_plantes_cactus_succulentes") {
+                                                        title = "Les cactus et succculentes"
+                                                        pk = 5
+                                                    } else if (action
+                                                               === "categorie_plantes_feuillage") {
+                                                        title = "Les plantes à feuillage"
+                                                        pk = 6
+                                                    }
 
                                                     plantListByCategory.title = title
                                                     plantListByCategory.category_id = pk
                                                     plantListByCategory.open()
                                                 }
-
                                             }
                                         }
                                     }
@@ -523,9 +544,9 @@ Loader {
             id: posometrePop
         }
 
-
-        PlantIdentifier {
+        Component {
             id: identifierPop
+            PlantPages.PlantIdentifier {}
         }
 
         ////////////////////////////////////////////////////////////////////
@@ -539,7 +560,9 @@ Loader {
 
             // 1: single column (single column view or portrait tablet)
             // 2: wide mode (wide view)
-            property int uiMode: (singleColumn || (isTablet && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
+            property int uiMode: (singleColumn
+                                  || (isTablet
+                                      && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
 
             contentWidth: (uiMode === 1) ? -1 : plantScreen.width
             contentHeight: (uiMode === 1) ? plantScreen.height : -1
@@ -575,7 +598,8 @@ Loader {
             color: headerUnicolor ? Theme.colorBackground : Theme.colorForeground
 
             visible: (!singleColumn && appContent.state === "PlantBrowser"
-                      && screenPlantBrowser.entryPoint === "DevicePlantSensor" && isPlantClicked())
+                      && screenPlantBrowser.entryPoint === "DevicePlantSensor"
+                      && isPlantClicked())
 
             Text {
                 anchors.left: parent.left
@@ -607,7 +631,8 @@ Loader {
                     source: "qrc:/assets/icons_material/baseline-check_circle-24px.svg"
 
                     onClicked: {
-                        selectedDevice.setPlantName(plantScreen.currentPlant.name)
+                        selectedDevice.setPlantName(
+                                    plantScreen.currentPlant.name)
                         appContent.state = "DevicePlantSensor"
                     }
                 }
@@ -649,7 +674,8 @@ Loader {
             height: 52
             color: Theme.colorForeground
             visible: (singleColumn && appContent.state === "PlantBrowser"
-                      && screenPlantBrowser.entryPoint === "DevicePlantSensor" && isPlantClicked())
+                      && screenPlantBrowser.entryPoint === "DevicePlantSensor"
+                      && isPlantClicked())
 
             RowLayout {
                 anchors.left: parent.left
@@ -672,7 +698,8 @@ Loader {
                     source: "qrc:/assets/icons_material/baseline-check_circle-24px.svg"
 
                     onClicked: {
-                        selectedDevice.setPlantName(plantScreen.currentPlant.name)
+                        selectedDevice.setPlantName(
+                                    plantScreen.currentPlant.name)
                         appContent.state = "DevicePlantSensor"
                     }
                 }

@@ -14,110 +14,86 @@ import QtPositioning
 import ThemeEngine 1.0
 
 import MaterialIcons
-import "components"
+import "../../components"
+import "../../"
 
-Popup {
-    id: identifierPop
-    dim: true
-    modal: true
+Page {
+    id: pageControl
     property variant plant_results
-    width: appWindow.width
-    height: appWindow.height
-    parent: appWindow.contentItem
+    property variant view: pageControl.StackView.view
     padding: 0
-    onClosed:  {
-        tabBar.currentIndex = 0
-        image.source = ""
-    }
-    onOpened: {
-        image.source = ""
-    }
-
-    PlantIdentifierDetails {
-        id: resultIdentifierDetailPopup
+    onVisibleChanged: {
+        if (visible) {
+            image.source = ""
+        } else {
+            tabBar.currentIndex = 0
+            image.source = ""
+        }
     }
 
+    Component {
+        id: plantResultPage
+        PlantIdentifierDetails {}
+    }
 
     PositionSource {
         id: gps
         active: true
-        preferredPositioningMethods : PositionSource.SatellitePositioningMethods
+        preferredPositioningMethods: PositionSource.SatellitePositioningMethods
+    }
+    header: AppBar {
+        title: identifierLayoutView.currentIndex === 0 ? "Identification de plante" : "Resultat"
+        leading.onClicked: {
+            if (identifierLayoutView.currentIndex === 0) {
+                pageControl.view.pop()
+            } else if (identifierLayoutView.currentIndex === 1) {
+                tabBar.currentIndex = 0
+                identifierLayoutView.currentIndex = 0
+            } else {
+                identifierLayoutView.currentIndex--
+            }
+        }
+        actions: [
+            AppBarButton {
+                icon: Icons.camera
+                visible: (Qt.platform.os == 'ios'
+                          || Qt.platform.os == 'android')
+                         && identifierLayoutView.currentIndex === 0
+                onClicked: {
+                    if (Qt.platform.os === 'ios') {
+                        imgPicker.openCamera()
+                    } else {
+                        androidToolsLoader.item.openCamera()
+                    }
+                }
+                width: 64
+                height: 64
+            }
+        ]
     }
 
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 0
         spacing: 0
-        Rectangle {
-            color: "#00c395"
-            Layout.preferredHeight: Qt.platform.os == 'ios' ? 90 : 65
-            Layout.fillWidth: true
-            RowLayout {
-                width: parent.width
-                anchors.verticalCenterOffset: Qt.platform.os == 'ios' ? 20 : 0
-                anchors.verticalCenter: parent.verticalCenter
-                spacing: 10
-                AppBarButton {
-                    id: buttonBackBg
-                    icon: "qrc:/assets/menus/menu_back.svg"
-                    onClicked: {
-                        if (identifierLayoutView.currentIndex === 0) {
-                            identifierPop.close()
-                        } else if (identifierLayoutView.currentIndex === 1) {
-                            tabBar.currentIndex = 0
-                            identifierLayoutView.currentIndex = 0
-                        }
-                        else {
-                            identifierLayoutView.currentIndex--
-                        }
+
+        Loader {
+            id: androidToolsLoader
+            active: Qt.platform.os === "android"
+            sourceComponent: Component {
+                Item {
+                    function openCamera() {
+                        QtAndroidAppPermissions.openCamera()
                     }
-                    Layout.preferredHeight: 64
-                    Layout.preferredWidth: 64
-                    Layout.alignment: Qt.AlignVCenter
-                }
-                Label {
-                    text: identifierLayoutView.currentIndex === 0 ? "Identification de plante" : "Resultat"
-                    font.pixelSize: 21
-                    font.bold: true
-                    font.weight: Font.Medium
-                    color: "white"
-                    Layout.alignment: Qt.AlignVCenter
-                    Layout.fillWidth: true
-                }
-                AppBarButton {
-                    icon:  Icons.camera
-                    visible: (Qt.platform.os == 'ios' || Qt.platform.os == 'android') && identifierLayoutView.currentIndex === 0
-                    onClicked: {
-                        if (Qt.platform.os === 'ios') {
-                            imgPicker.openCamera()
-                        } else {
-                            androidToolsLoader.item.openCamera()
-                        }
+                    function openGallery() {
+                        QtAndroidAppPermissions.openGallery()
                     }
 
-                    Layout.preferredHeight: 64
-                    Layout.preferredWidth: 64
-                    Layout.alignment: Qt.AlignVCenter
-                }
-                Loader {
-                    id: androidToolsLoader
-                    active: Qt.platform.os === "android"
-                    sourceComponent: Component {
-                        Item {
-                            function openCamera() {
-                                QtAndroidAppPermissions.openCamera()
-                            }
-                            function openGallery() {
-                                QtAndroidAppPermissions.openGallery()
-                            }
-
-                            Connections {
-                                target: QtAndroidAppPermissions
-                                function onImageSelected(path) {
-                                    image.source = "file://?" + Math.random()
-                                    image.source = "file://" + path
-                                }
-                            }
+                    Connections {
+                        target: QtAndroidAppPermissions
+                        function onImageSelected(path) {
+                            image.source = "file://?" + Math.random()
+                            image.source = "file://" + path
                         }
                     }
                 }
@@ -132,8 +108,7 @@ Popup {
             Layout.margins: 0
             currentIndex: 0
             onCurrentIndexChanged: {
-                if (accessCam.active)
-                {
+                if (accessCam.active) {
                     accessCam.active = false
                 }
                 tabBar.currentIndex = 0
@@ -147,10 +122,13 @@ Popup {
                         id: tabBar
                         topPadding: 0
                         Material.background: "#00c395"
-                        Material.foreground: Material.color(Material.Grey, Material.Shade50)
-                        Material.accent: Material.color(Material.Grey, Material.Shade50)
+                        Material.foreground: Material.color(Material.Grey,
+                                                            Material.Shade50)
+                        Material.accent: Material.color(Material.Grey,
+                                                        Material.Shade50)
                         Layout.fillWidth: true
-                        visible:  Qt.platform.os !== 'ios' && Qt.platform.os !== 'android'
+                        visible: Qt.platform.os !== 'ios'
+                                 && Qt.platform.os !== 'android'
                         TabButton {
                             text: "Fichier"
                         }
@@ -229,9 +207,9 @@ Popup {
                                         if (Qt.platform.os === 'ios') {
                                             imgPicker.openPicker()
                                         } else if (Qt.platform.os === 'android') {
-                                            androidToolsLoader.item.openGallery()
-                                        }
-                                        else {
+                                            androidToolsLoader.item.openGallery(
+                                                        )
+                                        } else {
                                             fileDialog.open()
                                         }
                                     }
@@ -276,10 +254,10 @@ Popup {
                                                     image2.source = imageCapture.preview
                                                 }
 
-                                                onErrorOccurred: function(id, error, message) {
-                                                }
+                                                onErrorOccurred: function (id, error, message) {}
                                             }
-                                            videoOutput: tabBar.currentIndex === 1 ? videoOutput : null
+                                            videoOutput: tabBar.currentIndex
+                                                         === 1 ? videoOutput : null
                                         }
 
                                         Rectangle {
@@ -326,7 +304,8 @@ Popup {
                             id: fileDialog
                             nameFilters: ["Image file (*.png *.jpg *.jpeg *.gif)"]
                             onAccepted: {
-                                if (Qt.application.os === "windows" || Qt.application.os === "osx"
+                                if (Qt.application.os === "windows"
+                                        || Qt.application.os === "osx"
                                         || Qt.application.os === "linux") {
                                     image.source = selectedFile
                                 } else {
@@ -335,7 +314,6 @@ Popup {
                             }
                         }
                     }
-
 
                     RowLayout {
                         Layout.fillWidth: true
@@ -358,7 +336,8 @@ Popup {
                             text: "Nouveau"
                             Layout.preferredHeight: 60
                             Layout.preferredWidth: 120
-                            visible: tabBar.currentIndex === 1 && accessCam.item?.image_view.visible === true
+                            visible: tabBar.currentIndex === 1
+                                     && accessCam.item?.image_view.visible === true
                             height: 45
                             onClicked: {
                                 if (accessCam.item.image_view.visible) {
@@ -376,47 +355,60 @@ Popup {
                             icon.source: Icons.magnify
                             Layout.preferredWidth: Qt.platform.os === 'ios' ? 120 : 180
                             Layout.preferredHeight: 60
-                            visible: image.source.toString() !== "" || accessCam.active
+                            visible: image.source.toString() !== ""
+                                     || accessCam.active
                             onClicked: {
                                 if (image.source.toString() !== "") {
                                     imgAnalysisSurface.loading = true
                                     let data = {
                                         "images": [imgTool.getBase64(
                                                 image.source.toString().replace(
-                                                    Qt.platform.os === "windows" ? "file:///" : "file://", ""))],
+                                                    Qt.platform.os
+                                                    === "windows" ? "file:///" : "file://",
+                                                    ""))],
                                         "modifiers": ["crops_fast", "similar_images"],
                                         "language": "fr",
                                         "plant_details": ["common_names", "taxonomy", "url", "wiki_description", "wiki_image", "wiki_images", "edible_parts", "propagation_methods"],
                                         "longitude": gps.position.coordinate.longitude,
-                                        "latitude": gps.position.coordinate.latitude,
+                                        "latitude": gps.position.coordinate.latitude
                                     }
-                                    request("POST", "https://plant.id/api/v2/identify",
-                                                         data).then(function (r) {
-                                                             let datas = JSON.parse(r)
-//                                                             console.log(r)
-                                                             identifierPop.plant_results = datas
-                                                             imgAnalysisSurface.loading = false
-                                                             identifierLayoutView.currentIndex = 1
-                                                             if (datas.is_plant)
-                                                                 identifedPlantListView.model = datas.suggestions.slice(0, 3)
-                                                             else
-                                                                 identifedPlantListView.model = []
-                                                         }).catch(function (e) {
-                                                             imgAnalysisSurface.loading = false
-                                                             console.log('Erreur', JSON.stringify(e))
-                                                         })
+                                    request("POST",
+                                            "https://plant.id/api/v2/identify",
+                                            data).then(function (r) {
+                                                let datas = JSON.parse(r)
+                                                //                                                             console.log(r)
+                                                pageControl.plant_results = datas
+                                                imgAnalysisSurface.loading = false
+                                                identifierLayoutView.currentIndex = 1
+                                                if (datas.is_plant)
+                                                    identifedPlantListView.model
+                                                            = datas.suggestions.slice(
+                                                                0, 3)
+                                                else
+                                                    identifedPlantListView.model = []
+                                            }).catch(function (e) {
+                                                imgAnalysisSurface.loading = false
+                                                console.log('Erreur',
+                                                            JSON.stringify(e))
+                                            })
                                 } else {
-                                    let path = StandardPaths.writableLocation(StandardPaths.PicturesLocation).toString().replace(Qt.application.os === "windows" ? "file:///" : "file://", "")
-                                    let ln = (Math.random() % 10 * 100000).toFixed(0)
+                                    let path = StandardPaths.writableLocation(
+                                            StandardPaths.PicturesLocation).toString(
+                                            ).replace(
+                                            Qt.application.os
+                                            === "windows" ? "file:///" : "file://",
+                                            "")
+                                    let ln = (Math.random(
+                                                  ) % 10 * 100000).toFixed(0)
                                     let filePath = path + "/" + ln + '.jpg'
                                     imgAnalysisSurface.savedImagePath = filePath
-                                    accessCam.item.imgCapture.captureToFile(filePath)
+                                    accessCam.item.imgCapture.captureToFile(
+                                                filePath)
                                 }
                             }
                         }
                         Item {
                             Layout.fillWidth: true
-
                         }
                     }
 
@@ -461,7 +453,8 @@ Popup {
                             horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
-                            visible: identifierPop.plant_results?.is_plant ?? false
+                            visible: pageControl.plant_results?.is_plant
+                                     ?? false
                             text: "Un de ces résultats devrait correspondre à votre recherche"
                         }
                         Label {
@@ -471,7 +464,7 @@ Popup {
                             horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
-                            visible: !identifierPop.plant_results?.is_plant
+                            visible: !pageControl.plant_results?.is_plant
                             text: "Ceci n'est pas une plante"
                         }
                     }
@@ -497,7 +490,6 @@ Popup {
                         height: 100
                         width: identifedPlantListView.width
 
-
                         Rectangle {
                             anchors.right: parent.right
                             anchors.rightMargin: 10
@@ -514,27 +506,9 @@ Popup {
                             }
                         }
 
-                        onClicked: {
-//                                identifierPop.close()
-                            resultIdentifierDetailPopup.plant_data = modelData
-                                resultIdentifierDetailPopup.open()
-//                            plantDatabase.filter(modelData["plant_details"]["scientific_name"])
-//                            let ps = plantDatabase.plantsFiltered.filter(function (p) {
-//                                if (p.name.indexOf(modelData["plant_details"]["scientific_name"]) !== -1)
-//                                    return p
-//                            })
-//                            if (ps.length > 0) {
-//                                plantScreen.currentPlant = ps[0]
-//                                identifierPop.close()
-
-//                                itemPlantBrowser.visible = false
-//                                itemPlantBrowser.enabled = false
-//                                itemPlantViewer.visible = true
-//                                itemPlantViewer.enabled = true
-//                                itemPlantViewer.contentX = 0
-//                                itemPlantViewer.contentY = 0
-//                            }
-                        }
+                        onClicked: page_view.push(plantResultPage, {
+                                                      "plant_data": modelData
+                                                  })
                     }
                 }
             }

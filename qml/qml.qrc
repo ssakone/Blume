@@ -31,6 +31,10 @@
         <file>DeviceEnvironmental.qml</file>
         <file>ThemeEngine.qml</file>
         <file>WindowGeometrySaver.qml</file>
+        
+        <file>pages/Plant/PlantIdentifier.qml</file>
+        <file>pages/Plant/PlantIdentifierDetails.qml</file>
+        
         <file alias="PopupBackgroundUpdates.qml">popups/PopupBackgroundUpdates.qml</file>
         <file alias="PopupBlacklistDevice.qml">popups/PopupBlacklistDevice.qml</file>
         <file alias="PopupCalibration.qml">popups/PopupCalibration.qml</file>
@@ -67,10 +71,8 @@
         <file alias="TableLine.qml">components/TableLine.qml</file>
         <file alias="ImagePickerArea.qml">components/ImagePickerArea.qml</file>
         <file>PlantDesease.qml</file>
-        <file>PlantIdentifier.qml</file>
         <file>PosometreDialog.qml</file>
         <file>popups/PopupLocationNotification.qml</file>
-        <file>PlantIdentifierDetails.qml</file>
         <file>PlantDeseaseDetails.qml</file>
         <file>PlantBrowseCategory.qml</file>
         <file>PlantScreenDetails.qml</file>

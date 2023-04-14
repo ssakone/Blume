@@ -126,7 +126,6 @@ RESOURCES   += qml/qml.qrc \
                            assets/assets.qrc \
                            assets/devices.qrc \
                            assets/plants.qrc \
-                           blume.qrc
 
 OTHER_FILES += README.md \
                            deploy_linux.sh \
