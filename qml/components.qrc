@@ -37,6 +37,7 @@
         <file>components/AppBar.qml</file>
     </qresource>
     <qresource prefix="/js">
+        <file alias="Http.js">components_js/Http.js</file>
         <file alias="UtilsNumber.js">components_js/UtilsNumber.js</file>
         <file alias="UtilsDeviceSensors.js">components_js/UtilsDeviceSensors.js</file>
         <file alias="UtilsPlantDatabase.js">components_js/UtilsPlantDatabase.js</file>

@@ -16,6 +16,7 @@ import ThemeEngine 1.0
 
 import MaterialIcons
 import "components"
+import "components_js/Http.js" as Http
 
 Popup {
     id: planteDeseasePopup
@@ -27,96 +28,69 @@ Popup {
     parent: appWindow.contentItem
     padding: 0
 
-    property variant form_schema: [
-        {
-            group_title: "Exposition et température",
-            fields: [
-                {
-                    label: "De combien d'ensoleillement bénéficie votre plante chaque jour ?",
-                    is_required: true,
-                    placeholder: "6h de lumière naturelle indirecte"
-                },
-                {
-                    label: "Quelles sont les température de son environnement ?",
-                    is_required: false,
-                    placeholder: "Journée: +24°C, Nuit: +1°C"
-                },
-            ]
-        },
+    property variant form_schema: [{
+            "group_title": "Exposition et température",
+            "fields": [{
+                    "label": "De combien d'ensoleillement bénéficie votre plante chaque jour ?",
+                    "is_required": true,
+                    "placeholder": "6h de lumière naturelle indirecte"
+                }, {
+                    "label": "Quelles sont les température de son environnement ?",
+                    "is_required": false,
+                    "placeholder": "Journée: +24°C, Nuit: +1°C"
+                }]
+        }, {
+            "group_title": "Parasites et maladies",
+            "fields": [{
+                    "label": "Y a-t-il des toiles ou des insectes sur la plante ou dans la terre ?",
+                    "is_required": false,
+                    "placeholder": "Insectes blancs sous les feuilles"
+                }, {
+                    "label": "Quelles sont les température de son environnement ?",
+                    "is_required": false,
+                    "placeholder": "Journée: +24°C, Nuit: +1°C"
+                }]
+        }, {
+            "group_title": "Arrosage",
+            "fields": [{
+                    "label": "A quelle fréquence arrosez-vous votre plante ?",
+                    "is_required": false,
+                    "placeholder": "1 à 2 fois par semaine"
+                }, {
+                    "label": "Quelle quantité d'eau utilisez-vous ?",
+                    "is_required": false,
+                    "placeholder": "Un verre et demi"
+                }, {
+                    "label": "Laissez-vous la terre sécher entre les arrosages ?",
+                    "is_required": false,
+                    "placeholder": "Oui, les premiers centimètres"
+                }, {
+                    "label": "Le fond du pot est-il percé ?",
+                    "is_required": false,
+                    "placeholder": "Oui"
+                }]
+        }, {
+            "group_title": "Rempotage et engrais",
+            "fields": [{
+                    "label": "A quelle fréquence arrosez-vous votre plante ?",
+                    "is_required": false,
+                    "placeholder": "1 à 2 fois par semaine"
+                }, {
+                    "label": "Quelle quantité d'eau utilisez-vous ?",
+                    "is_required": false,
+                    "placeholder": "Un verre et demi"
+                }, {
+                    "label": "Laissez-vous la terre sécher entre les arrosages ?",
+                    "is_required": false,
+                    "placeholder": "Oui, les premiers centimètres"
+                }, {
+                    "label": "Le fond du pot est-il percé ?",
+                    "is_required": false,
+                    "placeholder": "Oui"
+                }]
+        }]
 
-        {
-            group_title: "Parasites et maladies",
-            fields: [
-                {
-                    label: "Y a-t-il des toiles ou des insectes sur la plante ou dans la terre ?",
-                    is_required: false,
-                    placeholder: "Insectes blancs sous les feuilles"
-                },
-                {
-                    label: "Quelles sont les température de son environnement ?",
-                    is_required: false,
-                    placeholder: "Journée: +24°C, Nuit: +1°C"
-                },
-            ]
-        },
-
-        {
-            group_title: "Arrosage",
-            fields: [
-                {
-                    label: "A quelle fréquence arrosez-vous votre plante ?",
-                    is_required: false,
-                    placeholder: "1 à 2 fois par semaine"
-                },
-                {
-                    label: "Quelle quantité d'eau utilisez-vous ?",
-                    is_required: false,
-                    placeholder: "Un verre et demi"
-                },
-                {
-                    label: "Laissez-vous la terre sécher entre les arrosages ?",
-                    is_required: false,
-                    placeholder: "Oui, les premiers centimètres"
-                },
-                {
-                    label: "Le fond du pot est-il percé ?",
-                    is_required: false,
-                    placeholder: "Oui"
-                },
-            ]
-        },
-
-        {
-            group_title: "Rempotage et engrais",
-            fields: [
-                {
-                    label: "A quelle fréquence arrosez-vous votre plante ?",
-                    is_required: false,
-                    placeholder: "1 à 2 fois par semaine"
-                },
-                {
-                    label: "Quelle quantité d'eau utilisez-vous ?",
-                    is_required: false,
-                    placeholder: "Un verre et demi"
-                },
-                {
-                    label: "Laissez-vous la terre sécher entre les arrosages ?",
-                    is_required: false,
-                    placeholder: "Oui, les premiers centimètres"
-                },
-                {
-                    label: "Le fond du pot est-il percé ?",
-                    is_required: false,
-                    placeholder: "Oui"
-                },
-            ]
-        }
-
-
-    ]
-
-
-    onClosed:  {
+    onClosed: {
         if (accessCam.active)
             accessCam.active = false
         tabView.currentIndex = 0
@@ -132,10 +106,10 @@ Popup {
         id: resultDeseaseDetailPopup
     }
 
-    PositionSource  {
+    PositionSource {
         id: gps
         active: true
-        preferredPositioningMethods : PositionSource.SatellitePositioningMethods
+        preferredPositioningMethods: PositionSource.SatellitePositioningMethods
     }
 
     ColumnLayout {
@@ -159,9 +133,7 @@ Popup {
                             planteDeseasePopup.close()
                         } else if (identifierLayoutView.currentIndex === 4) {
                             identifierLayoutView.currentIndex = 0
-                        }
-
-                        else {
+                        } else {
                             identifierLayoutView.currentIndex--
                         }
                     }
@@ -184,8 +156,8 @@ Popup {
                             return "FAQ"
                         case 5:
                             return "Contacter un expert"
-
-                        default: return "Non trouvé"
+                        default:
+                            return "Non trouvé"
                         }
                     }
 
@@ -197,8 +169,10 @@ Popup {
                     Layout.fillWidth: true
                 }
                 AppBarButton {
-                    icon:  Icons.camera
-                    visible: (Qt.platform.os == 'ios' || Qt.platform.os == 'android') && identifierLayoutView.currentIndex === 1
+                    icon: Icons.camera
+                    visible: (Qt.platform.os == 'ios'
+                              || Qt.platform.os == 'android')
+                             && identifierLayoutView.currentIndex === 1
                     onClicked: {
                         if (Qt.platform.os === 'ios') {
                             imgPicker.openCamera()
@@ -232,7 +206,6 @@ Popup {
                         }
                     }
                 }
-
             }
         }
 
@@ -245,8 +218,7 @@ Popup {
             currentIndex: 0
             onCurrentIndexChanged: {
                 if (currentIndex != 1) {
-                    if (accessCam.active)
-                    {
+                    if (accessCam.active) {
                         tabView.currentIndex = 0
                         tabBar.currentIndex = 0
                         accessCam.active = false
@@ -267,29 +239,25 @@ Popup {
                             id: optionModel
 
                             Component.onCompleted: {
-                                let data = [
-                                    {
-                                        "name": qsTr("Analyser une plantes"),
-                                        "icon": Icons.magnifyScan,
-                                        "image": "",
-                                        "action": "analyser",
-                                        "style": "darkblue"
-                                    }, 
-                                    {
-                                        "name": qsTr("Encyclopedie des maladies"),
-                                        "icon": Icons.bookOpenOutline,
-                                        "image": "",
-                                        "action": "encyclopedie",
-                                        "style": "lightenYellow"
-                                    },
-                                    {
-                                        "name": qsTr("Contacter des experts"),
-                                        "icon": Icons.helpCircle,
-                                        "image": "",
-                                        "action": "faq",
-                                        "style": "lightenYellow"
-                                    }
-                                ]
+                                let data = [{
+                                                "name": qsTr("Analyser une plantes"),
+                                                "icon": Icons.magnifyScan,
+                                                "image": "",
+                                                "action": "analyser",
+                                                "style": "darkblue"
+                                            }, {
+                                                "name": qsTr("Encyclopedie des maladies"),
+                                                "icon": Icons.bookOpenOutline,
+                                                "image": "",
+                                                "action": "encyclopedie",
+                                                "style": "lightenYellow"
+                                            }, {
+                                                "name": qsTr("Contacter des experts"),
+                                                "icon": Icons.helpCircle,
+                                                "image": "",
+                                                "action": "faq",
+                                                "style": "lightenYellow"
+                                            }]
                                 data.forEach((plant => append(plant)))
                             }
                         }
@@ -366,7 +334,9 @@ Popup {
                                                 height: img.height
                                                 Rectangle {
                                                     anchors.centerIn: parent
-                                                    width: img.adapt ? img.width : Math.min(img.width, img.height)
+                                                    width: img.adapt ? img.width : Math.min(
+                                                                           img.width,
+                                                                           img.height)
                                                     height: img.adapt ? img.height : width
                                                     radius: 10
                                                 }
@@ -415,10 +385,13 @@ Popup {
                     TabBar {
                         id: tabBar
                         topPadding: 0
-                        visible:  Qt.platform.os !== 'ios' && Qt.platform.os !== 'android'
+                        visible: Qt.platform.os !== 'ios'
+                                 && Qt.platform.os !== 'android'
                         Material.background: "#00c395"
-                        Material.foreground: Material.color(Material.Grey, Material.Shade50)
-                        Material.accent: Material.color(Material.Grey, Material.Shade50)
+                        Material.foreground: Material.color(Material.Grey,
+                                                            Material.Shade50)
+                        Material.accent: Material.color(Material.Grey,
+                                                        Material.Shade50)
                         Layout.fillWidth: true
                         TabButton {
                             text: "Fichier"
@@ -447,7 +420,6 @@ Popup {
                             onCurrentIndexChanged: {
                                 if (currentIndex === 1) {
                                     tm.start()
-
                                 } else {
                                     accessCam.active = false
                                 }
@@ -500,9 +472,9 @@ Popup {
                                         if (Qt.platform.os === 'ios') {
                                             imgPicker.openPicker()
                                         } else if (Qt.platform.os === 'android') {
-                                            androidToolsLoader.item.openGallery()
-                                        }
-                                        else {
+                                            androidToolsLoader.item.openGallery(
+                                                        )
+                                        } else {
                                             fileDialog.open()
                                         }
                                     }
@@ -543,11 +515,13 @@ Popup {
                                                     image2.visible = true
                                                     analyserButton.clicked()
                                                 }
-                                                onErrorOccurred: function(id, error, message) {
-                                                    console.log(id, error, message)
+                                                onErrorOccurred: function (id, error, message) {
+                                                    console.log(id,
+                                                                error, message)
                                                 }
                                             }
-                                            videoOutput: tabView.currentIndex === 1 ? videoOutput : null
+                                            videoOutput: tabView.currentIndex
+                                                         === 1 ? videoOutput : null
                                         }
 
                                         Rectangle {
@@ -594,7 +568,8 @@ Popup {
                             id: fileDialog
                             nameFilters: ["Image file (*.png *.jpg *.jpeg *.gif)"]
                             onAccepted: {
-                                if (Qt.application.os === "windows" || Qt.application.os === "osx"
+                                if (Qt.application.os === "windows"
+                                        || Qt.application.os === "osx"
                                         || Qt.application.os === "linux") {
                                     image.source = selectedFile
                                 } else {
@@ -603,7 +578,6 @@ Popup {
                             }
                         }
                     }
-
 
                     RowLayout {
                         Layout.fillWidth: true
@@ -626,7 +600,8 @@ Popup {
                             text: "Nouveau"
                             Layout.preferredHeight: 60
                             Layout.preferredWidth: 120
-                            visible: tabView.currentIndex === 1 && accessCam.item?.image_view.visible === true
+                            visible: tabView.currentIndex === 1
+                                     && accessCam.item?.image_view.visible === true
                             height: 45
                             onClicked: {
                                 if (accessCam.item.image_view.visible) {
@@ -644,51 +619,62 @@ Popup {
                             icon.source: Icons.magnify
                             Layout.preferredWidth: Qt.platform.os === 'ios' ? 120 : 180
                             Layout.preferredHeight: 60
-                            visible: image.source.toString() !== "" || accessCam.active
+                            visible: image.source.toString() !== ""
+                                     || accessCam.active
                             onClicked: {
                                 if (image.source.toString() !== "") {
                                     imgAnalysisSurface.loading = true
                                     let data = {
                                         "images": [imgTool.getBase64(
                                                 image.source.toString().replace(
-                                                    Qt.platform.os === "windows" ? "file:///" : "file://", ""))],
-                                        "disease_details": ["cause", "treatment", "common_names", "classification", "description", "url" ],
+                                                    Qt.platform.os
+                                                    === "windows" ? "file:///" : "file://",
+                                                    ""))],
+                                        "disease_details": ["cause", "treatment", "common_names", "classification", "description", "url"],
                                         "modifiers": ["similar_images"],
                                         "language": "fr",
                                         "longitude": gps.position.coordinate.longitude,
                                         "latitude": gps.position.coordinate.latitude
                                     }
-                                    request("POST",
-                                            "https://plant.id/api/v2/health_assessment",
-                                            data).then(function (r) {
-                                                let datas = JSON.parse(r)
-//                                                console.log(r)
-                                                planteDeseasePopup.analyseResults = datas
-                                                imgAnalysisSurface.loading = false
-                                                identifierLayoutView.currentIndex = 2
-                                                console.log(datas.health_assessment.diseases[0]['similar_images'])
-                                                if (datas.is_plant && planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability < 0.7 ) {
-                                                    identifedPlantListView.model
-                                                            = datas.health_assessment.diseases
-                                                } else {
-                                                    identifedPlantListView.model = []
-                                                }
-                                            }).catch(function (e) {
-                                                imgAnalysisSurface.loading = false
-                                                console.log(JSON.stringify(e))
-                                            })
+                                    Http.request("POST",
+                                                 "https://plant.id/api/v2/health_assessment",
+                                                 data).then(function (r) {
+                                                     let datas = JSON.parse(r)
+                                                     //                                                console.log(r)
+                                                     planteDeseasePopup.analyseResults = datas
+                                                     imgAnalysisSurface.loading = false
+                                                     identifierLayoutView.currentIndex = 2
+                                                     console.log(datas.health_assessment.diseases[0]['similar_images'])
+                                                     if (datas.is_plant
+                                                             && planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability < 0.7) {
+                                                         identifedPlantListView.model
+                                                                 = datas.health_assessment.diseases
+                                                     } else {
+                                                         identifedPlantListView.model = []
+                                                     }
+                                                 }).catch(function (e) {
+                                                     imgAnalysisSurface.loading = false
+                                                     console.log(JSON.stringify(
+                                                                     e))
+                                                 })
                                 } else {
-                                    let path = StandardPaths.writableLocation(StandardPaths.PicturesLocation).toString().replace(Qt.application.os === "windows" ? "file:///" : "file://", "")
-                                    let ln = (Math.random() % 10 * 100000).toFixed(0)
+                                    let path = StandardPaths.writableLocation(
+                                            StandardPaths.PicturesLocation).toString(
+                                            ).replace(
+                                            Qt.application.os
+                                            === "windows" ? "file:///" : "file://",
+                                            "")
+                                    let ln = (Math.random(
+                                                  ) % 10 * 100000).toFixed(0)
                                     let filePath = path + "/" + ln + '.jpg'
                                     imgAnalysisSurface.savedImagePath = filePath
-                                    accessCam.item.imgCapture.captureToFile(filePath)
+                                    accessCam.item.imgCapture.captureToFile(
+                                                filePath)
                                 }
                             }
                         }
                         Item {
                             Layout.fillWidth: true
-
                         }
                     }
 
@@ -720,13 +706,12 @@ Popup {
                             horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
-                            visible: planteDeseasePopup.analyseResults?.is_plant  ?? false
-                            text: qsTr(planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.7 ?
-                                           "<font color='green'> Votre plante est en bonne santé</font>" :
-                                           (planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.4) ? "Votre plante semble en bonne santé" : "<font color='red'>Votre plante est malade</font>" )
-//                            text: "Plante en bonne sante ? <b><font color='%1'>%2</font></b>".arg(
-//                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "green" : "red").arg(
-//                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "Oui" : "Non")
+                            visible: planteDeseasePopup.analyseResults?.is_plant
+                                     ?? false
+                            text: qsTr(planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.7 ? "<font color='green'> Votre plante est en bonne santé</font>" : (planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.4) ? "Votre plante semble en bonne santé" : "<font color='red'>Votre plante est malade</font>")
+                            //                            text: "Plante en bonne sante ? <b><font color='%1'>%2</font></b>".arg(
+                            //                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "green" : "red").arg(
+                            //                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "Oui" : "Non")
                         }
                         Label {
                             font.pixelSize: 16
@@ -736,7 +721,8 @@ Popup {
                             horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
-                            visible: desease.analyseResults?.is_plant && planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability < 0.4
+                            visible: desease.analyseResults?.is_plant
+                                     && planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability < 0.4
                             text: "Quelques maladies détectées"
                         }
                         Label {
@@ -747,9 +733,10 @@ Popup {
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
                             visible: {
-                                if(desease !== undefined)
+                                if (desease !== undefined)
                                     return !desease.analyseResults?.is_plant
-                                else return false
+                                else
+                                    return false
                             }
 
                             text: "Ceci n'est pas une plante"
@@ -796,35 +783,98 @@ Popup {
 
                 Component.onCompleted: {
                     Http.fetch({
-                        method: 'GET',
-                        url: "https://blume.mahoudev.com/items/Maladies?fields[]=*.*",
-                    }).then(response => {
-                        let data = JSON.parse(response).data
-                        console.log(data)
-                        fetched_deseases = data
-                    })
+                                   "method": 'GET',
+                                   "url": "https://blume.mahoudev.com/items/Maladies?fields[]=*.*"
+                               }).then(response => {
+                                           let data = JSON.parse(response).data
+                                           console.log(data)
+                                           fetched_deseases = data
+                                       })
                 }
-
 
                 ListModel {
                     id: maladiesModel
 
-                    ListElement { nom: "Oïdium"; sousDescription: "Champignon blanc sur les feuilles"; dangerosite: 0.5 }
-                    ListElement { nom: "Mildiou"; sousDescription: "Taches jaunes ou brunes sur les feuilles"; dangerosite: 0.6 }
-                    ListElement { nom: "Tavelure"; sousDescription: "Taches brunes sur les fruits et les feuilles"; dangerosite: 0.5 }
-                    ListElement { nom: "Rouille"; sousDescription: "Pustules orangées sur les feuilles"; dangerosite: 0.6 }
-                    ListElement { nom: "Pourriture grise"; sousDescription: "Moisissure grise sur les fruits"; dangerosite: 0.7 }
-                    ListElement { nom: "Anthracnose"; sousDescription: "Lésions noires sur les feuilles"; dangerosite: 0.4 }
-                    ListElement { nom: "Chancre"; sousDescription: "Lésions sur les branches et troncs"; dangerosite: 0.7 }
-                    ListElement { nom: "Fusariose"; sousDescription: "Pourriture des racines et du collet"; dangerosite: 0.8 }
-                    ListElement { nom: "Nécrose"; sousDescription: "Mort des tissus végétaux"; dangerosite: 0.6 }
-                    ListElement { nom: "Verticilliose"; sousDescription: "Flétrissement et décoloration des feuilles"; dangerosite: 0.7 }
-                    ListElement { nom: "Bactériose"; sousDescription: "Pourriture bactérienne des tissus"; dangerosite: 0.8 }
-                    ListElement { nom: "Virose"; sousDescription: "Infection virale des plantes"; dangerosite: 0.7 }
-                    ListElement { nom: "Jaunisse"; sousDescription: "Décoloration jaune des feuilles"; dangerosite: 0.5 }
-                    ListElement { nom: "Sclérotiniose"; sousDescription: "Pourriture des tiges et des racines"; dangerosite: 0.6 }
-                    ListElement { nom: "Phytophthora"; sousDescription: "Pourriture des racines"; dangerosite: 0.8 }
-                    ListElement { nom: "Rhizoctone"; sousDescription: "Pourriture des racines et du collet"; dangerosite: 0.7 }
+                    ListElement {
+                        nom: "Oïdium"
+                        sousDescription: "Champignon blanc sur les feuilles"
+                        dangerosite: 0.5
+                    }
+                    ListElement {
+                        nom: "Mildiou"
+                        sousDescription: "Taches jaunes ou brunes sur les feuilles"
+                        dangerosite: 0.6
+                    }
+                    ListElement {
+                        nom: "Tavelure"
+                        sousDescription: "Taches brunes sur les fruits et les feuilles"
+                        dangerosite: 0.5
+                    }
+                    ListElement {
+                        nom: "Rouille"
+                        sousDescription: "Pustules orangées sur les feuilles"
+                        dangerosite: 0.6
+                    }
+                    ListElement {
+                        nom: "Pourriture grise"
+                        sousDescription: "Moisissure grise sur les fruits"
+                        dangerosite: 0.7
+                    }
+                    ListElement {
+                        nom: "Anthracnose"
+                        sousDescription: "Lésions noires sur les feuilles"
+                        dangerosite: 0.4
+                    }
+                    ListElement {
+                        nom: "Chancre"
+                        sousDescription: "Lésions sur les branches et troncs"
+                        dangerosite: 0.7
+                    }
+                    ListElement {
+                        nom: "Fusariose"
+                        sousDescription: "Pourriture des racines et du collet"
+                        dangerosite: 0.8
+                    }
+                    ListElement {
+                        nom: "Nécrose"
+                        sousDescription: "Mort des tissus végétaux"
+                        dangerosite: 0.6
+                    }
+                    ListElement {
+                        nom: "Verticilliose"
+                        sousDescription: "Flétrissement et décoloration des feuilles"
+                        dangerosite: 0.7
+                    }
+                    ListElement {
+                        nom: "Bactériose"
+                        sousDescription: "Pourriture bactérienne des tissus"
+                        dangerosite: 0.8
+                    }
+                    ListElement {
+                        nom: "Virose"
+                        sousDescription: "Infection virale des plantes"
+                        dangerosite: 0.7
+                    }
+                    ListElement {
+                        nom: "Jaunisse"
+                        sousDescription: "Décoloration jaune des feuilles"
+                        dangerosite: 0.5
+                    }
+                    ListElement {
+                        nom: "Sclérotiniose"
+                        sousDescription: "Pourriture des tiges et des racines"
+                        dangerosite: 0.6
+                    }
+                    ListElement {
+                        nom: "Phytophthora"
+                        sousDescription: "Pourriture des racines"
+                        dangerosite: 0.8
+                    }
+                    ListElement {
+                        nom: "Rhizoctone"
+                        sousDescription: "Pourriture des racines et du collet"
+                        dangerosite: 0.7
+                    }
                 }
 
                 ListView {
@@ -842,18 +892,25 @@ Popup {
                         onClicked: {
                             let formated = {}
                             let desease_details = {
-                                common_names: modelData.noms_communs,
-                                treatment: {
-                                    prevention: modelData.traitement_preventif || "",
-                                    chemical: modelData.traitement_chimique || "",
-                                    biological: modelData.traitement_biologique || "",
+                                "common_names": modelData.noms_communs,
+                                "treatment": {
+                                    "prevention": modelData.traitement_preventif
+                                                  || "",
+                                    "chemical": modelData.traitement_chimique
+                                                || "",
+                                    "biological": modelData.traitement_biologique
+                                                  || ""
                                 },
-                                description: modelData.description,
-                                cause: modelData.cause
+                                "description": modelData.description,
+                                "cause": modelData.cause
                             }
 
                             formated['name'] = modelData.nom_scientifique
-                            formated['similar_images'] = modelData.images.map(item => ({url: "https://blume.mahoudev.com/assets/"+item.directus_files_id}) )
+                            formated['similar_images'] = modelData.images.map(
+                                        item => ({
+                                                     "url": "https://blume.mahoudev.com/assets/"
+                                                            + item.directus_files_id
+                                                 }))
                             formated['disease_details'] = desease_details
 
                             console.log(JSON.stringify(formated))
@@ -900,13 +957,13 @@ Popup {
                             width: 50
                             radius: 25
                             Image {
-                                source: modelData['images'].length === 0 ? null : ("https://blume.mahoudev.com/assets/" + modelData['images'][0].directus_files_id )
+                                source: modelData['images'].length
+                                        === 0 ? null : ("https://blume.mahoudev.com/assets/"
+                                                        + modelData['images'][0].directus_files_id)
                             }
                         }
                     }
                 }
-
-
             }
 
             Item {
@@ -925,7 +982,7 @@ Popup {
 
                         Label {
                             text: "Foire aux questions"
-                            color : Theme.colorPrimary
+                            color: Theme.colorPrimary
                             font.pixelSize: 32
                             wrapMode: Text.Wrap
                             Layout.fillWidth: true
@@ -960,13 +1017,10 @@ Popup {
                                             Layout.rightMargin: 10
                                             Layout.bottomMargin: 20
                                         }
-
                                     ]
                                 }
                             }
                         }
-
-
                     }
                 }
 
@@ -975,7 +1029,7 @@ Popup {
                     componentRadius: 15
                     fullColor: Theme.colorPrimary
                     fulltextColor: "white"
-                    onClicked: identifierLayoutView.currentIndex ++
+                    onClicked: identifierLayoutView.currentIndex++
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 20
 
@@ -999,7 +1053,7 @@ Popup {
 
                         Label {
                             text: "Demander à un botaniste"
-                            color :"white"
+                            color: "white"
                             font.pixelSize: 32
                             wrapMode: Text.Wrap
                             Layout.fillWidth: true
@@ -1007,7 +1061,7 @@ Popup {
 
                         Label {
                             text: "Vous receverez un diagnostic et un plan de soin dans les trois jours après avoire rempli ce formulaire"
-                            color :"white"
+                            color: "white"
                             font.pixelSize: 16
                             font.weight: Font.Light
                             Layout.fillWidth: true
@@ -1017,7 +1071,6 @@ Popup {
                             Layout.fillHeight: true
                         }
                     }
-
                 }
 
                 Flickable {
@@ -1123,7 +1176,6 @@ Popup {
                                             clip: true
                                         }
                                     }
-
                                 }
 
                                 Repeater {
@@ -1167,7 +1219,8 @@ Popup {
                                                 Layout.fillWidth: true
                                                 spacing: 7
                                                 Label {
-                                                    text: (modelData.is_required ? "* " : "") + modelData.label
+                                                    text: (modelData.is_required ? "* " : "")
+                                                          + modelData.label
                                                     font {
                                                         pixelSize: 16
                                                         weight: Font.Bold
@@ -1211,11 +1264,8 @@ Popup {
                                                         wrapMode: Text.Wrap
                                                     }
                                                 }
-
                                             }
-
                                         }
-
                                     }
                                 }
 
@@ -1223,77 +1273,10 @@ Popup {
                                     Layout.preferredHeight: 70
                                 }
                             }
-
-
                         }
                     }
-
-
                 }
-
             }
         }
-    }
-    function fetch(opts) {
-        return new Promise(function (resolve, reject) {
-            var xhr = new XMLHttpRequest()
-            xhr.onload = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status == 200 || xhr.status == 201) {
-                        var res = xhr.responseText.toString()
-                        resolve(res)
-                    } else {
-                        let r = {
-                            "status": xhr.status,
-                            "statusText": xhr.statusText,
-                            "content": xhr.responseText
-                        }
-                        reject(r)
-                    }
-                } else {
-                    let r = {
-                        "status": xhr.status,
-                        "statusText": xhr.statusText,
-                        "content": xhr.responseText
-                    }
-                    reject(r)
-                }
-            }
-            xhr.onerror = function () {
-                let r = {
-                    "status": xhr.status,
-                    "statusText": 'NO CONNECTION, ' + xhr.statusText + xhr.responseText
-                }
-                reject(r)
-            }
-
-            xhr.open(opts.method ? opts.method : 'GET', opts.url, true)
-
-            if (opts.headers) {
-                Object.keys(opts.headers).forEach(function (key) {
-                    xhr.setRequestHeader(key, opts.headers[key])
-                })
-            }
-
-            let obj = opts.params
-
-            var data = obj ? JSON.stringify(obj) : ''
-
-            xhr.send(data)
-        })
-    }
-
-    function request(method, url, params) {
-        let query = {
-            "method": method,
-            "url": url,
-            "headers": {
-                "Accept": 'application/json',
-                "Api-Key": "aryQrOSbo6YrsMQGRx5VRpc1dOazmjDxO23jeitWxX43V7b3Xq",
-                "Content-Type": 'application/json'
-            },
-            "params": params ?? null
-        }
-        return fetch(query)
     }
 }

@@ -14,13 +14,14 @@ import QtPositioning
 import ThemeEngine 1.0
 
 import MaterialIcons
+import "../../components_js/Http.js" as Http 
 import "../../components"
 import "../../"
 
 Page {
     id: pageControl
-    property variant plant_results
-    property variant view: pageControl.StackView.view
+    property var plant_results
+    property var view: pageControl.StackView.view
     padding: 0
     onVisibleChanged: {
         if (visible) {
@@ -108,9 +109,8 @@ Page {
             Layout.margins: 0
             currentIndex: 0
             onCurrentIndexChanged: {
-                if (accessCam.active) {
+                if (accessCam.active)
                     accessCam.active = false
-                }
                 tabBar.currentIndex = 0
             }
 
@@ -153,11 +153,10 @@ Page {
                             anchors.fill: parent
                             currentIndex: tabBar.currentIndex
                             onCurrentIndexChanged: {
-                                if (currentIndex === 0) {
+                                if (currentIndex === 0)
                                     accessCam.active = false
-                                } else {
+                                else
                                     tm.start()
-                                }
                             }
 
                             Timer {
@@ -209,9 +208,8 @@ Page {
                                         } else if (Qt.platform.os === 'android') {
                                             androidToolsLoader.item.openGallery(
                                                         )
-                                        } else {
+                                        } else
                                             fileDialog.open()
-                                        }
                                     }
                                 }
                             }
@@ -232,9 +230,8 @@ Page {
                                         Connections {
                                             target: tabBar
                                             function onCurrentIndexChanged(index) {
-                                                if (tabBar.currentIndex === 0) {
+                                                if (tabBar.currentIndex === 0)
                                                     cam.stop()
-                                                }
                                             }
                                         }
                                         CaptureSession {
@@ -372,11 +369,10 @@ Page {
                                         "longitude": gps.position.coordinate.longitude,
                                         "latitude": gps.position.coordinate.latitude
                                     }
-                                    request("POST",
+                                    Http.request("POST",
                                             "https://plant.id/api/v2/identify",
                                             data).then(function (r) {
                                                 let datas = JSON.parse(r)
-                                                //                                                             console.log(r)
                                                 pageControl.plant_results = datas
                                                 imgAnalysisSurface.loading = false
                                                 identifierLayoutView.currentIndex = 1
@@ -513,67 +509,5 @@ Page {
                 }
             }
         }
-    }
-    function fetch(opts) {
-        return new Promise(function (resolve, reject) {
-            var xhr = new XMLHttpRequest()
-            xhr.onload = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status == 200 || xhr.status == 201) {
-                        var res = xhr.responseText.toString()
-                        resolve(res)
-                    } else {
-                        let r = {
-                            "status": xhr.status,
-                            "statusText": xhr.statusText,
-                            "content": xhr.responseText
-                        }
-                        reject(r)
-                    }
-                } else {
-                    let r = {
-                        "status": xhr.status,
-                        "statusText": xhr.statusText,
-                        "content": xhr.responseText
-                    }
-                    reject(r)
-                }
-            }
-            xhr.onerror = function () {
-                let r = {
-                    "status": xhr.status,
-                    "statusText": 'NO CONNECTION, ' + xhr.statusText + xhr.responseText
-                }
-                reject(r)
-            }
-
-            xhr.open(opts.method ? opts.method : 'GET', opts.url, true)
-
-            if (opts.headers) {
-                Object.keys(opts.headers).forEach(function (key) {
-                    xhr.setRequestHeader(key, opts.headers[key])
-                })
-            }
-
-            let obj = opts.params
-
-            var data = obj ? JSON.stringify(obj) : ''
-
-            xhr.send(data)
-        })
-    }
-
-    function request(method, url, params) {
-        let query = {
-            "method": method,
-            "url": url,
-            "headers": {
-                "Accept": 'application/json',
-                "Api-Key": "aryQrOSbo6YrsMQGRx5VRpc1dOazmjDxO23jeitWxX43V7b3Xq",
-                "Content-Type": 'application/json'
-            },
-            "params": params ?? null
-        }
-        return fetch(query)
     }
 }

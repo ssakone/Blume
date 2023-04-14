@@ -77,6 +77,8 @@
         <file>PlantBrowseCategory.qml</file>
         <file>PlantScreenDetails.qml</file>
         <file>FAQ.qml</file>
+
+        <file>components_js/Http.js</file>
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>
