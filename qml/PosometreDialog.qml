@@ -8,6 +8,7 @@ import QtMultimedia
 import QtQuick.Dialogs
 import ImageTools
 import Qt.labs.platform
+import PosometreCalculator
 import "components"
 
 import Qt5Compat.GraphicalEffects
@@ -16,12 +17,24 @@ import ThemeEngine 1.0
 
 Popup {
     id: posometrePop
-    width: parent.width - 20
-    height: width + 50
-    anchors.centerIn: parent
+    width: appWindow.width
+    height: appWindow.height
+    parent: appWindow.contentItem
+    padding: 0
     dim: true
     modal: true
-    onOpened: als.start()
+    onOpened: {
+        als.start()
+        posometreTimer.start()
+
+    }
+
+    function start() {
+        videoOutput.grabToImage((function (im) {
+            p_camera.getGamma(im)
+        }))
+    }
+
     onClosed: als.stop()
 
     property variant sensor: als.reading
@@ -31,7 +44,205 @@ Popup {
 
     background: Rectangle {
         color: Theme.colorPrimary
-        radius: 20
+        radius: 0
+    }
+
+    Timer {
+        id: timer2
+        repeat: true
+        interval: 500
+        onTriggered: {
+            posometrePop.start()
+        }
+    }
+
+    Timer {
+        id: posometreTimer
+        interval: 500
+        onTriggered: {
+            sessionCam.camera.start()
+            timer2.start()
+        }
+    }
+
+    Page {
+        anchors.fill: parent
+        header: Rectangle {
+            height: Qt.platform.os == 'ios' ? 90 : 65
+            color: "#00c395"
+            ColorImage {
+                source: Icons.arrowLeft
+                sourceSize.width: 28
+                sourceSize.height: 28
+                anchors.verticalCenterOffset: Qt.platform.os == 'ios' ? 15 : 0
+                anchors.verticalCenter: parent.verticalCenter
+                color: "white"
+                x: 15
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        posometrePop.close()
+                    }
+                }
+            }
+
+            Label {
+                anchors.verticalCenterOffset: Qt.platform.os == 'ios' ? 15 : 0
+                anchors.verticalCenter: parent.verticalCenter
+                text: "Posometre"
+            }
+        }
+
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 20
+
+            Item {
+                Layout.preferredHeight: "80"
+                Layout.fillWidth: true
+                Label {
+                    anchors.verticalCenter: parent.verticalCenter
+                    x: 10
+                    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non eros fringilla, scelerisque est aliquam, facilisis odio. Duis hendrerit eu purus eu consequat. Aliquam a dolor quis enim lacinia porta eu rutrum urna. In nec magna lacus. Pellentesque a tempor felis, ut pellentesque nulla. Ut vestibulum efficitur justo ac efficitur. Etiam consectetur porta posuere. Nunc ut ipsum sed augue interdum interdum. Donec dictum, quam et accumsan interdum, felis lorem iaculis lorem, eu aliquam quam quam id odio. Sed pellentesque placerat nibh sed elementum. Integer laoreet arcu sed ex dictum, in lacinia nulla rhoncus."
+                }
+            }
+
+            Rectangle {
+                id: indicatorRect
+
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter
+
+                color: "white"
+                clip: true
+                VideoOutput {
+                     id: videoOutput
+                     x: 10000
+                     y: 10000
+                     width: parent.width
+                     height: parent.height
+                     fillMode: Image.PreserveAspectCrop
+                     MouseArea {
+                          anchors.fill: parent;
+                          onClicked: posometrePop.start()
+                      }
+                 }
+
+                Rectangle {
+                    id: gl
+                    width: 60
+                    height: parent.height - 40
+                    radius: width / 2
+                    anchors.centerIn: parent
+                    clip: true
+                    color: "#e8e8e8"
+                    Item {
+                        id: root
+                        property real value: 0.0
+                        property real radius: width / 2
+                        anchors.bottom: parent.bottom
+                        width: 60
+                        height:  (sensor.lightLevel * gl.height) / 6
+
+                        Behavior on height {
+                            SmoothedAnimation {
+
+                            }
+                        }
+
+                        Rectangle {
+                            width: 60
+                            height: gl.height
+                            radius: width / 2
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            clip: true
+                            opacity: 6
+                            y: parent.height - gl.height
+                            visible: true
+                            gradient: Gradient {
+                                GradientStop {
+                                    position: 0.4
+                                    color: "yellow"
+                                }
+                                GradientStop {
+                                    position: 1
+                                    color: "teal"
+                                }
+                            }
+                        }
+                        layer.enabled: radius > 0
+                        layer.effect: OpacityMask {
+                            maskSource: Rectangle {
+                                width: root.width
+                                height: root.height
+                                radius: root.radius
+                            }
+                        }
+                    }
+                }
+                ListView {
+                    id: indicatorBar
+                    height: parent.height - 40
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.verticalCenterOffset: 40
+                    anchors.right: gl.right
+                    width: parent.width / 3
+                    model: indicator_model
+                    anchors.bottom: parent.bottom
+                    interactive: false
+                    clip: true
+                    opacity: .9
+
+                    delegate: Item {
+                        id: indicatorLevel
+                        required property string label
+                        required property int level
+                        required property color l_color
+                        required property color textColor
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: indicatorBar.width - 2
+                        height: gl.height / 6
+
+                        Text {
+                            text: label
+                            color: "black"
+                            Layout.alignment: Qt.AlignVCenter
+                            anchors.verticalCenter: parent.verticalCenter
+                            x: 10
+                        }
+
+                        Rectangle {
+                            height: 1
+                            width: parent.width
+                            color: "#cecece"
+                            anchors.bottom: parent.bottom
+                        }
+                    }
+                }
+
+                CaptureSession {
+                    id: sessionCam
+                     camera: Camera {
+                         id: camera
+                     }
+                     videoOutput: videoOutput
+                }
+
+            }
+
+            AmbientLightSensor {
+                id: als
+            }
+        }
+    }
+
+    PosometreCamera {
+        id: p_camera
+        onLighnessValue: function(value) {
+            console.log(value)
+            sensor = {"lightLevel": value}
+        }
     }
 
     ListModel {
@@ -43,120 +254,5 @@ Popup {
         ListElement { level: 1; l_color: "gray"; textColor: 'black'; label: "Sombre" }
     }
 
-    ColumnLayout {
-        anchors.fill: parent
-        spacing: 20
 
-        Column {
-            Layout.alignment: Qt.AlignHCenter
-            IconSvg {
-                width: 64
-                height: 64
-                anchors.horizontalCenter: parent.horizontalCenter
-                source: "qrc:/assets/icons_custom/posometre.svg"
-                color: 'black'
-            }
-
-            Label {
-                text: "Posometre"
-                anchors.horizontalCenter: parent.horizontalCenter
-                font.weight: Font.Medium
-            }
-        }
-
-        Rectangle {
-            id: indicatorRect
-
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignHCenter
-
-            color: "white"
-            border.color: 'gray'
-            radius: 20
-            clip: true
-
-            ListView {
-                id: indicatorBar
-                height: parent.height
-                width: parent.width
-                model: indicator_model
-                anchors.bottom: parent.bottom
-                interactive: false
-                clip: true
-
-                delegate: Rectangle {
-                    id: indicatorLevel
-                    required property string label
-                    required property int level
-                    required property color l_color
-                    required property color textColor
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    width: indicatorBar.width - 2
-                    height: Math.min((indicatorRect.height / indicator_model.count), 50) + 1
-                    //Layout.fillWidth: true //
-                    visible: sensor != null  && level <= sensor.lightLevel
-                    color: (sensor != null  && level <= sensor.lightLevel) ? l_color : Qt.rgba(0, 0, 0, 0)
-                    radius: 0
-                    ColorImage {
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.right: parent.right
-                        anchors.rightMargin: 15
-                        source: Icons.torch
-                        color: textColor
-                        visible: level === sensor.lightLevel
-                    }
-
-                    Text {
-                        text: label
-                        color: textColor
-                        Layout.alignment: Qt.AlignVCenter
-                        anchors.verticalCenter: parent.verticalCenter
-                        x: 10
-                    }
-
-                    Rectangle {
-                        height: 1
-                        width: parent.width
-                        color: "white"
-                        anchors.bottom: parent.bottom
-                    }
-                }
-            }
-        }
-
-
-//        Label {
-//            id: alsV
-//            anchors.horizontalCenter: parent.horizontalCenter
-//            wrapMode: Label.WordWrap
-////            width: parent.width - 20
-//            horizontalAlignment: Label.AlignHCenter
-//            text: {
-//                if (als.reading != null){
-//                   console.log(JSON.stringify(als.reading))
-//                    switch (als.reading.lightLevel) {
-//                        case 0:
-//                            return "Niveau inconnue"
-//                        case 1:
-//                            return "Sombre"
-//                        case 2:
-//                            return "Peu Sombre"
-//                        case 3:
-//                            return "Lumineux"
-//                        case 4:
-//                            return "Tres lumineux"
-//                        case 5:
-//                            return "Ensolleille"
-//                    }
-//                }
-//                return "Information sensor indisponible"
-//            }
-
-//            font.pixelSize: 44
-//        }
-        AmbientLightSensor {
-            id: als
-        }
-    }
 }

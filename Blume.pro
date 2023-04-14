@@ -72,6 +72,7 @@ SOURCES  += src/main.cpp \
             src/devices/device_esp32_higrow.cpp \
             src/devices/device_ess_generic.cpp \
             src/image2base64.cpp \
+            src/posometrecamera.cpp \
             src/thirdparty/RC4/rc4.cpp
 
 HEADERS  += src/SettingsManager.h \
@@ -114,6 +115,7 @@ HEADERS  += src/SettingsManager.h \
             src/devices/device_esp32_higrow.h \
             src/devices/device_ess_generic.h \
             src/image2base64.h \
+            src/posometrecamera.h \
             src/thirdparty/RC4/rc4.h
 
 INCLUDEPATH += src/ src/thirdparty/
@@ -403,4 +405,6 @@ DISTFILES += \
     qml/PlantDeseaseDetails.qml \
     qml/PlantIdentifier.qml \
     qml/PosometreDialog.qml
-android: include(C:/Users/HP/AppData/Local/Android/Sdk/android_openssl/openssl.pri)
+
+# android: include(C:/Users/HP/AppData/Local/Android/Sdk/android_openssl/openssl.pri)
+android: include(/Users/mac/Library/Android/sdk/android_openssl/openssl.pri)
