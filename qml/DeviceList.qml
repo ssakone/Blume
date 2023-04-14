@@ -11,9 +11,10 @@ import "components"
 
 import ThemeEngine 1.0
 
-Item {
+Page {
     id: screenDeviceList
     anchors.fill: parent
+    background: Item { }
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -346,11 +347,11 @@ Item {
 
     RoundButton {
         visible: deviceManager.hasDevices
-        icon.source: Icons.plusThick
+        icon.source: Icons.refresh
         icon.width: 32
         icon.height: 32
-        width: Qt.platform.os === "android" ? 90 : 70
-        height: Qt.platform.os === "android" ? 90 : 70
+        width: Qt.platform.os === "android" ? 80 : 70
+        height: Qt.platform.os === "android" ? 0 : 70
         anchors.right: parent.right
         anchors.rightMargin: 20
         anchors.bottom: parent.bottom
@@ -360,24 +361,39 @@ Item {
         Material.elevation: 0
         Material.background: Theme.colorPrimary
         Material.foreground: Material.color(Material.Grey, Material.Shade50)
+        Timer {
+            running: deviceManager.scanning
+            interval: 100
+            onRunningChanged: {
+                if (!running)
+                    parent.opacity = 1
+            }
+
+            onTriggered: {
+                if (parent.opacity == 1) {
+                    parent.opacity = 0.6
+                }
+                else {
+                    parent.opacity = 1
+                }
+            }
+        }
+
+        Behavior on opacity { NumberAnimation { duration: 100 } }
+
         onClicked: {
-            if (utilsApp.checkMobileBleLocationPermission()) {
-                scan()
+            if (deviceManager.scanning) {
+                deviceManager.scanDevices_stop()
             } else {
-                utilsApp.getMobileBleLocationPermission()
-                retryScan.start()
+                deviceManager.scanDevices_start()
             }
         }
         enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
     }
 
-    Loader {
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+    footer: Loader {
         width: parent.width
-
         asynchronous: true
-
         sourceComponent: RowLayout {
             spacing: 0
             Layout.alignment: Qt.AlignHCenter
