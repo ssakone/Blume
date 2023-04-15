@@ -27,6 +27,7 @@ Popup {
     padding: 0
     onClosed:  {
         tabBar.currentIndex = 0
+        image.source = ""
     }
     onOpened: {
         image.source = ""
@@ -113,7 +114,7 @@ Popup {
                             Connections {
                                 target: QtAndroidAppPermissions
                                 function onImageSelected(path) {
-                                    image.source = ""
+                                    image.source = "file://?" + Math.random()
                                     image.source = "file://" + path
                                 }
                             }
