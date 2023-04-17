@@ -23,14 +23,13 @@ Popup {
     }
 
     onOpened: {
-        console.log("----------", plant["images_plantes"], typeof plant["images_plantes"])
+        console.log("----------", plant["images_plantes"],
+                    typeof plant["images_plantes"])
     }
-
 
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
-
 
         Rectangle {
             id: header
@@ -87,7 +86,6 @@ Popup {
             Layout.fillHeight: true
             Layout.fillWidth: true
 
-
             boundsBehavior: Flickable.StopAtBounds
             clip: true
 
@@ -105,18 +103,16 @@ Popup {
                         Layout.fillWidth: true
                         Layout.preferredHeight: plantScreenDetailsPopup.height / 3
 
-                        visible: plant['images_plantes'].length > 0
+                        visible: plant['images_plantes']?.length ?? 0 > 0
                         clip: true
                         color: "#f0f0f0"
 
                         Image {
                             anchors.fill: parent
-                            source: plant['images_plantes'].length > 0 ? (
-                                        "https://blume.mahoudev.com/assets/" +plant['images_plantes'][0].directus_files_id)
-                                                            : null
+                            source: plant['images_plantes']?.length
+                                    ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/" + plant['images_plantes'][0].directus_files_id) : undefined
                             clip: true
                         }
-
                     }
 
                     ColumnLayout {
@@ -129,7 +125,7 @@ Popup {
                         spacing: 20
 
                         Label {
-                            text: plant.name_scientific
+                            text: plant?.name_scientific ?? ""
                             wrapMode: Text.Wrap
                             font.pixelSize: 24
                             font.weight: Font.DemiBold
@@ -142,7 +138,6 @@ Popup {
 
                             Layout.leftMargin: 10
                             Layout.rightMargin: 10
-
 
                             color: "#f0f0f0"
                             radius: 15
@@ -176,7 +171,6 @@ Popup {
                                     }
                                 }
 
-
                                 Rectangle {
                                     Layout.fillWidth: true
                                     Layout.preferredHeight: 1
@@ -199,11 +193,12 @@ Popup {
                                     Label {
                                         text: {
                                             let res = ""
-                                            if(plant['noms_communs']) {
-                                                let common_names = plant['noms_communs'].slice(1)
+                                            if (plant['noms_communs']) {
+                                                let common_names = plant['noms_communs'].slice(
+                                                        1)
                                                 let len = common_names.length
-                                                common_names.forEach((level, index) => res += (level + (len === index + 1 ? "" : ", ")) )
-
+                                                common_names.forEach(
+                                                            (level, index) => res += (level + (len === index + 1 ? "" : ", ")))
                                             }
                                             return res
                                         }
@@ -218,7 +213,6 @@ Popup {
                                         Layout.fillWidth: true
                                     }
                                 }
-
                             }
                         }
 
@@ -263,10 +257,14 @@ Popup {
 
                                     Label {
                                         text: {
-                                            if (!plant['care_level']) return "Non renseigné"
-                                            else if (plant['care_level'] === "hard") return "Difficile"
-                                            else if (plant['care_level'] === "medium") return "Moyen"
-                                            else if (plant['care_level'] === "easy") return "Facile"
+                                            if (!plant['care_level'])
+                                                return "Non renseigné"
+                                            else if (plant['care_level'] === "hard")
+                                                return "Difficile"
+                                            else if (plant['care_level'] === "medium")
+                                                return "Moyen"
+                                            else if (plant['care_level'] === "easy")
+                                                return "Facile"
                                         }
 
                                         font.pixelSize: 14
@@ -313,8 +311,10 @@ Popup {
 
                                     Label {
                                         text: {
-                                            if (!plant['frequence_arrosage']) return "Non renseigné"
-                                            else return plant['frequence_arrosage']
+                                            if (!plant['frequence_arrosage'])
+                                                return "Non renseigné"
+                                            else
+                                                return plant['frequence_arrosage']
                                         }
                                         font.pixelSize: 14
 
@@ -360,13 +360,14 @@ Popup {
                                     }
 
                                     Label {
-//                                        text: {
-//                                            let res = ""
-//                                            let len = plant['light_level'].length
-//                                            plant['light_level'].forEach((level, index) => res += (level + (len === index + 1 ? "" : ", ")) )
-//                                            return res
-//                                        }
-                                        text: plant['exposition_au_soleil'] || ""
+                                        //                                        text: {
+                                        //                                            let res = ""
+                                        //                                            let len = plant['light_level'].length
+                                        //                                            plant['light_level'].forEach((level, index) => res += (level + (len === index + 1 ? "" : ", ")) )
+                                        //                                            return res
+                                        //                                        }
+                                        text: plant['exposition_au_soleil']
+                                              || ""
 
                                         font.pixelSize: 14
 
@@ -377,10 +378,10 @@ Popup {
                                         Layout.leftMargin: 10
                                         Layout.rightMargin: 10
 
-        //                                background: Rectangle {
-        //                                    color: Theme.colorPrimary
-        //                                    radius: 5
-        //                                }
+                                        //                                background: Rectangle {
+                                        //                                    color: Theme.colorPrimary
+                                        //                                    radius: 5
+                                        //                                }
                                     }
 
                                     Item {
@@ -388,7 +389,6 @@ Popup {
                                     }
                                 }
                             }
-
                         }
 
                         ColumnLayout {
@@ -403,7 +403,7 @@ Popup {
                             TableLine {
                                 color: "#e4f0ea"
                                 title: "Exposition au soleil"
-                                description:  plant['exposition_au_soleil'] || ""
+                                description: plant['exposition_au_soleil'] || ""
                             }
 
                             TableLine {
@@ -438,7 +438,6 @@ Popup {
                                 title: "Toxicité"
                                 description: plant['toxicity'] ? 'Plante toxique' : 'Non toxique'
                             }
-
                         }
 
                         Rectangle {
@@ -453,7 +452,7 @@ Popup {
                                 text: "Aucun image disponible"
                                 font.pixelSize: 22
                                 anchors.centerIn: parent
-                                visible: plant['images_plantes']
+                                visible: plant['images_plantes'] ?? true
                             }
 
                             ColumnLayout {
@@ -488,10 +487,10 @@ Popup {
                                     Repeater {
                                         model: plant['images_plantes']
                                         delegate: Image {
-                                            source: "https://blume.mahoudev.com/assets/"+model.modelData.directus_files_id
+                                            source: "https://blume.mahoudev.com/assets/"
+                                                    + model.modelData.directus_files_id
                                         }
                                     }
-
                                 }
 
                                 RowLayout {
@@ -503,7 +502,7 @@ Popup {
                                     }
 
                                     Repeater {
-                                        model : plant['images_plantes']
+                                        model: plant['images_plantes']
                                         delegate: Rectangle {
                                             width: 10
                                             height: 10
@@ -516,7 +515,6 @@ Popup {
                                         Layout.fillWidth: true
                                     }
                                 }
-
                             }
                         }
 
@@ -524,7 +522,6 @@ Popup {
                             Layout.fillWidth: true
 
                             spacing: 3
-
 
                             Accordion {
                                 header: "Présentation des plantes"
@@ -543,7 +540,6 @@ Popup {
                                     }
                                 ]
                             }
-
 
                             Accordion {
                                 header: "Comment cultiver"
@@ -567,7 +563,8 @@ Popup {
                                 header: "Luminosité"
                                 contentItems: [
                                     Label {
-                                        text: plant['description_luminosite'] || ""
+                                        text: plant['description_luminosite']
+                                              || ""
                                         wrapMode: Text.Wrap
 
                                         font.pixelSize: 14
@@ -599,12 +596,12 @@ Popup {
                                 ]
                             }
 
-
                             Accordion {
                                 header: "Température & humidité"
                                 contentItems: [
                                     Label {
-                                        text: plant['description_temperature_humidite'] || ""
+                                        text: plant['description_temperature_humidite']
+                                              || ""
                                         wrapMode: Text.Wrap
 
                                         font.pixelSize: 14
@@ -622,7 +619,8 @@ Popup {
                                 header: "Mise en pot et rampotage"
                                 contentItems: [
                                     Label {
-                                        text: plant['description_mise_en_pot_et_rampotage'] || ""
+                                        text: plant['description_mise_en_pot_et_rampotage']
+                                              || ""
                                         wrapMode: Text.Wrap
 
                                         font.pixelSize: 14
@@ -640,7 +638,8 @@ Popup {
                                 header: "Multiplication"
                                 contentItems: [
                                     Label {
-                                        text: plant['description_multiplication'] || ""
+                                        text: plant['description_multiplication']
+                                              || ""
                                         wrapMode: Text.Wrap
 
                                         font.pixelSize: 14
@@ -691,7 +690,7 @@ Popup {
                                                 }
 
                                                 Repeater {
-                                                    model : plant['images_maladies']
+                                                    model: plant['images_maladies']
                                                     delegate: Rectangle {
                                                         width: 10
                                                         height: 10
@@ -705,7 +704,6 @@ Popup {
                                                 }
                                             }
 
-
                                             SwipeView {
                                                 Layout.fillWidth: true
                                                 Layout.fillHeight: true
@@ -713,33 +711,23 @@ Popup {
                                                 Repeater {
                                                     model: plant['images_maladies']
                                                     delegate: Image {
-                                                        source: "https://blume.mahoudev.com/assets/"+model.modelData.directus_files_id
+                                                        source: "https://blume.mahoudev.com/assets/"
+                                                                + model.modelData.directus_files_id
                                                     }
                                                 }
-
                                             }
                                         }
                                     }
-
-
                                 ]
-
                             }
-
                         }
 
                         Item {
                             Layout.preferredHeight: 20
                         }
                     }
-
-
                 }
             }
-
-
         }
     }
-
-
 }

@@ -13,8 +13,8 @@ Rectangle {
     height: appWindow.height
 
     color: 'red'
-//    padding: 0
 
+    //    padding: 0
     Rectangle {
         width: parent.width
         height: parent.height / 2
@@ -46,7 +46,6 @@ Rectangle {
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
-
 
         Rectangle {
             id: header
@@ -103,7 +102,6 @@ Rectangle {
             Layout.fillHeight: true
             Layout.fillWidth: true
 
-
             boundsBehavior: Flickable.StopAtBounds
             clip: true
 
@@ -126,19 +124,12 @@ Rectangle {
 
                         spacing: 20
 
-
                         Item {
                             Layout.preferredHeight: 20
                         }
                     }
-
-
                 }
             }
-
-
         }
     }
-
-
 }

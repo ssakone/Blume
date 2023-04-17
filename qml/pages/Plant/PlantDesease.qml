@@ -15,17 +15,13 @@ import Qt5Compat.GraphicalEffects
 import ThemeEngine 1.0
 
 import MaterialIcons
-import "components"
-import "components_js/Http.js" as Http
+import "../../"
+import "../../components"
+import "../../components_js/Http.js" as Http
 
-Popup {
-    id: planteDeseasePopup
-    dim: true
-    modal: true
+Page {
+    id: planteDeseaseControl
     property variant analyseResults
-    width: appWindow.width
-    height: appWindow.height
-    parent: appWindow.contentItem
     padding: 0
 
     property variant form_schema: [{
@@ -90,20 +86,21 @@ Popup {
                 }]
         }]
 
-    onClosed: {
-        if (accessCam.active)
-            accessCam.active = false
-        tabView.currentIndex = 0
-        tabBar.currentIndex = 0
-        image.source = ""
+    onVisibleChanged: {
+        if (visible)
+            image.source = ""
+        else {
+            if (accessCam.active)
+                accessCam.active = false
+            tabView.currentIndex = 0
+            tabBar.currentIndex = 0
+            image.source = ""
+        }
     }
 
-    onOpened: {
-        image.source = ""
-    }
-
-    PlantDeseaseDetails {
-        id: resultDeseaseDetailPopup
+    Component {
+        id: resultDeseaseDetailPage
+        PlantDeseaseDetails {}
     }
 
     PositionSource {
@@ -112,97 +109,383 @@ Popup {
         preferredPositioningMethods: PositionSource.SatellitePositioningMethods
     }
 
+    header: AppBar {
+        width: parent.width
+        title: {
+            switch (identifierLayoutView.currentIndex) {
+            case 0:
+                return "Maladie des plantes"
+            case 1:
+                return "Analyse de plante"
+            case 2:
+                return "Resultat de l'analyse"
+            case 3:
+                return "Encyclopedie des plantes"
+            case 4:
+                return "FAQ"
+            case 5:
+                return "Contacter un expert"
+            default:
+                return "Non trouvé"
+            }
+        }
+        noAutoPop: true
+        leading.onClicked: {
+            if (identifierLayoutView.currentIndex === 0) {
+                planteDeseaseControl.StackView.view.pop()
+            } else if (identifierLayoutView.currentIndex === 4
+                       || identifierLayoutView.currentIndex === 3) {
+                identifierLayoutView.currentIndex = 0
+            } else {
+                identifierLayoutView.currentIndex--
+            }
+        }
+        actions: [
+            AppBarButton {
+                icon: Icons.camera
+                visible: (Qt.platform.os == 'ios'
+                          || Qt.platform.os == 'android')
+                         && identifierLayoutView.currentIndex === 1
+                onClicked: {
+                    if (Qt.platform.os === 'ios') {
+                        imgPicker.openCamera()
+                    } else {
+                        androidToolsLoader.item.openCamera()
+                    }
+                }
+                height: 64
+                width: 64
+            }
+        ]
+    }
+
+    Component {
+        id: faqPage
+        Page {
+            header: AppBar {
+                title: "FAQ"
+            }
+            Flickable {
+                anchors.fill: parent
+                width: parent.width
+                height: parent.height
+                contentHeight: colHeadFaqSimple.height
+                Column {
+                    id: colHeadFaqSimple
+                    width: parent.width
+                    spacing: 20
+
+                    Label {
+                        text: "Foire aux questions"
+                        color: Theme.colorPrimary
+                        font.pixelSize: 32
+                        wrapMode: Text.Wrap
+                        width: parent.width
+                        horizontalAlignment: Label.AlignHCenter
+                    }
+
+                    Column {
+                        width: parent.width
+                        spacing: 1
+
+                        Repeater {
+                            model: 12
+                            delegate: Accordion {
+                                id: according
+                                header_color: Material.color(Material.Grey,
+                                                             Material.Shade100)
+                                content_color_expanded: "white"
+                                header_radius: 0
+                                header: "Questions " + index
+
+                                contentItems: [
+                                    Label {
+                                        text: "Sed at orci accumsan, pretium lorem sed, varius erat. Nunc id urna vitae diam laoreet maximus in at sapien. Maecenas eu massa augue. Proin nisi risus, consectetur sit amet efficitur eget, pharetra in felis. Quisque pretium neque nulla, eu pretium est hendrerit nec. Cras quis scelerisque neque. Nunc dignissim sem nec est vehicula congue. Donec sapien metus, lacinia vel sapien vitae, consectetur dictum ipsum. Nulla sagittis ante eget sem vestibulum cursus. "
+                                        wrapMode: Text.Wrap
+                                        width: according.width - 20
+
+                                        font.pixelSize: 14
+                                        font.weight: Font.Light
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+
+            ButtonWireframe {
+                text: "Contacter un expert"
+                componentRadius: 15
+                fullColor: Theme.colorPrimary
+                fulltextColor: "white"
+                onClicked: page_view.push(askMore)
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 20
+
+                anchors.right: parent.right
+                anchors.rightMargin: 20
+            }
+        }
+    }
+
+    Component {
+        id: askMore
+        Page {
+            header: AppBar {
+                title: "Demander à un botaniste"
+            }
+
+            ColumnLayout {
+                anchors.fill: parent
+                Rectangle {
+                    id: head
+                    Layout.preferredHeight: 120
+                    Layout.fillWidth: true
+                    color: Theme.colorPrimary
+
+                    ColumnLayout {
+                        anchors.fill: parent
+
+                        anchors.leftMargin: 10
+                        anchors.rightMargin: 10
+
+                        Label {
+                            text: "Vous receverez un diagnostic et un plan de soin dans les trois jours après avoire rempli ce formulaire"
+                            color: "white"
+                            font.pixelSize: 16
+                            font.weight: Font.Light
+                            Layout.fillWidth: true
+                            wrapMode: Text.Wrap
+                        }
+                        Item {
+                            Layout.fillHeight: true
+                        }
+                    }
+                }
+
+                Flickable {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    contentHeight: colHeadFaqForm.height
+
+                    Column {
+                        id: colHeadFaqForm
+                        width: parent.width
+
+                        Rectangle {
+                            width: parent.width
+                            height: insideCol2.height
+                            color: "white"
+                            radius: 50
+
+                            Column {
+                                id: insideCol2
+                                width: parent.width
+                                padding: 15
+                                topPadding: 30
+                                bottomPadding: 0
+
+                                spacing: 30
+
+                                Column {
+                                    width: parent.width
+                                    Label {
+                                        text: "Ajouter des images"
+                                        font {
+                                            pixelSize: 16
+                                            weight: Font.Bold
+                                        }
+
+                                        Layout.fillWidth: true
+                                        wrapMode: Text.Wrap
+                                    }
+
+                                    Label {
+                                        text: "Photographiez la plante entière ainsi que les parties qui semblent malades"
+                                        font.weight: Font.Light
+                                        Layout.fillWidth: true
+                                        wrapMode: Text.Wrap
+                                    }
+
+                                    RowLayout {
+                                        Layout.fillWidth: true
+                                        spacing: 10
+                                        Item {
+                                            Layout.fillWidth: true
+                                        }
+
+                                        Repeater {
+                                            model: 4
+                                            ImagePickerArea {
+                                                Layout.preferredHeight: 70
+                                                Layout.preferredWidth: 70
+                                            }
+                                        }
+
+                                        Item {
+                                            Layout.fillWidth: true
+                                        }
+                                    }
+                                }
+
+                                Column {
+                                    width: parent.width
+                                    Label {
+                                        text: "Décrivez le problème"
+                                        font {
+                                            pixelSize: 16
+                                            weight: Font.Bold
+                                        }
+
+                                        Layout.fillWidth: true
+                                        wrapMode: Text.Wrap
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillWidth: true
+                                        Layout.preferredHeight: 120
+                                        radius: 15
+                                        border {
+                                            width: 1
+                                            color: "#ccc"
+                                        }
+                                        TextEdit {
+                                            anchors.fill: parent
+                                            padding: 7
+                                            font {
+                                                pixelSize: 14
+                                                weight: Font.Light
+                                            }
+                                            wrapMode: Text.Wrap
+                                            clip: true
+                                        }
+                                    }
+                                }
+
+                                Repeater {
+                                    model: form_schema
+                                    delegate: Column {
+                                        required property variant modelData
+
+                                        width: parent.width
+                                        spacing: 15
+
+                                        Row {
+                                            width: parent.width
+                                            spacing: 10
+
+                                            IconSvg {
+                                                source: "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+                                                width: 30
+                                                height: 30
+                                                color: Theme.colorPrimary
+                                                anchors.verticalCenter: parent.verticalCenter
+                                            }
+
+                                            Label {
+                                                text: modelData.group_title
+                                                font {
+                                                    pixelSize: 13
+                                                    weight: Font.Bold
+                                                    capitalization: Font.AllUppercase
+                                                }
+                                                color: Theme.colorPrimary
+                                                anchors.verticalCenter: parent.verticalCenter
+                                                Layout.fillWidth: true
+                                                wrapMode: Text.Wrap
+                                            }
+                                        }
+
+                                        Repeater {
+                                            model: modelData.fields
+                                            delegate: Column {
+                                                required property variant modelData
+                                                width: parent.width
+                                                spacing: 7
+                                                Label {
+                                                    text: (modelData.is_required ? "* " : "")
+                                                          + modelData.label
+                                                    font {
+                                                        pixelSize: 16
+                                                        weight: Font.Bold
+                                                    }
+                                                    Layout.fillWidth: true
+                                                    wrapMode: Text.Wrap
+                                                }
+
+                                                Rectangle {
+                                                    Layout.fillWidth: true
+                                                    Layout.preferredHeight: 50
+                                                    radius: 10
+                                                    border {
+                                                        width: 1
+                                                        color: "#ccc"
+                                                    }
+                                                    TextInput {
+                                                        id: textInput
+                                                        anchors.fill: parent
+                                                        anchors.verticalCenter: parent.verticalCenter
+                                                        verticalAlignment: Text.AlignVCenter
+                                                        padding: 5
+
+                                                        font {
+                                                            pixelSize: 14
+                                                            weight: Font.Light
+                                                        }
+                                                    }
+                                                    Label {
+                                                        text: modelData?.placeholder
+                                                        color: "#aaa"
+                                                        font {
+                                                            pixelSize: 14
+                                                            weight: Font.Light
+                                                        }
+                                                        visible: textInput.text === ""
+                                                        anchors.fill: parent
+                                                        anchors.leftMargin: 5
+                                                        anchors.verticalCenter: parent.verticalCenter
+                                                        verticalAlignment: Text.AlignVCenter
+                                                        wrapMode: Text.Wrap
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                Item {
+                                    Layout.preferredHeight: 70
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 0
         spacing: 0
-        Rectangle {
-            color: "#00c395"
-            Layout.preferredHeight: Qt.platform.os == 'ios' ? 90 : 65
-            Layout.fillWidth: true
-            RowLayout {
-                width: parent.width
-                anchors.verticalCenterOffset: Qt.platform.os == 'ios' ? 20 : 0
-                anchors.verticalCenter: parent.verticalCenter
-                spacing: 10
-                AppBarButton {
-                    id: buttonBackBg
-                    icon: "qrc:/assets/menus/menu_back.svg"
-                    onClicked: {
-                        if (identifierLayoutView.currentIndex === 0) {
-                            planteDeseasePopup.close()
-                        } else if (identifierLayoutView.currentIndex === 4) {
-                            identifierLayoutView.currentIndex = 0
-                        } else {
-                            identifierLayoutView.currentIndex--
-                        }
+        Loader {
+            id: androidToolsLoader
+            active: Qt.platform.os === "android"
+            sourceComponent: Component {
+                Item {
+                    function openCamera() {
+                        QtAndroidAppPermissions.openCamera()
                     }
-                    Layout.preferredHeight: 64
-                    Layout.preferredWidth: 64
-                    Layout.alignment: Qt.AlignVCenter
-                }
-                Label {
-                    text: {
-                        switch (identifierLayoutView.currentIndex) {
-                        case 0:
-                            return "Maladie des plantes"
-                        case 1:
-                            return "Analyse de plante"
-                        case 2:
-                            return "Resultat de l'analyse"
-                        case 3:
-                            return "Encyclopedie des plantes"
-                        case 4:
-                            return "FAQ"
-                        case 5:
-                            return "Contacter un expert"
-                        default:
-                            return "Non trouvé"
-                        }
+                    function openGallery() {
+                        QtAndroidAppPermissions.openGallery()
                     }
 
-                    font.pixelSize: 21
-                    font.bold: true
-                    font.weight: Font.Medium
-                    color: "white"
-                    Layout.alignment: Qt.AlignVCenter
-                    Layout.fillWidth: true
-                }
-                AppBarButton {
-                    icon: Icons.camera
-                    visible: (Qt.platform.os == 'ios'
-                              || Qt.platform.os == 'android')
-                             && identifierLayoutView.currentIndex === 1
-                    onClicked: {
-                        if (Qt.platform.os === 'ios') {
-                            imgPicker.openCamera()
-                        } else {
-                            androidToolsLoader.item.openCamera()
-                        }
-                    }
-                    Layout.preferredHeight: 64
-                    Layout.preferredWidth: 64
-                    Layout.alignment: Qt.AlignVCenter
-                }
-                Loader {
-                    id: androidToolsLoader
-                    active: Qt.platform.os === "android"
-                    sourceComponent: Component {
-                        Item {
-                            function openCamera() {
-                                QtAndroidAppPermissions.openCamera()
-                            }
-                            function openGallery() {
-                                QtAndroidAppPermissions.openGallery()
-                            }
-
-                            Connections {
-                                target: QtAndroidAppPermissions
-                                function onImageSelected(path) {
-                                    image.source = "file://?" + Math.random()
-                                    image.source = "file://" + path
-                                }
-                            }
+                    Connections {
+                        target: QtAndroidAppPermissions
+                        function onImageSelected(path) {
+                            image.source = "file://?" + Math.random()
+                            image.source = "file://" + path
                         }
                     }
                 }
@@ -226,7 +509,6 @@ Popup {
                 }
             }
             Item {
-
                 Column {
                     width: parent.width - 10
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -354,7 +636,7 @@ Popup {
                                             } else if (action === "encyclopedie") {
                                                 identifierLayoutView.currentIndex = 3
                                             } else if (action === "faq") {
-                                                identifierLayoutView.currentIndex = 4
+                                                page_view.push(faqPage)
                                             }
                                         }
                                     }
@@ -641,12 +923,12 @@ Popup {
                                                  data).then(function (r) {
                                                      let datas = JSON.parse(r)
                                                      //                                                console.log(r)
-                                                     planteDeseasePopup.analyseResults = datas
+                                                     planteDeseaseControl.analyseResults = datas
                                                      imgAnalysisSurface.loading = false
                                                      identifierLayoutView.currentIndex = 2
                                                      console.log(datas.health_assessment.diseases[0]['similar_images'])
                                                      if (datas.is_plant
-                                                             && planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability < 0.7) {
+                                                             && planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability < 0.7) {
                                                          identifedPlantListView.model
                                                                  = datas.health_assessment.diseases
                                                      } else {
@@ -706,12 +988,12 @@ Popup {
                             horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
-                            visible: planteDeseasePopup.analyseResults?.is_plant
+                            visible: planteDeseaseControl.analyseResults?.is_plant
                                      ?? false
-                            text: qsTr(planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.7 ? "<font color='green'> Votre plante est en bonne santé</font>" : (planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.4) ? "Votre plante semble en bonne santé" : "<font color='red'>Votre plante est malade</font>")
+                            text: qsTr(planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.7 ? "<font color='green'> Votre plante est en bonne santé</font>" : (planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.4) ? "Votre plante semble en bonne santé" : "<font color='red'>Votre plante est malade</font>")
                             //                            text: "Plante en bonne sante ? <b><font color='%1'>%2</font></b>".arg(
-                            //                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "green" : "red").arg(
-                            //                                      planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "Oui" : "Non")
+                            //                                      planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "green" : "red").arg(
+                            //                                      planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "Oui" : "Non")
                         }
                         Label {
                             font.pixelSize: 16
@@ -721,8 +1003,13 @@ Popup {
                             horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
-                            visible: desease.analyseResults?.is_plant
-                                     && planteDeseasePopup.analyseResults?.health_assessment.is_healthy_probability < 0.4
+                            visible: {
+                                if (planteDeseaseControl.analyseResults?.is_plant !== undefined) {
+                                    return planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability < 0.4
+                                }
+                                return false
+                            }
+
                             text: "Quelques maladies détectées"
                         }
                         Label {
@@ -733,8 +1020,9 @@ Popup {
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
                             visible: {
-                                if (desease !== undefined)
-                                    return !desease.analyseResults?.is_plant
+                                if (planteDeseaseControl
+                                        ?? undefined !== undefined)
+                                    return !planteDeseaseControl.analyseResults?.is_plant
                                 else
                                     return false
                             }
@@ -765,8 +1053,9 @@ Popup {
                             }
                         }
                         onClicked: {
-                            resultDeseaseDetailPopup.desease_data = modelData
-                            resultDeseaseDetailPopup.open()
+                            page_view.push(resultDeseaseDetailPage, {
+                                               "desease_data": modelData
+                                           })
                         }
                     }
                 }
@@ -775,19 +1064,12 @@ Popup {
                 id: itemListAllDeseases
                 property variant fetched_deseases: []
 
-                PlantDeseaseDetails {
-                    id: deseaseDetailPopup
-                    header_hidden: true
-                    parent: parent
-                }
-
                 Component.onCompleted: {
                     Http.fetch({
                                    "method": 'GET',
                                    "url": "https://blume.mahoudev.com/items/Maladies?fields[]=*.*"
                                }).then(response => {
                                            let data = JSON.parse(response).data
-                                           console.log(data)
                                            fetched_deseases = data
                                        })
                 }
@@ -913,9 +1195,9 @@ Popup {
                                                  }))
                             formated['disease_details'] = desease_details
 
-                            console.log(JSON.stringify(formated))
-                            deseaseDetailPopup.desease_data = formated
-                            deseaseDetailPopup.open()
+                            page_view.push(resultDeseaseDetailPage, {
+                                               "desease_data": formated
+                                           })
                         }
 
                         Rectangle {
@@ -958,320 +1240,8 @@ Popup {
                             radius: 25
                             Image {
                                 source: modelData['images'].length
-                                        === 0 ? null : ("https://blume.mahoudev.com/assets/"
-                                                        + modelData['images'][0].directus_files_id)
-                            }
-                        }
-                    }
-                }
-            }
-
-            Item {
-                clip: true
-
-                Flickable {
-                    anchors.fill: parent
-                    width: parent.width
-                    height: parent.height
-                    contentHeight: colHeadFaqSimple.height
-                    ColumnLayout {
-                        id: colHeadFaqSimple
-                        anchors.fill: parent
-
-                        spacing: 20
-
-                        Label {
-                            text: "Foire aux questions"
-                            color: Theme.colorPrimary
-                            font.pixelSize: 32
-                            wrapMode: Text.Wrap
-                            Layout.fillWidth: true
-                            Layout.alignment: Qt.AlignHCenter
-                        }
-
-                        Column {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-
-                            spacing: 1
-
-                            Repeater {
-                                model: 12
-                                delegate: Accordion {
-                                    header_color: "#eaeaeaea" // Theme.colorPrimary
-                                    content_color_expanded: "white"
-                                    header_radius: 0
-                                    header: "Questions " + index
-
-                                    contentItems: [
-                                        Label {
-                                            text: "Sed at orci accumsan, pretium lorem sed, varius erat. Nunc id urna vitae diam laoreet maximus in at sapien. Maecenas eu massa augue. Proin nisi risus, consectetur sit amet efficitur eget, pharetra in felis. Quisque pretium neque nulla, eu pretium est hendrerit nec. Cras quis scelerisque neque. Nunc dignissim sem nec est vehicula congue. Donec sapien metus, lacinia vel sapien vitae, consectetur dictum ipsum. Nulla sagittis ante eget sem vestibulum cursus. "
-                                            wrapMode: Text.Wrap
-
-                                            font.pixelSize: 14
-                                            font.weight: Font.Light
-
-                                            Layout.fillHeight: true
-                                            Layout.fillWidth: true
-                                            Layout.leftMargin: 10
-                                            Layout.rightMargin: 10
-                                            Layout.bottomMargin: 20
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-
-                ButtonWireframe {
-                    text: "Contacter un expert"
-                    componentRadius: 15
-                    fullColor: Theme.colorPrimary
-                    fulltextColor: "white"
-                    onClicked: identifierLayoutView.currentIndex++
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 20
-
-                    anchors.right: parent.right
-                    anchors.rightMargin: 20
-                }
-            }
-
-            Item {
-                Rectangle {
-                    id: head
-                    height: identifierLayoutView.height / 3
-                    width: parent.width
-                    color: Theme.colorPrimary
-
-                    ColumnLayout {
-                        anchors.fill: parent
-
-                        anchors.leftMargin: 10
-                        anchors.rightMargin: 10
-
-                        Label {
-                            text: "Demander à un botaniste"
-                            color: "white"
-                            font.pixelSize: 32
-                            wrapMode: Text.Wrap
-                            Layout.fillWidth: true
-                        }
-
-                        Label {
-                            text: "Vous receverez un diagnostic et un plan de soin dans les trois jours après avoire rempli ce formulaire"
-                            color: "white"
-                            font.pixelSize: 16
-                            font.weight: Font.Light
-                            Layout.fillWidth: true
-                            wrapMode: Text.Wrap
-                        }
-                        Item {
-                            Layout.fillHeight: true
-                        }
-                    }
-                }
-
-                Flickable {
-                    anchors.fill: parent
-                    width: parent.width
-                    height: parent.height
-
-                    contentHeight: 2000
-
-                    ColumnLayout {
-                        id: colHeadFaqForm
-                        anchors.fill: parent
-
-                        Item {
-                            Layout.preferredHeight: head.height - 60
-                        }
-
-                        Rectangle {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            color: "white"
-                            radius: 50
-
-                            ColumnLayout {
-                                anchors.fill: parent
-
-                                anchors.topMargin: 30
-                                anchors.leftMargin: 15
-                                anchors.rightMargin: 15
-
-                                spacing: 30
-
-                                ColumnLayout {
-                                    Layout.fillWidth: true
-                                    Label {
-                                        text: "Ajouter des images"
-                                        font {
-                                            pixelSize: 16
-                                            weight: Font.Bold
-                                        }
-
-                                        Layout.fillWidth: true
-                                        wrapMode: Text.Wrap
-                                    }
-
-                                    Label {
-                                        text: "Photographiez la plante entière ainsi que les parties qui semblent malades"
-                                        font.weight: Font.Light
-                                        Layout.fillWidth: true
-                                        wrapMode: Text.Wrap
-                                    }
-
-                                    RowLayout {
-                                        Layout.fillWidth: true
-                                        spacing: 10
-                                        Item {
-                                            Layout.fillWidth: true
-                                        }
-
-                                        Repeater {
-                                            model: 4
-                                            ImagePickerArea {
-                                                Layout.preferredHeight: 70
-                                                Layout.preferredWidth: 70
-                                            }
-                                        }
-
-                                        Item {
-                                            Layout.fillWidth: true
-                                        }
-                                    }
-                                }
-
-                                ColumnLayout {
-                                    Layout.fillWidth: true
-                                    Label {
-                                        text: "Décrivez le problème"
-                                        font {
-                                            pixelSize: 16
-                                            weight: Font.Bold
-                                        }
-
-                                        Layout.fillWidth: true
-                                        wrapMode: Text.Wrap
-                                    }
-
-                                    Rectangle {
-                                        Layout.fillWidth: true
-                                        Layout.preferredHeight: 120
-                                        radius: 15
-                                        border {
-                                            width: 1
-                                            color: "#ccc"
-                                        }
-                                        TextEdit {
-                                            anchors.fill: parent
-                                            padding: 7
-                                            font {
-                                                pixelSize: 14
-                                                weight: Font.Light
-                                            }
-                                            wrapMode: Text.Wrap
-                                            clip: true
-                                        }
-                                    }
-                                }
-
-                                Repeater {
-                                    model: form_schema
-                                    delegate: ColumnLayout {
-                                        required property variant modelData
-
-                                        Layout.fillWidth: true
-                                        spacing: 15
-
-                                        Row {
-                                            Layout.fillWidth: true
-                                            spacing: 10
-
-                                            IconSvg {
-                                                source: "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
-                                                width: 30
-                                                height: 30
-                                                color: Theme.colorPrimary
-                                                anchors.verticalCenter: parent.verticalCenter
-                                            }
-
-                                            Label {
-                                                text: modelData.group_title
-                                                font {
-                                                    pixelSize: 13
-                                                    weight: Font.Bold
-                                                    capitalization: Font.AllUppercase
-                                                }
-                                                color: Theme.colorPrimary
-                                                anchors.verticalCenter: parent.verticalCenter
-                                                Layout.fillWidth: true
-                                                wrapMode: Text.Wrap
-                                            }
-                                        }
-
-                                        Repeater {
-                                            model: modelData.fields
-                                            delegate: ColumnLayout {
-                                                required property variant modelData
-                                                Layout.fillWidth: true
-                                                spacing: 7
-                                                Label {
-                                                    text: (modelData.is_required ? "* " : "")
-                                                          + modelData.label
-                                                    font {
-                                                        pixelSize: 16
-                                                        weight: Font.Bold
-                                                    }
-                                                    Layout.fillWidth: true
-                                                    wrapMode: Text.Wrap
-                                                }
-
-                                                Rectangle {
-                                                    Layout.fillWidth: true
-                                                    Layout.preferredHeight: 50
-                                                    radius: 10
-                                                    border {
-                                                        width: 1
-                                                        color: "#ccc"
-                                                    }
-                                                    TextInput {
-                                                        id: textInput
-                                                        anchors.fill: parent
-                                                        anchors.verticalCenter: parent.verticalCenter
-                                                        verticalAlignment: Text.AlignVCenter
-                                                        padding: 5
-
-                                                        font {
-                                                            pixelSize: 14
-                                                            weight: Font.Light
-                                                        }
-                                                    }
-                                                    Label {
-                                                        text: modelData?.placeholder
-                                                        color: "#aaa"
-                                                        font {
-                                                            pixelSize: 14
-                                                            weight: Font.Light
-                                                        }
-                                                        visible: textInput.text === ""
-                                                        anchors.fill: parent
-                                                        anchors.leftMargin: 5
-                                                        anchors.verticalCenter: parent.verticalCenter
-                                                        verticalAlignment: Text.AlignVCenter
-                                                        wrapMode: Text.Wrap
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                Item {
-                                    Layout.preferredHeight: 70
-                                }
+                                        === 0 ? "" : ("https://blume.mahoudev.com/assets/"
+                                                      + modelData['images'][0].directus_files_id)
                             }
                         }
                     }

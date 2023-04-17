@@ -14,6 +14,7 @@ Rectangle {
     property alias title: _label.text
     property alias titleLable: _label
     property alias actions: flowActions.children
+    property bool noAutoPop: false
 
     width: parent.width
     height: Qt.platform.os == 'ios' ? 90 : 60
@@ -30,7 +31,8 @@ Rectangle {
             Layout.preferredWidth: 64
             Layout.alignment: Qt.AlignVCenter
             onClicked: {
-                control.parent.StackView.view.pop()
+                if (!noAutoPop)
+                    control.parent.StackView.view.pop()
             }
         }
         Label {

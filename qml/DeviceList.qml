@@ -8,27 +8,27 @@ import SortFilterProxyModel
 import QtMultimedia
 import ImageTools
 import "components"
+import "pages/Plant/"
 
 import ThemeEngine 1.0
 
 Page {
     id: screenDeviceList
     anchors.fill: parent
-    background: Item { }
+    background: Item {}
 
     ////////////////////////////////////////////////////////////////////////////
-
     Component.onCompleted: {
         checkStatus()
         loadList()
     }
 
     function backAction() {
-        if (isSelected()) exitSelectionMode()
+        if (isSelected())
+            exitSelectionMode()
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     property bool splitView: settingsManager.splitView
     property bool deviceAvailable: deviceManager.hasDevices
     property bool bluetoothAvailable: deviceManager.bluetooth
@@ -36,7 +36,10 @@ Page {
 
     onBluetoothAvailableChanged: checkStatus()
     onBluetoothPermissionsAvailableChanged: checkStatus()
-    onDeviceAvailableChanged: { checkStatus(); exitSelectionMode(); }
+    onDeviceAvailableChanged: {
+        checkStatus()
+        exitSelectionMode()
+    }
     onSplitViewChanged: loadList()
 
     function loadList() {
@@ -48,7 +51,9 @@ Page {
             loaderDeviceList.source = "DeviceListUnified.qml"
         }
 
-        selectionCount = Qt.binding(function() { return loaderDeviceList.item.selectionCount })
+        selectionCount = Qt.binding(function () {
+            return loaderDeviceList.item.selectionCount
+        })
     }
 
     function checkStatus() {
@@ -85,22 +90,24 @@ Page {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     property int selectionCount: 0
 
     function isSelected() {
-        if (loaderDeviceList.status !== Loader.Ready) return false
+        if (loaderDeviceList.status !== Loader.Ready)
+            return false
         return loaderDeviceList.item.isSelected()
     }
     function exitSelectionMode() {
-        if (loaderDeviceList.status !== Loader.Ready) return
+        if (loaderDeviceList.status !== Loader.Ready)
+            return
         loaderDeviceList.item.exitSelectionMode()
     }
 
     function updateSelectedDevice() {
         for (var i = 0; i < deviceManager.deviceCount; i++) {
             if (deviceManager.getDeviceByProxyIndex(i).selected) {
-                deviceManager.updateDevice(deviceManager.getDeviceByProxyIndex(i).deviceAddress)
+                deviceManager.updateDevice(deviceManager.getDeviceByProxyIndex(
+                                               i).deviceAddress)
             }
         }
         exitSelectionMode()
@@ -108,7 +115,8 @@ Page {
     function syncSelectedDevice() {
         for (var i = 0; i < deviceManager.deviceCount; i++) {
             if (deviceManager.getDeviceByProxyIndex(i).selected) {
-                deviceManager.syncDevice(deviceManager.getDeviceByProxyIndex(i).deviceAddress)
+                deviceManager.syncDevice(deviceManager.getDeviceByProxyIndex(
+                                             i).deviceAddress)
             }
         }
         exitSelectionMode()
@@ -117,7 +125,8 @@ Page {
         var devicesAddr = []
         for (var i = 0; i < deviceManager.deviceCount; i++) {
             if (deviceManager.getDeviceByProxyIndex(i).selected) {
-                devicesAddr.push(deviceManager.getDeviceByProxyIndex(i).deviceAddress)
+                devicesAddr.push(deviceManager.getDeviceByProxyIndex(
+                                     i).deviceAddress)
             }
         }
         for (var count = 0; count < devicesAddr.length; count++) {
@@ -137,7 +146,6 @@ Page {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Column {
         id: rowbar
         anchors.top: parent.top
@@ -146,21 +154,27 @@ Page {
         z: 2
 
         ////////////////
-
         Rectangle {
             id: rectangleBluetoothStatus
             anchors.left: parent.left
             anchors.right: parent.right
 
             height: 0
-            Behavior on height { NumberAnimation { duration: 133 } }
+            Behavior on height {
+                NumberAnimation {
+                    duration: 133
+                }
+            }
 
             clip: true
             visible: (height > 0)
             color: Theme.colorActionbar
 
             // prevent clicks below this area
-            MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.AllButtons
+            }
 
             Text {
                 id: textBluetoothStatus
@@ -187,20 +201,24 @@ Page {
 
                 text: {
                     if (Qt.platform.os === "android") {
-                        if (!deviceManager.bluetoothEnabled) return qsTr("Enable")
-                        else if (!deviceManager.bluetoothPermissions) return qsTr("About")
+                        if (!deviceManager.bluetoothEnabled)
+                            return qsTr("Enable")
+                        else if (!deviceManager.bluetoothPermissions)
+                            return qsTr("About")
                     }
                     return qsTr("Retry")
                 }
                 onClicked: {
-                    if (Qt.platform.os === "android" && !deviceManager.bluetoothPermissions) {
+                    if (Qt.platform.os === "android"
+                            && !deviceManager.bluetoothPermissions) {
                         //utilsApp.getMobileBleLocationPermission()
                         //deviceManager.checkBluetoothPermissions()
 
                         // someone clicked 'never ask again'?
                         screenPermissions.loadScreenFrom("DeviceList")
                     } else {
-                        deviceManager.enableBluetooth(settingsManager.bluetoothControl)
+                        deviceManager.enableBluetooth(
+                                    settingsManager.bluetoothControl)
                     }
                 }
             }
@@ -213,27 +231,34 @@ Page {
                 rectangleBluetoothStatus.height = 48
             }
             function setPermissionWarning() {
-                textBluetoothStatus.text = qsTr("Bluetooth permission is missing...")
+                textBluetoothStatus.text = qsTr(
+                            "Bluetooth permission is missing...")
                 rectangleBluetoothStatus.height = 48
             }
         }
 
         ////////////////
-
         Rectangle {
             id: rectangleActions
             anchors.left: parent.left
             anchors.right: parent.right
 
             height: (screenDeviceList.selectionCount) ? 48 : 0
-            Behavior on height { NumberAnimation { duration: 133 } }
+            Behavior on height {
+                NumberAnimation {
+                    duration: 133
+                }
+            }
 
             clip: true
             visible: (height > 0)
             color: Theme.colorActionbar
 
             // prevent clicks below this area
-            MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.AllButtons
+            }
 
             Row {
                 anchors.left: parent.left
@@ -258,7 +283,8 @@ Page {
                     id: textActions
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("%n device(s) selected", "", screenDeviceList.selectionCount)
+                    text: qsTr("%n device(s) selected", "",
+                               screenDeviceList.selectionCount)
                     color: Theme.colorActionbarContent
                     font.bold: true
                     font.pixelSize: Theme.fontSizeComponent
@@ -319,7 +345,6 @@ Page {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Loader {
         id: loaderStatus
         anchors.fill: parent
@@ -327,7 +352,6 @@ Page {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Loader {
         id: loaderDeviceList
         anchors.fill: parent
@@ -336,7 +360,6 @@ Page {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Timer {
         id: retryScan
         interval: 333
@@ -372,14 +395,17 @@ Page {
             onTriggered: {
                 if (parent.opacity == 1) {
                     parent.opacity = 0.6
-                }
-                else {
+                } else {
                     parent.opacity = 1
                 }
             }
         }
 
-        Behavior on opacity { NumberAnimation { duration: 100 } }
+        Behavior on opacity {
+            NumberAnimation {
+                duration: 100
+            }
+        }
 
         onClicked: {
             if (deviceManager.scanning) {
@@ -426,38 +452,37 @@ Page {
                 onClicked: screenPlantBrowser.loadScreenFrom("DeviceList")
             }
 
-//            ButtonWireframe {
-//                Layout.preferredHeight: 70
-//                Layout.alignment: Qt.AlignVCenter
-//                Layout.fillWidth: true
-//                Layout.preferredWidth: screenDeviceList.width / 3
+            //            ButtonWireframe {
+            //                Layout.preferredHeight: 70
+            //                Layout.alignment: Qt.AlignVCenter
+            //                Layout.fillWidth: true
+            //                Layout.preferredWidth: screenDeviceList.width / 3
 
-//                Rectangle {
-//                    y: 0.8
-//                    width: parent.width
-//                    height: 4
-//                    radius: 2
-//                }
+            //                Rectangle {
+            //                    y: 0.8
+            //                    width: parent.width
+            //                    height: 4
+            //                    radius: 2
+            //                }
 
-//                Column {
-//                    width: parent.width
-//                    anchors.verticalCenter: parent.verticalCenter
-//                    ColorImage {
-//                        source: Icons.devices
-//                        width: 32
-//                        height: 32
-//                        color: "white"
-//                        anchors.horizontalCenter: parent.horizontalCenter
-//                    }
-//                }
+            //                Column {
+            //                    width: parent.width
+            //                    anchors.verticalCenter: parent.verticalCenter
+            //                    ColorImage {
+            //                        source: Icons.devices
+            //                        width: 32
+            //                        height: 32
+            //                        color: "white"
+            //                        anchors.horizontalCenter: parent.horizontalCenter
+            //                    }
+            //                }
 
-//                componentRadius: 0
-//                fullColor: true
-//                primaryColor: Theme.colorPrimary
-//                onClicked: screenDeviceBrowser.loadScreen()
-//                enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
-//            }
-
+            //                componentRadius: 0
+            //                fullColor: true
+            //                primaryColor: Theme.colorPrimary
+            //                onClicked: screenDeviceBrowser.loadScreen()
+            //                enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
+            //            }
             ButtonWireframe {
                 Layout.preferredHeight: 70
                 Layout.alignment: Qt.AlignVCenter
@@ -483,79 +508,19 @@ Page {
                 componentRadius: 0
                 fullColor: true
                 primaryColor: Theme.colorPrimary
-                onClicked: desease.open()
+                onClicked: {
+                    appContent.openStackView(desease)
+                }
             }
         }
     }
 
-    PlantDesease {
+    Component {
         id: desease
+        PlantDesease {}
     }
 
-    function fetch(opts) {
-        return new Promise(function (resolve, reject) {
-            var xhr = new XMLHttpRequest()
-            xhr.onload = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status == 200 || xhr.status == 201) {
-                        var res = xhr.responseText.toString()
-                        resolve(res)
-                    } else {
-                        let r = {
-                            "status": xhr.status,
-                            "statusText": xhr.statusText,
-                            "content": xhr.responseText
-                        }
-                        reject(r)
-                    }
-                } else {
-                    let r = {
-                        "status": xhr.status,
-                        "statusText": xhr.statusText,
-                        "content": xhr.responseText
-                    }
-                    reject(r)
-                }
-            }
-            xhr.onerror = function() {
-                let r = {
-                    "status": xhr.status,
-                    "statusText": 'NO CONNECTION, ' + xhr.statusText
-                }
-                reject(r)
-            }
-
-            xhr.open(opts.method ? opts.method : 'GET', opts.url, true)
-
-            if (opts.headers) {
-                Object.keys(opts.headers).forEach(function (key) {
-                    xhr.setRequestHeader(key, opts.headers[key])
-                })
-            }
-
-            let obj = opts.params
-
-            var data = obj ? JSON.stringify(obj) : ''
-
-            xhr.send(data)
-        })
-    }
-
-    function request(method, url, params) {
-        let query = {
-            "method": method,
-            "url": url,
-            "headers": {
-                "Accept": 'application/json',
-                "Api-Key": "aryQrOSbo6YrsMQGRx5VRpc1dOazmjDxO23jeitWxX43V7b3Xq",
-                "Content-Type": 'application/json'
-            },
-            "params": params ?? null
-        }
-        return fetch(query)
-    }
     ////////////////////////////////////////////////////////////////////////////
-
     function scan() {
         if (!deviceManager.updating) {
             if (deviceManager.scanning) {
@@ -563,6 +528,7 @@ Page {
             } else {
                 deviceManager.scanDevices_start()
             }
-        } else console.warn("deviceManager.updating")
+        } else
+            console.warn("deviceManager.updating")
     }
 }
