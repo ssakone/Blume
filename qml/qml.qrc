@@ -7,7 +7,7 @@
         <file>MobilePermissions.qml</file>
         <file>DesktopApplication.qml</file>
         <file>DesktopHeader.qml</file>
-        <file>PlantBrowser.qml</file>
+        <file>PlantBrowserOld.qml</file>
         <file>PlantScreen.qml</file>
         <file>About.qml</file>
         <file>Settings.qml</file>
@@ -34,6 +34,7 @@
         
         <file>pages/Insect/InsectIdentifier.qml</file>
 
+        <file>pages/Plant/PlantBrowser.qml</file>
         <file>pages/Plant/PlantIdentifier.qml</file>
         <file>pages/Plant/PlantIdentifierDetails.qml</file>
         <file>pages/Plant/PlantDesease.qml</file>

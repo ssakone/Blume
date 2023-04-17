@@ -449,40 +449,10 @@ Page {
                 componentRadius: 0
                 fullColor: true
                 primaryColor: Theme.colorPrimary
-                onClicked: screenPlantBrowser.loadScreenFrom("DeviceList")
+                onClicked: {
+                    appContent.openStackView(plantBrowserPage)
+                }
             }
-
-            //            ButtonWireframe {
-            //                Layout.preferredHeight: 70
-            //                Layout.alignment: Qt.AlignVCenter
-            //                Layout.fillWidth: true
-            //                Layout.preferredWidth: screenDeviceList.width / 3
-
-            //                Rectangle {
-            //                    y: 0.8
-            //                    width: parent.width
-            //                    height: 4
-            //                    radius: 2
-            //                }
-
-            //                Column {
-            //                    width: parent.width
-            //                    anchors.verticalCenter: parent.verticalCenter
-            //                    ColorImage {
-            //                        source: Icons.devices
-            //                        width: 32
-            //                        height: 32
-            //                        color: "white"
-            //                        anchors.horizontalCenter: parent.horizontalCenter
-            //                    }
-            //                }
-
-            //                componentRadius: 0
-            //                fullColor: true
-            //                primaryColor: Theme.colorPrimary
-            //                onClicked: screenDeviceBrowser.loadScreen()
-            //                enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
-            //            }
             ButtonWireframe {
                 Layout.preferredHeight: 70
                 Layout.alignment: Qt.AlignVCenter
@@ -513,11 +483,6 @@ Page {
                 }
             }
         }
-    }
-
-    Component {
-        id: desease
-        PlantDesease {}
     }
 
     ////////////////////////////////////////////////////////////////////////////

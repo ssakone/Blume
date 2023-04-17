@@ -9,15 +9,23 @@ import QtQuick.Dialogs
 import ImageTools
 import Qt.labs.platform
 
-import "components" as Components
-import "pages/Plant" as PlantPages
+import "../"
+import "../../"
+import "../../components" as Components
+import "../../components_js/Http.js" as Http
 
 import Qt5Compat.GraphicalEffects
 
 import ThemeEngine 1.0
 
-Loader {
+Page {
     id: plantBrowser
+
+    header: Components.AppBar {
+        title: "Plant browser"
+        noAutoPop: true
+        leading.onClicked: plantBrowser.StackView.view.pop()
+    }
 
     property string entryPoint: "DeviceList"
 
@@ -27,81 +35,18 @@ Loader {
         plantDatabase.load()
         plantDatabase.filter("")
 
-        if (status === Loader.Ready) {
-            // Reset state
-            item.resetPlantClicked()
-            item.focusSearchBox()
-        } else {
-            // Load the plant browser
-            active = true
-        }
+        item.resetPlantClicked()
+        item.focusSearchBox()
 
         // Change screen
-        appContent.state = "PlantBrowser"
+        //appContent.state = "PlantBrowser"
     }
 
-    function loadScreenFrom(screenname) {
-        entryPoint = screenname
-        loadScreen()
-    }
-
-    function backAction() {
-        if (status === Loader.Ready) {
-            item.backAction()
-        }
-    }
-
-    function forwardAction() {
-        if (status === Loader.Ready) {
-            item.forwardAction()
-        }
-    }
+    Component.onCompleted: loadScreen()
 
     ////////////////////////////////////////////////////////////////////////////
-    active: false
-    asynchronous: true
-
-    sourceComponent: Item {
-        function backAction() {
-            console.log("HOULA")
-            if (isPlantClicked()) {
-                itemPlantBrowser.visible = true
-                itemPlantBrowser.enabled = true
-                itemPlantViewer.visible = false
-                itemPlantViewer.enabled = false
-                return
-            }
-
-            if (plantSearchBox.focus) {
-                plantSearchBox.focus = false
-                return
-            }
-
-            appContent.state = entryPoint
-        }
-
-        function forwardAction() {
-            if (appContent.state === "PlantBrowser") {
-                if (typeof plantScreen.currentPlant !== "undefined"
-                        && plantScreen.currentPlant) {
-                    plantSearchBox.focus = false
-                    itemPlantBrowser.visible = false
-                    itemPlantBrowser.enabled = false
-                    itemPlantViewer.visible = true
-                    itemPlantViewer.enabled = true
-                }
-            } else {
-                appContent.state = "PlantBrowser"
-                focusSearchBox()
-            }
-        }
-
-        function isPlantClicked() {
-            if (itemPlantViewer.visible)
-                return true
-            return false
-        }
-
+    Item {
+        id: item
         function resetPlantClicked() {
             plantScreen.currentPlant = null
             plantSearchBox.text = ""
@@ -120,9 +65,8 @@ Loader {
             }
         }
 
-        Component.onCompleted: {
-            focusSearchBox()
-        }
+        Component.onCompleted: focusSearchBox()
+        anchors.fill: parent
 
         ////////////////
         Item {
@@ -162,7 +106,7 @@ Loader {
                 selectByMouse: true
                 colorSelectedText: "white"
                 onDisplayTextChanged: {
-                    if (displayText != '') {
+                    if (displayText !== '') {
                         plantListView.open()
                     }
                 }
@@ -401,8 +345,7 @@ Loader {
                                                 if (action === "posometre") {
                                                     posometrePop.open()
                                                 } else if (action === "identify") {
-                                                    //identifierPop.open()
-                                                    appContent.openStackView(
+                                                    page_view.push(
                                                                 identifierPop)
                                                 } else {
                                                     let title = ""
@@ -516,16 +459,10 @@ Loader {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            plantScreen.currentPlant = model
-                            plantSearchBox.focus = false
-
-                            itemPlantBrowser.visible = false
-                            itemPlantBrowser.enabled = false
-                            itemPlantViewer.visible = true
-                            itemPlantViewer.enabled = true
-                            itemPlantViewer.contentX = 0
-                            itemPlantViewer.contentY = 0
                             plantListView.close()
+                            page_view.push(plantScreen, {
+                                               "currentPlant": model
+                                           })
                         }
                     }
                 }
@@ -546,7 +483,7 @@ Loader {
 
         Component {
             id: identifierPop
-            PlantPages.PlantIdentifier {}
+            PlantIdentifier {}
         }
 
         ////////////////////////////////////////////////////////////////////
@@ -573,16 +510,14 @@ Loader {
             }
 
             function setPlant() {
-                plantScreen.currentPlant = currentDevice.plant
-
-                if (typeof itemPlantViewer !== "undefined" || itemPlantViewer) {
-                    itemPlantViewer.contentX = 0
-                    itemPlantViewer.contentY = 0
-                }
+                page_view.push(plantScreen, {
+                                   "currentPlant": currentDevice.plant
+                               })
             }
 
-            PlantScreen {
+            Component {
                 id: plantScreen
+                PlantScreen {}
             }
         }
 

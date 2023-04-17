@@ -16,7 +16,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     ItemNoPlant {
         visible: !currentDevice.hasPlant
         onClicked: {
@@ -26,7 +25,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Loader {
         id: plantScreenLoader
         anchors.fill: parent
@@ -43,7 +41,10 @@ Item {
             }
         }
         onLoaded: {
-            plantScreenLoader.item.setPlant(currentDevice.plant)
+            page_view.push(plantScreen, {
+                               "currentPlant": currentDevice.plant
+                           })
+            //plantScreenLoader.item.setPlant(currentDevice.plant)
         }
 
         active: false
@@ -56,25 +57,19 @@ Item {
 
             // 1: single column (single column view or portrait tablet)
             // 2: wide mode (wide view or landscape tablet)
-            property int uiMode: (singleColumn || (isTablet && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
+            property int uiMode: (singleColumn
+                                  || (isTablet
+                                      && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
 
             function setPlant() {
-                plantScreen.currentPlant = currentDevice.plant
-
-                if (typeof itemPlantViewer !== "undefined" || itemPlantViewer) {
-                    itemPlantViewer.contentX = 0
-                    itemPlantViewer.contentY = 0
-                }
+                page_view.push(plantScreen, {
+                                   "currentPlant": currentDevice.plant
+                               })
             }
 
-            PlantScreen {
+            Component {
                 id: plantScreen
-                //anchors.left: parent.left
-                //anchors.right: parent.right
-
-                parentHeight: parent.height
-
-                visible: true
+                PlantScreen {}
             }
         }
     }

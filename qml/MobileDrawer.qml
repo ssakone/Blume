@@ -589,7 +589,7 @@ Drawer {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        screenPlantBrowser.loadScreenFrom("DeviceList")
+                        appContent.openStackView(plantBrowserPage)
                         appDrawer.close()
                     }
                 }
@@ -627,7 +627,8 @@ Drawer {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        deseasePopup.open()
+                        appContent.openStackView(desease)
+                        appDrawer.close()
                     }
                 }
 
@@ -646,7 +647,7 @@ Drawer {
                     anchors.leftMargin: screenPaddingLeft + 56
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Plant Desease")
+                    text: qsTr("Desease")
                     font.pixelSize: 13
                     font.bold: true
                     color: Theme.colorText

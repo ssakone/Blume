@@ -16,13 +16,13 @@ Rectangle {
     property bool noAutoPop: false
 
     width: parent.width
-    height: Qt.platform.os == 'ios' ? 90 : 60
+    height: screenPaddingStatusbar + screenPaddingNotch + 52
 
     RowLayout {
         width: parent.width
-        anchors.verticalCenterOffset: Qt.platform.os == 'ios' ? 17 : 0
+        anchors.verticalCenterOffset: (screenPaddingNotch + screenPaddingStatusbar) / 2
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 10
+        spacing: 2
         AppBarButton {
             id: buttonBackBg
             icon: "qrc:/assets/menus/menu_back.svg"

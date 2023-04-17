@@ -6,6 +6,8 @@ import ThemeEngine 1.0
 import MobileUI 1.0
 import QtAndroidTools
 
+import "pages/Plant/"
+
 ApplicationWindow {
     id: appWindow
     minimumWidth: 480
@@ -445,9 +447,20 @@ ApplicationWindow {
         }
 
         function openStackView(page) {
-            page_view.previousState = state
+            if (state !== "Navigator")
+                page_view.previousState = state
             state = "Navigator"
             page_view.push(page, {}, StackView.Immediate)
+        }
+
+        Component {
+            id: desease
+            PlantDesease {}
+        }
+
+        Component {
+            id: plantBrowserPage
+            PlantBrowser {}
         }
 
         StackView {
@@ -461,7 +474,7 @@ ApplicationWindow {
                 Item {}
             }
             onDepthChanged: {
-                console.log("-----> ", depth)
+                console.log("-----> ", depth, previousState)
                 if (depth == 1)
                     parent.state = previousState
             }
@@ -508,7 +521,7 @@ ApplicationWindow {
             anchors.bottomMargin: mobileMenu.hhv
         }
 
-        PlantBrowser {
+        PlantBrowserOld {
             id: screenPlantBrowser
             anchors.fill: parent
             anchors.bottomMargin: mobileMenu.hhv

@@ -14,7 +14,7 @@ import QtPositioning
 import ThemeEngine 1.0
 
 import MaterialIcons
-import "../../components_js/Http.js" as Http 
+import "../../components_js/Http.js" as Http
 import "../../components"
 import "../../"
 
@@ -44,6 +44,7 @@ Page {
     }
     header: AppBar {
         title: identifierLayoutView.currentIndex === 0 ? "Identification de plante" : "Resultat"
+        noAutoPop: true
         leading.onClicked: {
             if (identifierLayoutView.currentIndex === 0) {
                 pageControl.view.pop()
@@ -370,23 +371,24 @@ Page {
                                         "latitude": gps.position.coordinate.latitude
                                     }
                                     Http.request("POST",
-                                            "https://plant.id/api/v2/identify",
-                                            data).then(function (r) {
-                                                let datas = JSON.parse(r)
-                                                pageControl.plant_results = datas
-                                                imgAnalysisSurface.loading = false
-                                                identifierLayoutView.currentIndex = 1
-                                                if (datas.is_plant)
-                                                    identifedPlantListView.model
-                                                            = datas.suggestions.slice(
-                                                                0, 3)
-                                                else
-                                                    identifedPlantListView.model = []
-                                            }).catch(function (e) {
-                                                imgAnalysisSurface.loading = false
-                                                console.log('Erreur',
-                                                            JSON.stringify(e))
-                                            })
+                                                 "https://plant.id/api/v2/identify",
+                                                 data).then(function (r) {
+                                                     let datas = JSON.parse(r)
+                                                     pageControl.plant_results = datas
+                                                     imgAnalysisSurface.loading = false
+                                                     identifierLayoutView.currentIndex = 1
+                                                     if (datas.is_plant)
+                                                         identifedPlantListView.model
+                                                                 = datas.suggestions.slice(
+                                                                     0, 3)
+                                                     else
+                                                         identifedPlantListView.model = []
+                                                 }).catch(function (e) {
+                                                     imgAnalysisSurface.loading = false
+                                                     console.log('Erreur',
+                                                                 JSON.stringify(
+                                                                     e))
+                                                 })
                                 } else {
                                     let path = StandardPaths.writableLocation(
                                             StandardPaths.PicturesLocation).toString(
