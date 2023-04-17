@@ -20,7 +20,7 @@ import "../../"
 
 Page {
     id: pageControl
-    property var plant_results
+    property var insects: []
     property var view: pageControl.StackView.view
     padding: 0
     onVisibleChanged: {
@@ -367,28 +367,28 @@ Page {
                                         "longitude": gps.position.coordinate.longitude,
                                         "latitude": gps.position.coordinate.latitude
                                     }
-                                    Http.request("POST",
-                                                 "https://insect.mlapi.ai/api/v1/identification",
-                                                 data).then(function (r) {
-                                                     let datas = JSON.parse(r)
-                                                     pageControl.plant_results = datas
-                                                     imgAnalysisSurface.loading = false
-                                                     identifierLayoutView.currentIndex = 1
-                                                     console.log(JSON.stringify(
-                                                                     datas))
-                                                     return
-                                                     if (datas.is_plant)
-                                                         identifedPlantListView.model
-                                                                 = datas.suggestions.slice(
-                                                                     0, 3)
-                                                     else
-                                                         identifedPlantListView.model = []
-                                                 }).catch(function (e) {
-                                                     imgAnalysisSurface.loading = false
-                                                     console.log('Erreur',
-                                                                 JSON.stringify(
-                                                                     e))
-                                                 })
+                                    Http.request(
+                                                "POST",
+                                                "https://insect.mlapi.ai/api/v1/identification",
+                                                data,
+                                                "0GqFkaJYbGLGG4tKMTjZ5FymjSbhlGfUriiZ7FkGIyX2Tm0qK4").then(
+                                                function (r) {
+                                                    let datas = JSON.parse(r)
+                                                    console.log(JSON.stringify(
+                                                                    datas))
+                                                    imgAnalysisSurface.loading = false
+                                                    pageControl.insects = datas.result.classification.suggestions
+                                                    identifedPlantListView.model
+                                                            = pageControl.insects
+                                                    identifierLayoutView.currentIndex = 1
+                                                    console.log(JSON.stringify(
+                                                                    datas))
+                                                }).catch(function (e) {
+                                                    imgAnalysisSurface.loading = false
+                                                    console.log('Erreur',
+                                                                JSON.stringify(
+                                                                    e))
+                                                })
                                 } else {
                                     let path = StandardPaths.writableLocation(
                                             StandardPaths.PicturesLocation).toString(
@@ -451,8 +451,7 @@ Page {
                             horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
-                            visible: pageControl.plant_results?.is_plant
-                                     ?? false
+                            visible: pageControl.insects.length > 0 ?? false
                             text: "Un de ces résultats devrait correspondre à votre recherche"
                         }
                         Label {
@@ -462,8 +461,8 @@ Page {
                             horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
-                            visible: !pageControl.plant_results?.is_plant
-                            text: "Ceci n'est pas une plante"
+                            visible: pageControl.insects.length === 0
+                            text: "Ceci n'est pas un insecte"
                         }
                     }
 
@@ -477,36 +476,28 @@ Page {
                             anchors.leftMargin: 10
                             spacing: 10
                             Label {
-                                text: modelData["plant_name"]
-                                font.pixelSize: 16
-                            }
-                            Label {
-                                text: modelData["plant_details"]["common_names"][0]
+                                text: modelData["name"]
+                                font.pixelSize: 21
                             }
                         }
 
-                        height: 100
+                        height: 60
                         width: identifedPlantListView.width
-
                         Rectangle {
                             anchors.right: parent.right
                             anchors.rightMargin: 10
                             anchors.verticalCenter: parent.verticalCenter
+                            width: 55
+                            height: 55
+                            radius: width / 2
                             color: "teal"
-                            radius: 20
-                            width: 80
-                            height: width
-                            clip: true
-                            Image {
-                                source: modelData["plant_details"]["wiki_image"]["value"]
-                                height: parent.height
-                                width: parent.width
+                            Label {
+                                anchors.centerIn: parent
+                                color: "white"
+                                text: parseInt(
+                                          modelData["probability"] * 100) + "%"
                             }
                         }
-
-                        onClicked: page_view.push(plantResultPage, {
-                                                      "plant_data": modelData
-                                                  })
                     }
                 }
             }

@@ -47,13 +47,13 @@ function fetch(opts) {
     })
 }
 
-function request(method, url, params) {
+function request(method, url, params, api = "") {
     let query = {
         "method": method,
         "url": url,
         "headers": {
             "Accept": 'application/json',
-            "Api-Key": "aryQrOSbo6YrsMQGRx5VRpc1dOazmjDxO23jeitWxX43V7b3Xq",
+            "Api-Key": api === "" ? "aryQrOSbo6YrsMQGRx5VRpc1dOazmjDxO23jeitWxX43V7b3Xq" : api,
             "Content-Type": 'application/json'
         },
         "params": params ?? null
