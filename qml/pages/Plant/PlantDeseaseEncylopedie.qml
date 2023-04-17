@@ -181,6 +181,8 @@ Page {
                     anchors.leftMargin: 10
                     font.pixelSize: 21
                     font.weight: Font.Medium
+                    width: parent.width - 20
+                    wrapMode: Label.Wrap
                     text: modelData['nom_scientifique']
                 }
 
@@ -190,6 +192,8 @@ Page {
                     anchors.leftMargin: 10
                     font.pixelSize: 12
                     color: "gray"
+                    width: parent.width - 20
+                    wrapMode: Label.Wrap
                     text: modelData['noms_communs'] ? modelData['noms_communs'][0] : ""
                 }
 
