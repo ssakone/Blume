@@ -3,8 +3,11 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import ThemeEngine 1.0
+
 //import PlantUtils 1.0
-import "components/"
+import "../../components_generic/"
+import "../../components/"
+import "../../"
 import "qrc:/js/UtilsPlantDatabase.js" as UtilsPlantDatabase
 
 Page {

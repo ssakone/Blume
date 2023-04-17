@@ -66,11 +66,6 @@ Item {
                                    "currentPlant": currentDevice.plant
                                })
             }
-
-            Component {
-                id: plantScreen
-                PlantScreen {}
-            }
         }
     }
 }

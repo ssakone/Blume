@@ -463,6 +463,11 @@ ApplicationWindow {
             PlantBrowser {}
         }
 
+        Component {
+            id: plantScreen
+            PlantScreen {}
+        }
+
         StackView {
             id: page_view
             property string previousState: ""

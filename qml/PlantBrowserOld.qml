@@ -572,16 +572,9 @@ Loader {
             }
 
             function setPlant() {
-                plantScreen.currentPlant = currentDevice.plant
-
-                if (typeof itemPlantViewer !== "undefined" || itemPlantViewer) {
-                    itemPlantViewer.contentX = 0
-                    itemPlantViewer.contentY = 0
-                }
-            }
-
-            PlantScreen {
-                id: plantScreen
+                appContent.openStackView(plantScreen, {
+                                             "currentPlant": currentDevice.plant
+                                         })
             }
         }
 

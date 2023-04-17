@@ -8,7 +8,6 @@
         <file>DesktopApplication.qml</file>
         <file>DesktopHeader.qml</file>
         <file>PlantBrowserOld.qml</file>
-        <file>PlantScreen.qml</file>
         <file>About.qml</file>
         <file>Settings.qml</file>
         <file>Tutorial.qml</file>
@@ -35,15 +34,16 @@
         <file>pages/Insect/InsectIdentifier.qml</file>
 
         <file>pages/Plant/PlantBrowser.qml</file>
+        <file>pages/Plant/PlantScreen.qml</file>
         <file>pages/Plant/PlantIdentifier.qml</file>
         <file>pages/Plant/PlantIdentifierDetails.qml</file>
         <file>pages/Plant/PlantDesease.qml</file>
         <file>pages/Plant/PlantDeseaseDetails.qml</file>
+        <file>pages/Plant/PlantDeseaseEncylopedie.qml</file>
 
         <file>pages/Faq.qml</file>
         <file>pages/AskHelp.qml</file>
 
-        
         <file alias="PopupBackgroundUpdates.qml">popups/PopupBackgroundUpdates.qml</file>
         <file alias="PopupBlacklistDevice.qml">popups/PopupBlacklistDevice.qml</file>
         <file alias="PopupCalibration.qml">popups/PopupCalibration.qml</file>

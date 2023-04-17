@@ -48,14 +48,10 @@ Page {
     Item {
         id: item
         function resetPlantClicked() {
-            plantScreen.currentPlant = null
             plantSearchBox.text = ""
             plantSearchBox.focus = false
             itemPlantBrowser.visible = true
             itemPlantBrowser.enabled = true
-            itemPlantViewer.visible = false
-            itemPlantViewer.enabled = false
-            itemPlantViewer.contentY = 0
         }
 
         function focusSearchBox() {
