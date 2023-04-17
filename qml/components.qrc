@@ -11,6 +11,7 @@
         <file alias="DatePicker.qml">components_generic/DatePicker6.qml</file>
         <file alias="DesktopHeaderItem.qml">components_generic/DesktopHeaderItem.qml</file>
         <file alias="IconSvg.qml">components_generic/IconSvg.qml</file>
+        <file>components_generic/IconSvg.qml</file>
         <file alias="ItemTag.qml">components_generic/ItemTag.qml</file>
         <file alias="MobileMenuItem_horizontal.qml">components_generic/MobileMenuItem_horizontal.qml</file>
         <file alias="ProgressArc.qml">components_generic/ProgressArc.qml</file>

@@ -15,6 +15,9 @@ import Qt5Compat.GraphicalEffects
 import ThemeEngine 1.0
 
 import MaterialIcons
+
+import "../"
+import "../Insect/"
 import "../../"
 import "../../components"
 import "../../components_js/Http.js" as Http
@@ -161,308 +164,17 @@ Page {
 
     Component {
         id: faqPage
-        Page {
-            header: AppBar {
-                title: "FAQ"
-            }
-            Flickable {
-                anchors.fill: parent
-                width: parent.width
-                height: parent.height
-                contentHeight: colHeadFaqSimple.height
-                Column {
-                    id: colHeadFaqSimple
-                    width: parent.width
-                    spacing: 20
-
-                    Label {
-                        text: "Foire aux questions"
-                        color: Theme.colorPrimary
-                        font.pixelSize: 32
-                        wrapMode: Text.Wrap
-                        width: parent.width
-                        horizontalAlignment: Label.AlignHCenter
-                    }
-
-                    Column {
-                        width: parent.width
-                        spacing: 1
-
-                        Repeater {
-                            model: 12
-                            delegate: Accordion {
-                                id: according
-                                header_color: Material.color(Material.Grey,
-                                                             Material.Shade100)
-                                content_color_expanded: "white"
-                                header_radius: 0
-                                header: "Questions " + index
-
-                                contentItems: [
-                                    Label {
-                                        text: "Sed at orci accumsan, pretium lorem sed, varius erat. Nunc id urna vitae diam laoreet maximus in at sapien. Maecenas eu massa augue. Proin nisi risus, consectetur sit amet efficitur eget, pharetra in felis. Quisque pretium neque nulla, eu pretium est hendrerit nec. Cras quis scelerisque neque. Nunc dignissim sem nec est vehicula congue. Donec sapien metus, lacinia vel sapien vitae, consectetur dictum ipsum. Nulla sagittis ante eget sem vestibulum cursus. "
-                                        wrapMode: Text.Wrap
-                                        width: according.width - 20
-
-                                        font.pixelSize: 14
-                                        font.weight: Font.Light
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                }
-            }
-
-            ButtonWireframe {
-                text: "Contacter un expert"
-                componentRadius: 15
-                fullColor: Theme.colorPrimary
-                fulltextColor: "white"
-                onClicked: page_view.push(askMore)
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 20
-
-                anchors.right: parent.right
-                anchors.rightMargin: 20
-            }
-        }
+        Faq {}
     }
 
     Component {
         id: askMore
-        Page {
-            header: AppBar {
-                title: "Demander à un botaniste"
-            }
+        AskHelp {}
+    }
 
-            ColumnLayout {
-                anchors.fill: parent
-                Rectangle {
-                    id: head
-                    Layout.preferredHeight: 120
-                    Layout.fillWidth: true
-                    color: Theme.colorPrimary
-
-                    ColumnLayout {
-                        anchors.fill: parent
-
-                        anchors.leftMargin: 10
-                        anchors.rightMargin: 10
-
-                        Label {
-                            text: "Vous receverez un diagnostic et un plan de soin dans les trois jours après avoire rempli ce formulaire"
-                            color: "white"
-                            font.pixelSize: 16
-                            font.weight: Font.Light
-                            Layout.fillWidth: true
-                            wrapMode: Text.Wrap
-                        }
-                        Item {
-                            Layout.fillHeight: true
-                        }
-                    }
-                }
-
-                Flickable {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    contentHeight: colHeadFaqForm.height
-
-                    Column {
-                        id: colHeadFaqForm
-                        width: parent.width
-
-                        Rectangle {
-                            width: parent.width
-                            height: insideCol2.height
-                            color: "white"
-                            radius: 50
-
-                            Column {
-                                id: insideCol2
-                                width: parent.width
-                                padding: 15
-                                topPadding: 30
-                                bottomPadding: 0
-
-                                spacing: 30
-
-                                Column {
-                                    width: parent.width
-                                    Label {
-                                        text: "Ajouter des images"
-                                        font {
-                                            pixelSize: 16
-                                            weight: Font.Bold
-                                        }
-
-                                        Layout.fillWidth: true
-                                        wrapMode: Text.Wrap
-                                    }
-
-                                    Label {
-                                        text: "Photographiez la plante entière ainsi que les parties qui semblent malades"
-                                        font.weight: Font.Light
-                                        Layout.fillWidth: true
-                                        wrapMode: Text.Wrap
-                                    }
-
-                                    RowLayout {
-                                        Layout.fillWidth: true
-                                        spacing: 10
-                                        Item {
-                                            Layout.fillWidth: true
-                                        }
-
-                                        Repeater {
-                                            model: 4
-                                            ImagePickerArea {
-                                                Layout.preferredHeight: 70
-                                                Layout.preferredWidth: 70
-                                            }
-                                        }
-
-                                        Item {
-                                            Layout.fillWidth: true
-                                        }
-                                    }
-                                }
-
-                                Column {
-                                    width: parent.width
-                                    Label {
-                                        text: "Décrivez le problème"
-                                        font {
-                                            pixelSize: 16
-                                            weight: Font.Bold
-                                        }
-
-                                        Layout.fillWidth: true
-                                        wrapMode: Text.Wrap
-                                    }
-
-                                    Rectangle {
-                                        Layout.fillWidth: true
-                                        Layout.preferredHeight: 120
-                                        radius: 15
-                                        border {
-                                            width: 1
-                                            color: "#ccc"
-                                        }
-                                        TextEdit {
-                                            anchors.fill: parent
-                                            padding: 7
-                                            font {
-                                                pixelSize: 14
-                                                weight: Font.Light
-                                            }
-                                            wrapMode: Text.Wrap
-                                            clip: true
-                                        }
-                                    }
-                                }
-
-                                Repeater {
-                                    model: form_schema
-                                    delegate: Column {
-                                        required property variant modelData
-
-                                        width: parent.width
-                                        spacing: 15
-
-                                        Row {
-                                            width: parent.width
-                                            spacing: 10
-
-                                            IconSvg {
-                                                source: "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
-                                                width: 30
-                                                height: 30
-                                                color: Theme.colorPrimary
-                                                anchors.verticalCenter: parent.verticalCenter
-                                            }
-
-                                            Label {
-                                                text: modelData.group_title
-                                                font {
-                                                    pixelSize: 13
-                                                    weight: Font.Bold
-                                                    capitalization: Font.AllUppercase
-                                                }
-                                                color: Theme.colorPrimary
-                                                anchors.verticalCenter: parent.verticalCenter
-                                                Layout.fillWidth: true
-                                                wrapMode: Text.Wrap
-                                            }
-                                        }
-
-                                        Repeater {
-                                            model: modelData.fields
-                                            delegate: Column {
-                                                required property variant modelData
-                                                width: parent.width
-                                                spacing: 7
-                                                Label {
-                                                    text: (modelData.is_required ? "* " : "")
-                                                          + modelData.label
-                                                    font {
-                                                        pixelSize: 16
-                                                        weight: Font.Bold
-                                                    }
-                                                    Layout.fillWidth: true
-                                                    wrapMode: Text.Wrap
-                                                }
-
-                                                Rectangle {
-                                                    Layout.fillWidth: true
-                                                    Layout.preferredHeight: 50
-                                                    radius: 10
-                                                    border {
-                                                        width: 1
-                                                        color: "#ccc"
-                                                    }
-                                                    TextInput {
-                                                        id: textInput
-                                                        anchors.fill: parent
-                                                        anchors.verticalCenter: parent.verticalCenter
-                                                        verticalAlignment: Text.AlignVCenter
-                                                        padding: 5
-
-                                                        font {
-                                                            pixelSize: 14
-                                                            weight: Font.Light
-                                                        }
-                                                    }
-                                                    Label {
-                                                        text: modelData?.placeholder
-                                                        color: "#aaa"
-                                                        font {
-                                                            pixelSize: 14
-                                                            weight: Font.Light
-                                                        }
-                                                        visible: textInput.text === ""
-                                                        anchors.fill: parent
-                                                        anchors.leftMargin: 5
-                                                        anchors.verticalCenter: parent.verticalCenter
-                                                        verticalAlignment: Text.AlignVCenter
-                                                        wrapMode: Text.Wrap
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                Item {
-                                    Layout.preferredHeight: 70
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    Component {
+        id: insectIndentifier
+        InsectIdentifier {}
     }
 
     ColumnLayout {
@@ -528,6 +240,12 @@ Page {
                                                 "action": "analyser",
                                                 "style": "darkblue"
                                             }, {
+                                                "name": qsTr("Identifier un insecte"),
+                                                "icon": Icons.bug,
+                                                "image": "",
+                                                "action": "insect",
+                                                "style": "lightBlue"
+                                            }, {
                                                 "name": qsTr("Encyclopedie des maladies"),
                                                 "icon": Icons.bookOpenOutline,
                                                 "image": "",
@@ -549,11 +267,11 @@ Page {
                             interactive: false
                             width: parent.width
                             height: parent.height - 20
-                            cellWidth: (parent.width - (10)) / 2.5
+                            cellWidth: (parent.width - (10)) / 3
                             cellHeight: cellWidth
                             model: optionModel
                             delegate: Item {
-                                width: (gr.width - (20)) / 2.5
+                                width: (gr.width - (20)) / 3
                                 height: width
                                 Rectangle {
                                     anchors.fill: parent
@@ -572,6 +290,8 @@ Page {
                                                     return "#2c718a"
                                                 case "lightenYellow":
                                                     return "#93d1be"
+                                                case "lightBlue":
+                                                    return "lightblue"
                                                 case "sunrise":
                                                     return "#ffc6a4"
                                                 default:
@@ -587,6 +307,8 @@ Page {
                                                     return "#143e44"
                                                 case "lightenYellow":
                                                     return "#0ca780"
+                                                case "lightBlue":
+                                                    return "lightblue"
                                                 case "sunrise":
                                                     return "#fc9185"
                                                 default:
@@ -631,12 +353,20 @@ Page {
                                         enabled: action !== ""
                                         hoverEnabled: enabled
                                         onClicked: {
-                                            if (action === "analyser") {
+                                            switch (action) {
+                                            case "analyser":
                                                 identifierLayoutView.currentIndex++
-                                            } else if (action === "encyclopedie") {
+                                                break
+                                            case "encyclopedie":
                                                 identifierLayoutView.currentIndex = 3
-                                            } else if (action === "faq") {
+                                                break
+                                            case "faq":
                                                 page_view.push(faqPage)
+                                                break
+                                            case "insect":
+                                                page_view.push(
+                                                            insectIndentifier)
+                                                break
                                             }
                                         }
                                     }

@@ -4,7 +4,6 @@ import QtQuick.Layouts
 import Qt.labs.platform
 import ThemeEngine 1.0
 
-import "../components"
 import "../"
 
 Rectangle {
@@ -21,7 +20,7 @@ Rectangle {
 
     RowLayout {
         width: parent.width
-        anchors.verticalCenterOffset: Qt.platform.os == 'ios' ? 20 : 0
+        anchors.verticalCenterOffset: Qt.platform.os == 'ios' ? 17 : 0
         anchors.verticalCenter: parent.verticalCenter
         spacing: 10
         AppBarButton {

@@ -7,9 +7,9 @@ import ImagePicker
 import Qt.labs.platform
 import QtAndroidTools
 
-import "components" as Components
+import "../components_generic"
 
-Components.ClipRRect {
+ClipRRect {
     property alias image_source: image.source
 
     Rectangle {
