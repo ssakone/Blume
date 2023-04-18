@@ -23,3 +23,22 @@ comme suivant les autres dans la meme page
 ```qml
 page_view.push(navigator.<page_name>)
 ```
+- pour creer une nouvelle page utiliser la syntax suivante
+
+```qml
+....
+import "components_generic" // folder
+import "components" // folder
+....
+
+BPage {
+	id: control
+	header: AppBar {
+		title: "Title"
+		// l'app bar contient deja un button retour sur la property leading qui personnalisable comme etant un button, lire le contenu de AppBar pour plus de comprehension
+	}
+	....
+}
+
+page_view.push(navigator.<page_name>)
+```
