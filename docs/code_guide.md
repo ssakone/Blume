@@ -29,7 +29,7 @@ page_view.push(navigator.<page_name>)
 ....
 import "components_generic" // folder
 import "components" // folder
-....
+...
 
 BPage {
 	id: control
@@ -37,8 +37,6 @@ BPage {
 		title: "Title"
 		// l'app bar contient deja un button retour sur la property leading qui personnalisable comme etant un button, lire le contenu de AppBar pour plus de comprehension
 	}
-	....
+	...
 }
-
-page_view.push(navigator.<page_name>)
 ```
