@@ -5,6 +5,8 @@ import QtQuick.Window
 import ThemeEngine 1.0
 import DeviceUtils 1.0
 
+import "pages/Plant/"
+
 ApplicationWindow {
     id: appWindow
     flags: Qt.Window
@@ -14,12 +16,12 @@ ApplicationWindow {
     property bool isMobile: false
     property bool isPhone: false
     property bool isTablet: false
-    property bool isHdpi: (utilsScreen.screenDpi > 128 || utilsScreen.screenPar > 1.0)
+    property bool isHdpi: (utilsScreen.screenDpi > 128
+                           || utilsScreen.screenPar > 1.0)
 
     property var selectedDevice: null
 
     // Desktop stuff ///////////////////////////////////////////////////////////
-
     minimumWidth: isHdpi ? 400 : 480
     minimumHeight: isHdpi ? 480 : 560
 
@@ -56,7 +58,6 @@ ApplicationWindow {
     }
 
     // Mobile stuff ////////////////////////////////////////////////////////////
-
     property int screenOrientation: Screen.primaryOrientation
     property int screenOrientationFull: Screen.orientation
 
@@ -66,19 +67,19 @@ ApplicationWindow {
     property int screenPaddingRight: 0
     property int screenPaddingBottom: 0
 
-    Item { // compatibility
+    Item {
+        // compatibility
         id: mobileMenu
-        signal deviceDataButtonClicked()
-        signal deviceHistoryButtonClicked()
-        signal devicePlantButtonClicked()
-        signal deviceSettingsButtonClicked()
+        signal deviceDataButtonClicked
+        signal deviceHistoryButtonClicked
+        signal devicePlantButtonClicked
+        signal deviceSettingsButtonClicked
         function setActiveDeviceData() {}
     }
 
     // Events handling /////////////////////////////////////////////////////////
-
     Component.onCompleted: {
-        //
+
     }
 
     Connections {
@@ -161,86 +162,107 @@ ApplicationWindow {
             }
         }
 
-        function onPlantsButtonClicked() { appContent.state = "DeviceList" }
-        function onSettingsButtonClicked() { screenSettings.loadScreen() }
-        function onAboutButtonClicked() { screenAbout.loadScreen() }
+        function onPlantsButtonClicked() {
+            appContent.state = "DeviceList"
+        }
+        function onSettingsButtonClicked() {
+            screenSettings.loadScreen()
+        }
+        function onAboutButtonClicked() {
+            screenAbout.loadScreen()
+        }
     }
 
     Connections {
         target: systrayManager
-        function onSensorsClicked() { appContent.state = "DeviceList" }
-        function onSettingsClicked() { screenSettings.loadScreen() }
+        function onSensorsClicked() {
+            appContent.state = "DeviceList"
+        }
+        function onSettingsClicked() {
+            screenSettings.loadScreen()
+        }
     }
 
     Connections {
         target: menubarManager
-        function onSensorsClicked() { appContent.state = "DeviceList" }
-        function onSettingsClicked() { screenSettings.loadScreen() }
-        function onAboutClicked() { screenAbout.loadScreen() }
-        function onTutorialClicked() { screenTutorial.loadScreenFrom(appContent.state) }
+        function onSensorsClicked() {
+            appContent.state = "DeviceList"
+        }
+        function onSettingsClicked() {
+            screenSettings.loadScreen()
+        }
+        function onAboutClicked() {
+            screenAbout.loadScreen()
+        }
+        function onTutorialClicked() {
+            screenTutorial.loadScreenFrom(appContent.state)
+        }
     }
 
     Connections {
         target: Qt.application
         function onStateChanged() {
             switch (Qt.application.state) {
-                case Qt.ApplicationInactive:
-                    //console.log("Qt.ApplicationInactive")
-                    break
+            case Qt.ApplicationInactive:
+                //console.log("Qt.ApplicationInactive")
+                break
+            case Qt.ApplicationActive:
+                //console.log("Qt.ApplicationActive")
 
-                case Qt.ApplicationActive:
-                    //console.log("Qt.ApplicationActive")
+                // Check if we need an 'automatic' theme change
+                Theme.loadTheme(settingsManager.appTheme)
 
-                    // Check if we need an 'automatic' theme change
-                    Theme.loadTheme(settingsManager.appTheme)
+                // Check Bluetooth anyway (on macOS)
+                //if (Qt.platform.os === "osx") deviceManager.checkBluetooth()
+                if (appContent.state === "DeviceBrowser") {
+                    // Restart the device browser
+                    deviceManager.scanNearby_start()
+                } else {
+                    // Listen for nearby devices
+                    deviceManager.refreshDevices_listen()
+                }
 
-                    // Check Bluetooth anyway (on macOS)
-                    //if (Qt.platform.os === "osx") deviceManager.checkBluetooth()
-
-                    if (appContent.state === "DeviceBrowser") {
-                        // Restart the device browser
-                        deviceManager.scanNearby_start()
-                    } else {
-                        // Listen for nearby devices
-                        deviceManager.refreshDevices_listen()
-                    }
-
-                    break
+                break
             }
         }
     }
 
-    onVisibilityChanged: (visibility) => {
-        //console.log("onVisibilityChanged(" + visibility + ")")
+    onVisibilityChanged: visibility => {
 
-        if (visibility === Window.Hidden) {
-            if (settingsManager.systray && Qt.platform.os === "osx") {
-                utilsDock.toggleDockIconVisibility(false)
-            }
-        }
-        if (visibility === Window.AutomaticVisibility ||
-            visibility === Window.Minimized || visibility === Window.Maximized ||
-            visibility === Window.Windowed || visibility === Window.FullScreen) {
-             if (settingsManager.systray && Qt.platform.os === "osx") {
-                 utilsDock.toggleDockIconVisibility(true)
-             }
-         }
-    }
+                             //console.log("onVisibilityChanged(" + visibility + ")")
+                             if (visibility === Window.Hidden) {
+                                 if (settingsManager.systray
+                                     && Qt.platform.os === "osx") {
+                                     utilsDock.toggleDockIconVisibility(false)
+                                 }
+                             }
+                             if (visibility === Window.AutomaticVisibility
+                                 || visibility === Window.Minimized
+                                 || visibility === Window.Maximized
+                                 || visibility === Window.Windowed
+                                 || visibility === Window.FullScreen) {
+                                 if (settingsManager.systray
+                                     && Qt.platform.os === "osx") {
+                                     utilsDock.toggleDockIconVisibility(true)
+                                 }
+                             }
+                         }
 
-    onClosing: (close) => {
-        //console.log("onClosing(" + close + ")")
+    onClosing: close => {
 
-        if (settingsManager.systray || Qt.platform.os === "osx") {
-            close.accepted = false
-            appWindow.hide()
-        }
-    }
+                   //console.log("onClosing(" + close + ")")
+                   if (settingsManager.systray || Qt.platform.os === "osx") {
+                       close.accepted = false
+                       appWindow.hide()
+                   }
+               }
 
     // User generated events handling //////////////////////////////////////////
-
     function backAction() {
-        if (appContent.state === "Tutorial" && screenTutorial.entryPoint === "DeviceList") {
-            return // do nothing
+        if (appContent.state === "Tutorial"
+                && screenTutorial.entryPoint === "DeviceList") {
+            return
+            // do nothing
         }
 
         if (appContent.state === "DeviceList") {
@@ -257,10 +279,11 @@ ApplicationWindow {
             screenPlantBrowser.backAction()
         } else if (appContent.state === "Tutorial") {
             appContent.state = screenTutorial.entryPoint
-        } else { // default
+        } else {
+            // default
             if (appContent.previousStates.length) {
                 appContent.previousStates.pop()
-                appContent.state = appContent.previousStates[appContent.previousStates.length-1]
+                appContent.state = appContent.previousStates[appContent.previousStates.length - 1]
             } else {
                 appContent.state = "DeviceList"
             }
@@ -270,15 +293,20 @@ ApplicationWindow {
         if (appContent.state === "DeviceList") {
             appContent.previousStates.pop()
 
-            if (appContent.previousStates[appContent.previousStates.length-1] === "DevicePlantSensor")
+            if (appContent.previousStates[appContent.previousStates.length - 1]
+                    === "DevicePlantSensor")
                 appContent.state = "DevicePlantSensor"
-            else if (appContent.previousStates[appContent.previousStates.length-1] === "DeviceThermometer")
+            else if (appContent.previousStates[appContent.previousStates.length
+                                               - 1] === "DeviceThermometer")
                 appContent.state = "DeviceThermometer"
-            else if (appContent.previousStates[appContent.previousStates.length-1] === "DeviceEnvironmental")
+            else if (appContent.previousStates[appContent.previousStates.length
+                                               - 1] === "DeviceEnvironmental")
                 appContent.state = "DeviceEnvironmental"
-            else if (appContent.previousStates[appContent.previousStates.length-1] === "DeviceBrowser")
+            else if (appContent.previousStates[appContent.previousStates.length
+                                               - 1] === "DeviceBrowser")
                 appContent.state = "DeviceBrowser"
-            else if (appContent.previousStates[appContent.previousStates.length-1] === "PlantBrowser")
+            else if (appContent.previousStates[appContent.previousStates.length
+                                               - 1] === "PlantBrowser")
                 appContent.state = "PlantBrowser"
         } else if (appContent.state === "PlantBrowser") {
             screenPlantBrowser.forwardAction()
@@ -289,13 +317,13 @@ ApplicationWindow {
         anchors.fill: parent
         z: 99
         acceptedButtons: (Qt.BackButton | Qt.ForwardButton)
-        onClicked: (mouse) => {
-            if (mouse.button === Qt.BackButton) {
-                backAction()
-            } else if (mouse.button === Qt.ForwardButton) {
-                forwardAction()
-            }
-        }
+        onClicked: mouse => {
+                       if (mouse.button === Qt.BackButton) {
+                           backAction()
+                       } else if (mouse.button === Qt.ForwardButton) {
+                           forwardAction()
+                       }
+                   }
     }
 
     Shortcut {
@@ -328,13 +356,13 @@ ApplicationWindow {
     }
 
     // UI sizes ////////////////////////////////////////////////////////////////
-
     property bool headerUnicolor: (Theme.colorHeader === Theme.colorBackground)
 
     property bool singleColumn: {
         if (isMobile) {
-            if (screenOrientation === Qt.PortraitOrientation ||
-                (isTablet && width < 480)) { // can be a 2/3 split screen on tablet
+            if (screenOrientation === Qt.PortraitOrientation
+                    || (isTablet && width < 480)) {
+                // can be a 2/3 split screen on tablet
                 return true
             } else {
                 return false
@@ -344,11 +372,11 @@ ApplicationWindow {
         }
     }
 
-    property bool wideMode: (isDesktop && width >= 560) || (isTablet && width >= 480)
+    property bool wideMode: (isDesktop && width >= 560) || (isTablet
+                                                            && width >= 480)
     property bool wideWideMode: (width >= 640)
 
     // QML /////////////////////////////////////////////////////////////////////
-
     PopupCalibration {
         id: popupCalibration
     }
@@ -371,6 +399,46 @@ ApplicationWindow {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+
+        function openStackView(page) {
+            if (state !== "Navigator")
+                page_view.previousState = state
+            state = "Navigator"
+            page_view.push(page, {}, StackView.Immediate)
+        }
+
+        Component {
+            id: desease
+            PlantDesease {}
+        }
+
+        Component {
+            id: plantBrowserPage
+            PlantBrowser {}
+        }
+
+        Component {
+            id: plantScreen
+            PlantScreen {}
+        }
+
+        StackView {
+            id: page_view
+            property string previousState: ""
+
+            y: -appHeader.height
+            width: parent.width
+            height: parent.height + appHeader.height
+            visible: false
+            initialItem: Component {
+                Item {}
+            }
+            onDepthChanged: {
+                console.log("-----> ", depth, previousState)
+                if (depth === 1)
+                    parent.state = previousState
+            }
+        }
 
         Tutorial {
             anchors.fill: parent
@@ -402,10 +470,11 @@ ApplicationWindow {
             id: screenAbout
         }
 
-        PlantBrowser {
+        PlantBrowserOld {
             anchors.fill: parent
             id: screenPlantBrowser
         }
+
         DeviceBrowser {
             anchors.fill: parent
             id: screenDeviceBrowser
@@ -427,120 +496,608 @@ ApplicationWindow {
             screenDeviceList.exitSelectionMode()
             appHeader.setActiveMenu()
 
-            if (state === "Tutorial") return
-            if (previousStates[previousStates.length-1] !== state) previousStates.push(state)
-            if (previousStates.length > 4) previousStates.splice(0, 1)
+            if (state === "Tutorial")
+                return
+            if (previousStates[previousStates.length - 1] !== state)
+                previousStates.push(state)
+            if (previousStates.length > 4)
+                previousStates.splice(0, 1)
             //console.log("states > " + appContent.previousStates)
         }
 
         states: [
             State {
+                name: "Navigator"
+                PropertyChanges {
+                    target: appHeader
+                    title: qsTr("Welcome")
+                    visible: false
+                }
+                PropertyChanges {
+                    target: page_view
+                    visible: true
+                    enabled: true
+                }
+                PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceList
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDevicePlantSensor
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceThermometer
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceEnvironmental
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenSettings
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenPermissions
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenAbout
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenPlantBrowser
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceBrowser
+                    visible: false
+                    enabled: false
+                }
+            },
+            State {
                 name: "Tutorial"
-                PropertyChanges { target: screenTutorial; visible: true; enabled: true; focus: true; }
-                PropertyChanges { target: screenDeviceList; visible: false; enabled: false; }
-                PropertyChanges { target: screenDevicePlantSensor; visible: false; enabled: false }
-                PropertyChanges { target: screenDeviceThermometer; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceEnvironmental; visible: false; enabled: false; }
-                PropertyChanges { target: screenSettings; visible: false; enabled: false; }
-                PropertyChanges { target: screenAbout; visible: false; enabled: false; }
-                PropertyChanges { target: screenPlantBrowser; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceBrowser; visible: false; enabled: false; }
+                PropertyChanges {
+                    target: screenTutorial
+                    visible: true
+                    enabled: true
+                    focus: true
+                }
+                PropertyChanges {
+                    target: appHeader
+                    visible: true
+                }
+                PropertyChanges {
+                    target: page_view
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceList
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDevicePlantSensor
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceThermometer
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceEnvironmental
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenSettings
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenAbout
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenPlantBrowser
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceBrowser
+                    visible: false
+                    enabled: false
+                }
             },
             State {
                 name: "DeviceList"
-                PropertyChanges { target: screenTutorial; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceList; visible: true; enabled: true; focus: true; }
-                PropertyChanges { target: screenDevicePlantSensor; visible: false; enabled: false }
-                PropertyChanges { target: screenDeviceThermometer; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceEnvironmental; visible: false; enabled: false; }
-                PropertyChanges { target: screenSettings; visible: false; enabled: false; }
-                PropertyChanges { target: screenAbout; visible: false; enabled: false; }
-                PropertyChanges { target: screenPlantBrowser; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceBrowser; visible: false; enabled: false; }
+                PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: appHeader
+                    title: "Blume"
+                    visible: true
+                }
+                PropertyChanges {
+                    target: page_view
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceList
+                    visible: true
+                    enabled: true
+                    focus: true
+                }
+                PropertyChanges {
+                    target: screenDevicePlantSensor
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceThermometer
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceEnvironmental
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenSettings
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenAbout
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenPlantBrowser
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceBrowser
+                    visible: false
+                    enabled: false
+                }
             },
             State {
                 name: "DevicePlantSensor"
-                PropertyChanges { target: screenTutorial; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceList; visible: false; enabled: false; }
-                PropertyChanges { target: screenDevicePlantSensor; visible: true; enabled: true; focus: true; }
-                PropertyChanges { target: screenDeviceThermometer; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceEnvironmental; visible: false; enabled: false; }
-                PropertyChanges { target: screenSettings; visible: false; enabled: false; }
-                PropertyChanges { target: screenAbout; visible: false; enabled: false; }
-                PropertyChanges { target: screenPlantBrowser; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceBrowser; visible: false; enabled: false; }
+                PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: appHeader
+                    title: "Blume"
+                    visible: true
+                }
+                PropertyChanges {
+                    target: page_view
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceList
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDevicePlantSensor
+                    visible: true
+                    enabled: true
+                    focus: true
+                }
+                PropertyChanges {
+                    target: screenDeviceThermometer
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceEnvironmental
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenSettings
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenAbout
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenPlantBrowser
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceBrowser
+                    visible: false
+                    enabled: false
+                }
             },
             State {
                 name: "DeviceThermometer"
-                PropertyChanges { target: screenTutorial; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceList; visible: false; enabled: false; }
-                PropertyChanges { target: screenDevicePlantSensor; visible: false; enabled: false }
-                PropertyChanges { target: screenDeviceThermometer; visible: true; enabled: true; focus: true; }
-                PropertyChanges { target: screenDeviceEnvironmental; visible: false; enabled: false; }
-                PropertyChanges { target: screenSettings; visible: false; enabled: false; }
-                PropertyChanges { target: screenAbout; visible: false; enabled: false; }
-                PropertyChanges { target: screenPlantBrowser; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceBrowser; visible: false; enabled: false; }
+                PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: appHeader
+                    title: "Blume"
+                    visible: true
+                }
+                PropertyChanges {
+                    target: page_view
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceList
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDevicePlantSensor
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceThermometer
+                    visible: true
+                    enabled: true
+                    focus: true
+                }
+                PropertyChanges {
+                    target: screenDeviceEnvironmental
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenSettings
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenAbout
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenPlantBrowser
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceBrowser
+                    visible: false
+                    enabled: false
+                }
             },
             State {
                 name: "DeviceEnvironmental"
-                PropertyChanges { target: screenTutorial; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceList; visible: false; enabled: false; }
-                PropertyChanges { target: screenDevicePlantSensor; visible: false; enabled: false }
-                PropertyChanges { target: screenDeviceThermometer; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceEnvironmental; visible: true; enabled: true; focus: true; }
-                PropertyChanges { target: screenSettings; visible: false; enabled: false; }
-                PropertyChanges { target: screenAbout; visible: false; enabled: false; }
-                PropertyChanges { target: screenPlantBrowser; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceBrowser; visible: false; enabled: false; }
+                PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: appHeader
+                    title: "Blume"
+                    visible: true
+                }
+                PropertyChanges {
+                    target: page_view
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceList
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDevicePlantSensor
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceThermometer
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceEnvironmental
+                    visible: true
+                    enabled: true
+                    focus: true
+                }
+                PropertyChanges {
+                    target: screenSettings
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenAbout
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenPlantBrowser
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceBrowser
+                    visible: false
+                    enabled: false
+                }
             },
             State {
                 name: "Settings"
-                PropertyChanges { target: screenTutorial; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceList; visible: false; enabled: false; }
-                PropertyChanges { target: screenDevicePlantSensor; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceThermometer; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceEnvironmental; visible: false; enabled: false; }
-                PropertyChanges { target: screenSettings; visible: true; enabled: true; focus: true; }
-                PropertyChanges { target: screenAbout; visible: false; enabled: false; }
-                PropertyChanges { target: screenPlantBrowser; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceBrowser; visible: false; enabled: false; }
+                PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: appHeader
+                    title: "Blume"
+                    visible: true
+                }
+                PropertyChanges {
+                    target: page_view
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceList
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDevicePlantSensor
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceThermometer
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceEnvironmental
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenSettings
+                    visible: true
+                    enabled: true
+                    focus: true
+                }
+                PropertyChanges {
+                    target: screenAbout
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenPlantBrowser
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceBrowser
+                    visible: false
+                    enabled: false
+                }
             },
             State {
                 name: "About"
-                PropertyChanges { target: screenTutorial; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceList; visible: false; enabled: false; }
-                PropertyChanges { target: screenDevicePlantSensor; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceThermometer; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceEnvironmental; visible: false; enabled: false; }
-                PropertyChanges { target: screenSettings; visible: false; enabled: false; }
-                PropertyChanges { target: screenAbout; visible: true; enabled: true; focus: true; }
-                PropertyChanges { target: screenPlantBrowser; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceBrowser; visible: false; enabled: false; }
+                PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: appHeader
+                    title: "Blume"
+                    visible: true
+                }
+                PropertyChanges {
+                    target: page_view
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceList
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDevicePlantSensor
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceThermometer
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceEnvironmental
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenSettings
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenAbout
+                    visible: true
+                    enabled: true
+                    focus: true
+                }
+                PropertyChanges {
+                    target: screenPlantBrowser
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceBrowser
+                    visible: false
+                    enabled: false
+                }
             },
             State {
                 name: "PlantBrowser"
-                PropertyChanges { target: screenTutorial; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceList; visible: false; enabled: false; }
-                PropertyChanges { target: screenDevicePlantSensor; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceThermometer; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceEnvironmental; visible: false; enabled: false; }
-                PropertyChanges { target: screenSettings; visible: false; enabled: false; }
-                PropertyChanges { target: screenAbout; visible: false; enabled: false; }
-                PropertyChanges { target: screenPlantBrowser; visible: true; enabled: true; focus: true; }
-                PropertyChanges { target: screenDeviceBrowser; visible: false; enabled: false; }
+                PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: appHeader
+                    title: "Blume"
+                    visible: true
+                }
+                PropertyChanges {
+                    target: page_view
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceList
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDevicePlantSensor
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceThermometer
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceEnvironmental
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenSettings
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenAbout
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenPlantBrowser
+                    visible: true
+                    enabled: true
+                    focus: true
+                }
+                PropertyChanges {
+                    target: screenDeviceBrowser
+                    visible: false
+                    enabled: false
+                }
             },
             State {
                 name: "DeviceBrowser"
-                PropertyChanges { target: screenTutorial; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceList; visible: false; enabled: false; }
-                PropertyChanges { target: screenDevicePlantSensor; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceThermometer; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceEnvironmental; visible: false; enabled: false; }
-                PropertyChanges { target: screenSettings; visible: false; enabled: false; }
-                PropertyChanges { target: screenAbout; visible: false; enabled: false; }
-                PropertyChanges { target: screenPlantBrowser; visible: false; enabled: false; }
-                PropertyChanges { target: screenDeviceBrowser; visible: true; enabled: true; focus: true; }
+                PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: appHeader
+                    title: "Blume"
+                    visible: true
+                }
+                PropertyChanges {
+                    target: page_view
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceList
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDevicePlantSensor
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceThermometer
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceEnvironmental
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenSettings
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenAbout
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenPlantBrowser
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: screenDeviceBrowser
+                    visible: true
+                    enabled: true
+                    focus: true
+                }
             }
         ]
     }

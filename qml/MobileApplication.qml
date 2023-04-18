@@ -480,7 +480,7 @@ ApplicationWindow {
             }
             onDepthChanged: {
                 console.log("-----> ", depth, previousState)
-                if (depth == 1)
+                if (depth === 1)
                     parent.state = previousState
             }
         }
