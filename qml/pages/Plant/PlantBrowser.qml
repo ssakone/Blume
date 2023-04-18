@@ -340,10 +340,11 @@ BPage {
                                             hoverEnabled: enabled
                                             onClicked: {
                                                 if (action === "posometre") {
-                                                    page_view.push(navigator.posometrePage)
+                                                    page_view.push(
+                                                                navigator.posometrePage)
                                                 } else if (action === "identify") {
                                                     page_view.push(
-                                                                identifierPop)
+                                                                navigator.plantIdentifierPage)
                                                 } else {
                                                     let title = ""
                                                     let pk = 0

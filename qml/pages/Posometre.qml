@@ -24,6 +24,9 @@ BPage {
     header: AppBar {
         title: "Posometre"
     }
+    background: Rectangle {
+        color: "black"
+    }
 
     AmbientLightSensor {
         id: als
@@ -49,11 +52,10 @@ BPage {
 
     property variant sensor: als.reading
 
-    background: Rectangle {
-        color: Theme.colorPrimary
-        radius: 0
-    }
-
+    //    background: Rectangle {
+    //        color: Theme.colorPrimary
+    //        radius: 0
+    //    }
     Timer {
         id: timer2
         repeat: true
@@ -94,8 +96,9 @@ BPage {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter
 
-            color: "white"
+            color: "black"
             clip: true
+
             Rectangle {
                 id: gl
                 width: 60
@@ -104,6 +107,16 @@ BPage {
                 anchors.centerIn: parent
                 clip: true
                 color: "#e8e8e8"
+                layer.enabled: true
+                layer.effect: Glow {
+                    color: 'white'
+                    radius: ((sensor?.lightLevel ?? 0) * 16) / 6
+                    Behavior on radius {
+                        NumberAnimation {
+                            duration: 200
+                        }
+                    }
+                }
                 Item {
                     id: root
                     property real value: 0.0
@@ -152,7 +165,7 @@ BPage {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.verticalCenterOffset: 40
                 anchors.right: gl.right
-                width: parent.width / 3
+                width: parent.width / 2.4
                 model: indicator_model
                 anchors.bottom: parent.bottom
                 interactive: false
@@ -171,10 +184,9 @@ BPage {
 
                     Label {
                         text: label
-                        color: "black"
-                        leftPadding: 10
+                        color: "white"
                         font.pixelSize: 16
-                        font.weight: font.Black
+                        font.weight: Font.Medium
                         Layout.alignment: Qt.AlignVCenter
                         anchors.verticalCenter: parent.verticalCenter
                     }
