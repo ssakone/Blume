@@ -78,9 +78,11 @@ BPage {
         Column {
             Layout.fillWidth: true
             Label {
-                width: parent.width - 50
-                padding: 16
-                text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non eros fringilla, scelerisque est aliquam, facilisis odio."
+                text: "Les agriculteurs peuvent utiliser un posemètre pour mesurer la quantité de lumière disponible pour les plantes, afin d'ajuster leur emplacement ou leur exposition à la lumière pour maximiser leur croissance et leur production."
+                font.pixelSize: 18
+                color: "white"
+                width: parent.width - 25
+                padding: 12
                 wrapMode: Label.Wrap
             }
         }
@@ -167,12 +169,14 @@ BPage {
                     width: indicatorBar.width - 2
                     height: gl.height / 6
 
-                    Text {
+                    Label {
                         text: label
                         color: "black"
+                        leftPadding: 10
+                        font.pixelSize: 16
+                        font.weight: font.Black
                         Layout.alignment: Qt.AlignVCenter
                         anchors.verticalCenter: parent.verticalCenter
-                        x: 10
                     }
 
                     Rectangle {
