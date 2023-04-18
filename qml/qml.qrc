@@ -31,7 +31,10 @@
         <file>ThemeEngine.qml</file>
         <file>WindowGeometrySaver.qml</file>
         
+        <!-- PAGE - INSECT -->
         <file>pages/Insect/InsectIdentifier.qml</file>
+
+        <!-- PAGE PLANT -->
 
         <file>pages/Plant/PlantBrowser.qml</file>
         <file>pages/Plant/PlantScreen.qml</file>
@@ -40,6 +43,8 @@
         <file>pages/Plant/PlantDesease.qml</file>
         <file>pages/Plant/PlantDeseaseDetails.qml</file>
         <file>pages/Plant/PlantDeseaseEncylopedie.qml</file>
+
+        <!-- OTHER PAGE -->
 
         <file>pages/Faq.qml</file>
         <file>pages/AskHelp.qml</file>
@@ -83,18 +88,26 @@
         <file>PlantBrowseCategory.qml</file>
         <file>PlantScreenDetails.qml</file>
 
+        <!-- COMPONENTS -->
+
         <file>components/Accordion.qml</file>
         <file>components/ImagePickerArea.qml</file>
 
+        <!-- JS OBJECT -->
+
         <file>components_js/Http.js</file>
 
+        <!-- GENERIC COMPONENT -->
 
         <file>components_generic/ActionMenuItem.qml</file>
         <file>components_generic/ButtonCompactable.qml</file>
-        <file>components_generic/RoundButtonIcon.qml</file>
         <file>components_generic/ButtonWireframe.qml</file>
         <file>components_generic/ButtonWireframeIcon.qml</file>
         <file>components_generic/ButtonWireframeIconCentered.qml</file>
+        <file>components_generic/BPage.qml</file>
+        <file>components_generic/ToolTipFlat.qml</file>
+        <file>components_generic/RoundButtonIcon.qml</file>
+
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>

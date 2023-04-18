@@ -2,6 +2,8 @@ import QtQuick
 
 import ThemeEngine 1.0
 
+import "components_generic/"
+
 Rectangle {
     id: rectangleHeaderBar
     width: parent.width
@@ -12,30 +14,30 @@ Rectangle {
     property int headerHeight: isHdpi ? 60 : 64
 
     ////////////////////////////////////////////////////////////////////////////
+    signal backButtonClicked
+    signal rightMenuClicked
 
-    signal backButtonClicked()
-    signal rightMenuClicked() // compatibility
+    // compatibility
+    signal deviceRebootButtonClicked
+    signal deviceCalibrateButtonClicked
+    signal deviceWateringButtonClicked
+    signal deviceLedButtonClicked
+    signal deviceRefreshButtonClicked
+    signal deviceRefreshRealtimeButtonClicked
+    signal deviceRefreshHistoryButtonClicked
+    signal deviceClearButtonClicked
 
-    signal deviceRebootButtonClicked()
-    signal deviceCalibrateButtonClicked()
-    signal deviceWateringButtonClicked()
-    signal deviceLedButtonClicked()
-    signal deviceRefreshButtonClicked()
-    signal deviceRefreshRealtimeButtonClicked()
-    signal deviceRefreshHistoryButtonClicked()
-    signal deviceClearButtonClicked()
+    signal deviceDataButtonClicked
+    signal deviceHistoryButtonClicked
+    signal devicePlantButtonClicked
+    signal deviceSettingsButtonClicked
 
-    signal deviceDataButtonClicked()
-    signal deviceHistoryButtonClicked()
-    signal devicePlantButtonClicked()
-    signal deviceSettingsButtonClicked()
-
-    signal refreshButtonClicked()
-    signal syncButtonClicked()
-    signal scanButtonClicked()
-    signal plantsButtonClicked()
-    signal settingsButtonClicked()
-    signal aboutButtonClicked()
+    signal refreshButtonClicked
+    signal syncButtonClicked
+    signal scanButtonClicked
+    signal plantsButtonClicked
+    signal settingsButtonClicked
+    signal aboutButtonClicked
 
     function setActiveDeviceData() {
         menuDeviceData.selected = true
@@ -81,11 +83,11 @@ Rectangle {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     DragHandler {
         // make that surface draggable
         // also, prevent clicks below this area
-        onActiveChanged: if (active) appWindow.startSystemMove()
+        onActiveChanged: if (active)
+                             appWindow.startSystemMove()
         target: null
     }
 
@@ -97,14 +99,20 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
 
         hoverEnabled: (buttonBack.source !== "qrc:/assets/menus/menu_logo_large.svg")
-        onEntered: { buttonBackBg.opacity = 0.5; }
-        onExited: { buttonBackBg.opacity = 0; buttonBack.width = 24; }
+        onEntered: {
+            buttonBackBg.opacity = 0.5
+        }
+        onExited: {
+            buttonBackBg.opacity = 0
+            buttonBack.width = 24
+        }
 
         onPressed: buttonBack.width = 20
         onReleased: buttonBack.width = 24
         onClicked: backButtonClicked()
 
-        enabled: (buttonBack.source !== "qrc:/assets/menus/menu_logo_large.svg" || wideMode)
+        enabled: (buttonBack.source !== "qrc:/assets/menus/menu_logo_large.svg"
+                  || wideMode)
         visible: enabled
 
         Rectangle {
@@ -114,7 +122,11 @@ Rectangle {
             z: -1
             color: Theme.colorHeaderHighlight
             opacity: 0
-            Behavior on opacity { OpacityAnimator { duration: 333 } }
+            Behavior on opacity {
+                OpacityAnimator {
+                    duration: 333
+                }
+            }
         }
 
         IconSvg {
@@ -146,7 +158,6 @@ Rectangle {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Row {
         id: menus
         anchors.top: parent.top
@@ -160,7 +171,6 @@ Rectangle {
         visible: true
 
         // DEVICE ACTIONS //////////
-
         ButtonCompactable {
             id: buttonThermoChart
             height: compact ? 36 : 34
@@ -168,7 +178,8 @@ Rectangle {
 
             visible: (appContent.state === "DeviceThermometer")
 
-            source: (settingsManager.graphThermometer === "lines") ? "qrc:/assets/icons_material/duotone-insert_chart-24px.svg" : "qrc:/assets/icons_material/baseline-timeline-24px.svg";
+            source: (settingsManager.graphThermometer
+                     === "lines") ? "qrc:/assets/icons_material/duotone-insert_chart-24px.svg" : "qrc:/assets/icons_material/baseline-timeline-24px.svg"
             tooltipText: qsTr("Switch graph")
             iconColor: Theme.colorHeaderContent
             textColor: Theme.colorHeaderContent
@@ -186,9 +197,9 @@ Rectangle {
             height: compact ? 36 : 34
             anchors.verticalCenter: parent.verticalCenter
 
-            visible: (deviceManager.bluetooth &&
-                      (selectedDevice && selectedDevice.hasWaterTank) &&
-                      (appContent.state === "DevicePlantSensor"))
+            visible: (deviceManager.bluetooth
+                      && (selectedDevice && selectedDevice.hasWaterTank)
+                      && (appContent.state === "DevicePlantSensor"))
 
             source: "qrc:/assets/icons_material/duotone-local_drink-24px.svg"
             tooltipText: qsTr("Watering")
@@ -203,11 +214,11 @@ Rectangle {
             height: compact ? 36 : 34
             anchors.verticalCenter: parent.verticalCenter
 
-            visible: (deviceManager.bluetooth &&
-                      (selectedDevice && selectedDevice.hasCalibration) &&
-                      (appContent.state === "DevicePlantSensor" ||
-                       appContent.state === "DeviceThermometer" ||
-                       appContent.state === "DeviceEnvironmental"))
+            visible: (deviceManager.bluetooth
+                      && (selectedDevice && selectedDevice.hasCalibration)
+                      && (appContent.state === "DevicePlantSensor"
+                          || appContent.state === "DeviceThermometer"
+                          || appContent.state === "DeviceEnvironmental"))
 
             source: "qrc:/assets/icons_material/duotone-model_training-24px.svg"
             tooltipText: qsTr("Calibrate")
@@ -222,11 +233,11 @@ Rectangle {
             height: compact ? 36 : 34
             anchors.verticalCenter: parent.verticalCenter
 
-            visible: (deviceManager.bluetooth &&
-                      (selectedDevice && selectedDevice.hasReboot) &&
-                      (appContent.state === "DevicePlantSensor" ||
-                       appContent.state === "DeviceThermometer" ||
-                       appContent.state === "DeviceEnvironmental"))
+            visible: (deviceManager.bluetooth && (selectedDevice
+                                                  && selectedDevice.hasReboot)
+                      && (appContent.state === "DevicePlantSensor"
+                          || appContent.state === "DeviceThermometer"
+                          || appContent.state === "DeviceEnvironmental"))
 
             source: "qrc:/assets/icons_material/duotone-restart_alt-24px.svg"
             tooltipText: qsTr("Reboot")
@@ -241,11 +252,11 @@ Rectangle {
             height: compact ? 36 : 34
             anchors.verticalCenter: parent.verticalCenter
 
-            visible: (deviceManager.bluetooth &&
-                      (selectedDevice && selectedDevice.hasLED) &&
-                      (appContent.state === "DevicePlantSensor" ||
-                       appContent.state === "DeviceThermometer" ||
-                       appContent.state === "DeviceEnvironmental"))
+            visible: (deviceManager.bluetooth && (selectedDevice
+                                                  && selectedDevice.hasLED)
+                      && (appContent.state === "DevicePlantSensor"
+                          || appContent.state === "DeviceThermometer"
+                          || appContent.state === "DeviceEnvironmental"))
 
             source: "qrc:/assets/icons_material/duotone-emoji_objects-24px.svg"
             tooltipText: qsTr("Blink LED")
@@ -257,30 +268,29 @@ Rectangle {
         }
 
         ////////////
-
-        Rectangle { // separator
+        Rectangle {
+            // separator
             anchors.verticalCenter: parent.verticalCenter
             height: 40
             width: Theme.componentBorderWidth
             color: Theme.colorHeaderHighlight
-            visible: (!singleColumn &&
-                      (buttonThermoChart.visible || buttonWatering.visible ||
-                       buttonCalibrate.visible || buttonReboot.visible ||
-                       buttonLed.visible))
+            visible: (!singleColumn
+                      && (buttonThermoChart.visible || buttonWatering.visible
+                          || buttonCalibrate.visible || buttonReboot.visible
+                          || buttonLed.visible))
         }
 
         ////////////
-
         ButtonCompactable {
             id: buttonRefreshHistory
             height: compact ? 36 : 34
             anchors.verticalCenter: parent.verticalCenter
 
-            visible: (deviceManager.bluetooth &&
-                      (selectedDevice && selectedDevice.hasHistory) &&
-                      (appContent.state === "DevicePlantSensor" ||
-                       appContent.state === "DeviceThermometer" ||
-                       appContent.state === "DeviceEnvironmental"))
+            visible: (deviceManager.bluetooth && (selectedDevice
+                                                  && selectedDevice.hasHistory)
+                      && (appContent.state === "DevicePlantSensor"
+                          || appContent.state === "DeviceThermometer"
+                          || appContent.state === "DeviceEnvironmental"))
 
             source: "qrc:/assets/icons_material/duotone-date_range-24px.svg"
             tooltipText: qsTr("Synchronize history")
@@ -307,8 +317,8 @@ Rectangle {
         }
 
         ////////////
-
-        Rectangle { // separator
+        Rectangle {
+            // separator
             anchors.verticalCenter: parent.verticalCenter
             height: 40
             width: Theme.componentBorderWidth
@@ -317,17 +327,16 @@ Rectangle {
         }
 
         ////////////
-
         ButtonCompactable {
             id: buttonRefreshRealtime
             height: compact ? 36 : 34
             anchors.verticalCenter: parent.verticalCenter
 
-            visible: (deviceManager.bluetooth &&
-                      (selectedDevice && selectedDevice.hasRealTime) &&
-                      (appContent.state === "DevicePlantSensor" ||
-                       appContent.state === "DeviceThermometer" ||
-                       appContent.state === "DeviceEnvironmental"))
+            visible: (deviceManager.bluetooth && (selectedDevice
+                                                  && selectedDevice.hasRealTime)
+                      && (appContent.state === "DevicePlantSensor"
+                          || appContent.state === "DeviceThermometer"
+                          || appContent.state === "DeviceEnvironmental"))
 
             source: "qrc:/assets/icons_material/duotone-update-24px.svg"
             tooltipText: qsTr("Real time data")
@@ -342,11 +351,12 @@ Rectangle {
             height: compact ? 36 : 34
             anchors.verticalCenter: parent.verticalCenter
 
-            visible: (deviceManager.bluetooth &&
-                      (selectedDevice && selectedDevice.hasBluetoothConnection) &&
-                      (appContent.state === "DevicePlantSensor" ||
-                       appContent.state === "DeviceThermometer" ||
-                       appContent.state === "DeviceEnvironmental"))
+            visible: (deviceManager.bluetooth
+                      && (selectedDevice
+                          && selectedDevice.hasBluetoothConnection)
+                      && (appContent.state === "DevicePlantSensor"
+                          || appContent.state === "DeviceThermometer"
+                          || appContent.state === "DeviceEnvironmental"))
 
             source: "qrc:/assets/icons_material/baseline-refresh-24px.svg"
             tooltipText: qsTr("Refresh sensor")
@@ -361,27 +371,26 @@ Rectangle {
         }
 
         ////////////
-
-        Rectangle { // separator
+        Rectangle {
+            // separator
             anchors.verticalCenter: parent.verticalCenter
             height: 40
             width: Theme.componentBorderWidth
             color: Theme.colorHeaderHighlight
-            visible: (!singleColumn && menuDevice.visible &&
-                      (buttonRefreshHistory.visible ||
-                       buttonRefreshRealtime.visible ||
-                       buttonRefreshData.visible))
+            visible: (!singleColumn && menuDevice.visible
+                      && (buttonRefreshHistory.visible
+                          || buttonRefreshRealtime.visible
+                          || buttonRefreshData.visible))
         }
 
         // DEVICE MENU //////////
-
         Row {
             id: menuDevice
             spacing: 0
 
-            visible: (appContent.state === "DevicePlantSensor" ||
-                      appContent.state === "DeviceThermometer" ||
-                      appContent.state === "DeviceEnvironmental")
+            visible: (appContent.state === "DevicePlantSensor"
+                      || appContent.state === "DeviceThermometer"
+                      || appContent.state === "DeviceEnvironmental")
 
             DesktopHeaderItem {
                 id: menuDeviceData
@@ -434,7 +443,6 @@ Rectangle {
         }
 
         // MAIN MENU ACTIONS //////////
-
         ButtonCompactable {
             id: buttonSort
             height: compact ? 36 : 34
@@ -465,8 +473,12 @@ Rectangle {
             Component.onCompleted: buttonSort.setText()
             Connections {
                 target: settingsManager
-                function onOrderByChanged() { buttonSort.setText() }
-                function onAppLanguageChanged() { buttonSort.setText() }
+                function onOrderByChanged() {
+                    buttonSort.setText()
+                }
+                function onAppLanguageChanged() {
+                    buttonSort.setText()
+                }
             }
 
             property var sortmode: {
@@ -476,14 +488,16 @@ Rectangle {
                     return 2
                 } else if (settingsManager.orderBy === "model") {
                     return 1
-                } else { // if (settingsManager.orderBy === "location") {
+                } else {
+                    // if (settingsManager.orderBy === "location") {
                     return 0
                 }
             }
 
             onClicked: {
                 sortmode++
-                if (sortmode > 3) sortmode = 0
+                if (sortmode > 3)
+                    sortmode = 0
 
                 if (sortmode === 0) {
                     settingsManager.orderBy = "location"
@@ -501,12 +515,14 @@ Rectangle {
             }
         }
 
-        Rectangle { // separator
+        Rectangle {
+            // separator
             anchors.verticalCenter: parent.verticalCenter
             height: 40
             width: Theme.componentBorderWidth
             color: Theme.colorHeaderHighlight
-            visible: (deviceManager.bluetooth && appContent.state === "DeviceList")
+            visible: (deviceManager.bluetooth
+                      && appContent.state === "DeviceList")
         }
 
         ButtonCompactable {
@@ -567,15 +583,20 @@ Rectangle {
             onClicked: refreshButtonClicked()
 
             animation: {
-                if (deviceManager.updating && deviceManager.listening) return "both"
-                if (deviceManager.updating) return "rotate"
-                if (deviceManager.listening) return "fade"
+                if (deviceManager.updating && deviceManager.listening)
+                    return "both"
+                if (deviceManager.updating)
+                    return "rotate"
+                if (deviceManager.listening)
+                    return "fade"
                 return ""
             }
-            animationRunning: (deviceManager.updating || deviceManager.listening)
+            animationRunning: (deviceManager.updating
+                               || deviceManager.listening)
         }
 
-        Rectangle { // separator
+        Rectangle {
+            // separator
             anchors.verticalCenter: parent.verticalCenter
             height: 40
             width: Theme.componentBorderWidth
@@ -584,15 +605,14 @@ Rectangle {
         }
 
         // MAIN MENU //////////
-
         Row {
             id: menuMain
 
-            visible: (appContent.state === "DeviceList" ||
-                      appContent.state === "DeviceBrowser" ||
-                      appContent.state === "PlantBrowser" ||
-                      appContent.state === "Settings" ||
-                      appContent.state === "About")
+            visible: (appContent.state === "DeviceList"
+                      || appContent.state === "DeviceBrowser"
+                      || appContent.state === "PlantBrowser"
+                      || appContent.state === "Settings"
+                      || appContent.state === "About")
             spacing: 0
 
             DesktopHeaderItem {
@@ -635,16 +655,14 @@ Rectangle {
     }
 
     ////////////
-
     Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
-        visible: (!headerUnicolor &&
-                  appContent.state !== "DeviceThermometer" &&
-                  appContent.state !== "DeviceEnvironmental" &&
-                  appContent.state !== "Tutorial")
+        visible: (!headerUnicolor && appContent.state !== "DeviceThermometer"
+                  && appContent.state !== "DeviceEnvironmental"
+                  && appContent.state !== "Tutorial")
 
         height: 2
         opacity: 0.33

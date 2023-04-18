@@ -20,9 +20,10 @@ import "../"
 import "../Insect/"
 import "../../"
 import "../../components"
+import "../../components_generic"
 import "../../components_js/Http.js" as Http
 
-Page {
+BPage {
     header: AppBar {
         title: "Encyclopedie des plantes"
     }

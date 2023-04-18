@@ -15,9 +15,10 @@ import ThemeEngine 1.0
 import MaterialIcons
 import "../../"
 import "../../components/"
+import "../../components_generic"
 import "../../components_js/Http.js" as Http
 
-Page {
+BPage {
     id: pageControl
     property variant desease_data
     property variant details: desease_data["disease_details"] ?? {}

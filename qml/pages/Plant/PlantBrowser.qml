@@ -12,13 +12,14 @@ import Qt.labs.platform
 import "../"
 import "../../"
 import "../../components" as Components
+import "../../components_generic"
 import "../../components_js/Http.js" as Http
 
 import Qt5Compat.GraphicalEffects
 
 import ThemeEngine 1.0
 
-Page {
+BPage {
     id: plantBrowser
 
     header: Components.AppBar {

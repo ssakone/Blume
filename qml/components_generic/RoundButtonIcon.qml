@@ -12,9 +12,9 @@ Item {
     property int sourceSize: UtilsNumber.alignTo(height * 0.666, 2)
 
     // actions
-    signal clicked()
-    signal pressed()
-    signal pressAndHold()
+    signal clicked
+    signal pressed
+    signal pressAndHold
 
     // states
     property bool selected: false
@@ -32,7 +32,8 @@ Item {
     property string backgroundColor: Theme.colorComponent
 
     // animation
-    property string animation // available: rotate, fade
+    property string animation
+    // available: rotate, fade
     property bool animationRunning: false
 
     // tooltip
@@ -40,7 +41,6 @@ Item {
     property string tooltipPosition: "bottom"
 
     ////////////////////////////////////////////////////////////////////////////
-
     MouseArea {
         id: mouseArea
         anchors.fill: control
@@ -54,24 +54,32 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
-    Rectangle { // background
+    Rectangle {
+        // background
         anchors.fill: control
         radius: width
 
-        visible: (control.highlightMode === "circle" || control.highlightMode === "both" || control.background)
+        visible: (control.highlightMode === "circle"
+                  || control.highlightMode === "both" || control.background)
         color: control.backgroundColor
 
         opacity: {
             if (mouseArea.containsMouse) {
-               return (control.highlightMode === "circle" || control.highlightMode === "both" || control.background) ? 1 : 0.75
+                return (control.highlightMode === "circle"
+                        || control.highlightMode === "both"
+                        || control.background) ? 1 : 0.75
             } else {
                 return control.background ? 0.75 : 0
             }
         }
-        Behavior on opacity { NumberAnimation { duration: 333 } }
+        Behavior on opacity {
+            NumberAnimation {
+                duration: 333
+            }
+        }
     }
-    Rectangle { // border
+    Rectangle {
+        // border
         anchors.fill: control
         radius: width
 
@@ -82,19 +90,25 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
-    IconSvg { // contentItem
+    IconSvg {
+        // contentItem
         width: control.sourceSize
         height: control.sourceSize
         anchors.centerIn: control
 
         rotation: control.rotation
         opacity: control.enabled ? 1.0 : 0.33
-        Behavior on opacity { NumberAnimation { duration: 333 } }
+        Behavior on opacity {
+            NumberAnimation {
+                duration: 333
+            }
+        }
 
         source: control.source
         color: {
-            if ((control.selected || mouseArea.containsMouse) && (control.highlightMode === "color" || control.highlightMode === "both")) {
+            if ((control.selected || mouseArea.containsMouse)
+                    && (control.highlightMode === "color"
+                        || control.highlightMode === "both")) {
                 return control.highlightColor
             }
             return control.iconColor
@@ -105,11 +119,18 @@ Item {
             alwaysRunToEnd: true
             loops: Animation.Infinite
 
-            PropertyAnimation { to: 0.33; duration: 750; }
-            PropertyAnimation { to: 1; duration: 750; }
+            PropertyAnimation {
+                to: 0.33
+                duration: 750
+            }
+            PropertyAnimation {
+                to: 1
+                duration: 750
+            }
         }
         NumberAnimation on rotation {
-            running: (control.animation === "rotate" && control.animationRunning)
+            running: (control.animation === "rotate"
+                      && control.animationRunning)
             alwaysRunToEnd: true
             loops: Animation.Infinite
 
@@ -121,7 +142,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Loader {
         anchors.fill: control
         active: control.tooltipText

@@ -510,7 +510,6 @@ ApplicationWindow {
                 name: "Navigator"
                 PropertyChanges {
                     target: appHeader
-                    title: qsTr("Welcome")
                     visible: false
                 }
                 PropertyChanges {
@@ -545,11 +544,6 @@ ApplicationWindow {
                 }
                 PropertyChanges {
                     target: screenSettings
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenPermissions
                     visible: false
                     enabled: false
                 }
@@ -636,7 +630,6 @@ ApplicationWindow {
                 }
                 PropertyChanges {
                     target: appHeader
-                    title: "Blume"
                     visible: true
                 }
                 PropertyChanges {
@@ -695,7 +688,6 @@ ApplicationWindow {
                 }
                 PropertyChanges {
                     target: appHeader
-                    title: "Blume"
                     visible: true
                 }
                 PropertyChanges {
@@ -754,7 +746,6 @@ ApplicationWindow {
                 }
                 PropertyChanges {
                     target: appHeader
-                    title: "Blume"
                     visible: true
                 }
                 PropertyChanges {
@@ -813,7 +804,6 @@ ApplicationWindow {
                 }
                 PropertyChanges {
                     target: appHeader
-                    title: "Blume"
                     visible: true
                 }
                 PropertyChanges {
@@ -872,7 +862,6 @@ ApplicationWindow {
                 }
                 PropertyChanges {
                     target: appHeader
-                    title: "Blume"
                     visible: true
                 }
                 PropertyChanges {
@@ -931,7 +920,6 @@ ApplicationWindow {
                 }
                 PropertyChanges {
                     target: appHeader
-                    title: "Blume"
                     visible: true
                 }
                 PropertyChanges {
@@ -990,7 +978,6 @@ ApplicationWindow {
                 }
                 PropertyChanges {
                     target: appHeader
-                    title: "Blume"
                     visible: true
                 }
                 PropertyChanges {
@@ -1049,7 +1036,6 @@ ApplicationWindow {
                 }
                 PropertyChanges {
                     target: appHeader
-                    title: "Blume"
                     visible: true
                 }
                 PropertyChanges {

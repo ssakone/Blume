@@ -14,9 +14,10 @@ import ThemeEngine 1.0
 
 import MaterialIcons
 import "../../components"
+import "../../components_generic"
 import "../../"
 
-Page {
+BPage {
     id: resultIdentifierDetailPop
     property variant plant_data
     property variant details: plant_data["plant_details"]

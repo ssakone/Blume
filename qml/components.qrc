@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/qml">
         <file alias="ActionMenuItem.qml">components_generic/ActionMenuItem.qml</file>
-        <file alias="ButtonCompactable.qml">components_generic/ButtonCompactable.qml</file>
-        <file alias="RoundButtonIcon.qml">components_generic/RoundButtonIcon.qml</file>
         <file alias="ButtonWireframe.qml">components_generic/ButtonWireframe.qml</file>
         <file alias="ButtonWireframeIcon.qml">components_generic/ButtonWireframeIcon.qml</file>
         <file alias="ButtonWireframeIconCentered.qml">components_generic/ButtonWireframeIconCentered.qml</file>
@@ -21,7 +19,7 @@
         <file alias="SelectorMenu.qml">components_generic/SelectorMenu.qml</file>
         <file alias="SelectorMenuItem.qml">components_generic/SelectorMenuItem.qml</file>
         <file alias="SliderValueSolid.qml">components_generic/SliderValueSolid.qml</file>
-        <file alias="ToolTipFlat.qml">components_generic/ToolTipFlat.qml</file>
+        
         <file alias="Carousel.qml">components_generic/Carousel.qml</file>
         <file alias="CheckBoxThemed.qml">components_themed/CheckBoxThemed.qml</file>
         <file alias="ComboBoxThemed.qml">components_themed/ComboBoxThemed.qml</file>

@@ -7,7 +7,9 @@ import QtSensors
 import SortFilterProxyModel
 import QtMultimedia
 import ImageTools
+
 import "components"
+import "components_generic/"
 import "pages/Plant/"
 
 import ThemeEngine 1.0

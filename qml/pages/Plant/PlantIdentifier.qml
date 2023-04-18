@@ -15,10 +15,11 @@ import ThemeEngine 1.0
 
 import MaterialIcons
 import "../../components_js/Http.js" as Http
+import "../../components_generic"
 import "../../components"
 import "../../"
 
-Page {
+BPage {
     id: pageControl
     property var plant_results
     property var view: pageControl.StackView.view

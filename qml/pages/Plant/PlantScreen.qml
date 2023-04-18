@@ -10,7 +10,7 @@ import "../../components/"
 import "../../"
 import "qrc:/js/UtilsPlantDatabase.js" as UtilsPlantDatabase
 
-Page {
+BPage {
     header: AppBar {
         title: currentPlant?.nameBotanical ?? ""
     }

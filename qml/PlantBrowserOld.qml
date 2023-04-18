@@ -10,6 +10,7 @@ import ImageTools
 import Qt.labs.platform
 
 import "components" as Components
+import "components_generic/"
 import "pages/Plant" as PlantPages
 
 import Qt5Compat.GraphicalEffects

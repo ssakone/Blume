@@ -3,6 +3,8 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
+import "components_generic/"
+
 Popup {
     id: popupDate
     width: appWindow.width * 0.9
@@ -20,7 +22,6 @@ Popup {
     ////////////////////////////////////////////////////////////////////////////
 
     //property var locale: Qt.locale()
-
     property var today: new Date()
     property bool isToday: false
 
@@ -63,25 +64,38 @@ Popup {
         var thismonth = new Date(grid.year, grid.month)
         bigMonth.text = thismonth.toLocaleString(locale, "MMMM")
 
-        isToday = (today.toLocaleString(locale, "dd MMMM yyyy") === currentDate.toLocaleString(locale, "dd MMMM yyyy"))
+        isToday = (today.toLocaleString(
+                       locale, "dd MMMM yyyy") === currentDate.toLocaleString(
+                       locale, "dd MMMM yyyy"))
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.5; to: 1.0; duration: 133; } }
-    exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 233; } }
+    enter: Transition {
+        NumberAnimation {
+            property: "opacity"
+            from: 0.5
+            to: 1.0
+            duration: 133
+        }
+    }
+    exit: Transition {
+        NumberAnimation {
+            property: "opacity"
+            from: 1.0
+            to: 0.0
+            duration: 233
+        }
+    }
 
     ////////////////////////////////////////////////////////////////////////////
-
     background: Rectangle {
-        radius: Theme.componentRadius*2
+        radius: Theme.componentRadius * 2
         color: Theme.colorBackground
         border.width: Theme.componentBorderWidth
         border.color: Theme.colorSeparator
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     contentItem: Column {
 
         Rectangle {
@@ -90,7 +104,7 @@ Popup {
             anchors.right: parent.right
 
             height: 80
-            radius: Theme.componentRadius*2
+            radius: Theme.componentRadius * 2
             color: Theme.colorPrimary
 
             Rectangle {
@@ -109,14 +123,16 @@ Popup {
 
                 Text {
                     id: bigDay
-                    text: currentDate.toLocaleString(locale, "dddd") // "Vendredi"
+                    text: currentDate.toLocaleString(locale,
+                                                     "dddd") // "Vendredi"
                     font.pixelSize: 24
                     font.capitalization: Font.Capitalize
                     color: "white"
                 }
                 Text {
                     id: bigDate
-                    text: currentDate.toLocaleString(locale, "dd MMMM yyyy") // "15 octobre 2020"
+                    text: currentDate.toLocaleString(
+                              locale, "dd MMMM yyyy") // "15 octobre 2020"
                     font.pixelSize: 20
                     color: "white"
                 }
@@ -130,7 +146,8 @@ Popup {
                 iconColor: "white"
                 backgroundColor: Qt.lighter(Theme.colorPrimary, 0.9)
 
-                visible: !(grid.year === today.getFullYear() && grid.month === today.getMonth())
+                visible: !(grid.year === today.getFullYear()
+                           && grid.month === today.getMonth())
 
                 onClicked: {
                     grid.month = today.getMonth()
@@ -140,7 +157,6 @@ Popup {
         }
 
         ////////////////
-
         Column {
             anchors.left: parent.left
             anchors.right: parent.right
@@ -155,7 +171,8 @@ Popup {
                 color: "#66dddddd"
 
                 RoundButtonIcon {
-                    width: 48; height: 48;
+                    width: 48
+                    height: 48
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
                     source: "qrc:/assets/icons_material/baseline-chevron_left-24px.svg"
@@ -174,14 +191,16 @@ Popup {
                     id: bigMonth
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
-                    text: currentDate.toLocaleString(locale, "MMMM") // "Octobre"
+                    text: currentDate.toLocaleString(locale,
+                                                     "MMMM") // "Octobre"
                     font.capitalization: Font.Capitalize
                     font.pixelSize: Theme.fontSizeContentBig
                     color: Theme.colorText
                 }
                 RoundButtonIcon {
                     anchors.right: parent.right
-                    width: 48; height: 48;
+                    width: 48
+                    height: 48
                     anchors.verticalCenter: parent.verticalCenter
                     source: "qrc:/assets/icons_material/baseline-chevron_right-24px.svg"
 
@@ -198,7 +217,6 @@ Popup {
             }
 
             ////////
-
             DayOfWeekRow {
                 id: dow
                 anchors.left: parent.left
@@ -207,7 +225,6 @@ Popup {
                 anchors.rightMargin: 4
 
                 //locale: popupDate.locale
-
                 delegate: Text {
                     text: model.shortName.substring(0, 1).toUpperCase()
                     color: Theme.colorText
@@ -225,7 +242,6 @@ Popup {
                 anchors.rightMargin: 4
 
                 //locale: popupDate.locale
-
                 delegate: Text {
                     width: (grid.width / 7)
                     height: width
@@ -238,9 +254,10 @@ Popup {
                     //font.bold: model.today
                     color: selected ? "white" : Theme.colorSubText
 
-                    property bool selected: (model.day === currentDate.getDate() &&
-                                             model.month === currentDate.getMonth() &&
-                                             model.year === currentDate.getFullYear())
+                    property bool selected: (model.day === currentDate.getDate()
+                                             && model.month === currentDate.getMonth()
+                                             && model.year === currentDate.getFullYear(
+                                                 ))
                     Rectangle {
                         z: -1
                         anchors.fill: parent
@@ -251,44 +268,49 @@ Popup {
                     }
                 }
 
-                onClicked: (date) => {
-                    if (date.getMonth() === grid.month) {
-                        // validate date (min / max)
-                        if (minDate && maxDate) {
-                            const diffMinTime = (minDate - date);
-                            const diffMinDays = -Math.ceil(diffMinTime / (1000 * 60 * 60 * 24) - 1);
-                            //console.log(diffMinDays + " diffMinDays");
-                            const diffMaxTime = (minDate - date);
-                            const diffMaxDays = -Math.ceil(diffMaxTime / (1000 * 60 * 60 * 24) - 1);
-                            //console.log(diffMaxDays + " diffMaxDays");
+                onClicked: date => {
+                               if (date.getMonth() === grid.month) {
+                                   // validate date (min / max)
+                                   if (minDate && maxDate) {
+                                       const diffMinTime = (minDate - date)
+                                       const diffMinDays = -Math.ceil(
+                                           diffMinTime / (1000 * 60 * 60 * 24) - 1)
+                                       //console.log(diffMinDays + " diffMinDays");
+                                       const diffMaxTime = (minDate - date)
+                                       const diffMaxDays = -Math.ceil(
+                                           diffMaxTime / (1000 * 60 * 60 * 24) - 1)
 
-                            if (diffMinDays > -1 && diffMaxDays < 1) {
-                                date.setHours(currentDate.getHours(),
-                                              currentDate.getMinutes(),
-                                              currentDate.getSeconds())
-                                currentDate = date
-                            }
-                        } else {
-                            const diffTime = (today - date);
-                            const diffDays = -Math.ceil(diffTime / (1000 * 60 * 60 * 24) - 1);
-                            //console.log(diffDays + " days");
+                                       //console.log(diffMaxDays + " diffMaxDays");
+                                       if (diffMinDays > -1
+                                           && diffMaxDays < 1) {
+                                           date.setHours(
+                                               currentDate.getHours(),
+                                               currentDate.getMinutes(),
+                                               currentDate.getSeconds())
+                                           currentDate = date
+                                       }
+                                   } else {
+                                       const diffTime = (today - date)
+                                       const diffDays = -Math.ceil(
+                                           diffTime / (1000 * 60 * 60 * 24) - 1)
+                                       //console.log(diffDays + " days");
 
-                            // validate date (-7 / today)
-                            if (diffDays > -7 && diffDays < 1) {
-                                date.setHours(currentDate.getHours(),
-                                              currentDate.getMinutes(),
-                                              currentDate.getSeconds())
-                                currentDate = date
-                            }
-                        }
+                                       // validate date (-7 / today)
+                                       if (diffDays > -7 && diffDays < 1) {
+                                           date.setHours(
+                                               currentDate.getHours(),
+                                               currentDate.getMinutes(),
+                                               currentDate.getSeconds())
+                                           currentDate = date
+                                       }
+                                   }
 
-                        printDate()
-                    }
-                }
+                                   printDate()
+                               }
+                           }
             }
 
             ////////
-
             Row {
                 anchors.right: parent.right
                 anchors.rightMargin: 16

@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Controls
 
 import ThemeEngine 1.0
+
+import "components_generic/"
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 
@@ -12,9 +14,10 @@ Flickable {
     contentHeight: flow.height
 
     function updateHeader() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        //console.log("plantSensorSettings // updateHeader() >> " + currentDevice)
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
 
+        //console.log("plantSensorSettings // updateHeader() >> " + currentDevice)
         plantSensorSettings.contentY = 0
     }
 
@@ -22,7 +25,9 @@ Flickable {
 
     // 1: single column (single column view or portrait tablet)
     // 2: wide mode (wide view)
-    property int uiMode: (singleColumn || (isTablet && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
+    property int uiMode: (singleColumn
+                          || (isTablet
+                              && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
 
     property int flow_width: (flow.width - flow.spacing)
     property int flow_divider: Math.round(flow_width / 512)
@@ -34,8 +39,9 @@ Flickable {
         anchors.right: parent.right
         height: (uiMode === 1) ? maxheight : plantSensorSettings.height
 
-        property int maxheight: 2*topPadding + 3*spacing + itemDevice.height + itemDeviceInfos.height +
-                                itemDeviceConnection.height + itemDeviceSensors.height + itemDeviceSettings.height
+        property int maxheight: 2 * topPadding + 3 * spacing + itemDevice.height
+                                + itemDeviceInfos.height + itemDeviceConnection.height
+                                + itemDeviceSensors.height + itemDeviceSettings.height
 
         topPadding: isPhone ? 14 : 16
         padding: isPhone ? 12 : 16
@@ -44,7 +50,6 @@ Flickable {
         flow: Flow.TopToBottom
 
         ////////////////////////////////
-
         Rectangle {
             id: itemDevice
             width: www
@@ -71,7 +76,8 @@ Flickable {
                 color: Theme.colorIcon
                 fillMode: Image.PreserveAspectFit
 
-                source: UtilsDeviceSensors.getDeviceImage(currentDevice.deviceName)
+                source: UtilsDeviceSensors.getDeviceImage(
+                            currentDevice.deviceName)
             }
 
             Column {
@@ -113,9 +119,9 @@ Flickable {
                         font.capitalization: Font.AllUppercase
                     }
                     Text {
-                        text: (Qt.platform.os === "osx" || Qt.platform.os === "ios") ?
-                                  currentDevice.deviceAddress :
-                                  "[" + currentDevice.deviceAddress + "]"
+                        text: (Qt.platform.os === "osx" || Qt.platform.os
+                               === "ios") ? currentDevice.deviceAddress : "["
+                                            + currentDevice.deviceAddress + "]"
                         textFormat: Text.PlainText
                         color: Theme.colorHighContrast
                         font.pixelSize: Theme.fontSizeContentBig
@@ -124,7 +130,9 @@ Flickable {
                 }
 
                 Column {
-                    visible: currentDevice.deviceAddressMAC.length && (Qt.platform.os === "osx" || Qt.platform.os === "ios")
+                    visible: currentDevice.deviceAddressMAC.length
+                             && (Qt.platform.os === "osx"
+                                 || Qt.platform.os === "ios")
 
                     Text {
                         text: qsTr("MAC Address")
@@ -165,7 +173,8 @@ Flickable {
 
                             IconSvg {
                                 id: imageFwUpdate
-                                width: parent.height - 4; height: parent.height - 4;
+                                width: parent.height - 4
+                                height: parent.height - 4
                                 anchors.left: parent.right
                                 anchors.leftMargin: 6
                                 anchors.verticalCenter: parent.verticalCenter
@@ -178,7 +187,8 @@ Flickable {
                     }
 
                     Column {
-                        visible: (currentDevice.hasBattery && currentDevice.deviceBattery >= 0)
+                        visible: (currentDevice.hasBattery
+                                  && currentDevice.deviceBattery >= 0)
 
                         Text {
                             text: qsTr("Battery")
@@ -196,14 +206,17 @@ Flickable {
 
                             IconSvg {
                                 id: imageBattery
-                                width: 32; height: 32;
+                                width: 32
+                                height: 32
                                 rotation: 90
                                 anchors.left: parent.right
                                 anchors.leftMargin: 6
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                source: UtilsDeviceSensors.getDeviceBatteryIcon(currentDevice.deviceBattery)
-                                color: UtilsDeviceSensors.getDeviceBatteryColor(currentDevice.deviceBattery)
+                                source: UtilsDeviceSensors.getDeviceBatteryIcon(
+                                            currentDevice.deviceBattery)
+                                color: UtilsDeviceSensors.getDeviceBatteryColor(
+                                           currentDevice.deviceBattery)
                             }
                         }
                     }
@@ -222,12 +235,14 @@ Flickable {
                     }
                     Text {
                         id: uptime
-                        text: currentDevice.deviceUptime.toLocaleString(Locale.ShortFormat)
+                        text: currentDevice.deviceUptime.toLocaleString(
+                                  Locale.ShortFormat)
                         font.pixelSize: Theme.fontSizeContentBig
                         color: Theme.colorHighContrast
                     }
                 }
-/*
+
+                /*
                 Column {
                     visible: lastmove.text
 
@@ -261,7 +276,8 @@ Flickable {
                     }
                     Text {
                         id: lastupdate
-                        text: currentDevice.lastUpdate.toLocaleString(Locale.ShortFormat)
+                        text: currentDevice.lastUpdate.toLocaleString(
+                                  Locale.ShortFormat)
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContentBig
                         color: Theme.colorHighContrast
@@ -281,7 +297,8 @@ Flickable {
                     }
                     Text {
                         id: lastsync
-                        text: currentDevice.lastHistorySync.toLocaleString(Locale.ShortFormat)
+                        text: currentDevice.lastHistorySync.toLocaleString(
+                                  Locale.ShortFormat)
                         textFormat: Text.PlainText
                         font.pixelSize: Theme.fontSizeContentBig
                         color: Theme.colorHighContrast
@@ -291,7 +308,6 @@ Flickable {
         }
 
         ////////////////////////////////
-
         Rectangle {
             id: itemDeviceInfos
             width: www
@@ -452,7 +468,6 @@ Flickable {
         }
 
         ////////////////////////////////
-
         Rectangle {
             id: itemDeviceConnection
             width: www
@@ -479,7 +494,8 @@ Flickable {
                     spacing: 8
 
                     IconSvg {
-                        width: 20; height: 20;
+                        width: 20
+                        height: 20
                         anchors.verticalCenter: parent.verticalCenter
 
                         source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
@@ -512,7 +528,6 @@ Flickable {
         }
 
         ////////////////////////////////
-
         Rectangle {
             id: itemDeviceSensors
             width: www
@@ -553,17 +568,20 @@ Flickable {
                         spacing: 12
 
                         RoundButtonIcon {
-                            width: 40; height: 40;
+                            width: 40
+                            height: 40
                             border: true
                             background: true
                             backgroundColor: Theme.colorBackground
                             iconColor: Theme.colorIcon
-                            source: UtilsDeviceSensors.getDeviceSensorIcon(modelData.sensorId)
+                            source: UtilsDeviceSensors.getDeviceSensorIcon(
+                                        modelData.sensorId)
                         }
                         Column {
                             anchors.verticalCenter: parent.verticalCenter
                             Text {
-                                text: UtilsDeviceSensors.getDeviceSensorName(modelData.sensorId)
+                                text: UtilsDeviceSensors.getDeviceSensorName(
+                                          modelData.sensorId)
                                 textFormat: Text.PlainText
                                 font.pixelSize: Theme.fontSizeContent
                                 color: Theme.colorText
@@ -599,17 +617,20 @@ Flickable {
                         spacing: 12
 
                         RoundButtonIcon {
-                            width: 40; height: 40;
+                            width: 40
+                            height: 40
                             border: true
                             background: true
                             backgroundColor: Theme.colorBackground
                             iconColor: Theme.colorIcon
-                            source: UtilsDeviceSensors.getDeviceCapabilityIcon(modelData.capabilityId)
+                            source: UtilsDeviceSensors.getDeviceCapabilityIcon(
+                                        modelData.capabilityId)
                         }
                         Column {
                             anchors.verticalCenter: parent.verticalCenter
                             Text {
-                                text: UtilsDeviceSensors.getDeviceCapabilityName(modelData.capabilityId)
+                                text: UtilsDeviceSensors.getDeviceCapabilityName(
+                                          modelData.capabilityId)
                                 textFormat: Text.PlainText
                                 font.pixelSize: Theme.fontSizeContent
                                 color: Theme.colorText
@@ -627,7 +648,6 @@ Flickable {
         }
 
         ////////////////////////////////
-
         Rectangle {
             id: itemDeviceSettings
             width: www
@@ -658,7 +678,8 @@ Flickable {
                 }
 
                 SwitchThemedDesktop {
-                    text: checked ? qsTr("Device is enabled") : qsTr("Device is disabled")
+                    text: checked ? qsTr("Device is enabled") : qsTr(
+                                        "Device is disabled")
                     checked: currentDevice.deviceEnabled
                     onClicked: currentDevice.deviceEnabled = checked
                 }
@@ -675,11 +696,17 @@ Flickable {
                         anchors.bottom: parent.bottom
 
                         color: Theme.colorBackground
-                        border.width: (currentDevice && currentDevice.deviceIsInside) ? 2 : 0
+                        border.width: (currentDevice
+                                       && currentDevice.deviceIsInside) ? 2 : 0
                         border.color: Theme.colorSeparator
 
-                        opacity: (currentDevice && currentDevice.deviceIsInside) ? 1 : 0.5
-                        Behavior on opacity { OpacityAnimator { duration: 133 } }
+                        opacity: (currentDevice
+                                  && currentDevice.deviceIsInside) ? 1 : 0.5
+                        Behavior on opacity {
+                            OpacityAnimator {
+                                duration: 133
+                            }
+                        }
 
                         MouseArea {
                             anchors.fill: parent
@@ -691,7 +718,8 @@ Flickable {
 
                             IconSvg {
                                 id: insideImage
-                                width: 40; height: 40;
+                                width: 40
+                                height: 40
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 color: Theme.colorIcon
                                 source: "qrc:/assets/icons_custom/inside-24px.svg"
@@ -714,11 +742,17 @@ Flickable {
                         anchors.bottom: parent.bottom
 
                         color: Theme.colorBackground
-                        border.width: (currentDevice && currentDevice.deviceIsOutside) ? 2 : 0
+                        border.width: (currentDevice
+                                       && currentDevice.deviceIsOutside) ? 2 : 0
                         border.color: Theme.colorSeparator
 
-                        opacity: (currentDevice && currentDevice.deviceIsOutside) ? 1 : 0.5
-                        Behavior on opacity { OpacityAnimator { duration: 133 } }
+                        opacity: (currentDevice
+                                  && currentDevice.deviceIsOutside) ? 1 : 0.5
+                        Behavior on opacity {
+                            OpacityAnimator {
+                                duration: 133
+                            }
+                        }
 
                         MouseArea {
                             anchors.fill: parent
@@ -730,7 +764,8 @@ Flickable {
 
                             IconSvg {
                                 id: outsideImage
-                                width: 40; height: 40;
+                                width: 40
+                                height: 40
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 source: "qrc:/assets/icons_custom/outside-24px.svg"
                                 color: Theme.colorIcon
@@ -751,7 +786,8 @@ Flickable {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    visible: (Qt.platform.os === "osx" || Qt.platform.os === "ios")
+                    visible: (Qt.platform.os === "osx"
+                              || Qt.platform.os === "ios")
                     topPadding: 8
                     spacing: 6
 
@@ -817,7 +853,8 @@ Flickable {
 
                             inputMask: "HH:HH:HH:HH:HH:HH"
                             onEditingFinished: {
-                                if (text) currentDevice.deviceAddressMAC = text
+                                if (text)
+                                    currentDevice.deviceAddressMAC = text
                                 focus = false
                             }
 
@@ -832,10 +869,10 @@ Flickable {
                                 hoverEnabled: true
                                 propagateComposedEvents: true
 
-                                onPressed: (mouse) => {
-                                    textInputMacAddr.forceActiveFocus()
-                                    mouse.accepted = false
-                                }
+                                onPressed: mouse => {
+                                               textInputMacAddr.forceActiveFocus()
+                                               mouse.accepted = false
+                                           }
                             }
 
                             IconSvg {
@@ -849,8 +886,14 @@ Flickable {
                                 source: "qrc:/assets/icons_material/duotone-edit-24px.svg"
                                 color: Theme.colorSubText
 
-                                opacity: (isMobile || !textInputMacAddr.text || textInputMacAddr.focus || textInputMacAddrArea.containsMouse) ? 0.9 : 0
-                                Behavior on opacity { OpacityAnimator { duration: 133 } }
+                                opacity: (isMobile || !textInputMacAddr.text
+                                          || textInputMacAddr.focus
+                                          || textInputMacAddrArea.containsMouse) ? 0.9 : 0
+                                Behavior on opacity {
+                                    OpacityAnimator {
+                                        duration: 133
+                                    }
+                                }
                             }
                         }
                     }
