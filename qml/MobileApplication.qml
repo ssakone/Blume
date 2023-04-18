@@ -453,6 +453,15 @@ ApplicationWindow {
             page_view.push(page, {}, StackView.Immediate)
         }
 
+        NavigationPage {
+            id: navigator
+        }
+
+        Component {
+            id: plantIdentifier
+            PlantIdentifier {}
+        }
+
         Component {
             id: desease
             PlantDesease {}
@@ -526,7 +535,7 @@ ApplicationWindow {
             anchors.bottomMargin: mobileMenu.hhv
         }
 
-        PlantBrowserOld {
+        Item {
             id: screenPlantBrowser
             anchors.fill: parent
             anchors.bottomMargin: mobileMenu.hhv

@@ -8,7 +8,7 @@ import "../"
 
 Rectangle {
     id: control
-    color: "#00c395"
+    color: Theme.colorPrimary
     property alias leading: buttonBackBg
     property alias title: _label.text
     property alias titleLable: _label

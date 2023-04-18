@@ -407,6 +407,10 @@ ApplicationWindow {
             page_view.push(page, {}, StackView.Immediate)
         }
 
+        NavigationPage {
+            id: navigator
+        }
+
         Component {
             id: desease
             PlantDesease {}
@@ -470,7 +474,7 @@ ApplicationWindow {
             id: screenAbout
         }
 
-        PlantBrowserOld {
+        Item {
             anchors.fill: parent
             id: screenPlantBrowser
         }

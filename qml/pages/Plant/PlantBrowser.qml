@@ -340,7 +340,7 @@ BPage {
                                             hoverEnabled: enabled
                                             onClicked: {
                                                 if (action === "posometre") {
-                                                    posometrePop.open()
+                                                    page_view.push(navigator.posometrePage)
                                                 } else if (action === "identify") {
                                                     page_view.push(
                                                                 identifierPop)
@@ -472,15 +472,6 @@ BPage {
 
         PlantBrowseCategory {
             id: plantListByCategory
-        }
-
-        PosometreDialog {
-            id: posometrePop
-        }
-
-        Component {
-            id: identifierPop
-            PlantIdentifier {}
         }
 
         ////////////////////////////////////////////////////////////////////
