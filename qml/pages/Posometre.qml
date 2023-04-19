@@ -138,6 +138,8 @@ BPage {
                         opacity: 6
                         y: parent.height - gl.height
                         visible: true
+                        border.width: 2
+                        border.color: "gray"
                         gradient: Gradient {
                             GradientStop {
                                 position: 0.4
