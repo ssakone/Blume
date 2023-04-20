@@ -13,98 +13,51 @@ import Qt5Compat.GraphicalEffects
 import ThemeEngine 1.0
 
 import MaterialIcons
-import "components"
+import "../../components"
+import "../../components_generic"
+import "../../"
 
-Popup {
+BPage {
     id: resultIdentifierDetailPop
-    dim: true
-    modal: true
     property variant plant_data
     property variant details: plant_data["plant_details"]
-    width: appWindow.width
-    height: appWindow.height
-    padding: 0
-    onClosed:  {
-        tabBar.currentIndex = 0
+
+    onVisibleChanged: {
+        if (!visible)
+            tabBar.currentIndex = 0
+        else {
+            let data = [details["wiki_image"]]
+            data = data.concat(details['wiki_images'].map(item => item))
+            data.forEach(item => model_images.append(item))
+        }
     }
+
     background: Rectangle {
         color: Theme.colorPrimary
     }
 
-    onOpened: {
-        let data = [details["wiki_image"]]
-        data = data.concat(details['wiki_images'].map(item => item ))
-        data.forEach(item => model_images.append(item) )
-
-//        console.warn("Data in ", data)
+    header: AppBar {
+        title: plant_data.plant_name
     }
 
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 0
         spacing: 0
-        Rectangle {
-            color: "#00c395"
-            Layout.preferredHeight: 65
-            Layout.fillWidth: true
-            Row {
-                anchors.verticalCenter: parent.verticalCenter
-                Rectangle {
-                    id: buttonBackBg
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 65
-                    height: 65
-                    radius: height
-                    color: "transparent" //Theme.colorHeaderHighlight
-                    opacity: 1
-                    IconSvg {
-                        id: buttonBack
-                        width: 24
-                        height: width
-                        anchors.centerIn: parent
-
-                        source: "qrc:/assets/menus/menu_back.svg"
-                        color: Theme.colorHeaderContent
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            resultIdentifierDetailPop.close()
-                        }
-                    }
-
-                    Behavior on opacity {
-                        OpacityAnimator {
-                            duration: 333
-                        }
-                    }
-                }
-                Label {
-                    text: "Retour"
-                    font.pixelSize: 21
-                    font.bold: true
-                    font.weight: Font.Medium
-                    color: "white"
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-            }
-        }
 
         ListModel {
             id: model_images
         }
 
-
-            Rectangle {
-                height: resultIdentifierDetailPop.height / 3
-                Layout.fillWidth: true
-                clip: true
-                Image {
-                    source: details['wiki_image']['value']
-                    fillMode: Image.PreserveAspectCrop
-                }
+        Rectangle {
+            height: resultIdentifierDetailPop.height / 3
+            Layout.fillWidth: true
+            clip: true
+            Image {
+                source: details['wiki_image']['value']
+                fillMode: Image.PreserveAspectCrop
             }
-
+        }
 
         ColumnLayout {
 
@@ -137,10 +90,7 @@ Popup {
                         Layout.fillHeight: true
                     }
                 }
-
             }
-
-
 
             ScrollView {
                 width: resultIdentifierDetailPop.width - 40
@@ -197,16 +147,16 @@ Popup {
                                     source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
                                     width: 25
                                     height: 25
-                                    color: Material.color(Material.Red, Material.Shade600)
+                                    color: Material.color(Material.Red,
+                                                          Material.Shade600)
                                 }
                                 Label {
                                     text: "Plante toxique"
-                                    color: Material.color(Material.Red, Material.Shade600)
+                                    color: Material.color(Material.Red,
+                                                          Material.Shade600)
                                     font.pixelSize: 18
                                 }
                             }
-
-
                         }
                     }
                     Rectangle {
@@ -240,15 +190,10 @@ Popup {
                                     }
                                 }
                             }
-
                         }
                     }
-
                 }
-
             }
-
-
 
             Label {
                 text: details['wiki_description']['value']
@@ -256,7 +201,6 @@ Popup {
                 Layout.maximumWidth: resultIdentifierDetailPop.width - 40
                 wrapMode: Text.Wrap
             }
-
 
             RowLayout {
 
@@ -287,10 +231,6 @@ Popup {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
             }
-
         }
-
     }
-
-
 }

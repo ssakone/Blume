@@ -1,8 +1,9 @@
 import QtQuick 2.15
 
 //import QtGraphicalEffects 1.15 // Qt5
-import Qt5Compat.GraphicalEffects // Qt6
+import Qt5Compat.GraphicalEffects
 
+// Qt6
 import ThemeEngine 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 
@@ -11,13 +12,19 @@ Item {
     implicitWidth: Theme.componentHeight
     implicitHeight: Theme.componentHeight
 
-    width: compact ? height : (contentRow.width + 12 + ((source.toString().length && !text) ? 0 : 16))
-    Behavior on width { NumberAnimation { duration: 133 } }
+    width: compact ? height : (contentRow.width + 12 + ((source.toString(
+                                                             ).length
+                                                         && !text) ? 0 : 16))
+    Behavior on width {
+        NumberAnimation {
+            duration: 133
+        }
+    }
 
     // actions
-    signal clicked()
-    signal pressed()
-    signal pressAndHold()
+    signal clicked
+    signal pressed
+    signal pressAndHold
 
     // settings
     property bool compact: true
@@ -31,7 +38,8 @@ Item {
     property string backgroundColor: Theme.colorComponent
 
     // animation
-    property string animation // available: rotate, fade, both
+    property string animation
+    // available: rotate, fade, both
     property bool animationRunning: false
     property bool hoverAnimation: (isDesktop && !compact)
 
@@ -40,7 +48,6 @@ Item {
     property string tooltipPosition: "bottom"
 
     ////////////////////////////////////////////////////////////////////////////
-
     MouseArea {
         id: mouseArea
         anchors.fill: parent
@@ -61,7 +68,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Rectangle {
         id: background
         anchors.fill: control
@@ -69,19 +75,33 @@ Item {
         radius: control.compact ? (control.height / 2) : Theme.componentRadius
         color: control.backgroundColor
         opacity: (!control.compact || mouseArea.containsMouse) ? 1 : 0
-        Behavior on opacity { NumberAnimation { duration: 333 } }
+        Behavior on opacity {
+            NumberAnimation {
+                duration: 333
+            }
+        }
 
         Rectangle {
             id: mouseBackground
-            width: 0; height: width; radius: width;
+            width: 0
+            height: width
+            radius: width
             x: mouseArea.mouseX - (width / 2)
             y: mouseArea.mouseY - (width / 2)
 
             visible: !control.compact
             color: "white"
             opacity: mouseArea.containsMouse ? 0.16 : 0
-            Behavior on opacity { NumberAnimation { duration: 333 } }
-            Behavior on width { NumberAnimation { duration: 200 } }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 333
+                }
+            }
+            Behavior on width {
+                NumberAnimation {
+                    duration: 200
+                }
+            }
         }
 
         layer.enabled: control.hoverAnimation
@@ -97,7 +117,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Row {
         id: contentRow
         anchors.centerIn: control
@@ -110,23 +129,35 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
 
             opacity: enabled ? 1.0 : 0.4
-            Behavior on opacity { NumberAnimation { duration: 333 } }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 333
+                }
+            }
 
             source: control.source
             color: control.iconColor
 
             SequentialAnimation on opacity {
-                running: (control.animationRunning &&
-                          (control.animation === "fade" || control.animation === "both"))
+                running: (control.animationRunning
+                          && (control.animation === "fade"
+                              || control.animation === "both"))
                 alwaysRunToEnd: true
                 loops: Animation.Infinite
 
-                PropertyAnimation { to: 0.5; duration: 666; }
-                PropertyAnimation { to: 1; duration: 666; }
+                PropertyAnimation {
+                    to: 0.5
+                    duration: 666
+                }
+                PropertyAnimation {
+                    to: 1
+                    duration: 666
+                }
             }
             NumberAnimation on rotation {
-                running: (control.animationRunning &&
-                          (control.animation === "rotate" || control.animation === "both"))
+                running: (control.animationRunning
+                          && (control.animation === "rotate"
+                              || control.animation === "both"))
                 alwaysRunToEnd: true
                 loops: Animation.Infinite
 
@@ -152,7 +183,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Loader {
         anchors.fill: control
         active: control.tooltipText

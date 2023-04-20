@@ -26,12 +26,12 @@ Popup {
     onOpened: switch (Qt.platform.os) {
               case "android":
                   als.start()
-                  break;
+                  break
               case "ios":
                   cameraLoader.active = true
                   cameraLoader.item.camera.start()
                   posometreTimer.start()
-                  break;
+                  break
               }
 
     function start() {
@@ -40,14 +40,13 @@ Popup {
 
     onClosed: {
         switch (Qt.platform.os) {
-          case "android":
-              als.stop()
-              break
-          case "ios":
-              timer2.stop()
-              break
-          }
-
+        case "android":
+            als.stop()
+            break
+        case "ios":
+            timer2.stop()
+            break
+        }
     }
 
     property variant sensor: als.reading
@@ -143,7 +142,7 @@ Popup {
                         property real radius: width / 2
                         anchors.bottom: parent.bottom
                         width: 60
-                        height: (sensor.lightLevel * gl.height) / 6
+                        height: (sensor?.lightLevel ?? 0 * gl.height) / 6
 
                         Behavior on height {
                             SmoothedAnimation {}
@@ -232,7 +231,7 @@ Popup {
                     width: 1
                     height: 1
                     active: Qt.platform.os === "ios"
-                    sourceComponent:  Component {
+                    sourceComponent: Component {
                         CaptureSession {
                             Component.onCompleted: camera.start()
                             camera: Camera {

@@ -157,7 +157,6 @@ void QAndroidAppPermissions::done(JNIEnv *env, jobject thiz, jstring path)
 
 void QAndroidAppPermissions::handleActivityResult(int receiverRequestCode, int resultCode, const QJniObject &data)
 {
-    qDebug() <<" Count of byte";
     if (resultCode == -1 && data.isValid()) {
         // l'image a été capturée ou sélectionnée avec succès
         if (receiverRequestCode == 101) {

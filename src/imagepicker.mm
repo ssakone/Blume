@@ -28,7 +28,6 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    DEBUG;
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *fileName = [NSString stringWithFormat:@"/image-%f.jpg", [[NSDate date] timeIntervalSince1970]];
     path = [path stringByAppendingString:fileName];
@@ -58,7 +57,6 @@ ImagePicker::ImagePicker(QQuickItem *parent) :
   QQuickItem(parent),
   m_delegate([[ImagePickerDelegate alloc] initWithObject:this])
 {
-    DEBUG;
 }
 
 /**

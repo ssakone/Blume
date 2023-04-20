@@ -9,14 +9,24 @@ import QtQuick.Dialogs
 import ImageTools
 import Qt.labs.platform
 
-import "components" as Components
+import "../"
+import "../../"
+import "../../components" as Components
+import "../../components_generic"
+import "../../components_js/Http.js" as Http
 
 import Qt5Compat.GraphicalEffects
 
 import ThemeEngine 1.0
 
-Loader {
+BPage {
     id: plantBrowser
+
+    header: Components.AppBar {
+        title: "Plant browser"
+        noAutoPop: true
+        leading.onClicked: plantBrowser.StackView.view.pop()
+    }
 
     property string entryPoint: "DeviceList"
 
@@ -26,89 +36,23 @@ Loader {
         plantDatabase.load()
         plantDatabase.filter("")
 
-        if (status === Loader.Ready) {
-            // Reset state
-            item.resetPlantClicked()
-            item.focusSearchBox()
-        } else {
-            // Load the plant browser
-            active = true
-        }
+        item.resetPlantClicked()
+        item.focusSearchBox()
 
         // Change screen
-        appContent.state = "PlantBrowser"
+        //appContent.state = "PlantBrowser"
     }
 
-    function loadScreenFrom(screenname) {
-        entryPoint = screenname
-        loadScreen()
-    }
-
-    function backAction() {
-        if (status === Loader.Ready) {
-            item.backAction()
-        }
-    }
-
-    function forwardAction() {
-        if (status === Loader.Ready) {
-            item.forwardAction()
-        }
-    }
+    Component.onCompleted: loadScreen()
 
     ////////////////////////////////////////////////////////////////////////////
-    active: false
-    asynchronous: true
-
-    sourceComponent: Item {
-        function backAction() {
-            console.log("HOULA")
-            if (isPlantClicked()) {
-                itemPlantBrowser.visible = true
-                itemPlantBrowser.enabled = true
-                itemPlantViewer.visible = false
-                itemPlantViewer.enabled = false
-                return
-            }
-
-            if (plantSearchBox.focus) {
-                plantSearchBox.focus = false
-                return
-            }
-
-            appContent.state = entryPoint
-        }
-
-        function forwardAction() {
-            if (appContent.state === "PlantBrowser") {
-                if (typeof plantScreen.currentPlant !== "undefined" && plantScreen.currentPlant) {
-                    plantSearchBox.focus = false
-                    itemPlantBrowser.visible = false
-                    itemPlantBrowser.enabled = false
-                    itemPlantViewer.visible = true
-                    itemPlantViewer.enabled = true
-                }
-            } else {
-                appContent.state = "PlantBrowser"
-                focusSearchBox()
-            }
-        }
-
-        function isPlantClicked() {
-            if (itemPlantViewer.visible)
-                return true
-            return false
-        }
-
+    Item {
+        id: item
         function resetPlantClicked() {
-            plantScreen.currentPlant = null
             plantSearchBox.text = ""
             plantSearchBox.focus = false
             itemPlantBrowser.visible = true
             itemPlantBrowser.enabled = true
-            itemPlantViewer.visible = false
-            itemPlantViewer.enabled = false
-            itemPlantViewer.contentY = 0
         }
 
         function focusSearchBox() {
@@ -118,9 +62,8 @@ Loader {
             }
         }
 
-        Component.onCompleted: {
-            focusSearchBox()
-        }
+        Component.onCompleted: focusSearchBox()
+        anchors.fill: parent
 
         ////////////////
         Item {
@@ -160,13 +103,12 @@ Loader {
                 selectByMouse: true
                 colorSelectedText: "white"
                 onDisplayTextChanged: {
-                    if (displayText != '') {
+                    if (displayText !== '') {
                         plantListView.open()
                     }
                 }
 
                 //onDisplayTextChanged: plantDatabase.filter(displayText)
-
                 MouseArea {
                     anchors.fill: parent
                     anchors.rightMargin: 70
@@ -382,7 +324,9 @@ Loader {
                                                     height: img.height
                                                     Rectangle {
                                                         anchors.centerIn: parent
-                                                        width: img.adapt ? img.width : Math.min(img.width, img.height)
+                                                        width: img.adapt ? img.width : Math.min(
+                                                                               img.width,
+                                                                               img.height)
                                                         height: img.adapt ? img.height : width
                                                         radius: 10
                                                     }
@@ -396,24 +340,42 @@ Loader {
                                             hoverEnabled: enabled
                                             onClicked: {
                                                 if (action === "posometre") {
-                                                    posometrePop.open()
+                                                    page_view.push(
+                                                                navigator.posometrePage)
                                                 } else if (action === "identify") {
-                                                    identifierPop.open()
+                                                    page_view.push(
+                                                                navigator.plantIdentifierPage)
                                                 } else {
                                                     let title = ""
                                                     let pk = 0
-                                                    if (action === "categorie_plantes_herbes") {title = "Les herbes"; pk = 1}
-                                                    else if (action === "categorie_plantes_legumes") {title = "Les légumes"; pk = 2}
-                                                    else if (action === "categorie_plantes_orchidee") {title = "Les orchidées"; pk = 3}
-                                                    else if (action === "categorie_plantes_fleuries") {title = "Les plantes fleuries"; pk = 4}
-                                                    else if (action === "categorie_plantes_cactus_succulentes") {title = "Les cactus et succculentes"; pk = 5}
-                                                    else if (action === "categorie_plantes_feuillage") {title = "Les plantes à feuillage"; pk = 6}
+                                                    if (action === "categorie_plantes_herbes") {
+                                                        title = "Les herbes"
+                                                        pk = 1
+                                                    } else if (action
+                                                               === "categorie_plantes_legumes") {
+                                                        title = "Les légumes"
+                                                        pk = 2
+                                                    } else if (action
+                                                               === "categorie_plantes_orchidee") {
+                                                        title = "Les orchidées"
+                                                        pk = 3
+                                                    } else if (action
+                                                               === "categorie_plantes_fleuries") {
+                                                        title = "Les plantes fleuries"
+                                                        pk = 4
+                                                    } else if (action === "categorie_plantes_cactus_succulentes") {
+                                                        title = "Les cactus et succculentes"
+                                                        pk = 5
+                                                    } else if (action
+                                                               === "categorie_plantes_feuillage") {
+                                                        title = "Les plantes à feuillage"
+                                                        pk = 6
+                                                    }
 
                                                     plantListByCategory.title = title
                                                     plantListByCategory.category_id = pk
                                                     plantListByCategory.open()
                                                 }
-
                                             }
                                         }
                                     }
@@ -495,16 +457,10 @@ Loader {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            plantScreen.currentPlant = model
-                            plantSearchBox.focus = false
-
-                            itemPlantBrowser.visible = false
-                            itemPlantBrowser.enabled = false
-                            itemPlantViewer.visible = true
-                            itemPlantViewer.enabled = true
-                            itemPlantViewer.contentX = 0
-                            itemPlantViewer.contentY = 0
                             plantListView.close()
+                            page_view.push(plantScreen, {
+                                               "currentPlant": model
+                                           })
                         }
                     }
                 }
@@ -519,15 +475,6 @@ Loader {
             id: plantListByCategory
         }
 
-        PosometreDialog {
-            id: posometrePop
-        }
-
-
-        PlantIdentifier {
-            id: identifierPop
-        }
-
         ////////////////////////////////////////////////////////////////////
         Flickable {
             id: itemPlantViewer
@@ -539,7 +486,9 @@ Loader {
 
             // 1: single column (single column view or portrait tablet)
             // 2: wide mode (wide view)
-            property int uiMode: (singleColumn || (isTablet && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
+            property int uiMode: (singleColumn
+                                  || (isTablet
+                                      && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
 
             contentWidth: (uiMode === 1) ? -1 : plantScreen.width
             contentHeight: (uiMode === 1) ? plantScreen.height : -1
@@ -550,16 +499,14 @@ Loader {
             }
 
             function setPlant() {
-                plantScreen.currentPlant = currentDevice.plant
-
-                if (typeof itemPlantViewer !== "undefined" || itemPlantViewer) {
-                    itemPlantViewer.contentX = 0
-                    itemPlantViewer.contentY = 0
-                }
+                page_view.push(plantScreen, {
+                                   "currentPlant": currentDevice.plant
+                               })
             }
 
-            PlantScreen {
+            Component {
                 id: plantScreen
+                PlantScreen {}
             }
         }
 
@@ -575,7 +522,8 @@ Loader {
             color: headerUnicolor ? Theme.colorBackground : Theme.colorForeground
 
             visible: (!singleColumn && appContent.state === "PlantBrowser"
-                      && screenPlantBrowser.entryPoint === "DevicePlantSensor" && isPlantClicked())
+                      && screenPlantBrowser.entryPoint === "DevicePlantSensor"
+                      && isPlantClicked())
 
             Text {
                 anchors.left: parent.left
@@ -607,7 +555,8 @@ Loader {
                     source: "qrc:/assets/icons_material/baseline-check_circle-24px.svg"
 
                     onClicked: {
-                        selectedDevice.setPlantName(plantScreen.currentPlant.name)
+                        selectedDevice.setPlantName(
+                                    plantScreen.currentPlant.name)
                         appContent.state = "DevicePlantSensor"
                     }
                 }
@@ -649,7 +598,8 @@ Loader {
             height: 52
             color: Theme.colorForeground
             visible: (singleColumn && appContent.state === "PlantBrowser"
-                      && screenPlantBrowser.entryPoint === "DevicePlantSensor" && isPlantClicked())
+                      && screenPlantBrowser.entryPoint === "DevicePlantSensor"
+                      && isPlantClicked())
 
             RowLayout {
                 anchors.left: parent.left
@@ -672,7 +622,8 @@ Loader {
                     source: "qrc:/assets/icons_material/baseline-check_circle-24px.svg"
 
                     onClicked: {
-                        selectedDevice.setPlantName(plantScreen.currentPlant.name)
+                        selectedDevice.setPlantName(
+                                    plantScreen.currentPlant.name)
                         appContent.state = "DevicePlantSensor"
                     }
                 }

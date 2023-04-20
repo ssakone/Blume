@@ -1,14 +1,13 @@
 import QtQuick
 import QtQuick.Controls
 import "components"
+import "pages/Plant/"
 
 import ThemeEngine 1.0
 
 Drawer {
-    width: parent.width*0.8
+    width: parent.width * 0.8
     height: parent.height
-
-    ////////////////////////////////////////////////////////////////////////////
 
     background: Rectangle {
         color: Theme.colorBackground
@@ -25,8 +24,6 @@ Drawer {
         id: deseasePopup
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-
     contentItem: Item {
 
         Column {
@@ -38,16 +35,21 @@ Drawer {
 
             Connections {
                 target: appWindow
-                function onScreenPaddingStatusbarChanged() { rectangleHeader.updateIOSHeader() }
+                function onScreenPaddingStatusbarChanged() {
+                    rectangleHeader.updateIOSHeader()
+                }
             }
             Connections {
                 target: ThemeEngine
-                function onCurrentThemeChanged() { rectangleHeader.updateIOSHeader() }
+                function onCurrentThemeChanged() {
+                    rectangleHeader.updateIOSHeader()
+                }
             }
 
             function updateIOSHeader() {
                 if (Qt.platform.os === "ios") {
-                    if (screenPaddingStatusbar !== 0 && Theme.currentTheme === ThemeEngine.THEME_NIGHT)
+                    if (screenPaddingStatusbar !== 0
+                            && Theme.currentTheme === ThemeEngine.THEME_NIGHT)
                         rectangleStatusbar.height = screenPaddingStatusbar
                     else
                         rectangleStatusbar.height = 0
@@ -55,7 +57,6 @@ Drawer {
             }
 
             ////////
-
             Rectangle {
                 id: rectangleStatusbar
                 height: screenPaddingStatusbar
@@ -100,10 +101,12 @@ Drawer {
                 }
             }
         }
-        MouseArea { anchors.fill: rectangleHeader; acceptedButtons: Qt.AllButtons; }
+        MouseArea {
+            anchors.fill: rectangleHeader
+            acceptedButtons: Qt.AllButtons
+        }
 
         ////////////////////////////////////////////////////////////////////////////
-
         Flickable {
             anchors.top: rectangleHeader.bottom
             anchors.left: parent.left
@@ -119,13 +122,13 @@ Drawer {
                 anchors.right: parent.right
 
                 ////////
-
                 Rectangle {
                     id: rectangleHome
                     height: 48
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    color: (appContent.state === "DeviceList") ? Theme.colorForeground : Theme.colorBackground
+                    color: (appContent.state
+                            === "DeviceList") ? Theme.colorForeground : Theme.colorBackground
 
                     MouseArea {
                         anchors.fill: parent
@@ -158,13 +161,13 @@ Drawer {
                 }
 
                 ////////
-
                 Rectangle {
                     id: rectangleSettings
                     height: 48
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    color: (appContent.state === "Settings") ? Theme.colorForeground : Theme.colorBackground
+                    color: (appContent.state
+                            === "Settings") ? Theme.colorForeground : Theme.colorBackground
 
                     MouseArea {
                         anchors.fill: parent
@@ -201,8 +204,8 @@ Drawer {
                     height: 48
                     anchors.right: parent.right
                     anchors.left: parent.left
-                    color: (appContent.state === "About" || appContent.state === "Permissions")
-                           ? Theme.colorForeground : Theme.colorBackground
+                    color: (appContent.state === "About" || appContent.state
+                            === "Permissions") ? Theme.colorForeground : Theme.colorBackground
 
                     MouseArea {
                         anchors.fill: parent
@@ -235,8 +238,8 @@ Drawer {
                 }
 
                 ////////
-
-                Item { // spacer
+                Item {
+                    // spacer
                     height: 8
                     anchors.right: parent.right
                     anchors.left: parent.left
@@ -254,7 +257,6 @@ Drawer {
                 }
 
                 ////////
-
                 Item {
                     id: rectangleOrderBy
                     height: 48
@@ -271,14 +273,16 @@ Drawer {
                                 return 2
                             } else if (settingsManager.orderBy === "model") {
                                 return 1
-                            } else { // if (settingsManager.orderBy === "location") {
+                            } else {
+                                // if (settingsManager.orderBy === "location") {
                                 return 0
                             }
                         }
 
                         onClicked: {
                             sortmode++
-                            if (sortmode > 3) sortmode = 0
+                            if (sortmode > 3)
+                                sortmode = 0
 
                             if (sortmode === 0) {
                                 settingsManager.orderBy = "location"
@@ -329,8 +333,12 @@ Drawer {
                         Component.onCompleted: textOrderBy.setText()
                         Connections {
                             target: settingsManager
-                            function onOrderByChanged() { textOrderBy.setText() }
-                            function onAppLanguageChanged() { textOrderBy.setText() }
+                            function onOrderByChanged() {
+                                textOrderBy.setText()
+                            }
+                            function onAppLanguageChanged() {
+                                textOrderBy.setText()
+                            }
                         }
 
                         font.pixelSize: 13
@@ -340,8 +348,8 @@ Drawer {
                 }
 
                 ////////
-
-                Item { // spacer
+                Item {
+                    // spacer
                     height: 8
                     anchors.right: parent.right
                     anchors.left: parent.left
@@ -359,14 +367,15 @@ Drawer {
                 }
 
                 ////////
-
                 Item {
                     id: buttonRefresh
                     height: 48
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions) && !deviceManager.scanning
+                    enabled: (deviceManager.bluetooth
+                              && deviceManager.bluetoothPermissions)
+                             && !deviceManager.scanning
 
                     MouseArea {
                         anchors.fill: parent
@@ -391,7 +400,11 @@ Drawer {
                             radius: Theme.componentRadius
                             color: Theme.colorForeground
                             opacity: parent.containsPress
-                            Behavior on opacity { OpacityAnimator { duration: 133 } }
+                            Behavior on opacity {
+                                OpacityAnimator {
+                                    duration: 133
+                                }
+                            }
                         }
                     }
 
@@ -428,14 +441,15 @@ Drawer {
                 }
 
                 ////////
-
                 Item {
                     id: buttonSync
                     height: 48
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions) && !deviceManager.scanning
+                    enabled: (deviceManager.bluetooth
+                              && deviceManager.bluetoothPermissions)
+                             && !deviceManager.scanning
 
                     MouseArea {
                         anchors.fill: parent
@@ -460,7 +474,11 @@ Drawer {
                             radius: Theme.componentRadius
                             color: Theme.colorForeground
                             opacity: parent.containsPress
-                            Behavior on opacity { OpacityAnimator { duration: 133 } }
+                            Behavior on opacity {
+                                OpacityAnimator {
+                                    duration: 133
+                                }
+                            }
                         }
                     }
 
@@ -474,13 +492,20 @@ Drawer {
                         source: "qrc:/assets/icons_custom/duotone-date_all-24px.svg"
                         color: buttonSync.enabled ? Theme.colorText : Theme.colorSubText
 
-                        SequentialAnimation on opacity { // syncAnimation (fade)
+                        SequentialAnimation on opacity {
+                            // syncAnimation (fade)
                             loops: Animation.Infinite
                             running: deviceManager.syncing
                             alwaysRunToEnd: true
 
-                            PropertyAnimation { to: 0.33; duration: 750; }
-                            PropertyAnimation { to: 1; duration: 750; }
+                            PropertyAnimation {
+                                to: 0.33
+                                duration: 750
+                            }
+                            PropertyAnimation {
+                                to: 1
+                                duration: 750
+                            }
                         }
                     }
                     Text {
@@ -496,10 +521,10 @@ Drawer {
                 }
 
                 ////////
-
                 DrawerItem {
                     id: buttonScan
-                    enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
+                    enabled: (deviceManager.bluetooth
+                              && deviceManager.bluetoothPermissions)
                     iconSource: "qrc:/assets/icons_material/baseline-search-24px.svg"
                     color: buttonScan.enabled ? Theme.colorText : Theme.colorSubText
                     text: qsTr("Search for new sensors")
@@ -520,7 +545,8 @@ Drawer {
                         } else {
                             deviceManager.scanDevices_start()
                         }
-                    } else console.warn("deviceManager.updating")
+                    } else
+                        console.warn("deviceManager.updating")
                 }
 
                 Timer {
@@ -536,7 +562,8 @@ Drawer {
                     iconSource: Icons.bluetooth
                     color: buttonScan.enabled ? Theme.colorText : Theme.colorSubText
                     text: qsTr("Bluetooth devices")
-                    enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
+                    enabled: (deviceManager.bluetooth
+                              && deviceManager.bluetoothPermissions)
                     onClicked: {
                         screenDeviceBrowser.loadScreen()
                         appDrawer.close()
@@ -546,7 +573,6 @@ Drawer {
         }
 
         ////////////////////////////////////////////////////////////////////////
-
         Column {
             anchors.left: parent.left
             anchors.right: parent.right
@@ -557,12 +583,13 @@ Drawer {
                 height: 48
                 anchors.left: parent.left
                 anchors.right: parent.right
-                color: (appContent.state === "PlantBrowser") ? Theme.colorForeground : Theme.colorBackground
+                color: (appContent.state
+                        === "PlantBrowser") ? Theme.colorForeground : Theme.colorBackground
 
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        screenPlantBrowser.loadScreenFrom("DeviceList")
+                        appContent.openStackView(plantBrowserPage)
                         appDrawer.close()
                     }
                 }
@@ -594,12 +621,14 @@ Drawer {
                 height: 48
                 anchors.left: parent.left
                 anchors.right: parent.right
-                color: (appContent.state === "PlantBrowser") ? Theme.colorForeground : Theme.colorBackground
+                color: (appContent.state
+                        === "PlantBrowser") ? Theme.colorForeground : Theme.colorBackground
 
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        deseasePopup.open()
+                        appContent.openStackView(desease)
+                        appDrawer.close()
                     }
                 }
 
@@ -618,7 +647,7 @@ Drawer {
                     anchors.leftMargin: screenPaddingLeft + 56
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Plant Desease")
+                    text: qsTr("Desease")
                     font.pixelSize: 13
                     font.bold: true
                     color: Theme.colorText
@@ -630,9 +659,11 @@ Drawer {
                 height: 48
                 anchors.right: parent.right
                 anchors.left: parent.left
-                color: (appContent.state === "DeviceBrowser") ? Theme.colorForeground : Theme.colorBackground
+                color: (appContent.state
+                        === "DeviceBrowser") ? Theme.colorForeground : Theme.colorBackground
 
-                enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
+                enabled: (deviceManager.bluetooth
+                          && deviceManager.bluetoothPermissions)
 
                 MouseArea {
                     anchors.fill: parent

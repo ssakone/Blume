@@ -7,9 +7,9 @@ import ImagePicker
 import Qt.labs.platform
 import QtAndroidTools
 
-import "components" as Components
+import "../components_generic"
 
-Components.ClipRRect {
+ClipRRect {
     property alias image_source: image.source
 
     Rectangle {
@@ -22,7 +22,8 @@ Components.ClipRRect {
             id: fileDialog
             nameFilters: ["Image file (*.png *.jpg *.jpeg *.gif)"]
             onAccepted: {
-                if (Qt.application.os === "windows" || Qt.application.os === "osx"
+                if (Qt.application.os === "windows"
+                        || Qt.application.os === "osx"
                         || Qt.application.os === "linux") {
                     image_source = selectedFile
                 } else {
@@ -52,22 +53,27 @@ Components.ClipRRect {
             }
         }
 
-        Item {
-            function openCamera() {
-                QtAndroidAppPermissions.openCamera()
-            }
-            function openGallery() {
-                QtAndroidAppPermissions.openGallery()
-            }
+        Loader {
+            id: androidToolsLoader2
+            active: Qt.platform.os == "android"
+            sourceComponent: Component {
+                Item {
+                    function openCamera() {
+                        QtAndroidAppPermissions.openCamera()
+                    }
+                    function openGallery() {
+                        QtAndroidAppPermissions.openGallery()
+                    }
 
-            Connections {
-                target: QtAndroidAppPermissions
-                function onImageSelected(path) {
-                    image_source = "file://" + path
+                    Connections {
+                        target: QtAndroidAppPermissions
+                        function onImageSelected(path) {
+                            image_source = "file://" + path
+                        }
+                    }
                 }
             }
         }
-
 
         MouseArea {
             anchors.fill: parent
@@ -76,13 +82,11 @@ Components.ClipRRect {
                 if (Qt.platform.os === 'ios') {
                     imgPicker.openCamera()
                 } else if (Qt.platform.os === 'android') {
-                    androidToolsLoader.item.openCamera()
+                    androidToolsLoader2.item.openCamera()
                 } else {
                     fileDialog.open()
                 }
             }
         }
     }
-
 }
-

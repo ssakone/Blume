@@ -4,6 +4,8 @@ import QtQuick.Controls
 import ThemeEngine 1.0
 
 import JournalUtils 1.0
+
+import "components_generic/"
 import "qrc:/js/UtilsPlantJournal.js" as UtilsPlantJournal
 
 Item {
@@ -12,7 +14,8 @@ Item {
     // 1: single column (single column view)
     // 2: single column, with calendar unfolded (portrait tablet)
     // 3: wide mode (wide view)
-    property int uiMode: (singleColumn) ? 1 : ((isTablet && screenOrientation === Qt.PortraitOrientation) ? 2 : 3)
+    property int uiMode: (singleColumn) ? 1 : ((isTablet && screenOrientation
+                                                === Qt.PortraitOrientation) ? 2 : 3)
 
     function load() {
         journalEntries.active = true
@@ -34,7 +37,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     ItemNoJournal {
         visible: !currentDevice.hasJournal
         enabled: !currentDevice.hasJournal
@@ -45,7 +47,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Loader {
         id: journalEntries
         anchors.fill: parent
@@ -108,9 +109,14 @@ Item {
 
                     text: {
                         if (currentDevice.plantNameDisplay.length)
-                            qsTr("%1 tracked since %2").arg(currentDevice.plantNameDisplay).arg(currentDevice.plantStart.toLocaleString(Locale.ShortFormat))
+                            qsTr("%1 tracked since %2").arg(
+                                        currentDevice.plantNameDisplay).arg(
+                                        currentDevice.plantStart.toLocaleString(
+                                            Locale.ShortFormat))
                         else
-                            qsTr("Plant tracked since %1").arg(currentDevice.plantStart.toLocaleString(Locale.ShortFormat))
+                            qsTr("Plant tracked since %1").arg(
+                                        currentDevice.plantStart.toLocaleString(
+                                            Locale.ShortFormat))
                     }
                     color: Theme.colorText
                     wrapMode: Text.WordWrap
@@ -168,7 +174,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////
-
     Loader {
         id: journalEditorLoader
         anchors.fill: parent
@@ -211,7 +216,6 @@ Item {
                 property int entryType: JournalUtils.JOURNAL_WATER
 
                 ////////////
-
                 function open() {
                     currentDateTime = new Date() // to reset date
                     datePicker.openDate(currentDateTime)
@@ -240,17 +244,15 @@ Item {
                 }
 
                 ////////////
-
                 PopupDate {
                     id: popupDate
-                    onUpdateDate: (newdate) => {
-                        //console.log("onUpdateDate(" + newdate + ")")
-                        entryEditor.currentDateTime = newdate
-                    }
+                    onUpdateDate: newdate => {
+                                      //console.log("onUpdateDate(" + newdate + ")")
+                                      entryEditor.currentDateTime = newdate
+                                  }
                 }
 
                 ////////////
-
                 Grid {
                     id: rowrowrow
                     anchors.fill: parent
@@ -264,7 +266,8 @@ Item {
                     rows: 2
 
                     Item {
-                        width: (uiMode === 2) ? rowrowrow.width : ((rowrowrow.width * 0.4) - (rowrowrow.spacing / 2))
+                        width: (uiMode === 2) ? rowrowrow.width : ((rowrowrow.width * 0.4)
+                                                                   - (rowrowrow.spacing / 2))
                         height: (uiMode === 2) ? 320 : rowrowrow.height
                         visible: (uiMode !== 1)
 
@@ -272,17 +275,17 @@ Item {
                             id: datePicker
                             anchors.fill: parent
 
-                            onUpdateDate: (newdate) => {
-                                //console.log("onUpdateDate(" + newdate + ")")
-                                entryEditor.currentDateTime = newdate
-                            }
+                            onUpdateDate: newdate => {
+                                              //console.log("onUpdateDate(" + newdate + ")")
+                                              entryEditor.currentDateTime = newdate
+                                          }
                         }
                     }
 
                     ////
-
                     Column {
-                        width: (uiMode !== 3) ? parent.width : (rowrowrow.width * 0.6) - (rowrowrow.spacing / 2)
+                        width: (uiMode !== 3) ? parent.width : (rowrowrow.width * 0.6)
+                                                - (rowrowrow.spacing / 2)
                         spacing: isPhone ? 12 : 20
 
                         ButtonWireframe {
@@ -292,11 +295,13 @@ Item {
 
                             //visible: singleColumn
                             fullColor: true
-                            text: entryEditor.currentDateTime.toLocaleDateString(Qt.locale())
+                            text: entryEditor.currentDateTime.toLocaleDateString(
+                                      Qt.locale())
                             primaryColor: Theme.colorSecondary
                             onClicked: {
                                 if (uiMode === 1)
-                                    popupDate.openDate(entryEditor.currentDateTime)
+                                    popupDate.openDate(
+                                                entryEditor.currentDateTime)
                             }
                         }
 
@@ -319,8 +324,7 @@ Item {
                                 rows: (uiMode === 1) ? 2 : 1
 
                                 Repeater {
-                                    model: [JournalUtils.JOURNAL_WATER, JournalUtils.JOURNAL_FERTILIZE, JournalUtils.JOURNAL_PRUNE,
-                                            JournalUtils.JOURNAL_ROTATE, JournalUtils.JOURNAL_MOVE, JournalUtils.JOURNAL_REPOT]
+                                    model: [JournalUtils.JOURNAL_WATER, JournalUtils.JOURNAL_FERTILIZE, JournalUtils.JOURNAL_PRUNE, JournalUtils.JOURNAL_ROTATE, JournalUtils.JOURNAL_MOVE, JournalUtils.JOURNAL_REPOT]
 
                                     Column {
                                         spacing: 4
@@ -331,7 +335,8 @@ Item {
                                             width: 52
                                             height: 52
 
-                                            source: UtilsPlantJournal.getJournalEntryIcon(modelData)
+                                            source: UtilsPlantJournal.getJournalEntryIcon(
+                                                        modelData)
                                             iconColor: Theme.colorSubText
                                             background: true
                                             backgroundColor: Theme.colorBackground
@@ -345,7 +350,8 @@ Item {
                                         Text {
                                             anchors.horizontalCenter: parent.horizontalCenter
 
-                                            text: UtilsPlantJournal.getJournalEntryName(modelData)
+                                            text: UtilsPlantJournal.getJournalEntryName(
+                                                      modelData)
                                             textFormat: Text.PlainText
                                             color: btn.selected ? Theme.colorPrimary : Theme.colorText
                                             //font.bold: btn.selected
@@ -368,7 +374,6 @@ Item {
                 }
 
                 ////////////////
-
                 Row {
                     anchors.right: parent.right
                     anchors.rightMargin: 16
@@ -396,7 +401,10 @@ Item {
 
                         onClicked: {
                             //console.log("Add entry: " + newEntry.entryType + " / " + newEntry.currentDateTime + " / " + entryComment.text)
-                            entryEditor.entry.editEntry(entryEditor.entryType, entryEditor.currentDateTime, entryComment.text)
+                            entryEditor.entry.editEntry(
+                                        entryEditor.entryType,
+                                        entryEditor.currentDateTime,
+                                        entryComment.text)
                             entryEditor.close()
                         }
                     }
@@ -413,7 +421,10 @@ Item {
 
                         onClicked: {
                             //console.log("Add entry: " + newEntry.entryType + " / " + newEntry.currentDateTime + " / " + entryComment.text)
-                            currentDevice.addJournalEntry(entryEditor.entryType, entryEditor.currentDateTime, entryComment.text)
+                            currentDevice.addJournalEntry(
+                                        entryEditor.entryType,
+                                        entryEditor.currentDateTime,
+                                        entryComment.text)
                             entryEditor.close()
                         }
                     }
