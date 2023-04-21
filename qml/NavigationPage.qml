@@ -3,6 +3,7 @@ import QtQuick
 import "pages"
 import "pages/Plant"
 import "pages/Insect"
+import "pages/Garden"
 
 QtObject {
     property var plantIdentifierPage: Component {
@@ -19,5 +20,14 @@ QtObject {
     }
     property var plantDetailPage: Component {
         PlantScreen {}
+    }
+    property var gardenPlantsList: Component {
+        GardenPlantsList {}
+    }
+    property var gardenSpacesList: Component {
+        GardenSpacesList {}
+    }
+    property var gardenSpaceDetails: Component {
+        GardenSpaceDetails {}
     }
 }

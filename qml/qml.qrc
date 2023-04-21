@@ -30,16 +30,8 @@
         <file>DeviceEnvironmental.qml</file>
         <file>ThemeEngine.qml</file>
         <file>WindowGeometrySaver.qml</file>
-
-        <!-- UTILITY OBEJCT -->
-
         <file>NavigationPage.qml</file>
-        
-        <!-- PAGE - INSECT -->
         <file>pages/Insect/InsectIdentifier.qml</file>
-
-        <!-- PAGE PLANT -->
-
         <file>pages/Plant/PlantBrowser.qml</file>
         <file>pages/Plant/PlantScreen.qml</file>
         <file>pages/Plant/PlantIdentifier.qml</file>
@@ -47,15 +39,12 @@
         <file>pages/Plant/PlantDesease.qml</file>
         <file>pages/Plant/PlantDeseaseDetails.qml</file>
         <file>pages/Plant/PlantDeseaseEncylopedie.qml</file>
-
-        <!-- OTHER PAGE -->
-
+        <file>pages/Garden/GardenScreen.qml</file>
+        <file>pages/Garden/GardenPlantsList.qml</file>
+        <file>pages/Garden/GardenSpacesList.qml</file>
         <file>pages/Posometre.qml</file>
         <file>pages/Faq.qml</file>
         <file>pages/AskHelp.qml</file>
-
-        <!-- END OTHER PAGE -->
-
         <file alias="PopupBackgroundUpdates.qml">popups/PopupBackgroundUpdates.qml</file>
         <file alias="PopupBlacklistDevice.qml">popups/PopupBlacklistDevice.qml</file>
         <file alias="PopupCalibration.qml">popups/PopupCalibration.qml</file>
@@ -89,22 +78,12 @@
         <file alias="ItemNoJournal.qml">components/ItemNoJournal.qml</file>
         <file alias="SectionTitle.qml">components/SectionTitle.qml</file>
         <file alias="TableLine.qml">components/TableLine.qml</file>
-
         <file>popups/PopupLocationNotification.qml</file>
         <file>PlantBrowseCategory.qml</file>
         <file>PlantScreenDetails.qml</file>
-
-        <!-- COMPONENTS -->
-
         <file>components/Accordion.qml</file>
         <file>components/ImagePickerArea.qml</file>
-
-        <!-- JS OBJECT -->
-
         <file>components_js/Http.js</file>
-
-        <!-- GENERIC COMPONENT -->
-
         <file>components_generic/ActionMenuItem.qml</file>
         <file>components_generic/ButtonCompactable.qml</file>
         <file>components_generic/ButtonWireframe.qml</file>
@@ -113,7 +92,7 @@
         <file>components_generic/BPage.qml</file>
         <file>components_generic/ToolTipFlat.qml</file>
         <file>components_generic/RoundButtonIcon.qml</file>
-
+        <file>pages/Garden/GardenSpaceDetails.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>

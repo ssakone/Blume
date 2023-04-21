@@ -18,6 +18,7 @@ import MaterialIcons
 
 import "../"
 import "../Insect/"
+import "../Garden/"
 import "../../"
 import "../../components"
 import "../../components_generic"
@@ -162,6 +163,11 @@ BPage {
     }
 
     Component {
+        id: gardenScreen
+        GardenScreen {}
+    }
+
+    Component {
         id: faqPage
         Faq {}
     }
@@ -245,12 +251,18 @@ BPage {
                                                 "action": "insect",
                                                 "style": "lightBlue"
                                             }, {
+                                                "name": qsTr("Mon Jardin"),
+                                                "icon": Icons.flower,
+                                                "image": "",
+                                                "action": "garden",
+                                                "style": "lightenYellow"
+                                            }, {
                                                 "name": qsTr("Encyclopedie des maladies"),
                                                 "icon": Icons.bookOpenOutline,
                                                 "image": "",
                                                 "action": "encyclopedie",
                                                 "style": "lightenYellow"
-                                            }, {
+                                            },{
                                                 "name": qsTr("Contacter des experts"),
                                                 "icon": Icons.helpCircle,
                                                 "image": "",
@@ -366,6 +378,10 @@ BPage {
                                             case "insect":
                                                 page_view.push(
                                                             insectIndentifier)
+                                                break
+                                            case "garden":
+                                                page_view.push(
+                                                            gardenScreen)
                                                 break
                                             }
                                         }
