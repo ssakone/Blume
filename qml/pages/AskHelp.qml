@@ -43,6 +43,7 @@ Page {
             Layout.fillWidth: true
             Layout.fillHeight: true
             contentHeight: colHeadFaqForm.height
+            topMargin: -60
 
             Column {
                 id: colHeadFaqForm
@@ -57,14 +58,15 @@ Page {
                     Column {
                         id: insideCol2
                         width: parent.width
-                        padding: 15
+                        padding: width < 500 ? 10 : width / 11
                         topPadding: 30
-                        bottomPadding: 0
+                        bottomPadding: 70
 
                         spacing: 30
 
                         Column {
                             width: parent.width
+                            spacing: 10
                             Label {
                                 text: "Ajouter des images"
                                 font {
@@ -84,7 +86,7 @@ Page {
                             }
 
                             RowLayout {
-                                Layout.fillWidth: true
+                                width: parent.width
                                 spacing: 10
                                 Item {
                                     Layout.fillWidth: true
@@ -93,8 +95,8 @@ Page {
                                 Repeater {
                                     model: 4
                                     ImagePickerArea {
-                                        Layout.preferredHeight: 70
-                                        Layout.preferredWidth: 70
+                                        width: 70
+                                        height: 70
                                     }
                                 }
 
@@ -105,7 +107,9 @@ Page {
                         }
 
                         Column {
-                            width: parent.width
+                            width: parent.width - (2*parent.padding)
+                            spacing: 15
+
                             Label {
                                 text: "Décrivez le problème"
                                 font {
@@ -117,25 +121,27 @@ Page {
                                 wrapMode: Text.Wrap
                             }
 
-                            Rectangle {
-                                Layout.fillWidth: true
-                                Layout.preferredHeight: 120
-                                radius: 15
-                                border {
-                                    width: 1
-                                    color: "#ccc"
+                            TextArea {
+                                width: parent.width
+                                height: 120
+                                padding: 7
+                                topPadding: 10
+                                font {
+                                    pixelSize: 14
+                                    weight: Font.Light
                                 }
-                                TextEdit {
-                                    anchors.fill: parent
-                                    padding: 7
-                                    font {
-                                        pixelSize: 14
-                                        weight: Font.Light
+                                wrapMode: Text.Wrap
+//                                clip: true
+                                background: Rectangle {
+                                    color: "#f5f5f5"
+                                    radius: 15
+                                    border {
+                                        width: 1
+                                        color: "#ccc"
                                     }
-                                    wrapMode: Text.Wrap
-                                    clip: true
                                 }
                             }
+
                         }
 
                         Repeater {
@@ -143,7 +149,7 @@ Page {
                             delegate: Column {
                                 required property variant modelData
 
-                                width: parent.width
+                                width: parent.width - (2*parent.padding)
                                 spacing: 15
 
                                 Row {
@@ -167,7 +173,7 @@ Page {
                                         }
                                         color: Theme.colorPrimary
                                         anchors.verticalCenter: parent.verticalCenter
-                                        Layout.fillWidth: true
+                                        width: parent.width
                                         wrapMode: Text.Wrap
                                     }
                                 }
@@ -185,52 +191,42 @@ Page {
                                                 pixelSize: 16
                                                 weight: Font.Bold
                                             }
-                                            Layout.fillWidth: true
+                                            width: parent.width
                                             wrapMode: Text.Wrap
                                         }
 
-                                        Rectangle {
-                                            Layout.fillWidth: true
-                                            Layout.preferredHeight: 50
-                                            radius: 10
-                                            border {
-                                                width: 1
-                                                color: "#ccc"
-                                            }
-                                            TextInput {
-                                                id: textInput
-                                                anchors.fill: parent
-                                                anchors.verticalCenter: parent.verticalCenter
-                                                verticalAlignment: Text.AlignVCenter
-                                                padding: 5
+                                        TextField {
+                                            id: textInput
+                                            placeholderText: modelData?.placeholder
+                                            padding: 5
 
-                                                font {
-                                                    pixelSize: 14
-                                                    weight: Font.Light
-                                                }
+                                            width: parent.width
+                                            height: 50
+
+                                            verticalAlignment: Text.AlignVCenter
+
+                                            font {
+                                                pixelSize: 14
+                                                weight: Font.Light
                                             }
-                                            Label {
-                                                text: modelData?.placeholder
-                                                color: "#aaa"
-                                                font {
-                                                    pixelSize: 14
-                                                    weight: Font.Light
+
+                                            background: Rectangle {
+                                                radius: 15
+                                                color: "#f5f5f5"
+                                                border {
+                                                    color: "#ccc"
+                                                    width: 1
                                                 }
-                                                visible: textInput.text === ""
-                                                anchors.fill: parent
-                                                anchors.leftMargin: 5
-                                                anchors.verticalCenter: parent.verticalCenter
-                                                verticalAlignment: Text.AlignVCenter
-                                                wrapMode: Text.Wrap
                                             }
                                         }
+
                                     }
                                 }
                             }
                         }
 
                         Item {
-                            Layout.preferredHeight: 70
+                            height: 70
                         }
                     }
                 }
