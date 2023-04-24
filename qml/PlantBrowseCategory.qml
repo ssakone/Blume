@@ -7,7 +7,7 @@ import SortFilterProxyModel
 import QtQuick.Dialogs
 import Qt.labs.platform
 import "components" as Components
-
+import "components_js/Http.js" as Http
 import Qt5Compat.GraphicalEffects
 
 import ThemeEngine 1.0
@@ -26,7 +26,7 @@ Popup {
 
     onOpened: {
         if(listCategoryPlants.category_id) {
-            Components.Http.fetch({
+            Http.fetch({
                 method: 'GET',
                 url: "https://blume.mahoudev.com/items/Plantes?fields[]=*.*&filter[categorie][id][_eq]=" + category_id,
             }).then(response => {
@@ -123,15 +123,19 @@ Popup {
                 color: (index % 2 ) ? "white" : "#f0f0f0"
             }
 
-            Image {
+            Components.ClipRRect {
                 id: leftImg
-                source: "qrc:/assets/img/feuillage.jpg"
                 height: 60
                 width: height
-
+                radius: width / 2
                 anchors.left: parent.left
                 anchors.leftMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
+
+                Image {
+                    source: modelData.images_plantes.length === 0 ? "" : "https://blume.mahoudev.com/assets/" + modelData.images_plantes[0].directus_files_id
+                    anchors.fill: parent
+                }
             }
 
             Column {

@@ -110,7 +110,7 @@ Popup {
                         Image {
                             anchors.fill: parent
                             source: plant['images_plantes']?.length
-                                    ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/" + plant['images_plantes'][0].directus_files_id) : undefined
+                                    ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/" + plant['images_plantes'][0].directus_files_id) : ""
                             clip: true
                         }
                     }
