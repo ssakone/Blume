@@ -6,6 +6,8 @@ import ThemeEngine 1.0
 import DeviceUtils 1.0
 
 import "pages/Plant/"
+import "services/"
+import "models/"
 
 ApplicationWindow {
     id: appWindow
@@ -20,6 +22,7 @@ ApplicationWindow {
                            || utilsScreen.screenPar > 1.0)
 
     property var selectedDevice: null
+    property alias $SqlClient: _sqliClient
 
     // Desktop stuff ///////////////////////////////////////////////////////////
     minimumWidth: isHdpi ? 400 : 480
@@ -57,6 +60,37 @@ ApplicationWindow {
         }
     }
 
+    SqlClient {
+        id: _sqliClient
+        Component.onCompleted: open()
+        onDatabaseOpened: {
+            Promise.all([alarmModel, plantModel, spaceModel]).then(
+                        function (rs) {
+                            console.info("[+] All table ready")
+                        }).catch(function (rs) {
+                            console.error("Something happen => ", rs)
+                        })
+        }
+    }
+
+    ////// MODEL BEBIN ->
+    PlantModel {
+        id: plantModel
+        db: _sqliClient
+    }
+
+    SpaceModel {
+        id: spaceModel
+        db: _sqliClient
+    }
+
+    AlarmModel {
+        id: alarmModel
+        db: _sqliClient
+    }
+
+    ///// <- END MODEL
+
     // Mobile stuff ////////////////////////////////////////////////////////////
     property int screenOrientation: Screen.primaryOrientation
     property int screenOrientationFull: Screen.orientation
@@ -78,10 +112,6 @@ ApplicationWindow {
     }
 
     // Events handling /////////////////////////////////////////////////////////
-    Component.onCompleted: {
-
-    }
-
     Connections {
         target: appHeader
         function onBackButtonClicked() {
@@ -438,7 +468,6 @@ ApplicationWindow {
                 Item {}
             }
             onDepthChanged: {
-                console.log("-----> ", depth, previousState)
                 if (depth === 1)
                     parent.state = previousState
             }
