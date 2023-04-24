@@ -28,68 +28,6 @@ BPage {
     property variant analyseResults
     padding: 0
 
-    property variant form_schema: [{
-            "group_title": "Exposition et température",
-            "fields": [{
-                    "label": "De combien d'ensoleillement bénéficie votre plante chaque jour ?",
-                    "is_required": true,
-                    "placeholder": "6h de lumière naturelle indirecte"
-                }, {
-                    "label": "Quelles sont les température de son environnement ?",
-                    "is_required": false,
-                    "placeholder": "Journée: +24°C, Nuit: +1°C"
-                }]
-        }, {
-            "group_title": "Parasites et maladies",
-            "fields": [{
-                    "label": "Y a-t-il des toiles ou des insectes sur la plante ou dans la terre ?",
-                    "is_required": false,
-                    "placeholder": "Insectes blancs sous les feuilles"
-                }, {
-                    "label": "Quelles sont les température de son environnement ?",
-                    "is_required": false,
-                    "placeholder": "Journée: +24°C, Nuit: +1°C"
-                }]
-        }, {
-            "group_title": "Arrosage",
-            "fields": [{
-                    "label": "A quelle fréquence arrosez-vous votre plante ?",
-                    "is_required": false,
-                    "placeholder": "1 à 2 fois par semaine"
-                }, {
-                    "label": "Quelle quantité d'eau utilisez-vous ?",
-                    "is_required": false,
-                    "placeholder": "Un verre et demi"
-                }, {
-                    "label": "Laissez-vous la terre sécher entre les arrosages ?",
-                    "is_required": false,
-                    "placeholder": "Oui, les premiers centimètres"
-                }, {
-                    "label": "Le fond du pot est-il percé ?",
-                    "is_required": false,
-                    "placeholder": "Oui"
-                }]
-        }, {
-            "group_title": "Rempotage et engrais",
-            "fields": [{
-                    "label": "A quelle fréquence arrosez-vous votre plante ?",
-                    "is_required": false,
-                    "placeholder": "1 à 2 fois par semaine"
-                }, {
-                    "label": "Quelle quantité d'eau utilisez-vous ?",
-                    "is_required": false,
-                    "placeholder": "Un verre et demi"
-                }, {
-                    "label": "Laissez-vous la terre sécher entre les arrosages ?",
-                    "is_required": false,
-                    "placeholder": "Oui, les premiers centimètres"
-                }, {
-                    "label": "Le fond du pot est-il percé ?",
-                    "is_required": false,
-                    "placeholder": "Oui"
-                }]
-        }]
-
     onVisibleChanged: {
         if (visible)
             image.source = ""
