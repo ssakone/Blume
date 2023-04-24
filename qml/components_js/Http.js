@@ -61,8 +61,9 @@ function request(method, url, params, api = "") {
     return fetch(query)
 }
 
-function send_mail(to, recv_name, subject = "Blume: contacter un expert", content_html = "", content_txt ="" ) {
-    let auth = "af7ef02f89cd85f6aa5fa5db1dd313e1:b4085a8615eff4b65de0f1ac8c58910c"
+function send_mail({to, recv_name, subject = "Blume: contacter un expert", content_html = "", content_txt ="Aide", attachements = [] }) {
+
+    let auth = Qt.btoa("af7ef02f89cd85f6aa5fa5db1dd313e1:b4085a8615eff4b65de0f1ac8c58910c")
     let query = {
         "method": "POST",
         "url": "https://api.mailjet.com/v3.1/send",
@@ -86,7 +87,8 @@ function send_mail(to, recv_name, subject = "Blume: contacter un expert", conten
                     ],
                     "Subject": subject,
                     "TextPart": content_txt,
-                    "HTMLPart": content_html
+                    "HTMLPart": content_html,
+                    "Attachments": attachements
                 }
             ]
         }

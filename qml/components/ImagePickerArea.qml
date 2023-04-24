@@ -10,7 +10,10 @@ import QtAndroidTools
 import "../components_generic"
 
 ClipRRect {
+    id: root
     property alias image_source: image.source
+
+    property var onImgChanged: function() {}
 
     Rectangle {
         id: area
@@ -29,6 +32,7 @@ ClipRRect {
                 } else {
                     image_source = currentFile
                 }
+                root.onImgChanged()
             }
         }
 
