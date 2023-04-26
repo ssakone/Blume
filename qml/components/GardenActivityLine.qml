@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+import ThemeEngine
 import "../components_generic"
 
 Rectangle {
@@ -41,7 +42,6 @@ Rectangle {
                 anchors.centerIn: parent
             }
         }
-
 
         ColumnLayout {
             Layout.fillWidth: true
@@ -91,21 +91,17 @@ Rectangle {
                 color: Theme.colorPrimary
             }
         }
-       Label {
-           visible: time_inline
+        Label {
+            visible: time_inline
             text: qsTr(hours + ":" + minutes)
             font.pixelSize: 24
             color: Theme.colorPrimary
         }
-
-
     }
 
     MouseArea {
         anchors.fill: parent
         cursorShape: "PointingHandCursor"
         onClicked: root.onClicked()
-
     }
-
 }

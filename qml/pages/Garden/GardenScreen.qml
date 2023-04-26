@@ -11,6 +11,18 @@ BPage {
     id: control
     header: AppBar {
         title: "Mon Jardin"
+        titleLabel.horizontalAlignment: Text.AlignHCenter
+        titleLabel.rightPadding: 60
+        titleLabel.font {
+            pixelSize: 18
+            weight: Font.Medium
+        }
+
+        leading.icon: Icons.chevronLeft
+        leading.iconSize: 36
+
+        backgroundColor: "white"
+        foregroundColor: "black"
     }
 
     ColumnLayout {
@@ -25,18 +37,17 @@ BPage {
 
             Repeater {
                 model: [{
-                    icon: Icons.flowerTulip,
-                    title: "Mes plantes",
-                    action: "plants"
-                }, {
-                        icon: Icons.selectPlace,
-                        title: "Mes espaces",
-                        action: "spaces"
-                    },
-                    {
-                        icon: Icons.alarm,
-                        title: "Alarme",
-                        action: "alarm"
+                        "icon": Icons.flowerTulip,
+                        "title": "Mes plantes",
+                        "action": "plants"
+                    }, {
+                        "icon": Icons.selectPlace,
+                        "title": "Mes espaces",
+                        "action": "spaces"
+                    }, {
+                        "icon": Icons.alarm,
+                        "title": "Alarme",
+                        "action": "alarm"
                     }]
                 delegate: Rectangle {
                     Layout.preferredHeight: 80
@@ -61,13 +72,13 @@ BPage {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            switch(modelData.action){
-                                case "plants":
-                                    page_view.push(navigator.gardenPlantsList)
-                                    break
-                                case "spaces":
-                                    page_view.push(navigator.gardenSpacesList)
-                                    break
+                            switch (modelData.action) {
+                            case "plants":
+                                page_view.push(navigator.gardenPlantsList)
+                                break
+                            case "spaces":
+                                page_view.push(navigator.gardenSpacesList)
+                                break
                             }
                         }
                     }
@@ -102,16 +113,8 @@ BPage {
                             Layout.preferredHeight: 70
                         }
                     }
-
-
                 }
-
             }
-
         }
-
     }
-
-
-
 }

@@ -8,10 +8,12 @@ import "../"
 
 Rectangle {
     id: control
-    color: Theme.colorPrimary
+    color: backgroundColor
+    property color backgroundColor: Theme.colorPrimary
+    property color foregroundColor: Theme.colorHeaderContent
     property alias leading: buttonBackBg
     property alias title: _label.text
-    property alias titleLable: _label
+    property alias titleLabel: _label
     property alias actions: flowActions.children
     property bool noAutoPop: false
 
@@ -29,6 +31,7 @@ Rectangle {
             Layout.preferredHeight: 64
             Layout.preferredWidth: 64
             Layout.alignment: Qt.AlignVCenter
+            foregroundColor: control.foregroundColor
             onClicked: {
                 if (!noAutoPop)
                     control.parent.StackView.view.pop()
@@ -39,7 +42,7 @@ Rectangle {
             font.pixelSize: 21
             font.bold: true
             font.weight: Font.Medium
-            color: "white"
+            color: control.foregroundColor
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
         }
