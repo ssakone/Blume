@@ -93,6 +93,16 @@
         <file>components_generic/ToolTipFlat.qml</file>
         <file>components_generic/RoundButtonIcon.qml</file>
         <file>pages/Garden/GardenSpaceDetails.qml</file>
+
+        <!-- SERVICES -->
+        <file>services/SqlClient.qml</file>
+
+        <!-- DATABASE MODEL -->
+        <file>models/AlarmModel.qml</file>
+        <file>models/Model.qml</file>
+        <file>models/PlantModel.qml</file>
+        <file>models/SpaceModel.qml</file>
+
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>
