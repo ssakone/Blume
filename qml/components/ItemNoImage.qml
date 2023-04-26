@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-import ThemeEngine 1.0
+import ThemeEngine
 
 import "../components_generic"
 
@@ -30,6 +30,7 @@ Column {
         wrapMode: Label.Wrap
         font.pixelSize: 14
         text: subtitle || 'Assurez-vous de prendre une photo nette et lumineuse comprenant uniquement la plante que vous souhaitez identifier.'
+        opacity: .6
         horizontalAlignment: Text.horizontalCenter
     }
 
@@ -61,7 +62,7 @@ Column {
 
     Label {
         anchors.horizontalCenter: parent.horizontalCenter
-        width: 200
+        width: parent.width - (2 * parent.padding)
         wrapMode: Label.Wrap
         font.pixelSize: 16
         horizontalAlignment: Label.AlignHCenter

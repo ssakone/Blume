@@ -257,11 +257,11 @@ BPage {
                                 interactive: false
                                 width: parent.width
                                 height: parent.height - 20
-                                cellWidth: (parent.width - (10)) / 3
+                                cellWidth: gr.width > 800 ? gr.width / 5 : (gr.width > 500 ? gr.width/ 4 : gr.width /3)
                                 cellHeight: cellWidth
                                 model: plantOptionModel
                                 delegate: Item {
-                                    width: (gr.width - (20)) / 3
+                                    width: gr.cellWidth
                                     height: width
                                     Rectangle {
                                         anchors.fill: parent

@@ -149,7 +149,7 @@ BPage {
             Layout.margins: 0
             currentIndex: 0
             onCurrentIndexChanged: {
-                if (currentIndex != 1) {
+                if (currentIndex !== 1) {
                     if (accessCam.active) {
                         tabView.currentIndex = 0
                         tabBar.currentIndex = 0
@@ -171,7 +171,7 @@ BPage {
 
                             Component.onCompleted: {
                                 let data = [{
-                                                "name": qsTr("Analyser une plantes"),
+                                                "name": qsTr("Détecter une maladie"),
                                                 "icon": Icons.magnifyScan,
                                                 "image": "",
                                                 "action": "analyser",
@@ -204,11 +204,11 @@ BPage {
                             interactive: false
                             width: parent.width
                             height: parent.height - 20
-                            cellWidth: (parent.width - (10)) / 3
+                            cellWidth: gr.width > 800 ? gr.width / 5 : (gr.width > 500 ? gr.width/ 4 : gr.width /3)
                             cellHeight: cellWidth
                             model: optionModel
                             delegate: Item {
-                                width: (gr.width - (20)) / 3
+                                width: gr.cellWidth
                                 height: width
                                 Rectangle {
                                     anchors.fill: parent
@@ -255,8 +255,8 @@ BPage {
                                         }
                                     }
                                     IconSvg {
-                                        width: 64
-                                        height: 64
+                                        width: parent.width / 2
+                                        height: width
                                         visible: icon !== ""
                                         anchors.centerIn: parent
 
@@ -394,39 +394,20 @@ BPage {
                                     anchors.fill: parent
                                     fillMode: Image.PreserveAspectFit
                                 }
-                                Column {
+                                ItemNoImage {
                                     visible: image.source.toString() === ""
-                                    anchors.centerIn: parent
-                                    spacing: 10
-                                    IconSvg {
-                                        width: 64
-                                        height: 64
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        source: Icons.fileDocument
-                                        opacity: .5
-                                        color: 'black'
-                                    }
-                                    Label {
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        width: 140
-                                        wrapMode: Label.Wrap
-                                        font.pixelSize: 16
-                                        horizontalAlignment: Label.AlignHCenter
-                                        text: 'Clickez pour importer une image'
-                                        opacity: .6
-                                    }
-                                }
-                                MouseArea {
                                     anchors.fill: parent
-                                    onClicked: {
+                                    spacing: 10
+                                    padding: 25
+
+                                    title: 'Identifier une maladie'
+                                    onClicked: function() {
                                         if (Qt.platform.os === 'ios') {
                                             imgPicker.openPicker()
                                         } else if (Qt.platform.os === 'android') {
-                                            androidToolsLoader.item.openGallery(
-                                                        )
-                                        } else {
+                                            androidToolsLoader.item.openGallery()
+                                        } else
                                             fileDialog.open()
-                                        }
                                     }
                                 }
                             }

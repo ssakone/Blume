@@ -187,7 +187,7 @@ BPage {
                                     padding: 25
 
                                     title: 'Identifier la plante'
-                                    onClicked: {
+                                    onClicked: function() {
                                         if (Qt.platform.os === 'ios') {
                                             imgPicker.openPicker()
                                         } else if (Qt.platform.os === 'android') {

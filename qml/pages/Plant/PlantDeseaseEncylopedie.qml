@@ -138,7 +138,7 @@ BPage {
                 required property variant modelData
                 required property int index
 
-                height: 70
+                height: 100
                 width: listView.width
                 onClicked: {
                     let formated = {}
@@ -164,6 +164,51 @@ BPage {
                                    })
                 }
 
+                ClipRRect {
+                    id: imgCircle
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.leftMargin: 10
+                    height: 80
+                    width: height
+                    radius: height / 2
+                    Rectangle {
+                        color: "#e5e5e5"
+                        anchors.fill: parent
+                        Image {
+                            anchors.fill: parent
+                            source: modelData['images'].length
+                                    === 0 ? "" : ("https://blume.mahoudev.com/assets/"
+                                                  + modelData['images'][0].directus_files_id)
+                        }
+                    }
+
+                }
+
+                Label {
+                    id: titleLabel
+                    anchors.top: parent.top
+                    anchors.topMargin: 15
+                    anchors.left: imgCircle.right
+                    anchors.leftMargin: 10
+                    font.pixelSize: 21
+                    font.weight: Font.Medium
+                    width: parent.width - imgCircle.width - 30
+                    elide: Text.ElideRight
+                    text: modelData['nom_scientifique']
+                }
+
+                Label {
+                    anchors.top: titleLabel.bottom
+                    anchors.left: imgCircle.right
+                    anchors.leftMargin: 10
+                    font.pixelSize: 12
+                    color: "gray"
+                    elide: Text.ElideRight
+                    width: parent.width - imgCircle.width - 30
+                    text: modelData['noms_communs'] ? modelData['noms_communs'][0] : ""
+                }
+
                 Rectangle {
                     anchors.bottom: parent.bottom
                     height: 1
@@ -174,44 +219,6 @@ BPage {
                     visible: index !== maladiesModel.count - 1
                 }
 
-                Label {
-                    id: titleLabel
-                    anchors.top: parent.top
-                    anchors.topMargin: 15
-                    anchors.left: parent.left
-                    anchors.leftMargin: 10
-                    font.pixelSize: 21
-                    font.weight: Font.Medium
-                    width: parent.width - 20
-                    wrapMode: Label.Wrap
-                    text: modelData['nom_scientifique']
-                }
-
-                Label {
-                    anchors.top: titleLabel.bottom
-                    anchors.left: parent.left
-                    anchors.leftMargin: 10
-                    font.pixelSize: 12
-                    color: "gray"
-                    width: parent.width - 20
-                    wrapMode: Label.Wrap
-                    text: modelData['noms_communs'] ? modelData['noms_communs'][0] : ""
-                }
-
-                ClipRRect {
-                    id: dangerositeCercle
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    anchors.rightMargin: 10
-                    height: 50
-                    width: 50
-                    radius: 25
-                    Image {
-                        source: modelData['images'].length
-                                === 0 ? "" : ("https://blume.mahoudev.com/assets/"
-                                              + modelData['images'][0].directus_files_id)
-                    }
-                }
             }
         }
     }

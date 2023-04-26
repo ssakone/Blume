@@ -133,12 +133,17 @@ Popup {
                 anchors.leftMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
 
-                Image {
-                    source: modelData.images_plantes.length
-                            === 0 ? "" : "https://blume.mahoudev.com/assets/"
-                                    + modelData.images_plantes[0].directus_files_id
+                Rectangle {
+                    color: "#e5e5e5"
                     anchors.fill: parent
+                    Image {
+                        anchors.fill: parent
+                        source: modelData.images_plantes.length
+                                === 0 ? "" : "https://blume.mahoudev.com/assets/"
+                                        + modelData.images_plantes[0].directus_files_id
+                    }
                 }
+
             }
 
             Column {

@@ -179,36 +179,18 @@ Page {
                                     anchors.fill: parent
                                     fillMode: Image.PreserveAspectFit
                                 }
-                                Column {
+                                ItemNoImage {
                                     visible: image.source.toString() === ""
-                                    anchors.centerIn: parent
-                                    spacing: 10
-                                    IconSvg {
-                                        width: 64
-                                        height: 64
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        source: Icons.fileDocument
-                                        opacity: .5
-                                        color: 'black'
-                                    }
-                                    Label {
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        width: 140
-                                        wrapMode: Label.Wrap
-                                        font.pixelSize: 16
-                                        horizontalAlignment: Label.AlignHCenter
-                                        text: 'Clickez pour importer une image'
-                                        opacity: .6
-                                    }
-                                }
-                                MouseArea {
                                     anchors.fill: parent
-                                    onClicked: {
+                                    spacing: 10
+                                    padding: 25
+
+                                    title: 'Identifier un insecte'
+                                    onClicked: function() {
                                         if (Qt.platform.os === 'ios') {
                                             imgPicker.openPicker()
                                         } else if (Qt.platform.os === 'android') {
-                                            androidToolsLoader.item.openGallery(
-                                                        )
+                                            androidToolsLoader.item.openGallery()
                                         } else
                                             fileDialog.open()
                                     }
