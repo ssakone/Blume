@@ -19,7 +19,6 @@
         <file alias="SelectorMenu.qml">components_generic/SelectorMenu.qml</file>
         <file alias="SelectorMenuItem.qml">components_generic/SelectorMenuItem.qml</file>
         <file alias="SliderValueSolid.qml">components_generic/SliderValueSolid.qml</file>
-        
         <file alias="Carousel.qml">components_generic/Carousel.qml</file>
         <file alias="CheckBoxThemed.qml">components_themed/CheckBoxThemed.qml</file>
         <file alias="ComboBoxThemed.qml">components_themed/ComboBoxThemed.qml</file>
@@ -35,6 +34,7 @@
         <file>components/ClipRRect.qml</file>
         <file>components/AppBarButton.qml</file>
         <file>components/AppBar.qml</file>
+        <file>components/ItemNoImage.qml</file>
     </qresource>
     <qresource prefix="/js">
         <file alias="Http.js">components_js/Http.js</file>
@@ -44,4 +44,3 @@
         <file alias="UtilsPlantJournal.js">components_js/UtilsPlantJournal.js</file>
     </qresource>
 </RCC>
-

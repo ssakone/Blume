@@ -180,70 +180,20 @@ BPage {
                                     anchors.fill: parent
                                     fillMode: Image.PreserveAspectFit
                                 }
-                                Column {
+                                ItemNoImage {
                                     visible: image.source.toString() === ""
                                     anchors.fill: parent
                                     spacing: 10
                                     padding: 25
 
-                                    Label {
-                                        width: parent.width - (2 * parent.padding)
-                                        wrapMode: Label.Wrap
-                                        font.pixelSize: 24
-                                        font.weight: Font.Bold
-                                        text: 'Identifier la plante'
-                                        horizontalAlignment: Text.horizontalCenter
-                                    }
-
-                                    Label {
-                                        width: parent.width - (2 * parent.padding)
-                                        wrapMode: Label.Wrap
-                                        font.pixelSize: 14
-                                        text: 'Assurez-vous de prendre une photo nette et lumineuse comprenant uniquement la plante que vous souhaitez identifier.'
-                                        horizontalAlignment: Text.horizontalCenter
-                                    }
-
-                                    ClipRRect {
-                                        width: parent.width - (2 * parent.padding) - 50
-                                        height: width
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        radius: height / 2
-
-                                        Rectangle {
-                                            anchors.fill: parent
-                                            color: "#e5e5e5"
-
-                                            IconSvg {
-                                                width: parent.width / 1.5
-                                                height: width
-                                                anchors.centerIn: parent
-                                                source: Icons.image
-                                                opacity: .5
-                                                color: Theme.colorPrimary
-                                            }
-                                        }
-
-                                        MouseArea {
-                                            anchors.fill: parent
-                                            onClicked: {
-                                                if (Qt.platform.os === 'ios') {
-                                                    imgPicker.openPicker()
-                                                } else if (Qt.platform.os === 'android') {
-                                                    androidToolsLoader.item.openGallery()
-                                                } else
-                                                    fileDialog.open()
-                                            }
-                                        }
-                                    }
-
-                                    Label {
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        width: 200
-                                        wrapMode: Label.Wrap
-                                        font.pixelSize: 16
-                                        horizontalAlignment: Label.AlignHCenter
-                                        text: 'Clickez pour importer une image'
-                                        opacity: .6
+                                    title: 'Identifier la plante'
+                                    onClicked: {
+                                        if (Qt.platform.os === 'ios') {
+                                            imgPicker.openPicker()
+                                        } else if (Qt.platform.os === 'android') {
+                                            androidToolsLoader.item.openGallery()
+                                        } else
+                                            fileDialog.open()
                                     }
                                 }
                             }
