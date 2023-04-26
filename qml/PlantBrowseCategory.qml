@@ -23,27 +23,30 @@ Popup {
     property string title: "Catégorie"
     property int category_id
     property variant plants_list: []
+    property bool isLoaded: false
 
     onOpened: {
-        if(listCategoryPlants.category_id) {
+        loadingIndicator.running = true
+        if (listCategoryPlants.category_id) {
             Http.fetch({
-                method: 'GET',
-                url: "https://blume.mahoudev.com/items/Plantes?fields[]=*.*&filter[categorie][id][_eq]=" + category_id,
-            }).then(response => {
-                let data = JSON.parse(response).data
-                plants_list = data
-            })
+                           "method": 'GET',
+                           "url": "https://blume.mahoudev.com/items/Plantes?fields[]=*.*&filter[categorie][id][_eq]=" + category_id
+                       }).then(response => {
+                                   //                isLoaded = true
+                                   let data = JSON.parse(response).data
+                                   plants_list = data
+                                   loadingIndicator.running = false
+                               })
         }
     }
 
     onClosed: {
         listCategoryPlants.title = ""
         listCategoryPlants.category_id = 0
+        plants_list = []
     }
 
-
-    background: Rectangle {
-    }
+    background: Rectangle {}
 
     closePolicy: Popup.NoAutoClose
 
@@ -90,12 +93,10 @@ Popup {
                 font.bold: true
                 font.weight: Font.Medium
                 color: "white"
-               Layout.alignment: Qt.AlignVCenter
+                Layout.alignment: Qt.AlignVCenter
             }
         }
     }
-
-
 
     ListView {
         id: plantList
@@ -117,15 +118,15 @@ Popup {
             required property int index
 
             width: ListView.view.width
-            height: 80
+            height: 100
 
             background: Rectangle {
-                color: (index % 2 ) ? "white" : "#f0f0f0"
+                color: (index % 2) ? "white" : "#f0f0f0"
             }
 
             Components.ClipRRect {
                 id: leftImg
-                height: 60
+                height: 80
                 width: height
                 radius: width / 2
                 anchors.left: parent.left
@@ -133,7 +134,9 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
 
                 Image {
-                    source: modelData.images_plantes.length === 0 ? "" : "https://blume.mahoudev.com/assets/" + modelData.images_plantes[0].directus_files_id
+                    source: modelData.images_plantes.length
+                            === 0 ? "" : "https://blume.mahoudev.com/assets/"
+                                    + modelData.images_plantes[0].directus_files_id
                     anchors.fill: parent
                 }
             }
@@ -152,8 +155,8 @@ Popup {
                 }
                 Text {
                     text: {
-                        if(modelData.noms_communs) {
-                            return modelData.noms_communs ? ( modelData.noms_communs[0] + (modelData.noms_communs[1] ? `, ${modelData.noms_communs[1]}` : "") ) : ""
+                        if (modelData.noms_communs) {
+                            return modelData.noms_communs ? (modelData.noms_communs[0] + (modelData.noms_communs[1] ? `, ${modelData.noms_communs[1]}` : "")) : ""
                         }
                         return ""
                     }
@@ -175,16 +178,20 @@ Popup {
                     plantScreenDetailsPopup.open()
                 }
             }
-
         }
 
         ItemNoPlants {
-            visible: (plants_list.length <= 0)
+            visible: (plants_list.length === 0
+                      && loadingIndicator.running === false)
         }
     }
 
     PlantScreenDetails {
         id: plantScreenDetailsPopup
     }
-}
 
+    BusyIndicator {
+        id: loadingIndicator
+        anchors.centerIn: parent
+    }
+}

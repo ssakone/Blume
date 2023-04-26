@@ -182,36 +182,68 @@ BPage {
                                 }
                                 Column {
                                     visible: image.source.toString() === ""
-                                    anchors.centerIn: parent
+                                    anchors.fill: parent
                                     spacing: 10
-                                    IconSvg {
-                                        width: 64
-                                        height: 64
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        source: Icons.fileDocument
-                                        opacity: .5
-                                        color: 'black'
+                                    padding: 25
+
+                                    Label {
+                                        width: parent.width - (2 * parent.padding)
+                                        wrapMode: Label.Wrap
+                                        font.pixelSize: 24
+                                        font.weight: Font.Bold
+                                        text: 'Identifier la plante'
+                                        horizontalAlignment: Text.horizontalCenter
                                     }
+
+                                    Label {
+                                        width: parent.width - (2 * parent.padding)
+                                        wrapMode: Label.Wrap
+                                        font.pixelSize: 14
+                                        text: 'Assurez-vous de prendre une photo nette et lumineuse comprenant uniquement la plante que vous souhaitez identifier.'
+                                        horizontalAlignment: Text.horizontalCenter
+                                    }
+
+                                    ClipRRect {
+                                        width: parent.width - (2 * parent.padding) - 50
+                                        height: width
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        radius: height / 2
+
+                                        Rectangle {
+                                            anchors.fill: parent
+                                            color: "#e5e5e5"
+
+                                            IconSvg {
+                                                width: parent.width / 1.5
+                                                height: width
+                                                anchors.centerIn: parent
+                                                source: Icons.image
+                                                opacity: .5
+                                                color: Theme.colorPrimary
+                                            }
+                                        }
+
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onClicked: {
+                                                if (Qt.platform.os === 'ios') {
+                                                    imgPicker.openPicker()
+                                                } else if (Qt.platform.os === 'android') {
+                                                    androidToolsLoader.item.openGallery()
+                                                } else
+                                                    fileDialog.open()
+                                            }
+                                        }
+                                    }
+
                                     Label {
                                         anchors.horizontalCenter: parent.horizontalCenter
-                                        width: 140
+                                        width: 200
                                         wrapMode: Label.Wrap
                                         font.pixelSize: 16
                                         horizontalAlignment: Label.AlignHCenter
                                         text: 'Clickez pour importer une image'
                                         opacity: .6
-                                    }
-                                }
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        if (Qt.platform.os === 'ios') {
-                                            imgPicker.openPicker()
-                                        } else if (Qt.platform.os === 'android') {
-                                            androidToolsLoader.item.openGallery(
-                                                        )
-                                        } else
-                                            fileDialog.open()
                                     }
                                 }
                             }
@@ -449,7 +481,7 @@ BPage {
                             font.pixelSize: 18
                             width: 300
                             wrapMode: Label.Wrap
-                            horizontalAlignment: Label.AlignHCenter
+                            horizontalAlignment: Label.AlignLeft
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
                             visible: pageControl.plant_results?.is_plant
@@ -489,19 +521,21 @@ BPage {
                         height: 100
                         width: identifedPlantListView.width
 
-                        Rectangle {
+                        ClipRRect {
                             anchors.right: parent.right
                             anchors.rightMargin: 10
                             anchors.verticalCenter: parent.verticalCenter
-                            color: "teal"
-                            radius: 20
                             width: 80
                             height: width
-                            clip: true
-                            Image {
-                                source: modelData["plant_details"]["wiki_image"]["value"]
-                                height: parent.height
-                                width: parent.width
+                            radius: height / 2
+
+                            Rectangle {
+                                anchors.fill: parent
+                                color: "teal"
+                                Image {
+                                    source: modelData["plant_details"]["wiki_image"]["value"]
+                                    anchors.fill: parent
+                                }
                             }
                         }
 
