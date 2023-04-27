@@ -20,11 +20,10 @@ Popup {
     height: appWindow.height
     padding: 0
 
-    property int category_id
     property string title: "Catégorie"
+    property int category_id
+    property variant plants_list: []
     property bool isLoaded: false
-
-    property var plantsList: []
 
     onOpened: {
         loadingIndicator.running = true
@@ -34,11 +33,7 @@ Popup {
                            "url": "https://blume.mahoudev.com/items/Plantes?fields[]=*.*&filter[categorie][id][_eq]=" + category_id
                        }).then(response => {
                                    let data = JSON.parse(response).data
-                                   for(let i=0; i<data.length; i++) {
-                                       console.log("is pushing")
-                                       plantsList.push(data[i])
-                                   }
-
+                                   plants_list = data
                                    loadingIndicator.running = false
                                })
         }
@@ -47,7 +42,7 @@ Popup {
     onClosed: {
         listCategoryPlants.title = ""
         listCategoryPlants.category_id = 0
-        plantsList = []
+        plants_list = []
     }
 
     background: Rectangle {}
@@ -108,7 +103,7 @@ Popup {
         clip: true
         anchors.fill: parent
         anchors.topMargin: header.height
-        model: plantsList
+        model: plants_list
 
         header: Label {
             text: title
@@ -182,6 +177,7 @@ Popup {
                 cursorShape: "PointingHandCursor"
 
                 onClicked: {
+                    console.log(JSON.stringify(modelData))
                     plantScreenDetailsPopup.plant = modelData
                     plantScreenDetailsPopup.open()
                 }
@@ -189,7 +185,7 @@ Popup {
         }
 
         ItemNoPlants {
-            visible: (plantsList.length === 0
+            visible: (plants_list.length === 0
                       && loadingIndicator.running === false)
         }
     }

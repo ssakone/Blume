@@ -37,7 +37,7 @@ BPage {
     function fetchMore() {
         console.log("Gonna fetch_more...")
         isLoading = true
-        let query = `https://blume.mahoudev.com/items/Plantes?fields[]=*.*&limit=${pageLimit}&offset=${currentPage
+        let query = `https://blume.mahoudev.com/items/Plantes?fields[]=*.*&limit=${plantSearchBox.displayText !== "" ? 70 : pageLimit}&offset=${currentPage
             * pageLimit}${plantSearchBox.displayText
             === "" ? '' : "&filter[name_scientific][_contains]=" + plantSearchBox.displayText}`
 
@@ -48,9 +48,9 @@ BPage {
                                let data = JSON.parse(response).data
 
                                // Remove null value
-                               if (plantSearchBox.displayText === "")
-                               plantsModel.clear()
-
+                               if (plantSearchBox.displayText !== "") {
+                                   plantsModel.clear()
+                                }
                                for (var i = 0; i < data.length; i++) {
                                    let item = data[i]
                                    let itemKeys = Object.keys(item)
@@ -65,6 +65,7 @@ BPage {
                                    }
                                    plantsModel.append(item)
                                }
+
                                isLoading = false
                            })
     }
@@ -74,24 +75,23 @@ BPage {
         id: plantsModel
     }
 
-    SortFilterProxyModel {
-        id: plantFilter
-        sourceModel: plantsModel
-        delayed: true
-        filters: [
-            RegExpFilter {
-                roleName: "name"
-                pattern: plantSearchBox.displayText
-            }
-        ]
-    }
     PlantScreenDetails {
         id: plantScreenDetailsPopup
     }
 
+    Timer {
+        id: searchTimer
+        interval: 1500
+        repeat: true
+        running: plantSearchBox.displayText !== "" && plantListView.previousDisplayText !== plantSearchBox.text
+        onTriggered: {
+            fetchMore()
+            plantListView.previousDisplayText = plantSearchBox.text
+        }
+    }
+
     ColumnLayout {
         anchors.fill: parent
-        //        anchors.topMargin: 20
         spacing: 5
 
         TextFieldThemed {
@@ -108,7 +108,10 @@ BPage {
                 plantListView.currentPage = 0
                 plantListView.fetchMore()
             }
-            onTextChanged: plantListView.previousDisplayText = text
+            onTextChanged: {
+
+                plantListView.isLoading = true
+            }
 
             MouseArea {
                 anchors.fill: parent
@@ -159,7 +162,7 @@ BPage {
             Layout.fillHeight: true
             spacing: 0
             clip: true
-            model: plantFilter
+            model: plantsModel
 
             ScrollBar.vertical: ScrollBar {
                 property bool isLoading: false
@@ -216,29 +219,17 @@ BPage {
                 }
 
                 Column {
-                    anchors.left: leftImg.right
-                    anchors.leftMargin: 20
                     anchors.verticalCenter: parent.verticalCenter
+                    leftPadding: leftImg.width + 20
+                    width: parent.width - leftPadding - 20
 
                     Text {
                         text: modelData.name_scientific
                         color: Theme.colorText
                         fontSizeMode: Text.Fit
                         font.pixelSize: 18
-                        minimumPixelSize: Theme.fontSizeContentSmall
-                    }
-                    Text {
-                        text: {
-                            if (modelData.noms_communs) {
-                                return modelData.noms_communs ? (modelData.noms_communs[0] + (modelData.noms_communs[1] ? `, ${modelData.noms_communs[1]}` : "")) : ""
-                            }
-                            return ""
-                        }
-
-                        color: Theme.colorSubText
-                        fontSizeMode: Text.Fit
-                        font.pixelSize: 14
-                        minimumPixelSize: Theme.fontSizeContentSmall
+                        width: parent.width - 10
+                        elide: Text.ElideRight
                     }
                 }
 
