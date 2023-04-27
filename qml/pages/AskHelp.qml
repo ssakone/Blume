@@ -88,6 +88,7 @@ Page {
                     "placeholder": "1 à 2 fois par semaine"
                 }]
         }]
+
     property variant attached_images: []
 
     Popup {

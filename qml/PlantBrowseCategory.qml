@@ -20,10 +20,11 @@ Popup {
     height: appWindow.height
     padding: 0
 
-    property string title: "Catégorie"
     property int category_id
-    property variant plants_list: []
+    property string title: "Catégorie"
     property bool isLoaded: false
+
+    property var plantsList: []
 
     onOpened: {
         loadingIndicator.running = true
@@ -32,9 +33,12 @@ Popup {
                            "method": 'GET',
                            "url": "https://blume.mahoudev.com/items/Plantes?fields[]=*.*&filter[categorie][id][_eq]=" + category_id
                        }).then(response => {
-                                   //                isLoaded = true
                                    let data = JSON.parse(response).data
-                                   plants_list = data
+                                   for(let i=0; i<data.length; i++) {
+                                       console.log("is pushing")
+                                       plantsList.push(data[i])
+                                   }
+
                                    loadingIndicator.running = false
                                })
         }
@@ -43,7 +47,7 @@ Popup {
     onClosed: {
         listCategoryPlants.title = ""
         listCategoryPlants.category_id = 0
-        plants_list = []
+        plantsList = []
     }
 
     background: Rectangle {}
@@ -104,7 +108,7 @@ Popup {
         clip: true
         anchors.fill: parent
         anchors.topMargin: header.height
-        model: plants_list
+        model: plantsList
 
         header: Label {
             text: title
@@ -178,7 +182,6 @@ Popup {
                 cursorShape: "PointingHandCursor"
 
                 onClicked: {
-                    console.log(JSON.stringify(modelData))
                     plantScreenDetailsPopup.plant = modelData
                     plantScreenDetailsPopup.open()
                 }
@@ -186,7 +189,7 @@ Popup {
         }
 
         ItemNoPlants {
-            visible: (plants_list.length === 0
+            visible: (plantsList.length === 0
                       && loadingIndicator.running === false)
         }
     }

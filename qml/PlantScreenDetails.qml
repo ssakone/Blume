@@ -194,7 +194,7 @@ Popup {
                                         text: {
                                             let res = ""
                                             if (plant['noms_communs']) {
-                                                let common_names = plant['noms_communs'].slice(
+                                                let common_names = plant['noms_communs']?.slice(
                                                         1)
                                                 let len = common_names.length
                                                 common_names.forEach(
@@ -360,12 +360,6 @@ Popup {
                                     }
 
                                     Label {
-                                        //                                        text: {
-                                        //                                            let res = ""
-                                        //                                            let len = plant['light_level'].length
-                                        //                                            plant['light_level'].forEach((level, index) => res += (level + (len === index + 1 ? "" : ", ")) )
-                                        //                                            return res
-                                        //                                        }
                                         text: plant['exposition_au_soleil']
                                               || ""
 
@@ -377,11 +371,6 @@ Popup {
                                         Layout.fillWidth: true
                                         Layout.leftMargin: 10
                                         Layout.rightMargin: 10
-
-                                        //                                background: Rectangle {
-                                        //                                    color: Theme.colorPrimary
-                                        //                                    radius: 5
-                                        //                                }
                                     }
 
                                     Item {
@@ -488,7 +477,7 @@ Popup {
                                         model: plant['images_plantes']
                                         delegate: Image {
                                             source: "https://blume.mahoudev.com/assets/"
-                                                    + model.modelData.directus_files_id
+                                                    + model['directus_files_id']
                                         }
                                     }
                                 }

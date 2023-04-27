@@ -18,6 +18,9 @@ QtObject {
         PlantBrowser {}
     }
     property var plantDetailPage: Component {
-        PlantScreen {}
+        PlantScreenDetails {}
+    }
+    property var plantSearchPage: Component {
+        PlantSearch{}
     }
 }

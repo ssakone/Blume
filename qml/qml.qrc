@@ -90,6 +90,7 @@
         <file>components_generic/ToolTipFlat.qml</file>
         <file>components_generic/RoundButtonIcon.qml</file>
         <file>components/FormGroup.qml</file>
+        <file>pages/Plant/PlantSearch.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>
