@@ -40,7 +40,7 @@ BPage {
             spacing: 10
 
             Rectangle {
-                height: 300
+                height: singleColumn ? 300 : pageControl.height / 3
                 width: parent.width
                 clip: true
                 color: "#f0f0f0"
@@ -98,7 +98,7 @@ BPage {
                 Text {
                     text: details['description']
                     wrapMode: Text.Wrap
-                    Layout.maximumWidth: pageControl.width - 40
+                    width: parent.width
                 }
 
                 Label {

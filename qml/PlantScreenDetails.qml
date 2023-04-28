@@ -22,11 +22,6 @@ Popup {
         id: modelImagesPlantes
     }
 
-    onOpened: {
-        console.log("----------", plant["images_plantes"],
-                    typeof plant["images_plantes"])
-    }
-
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
@@ -101,7 +96,7 @@ Popup {
 
                     Rectangle {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: plantScreenDetailsPopup.height / 3
+                        Layout.preferredHeight: singleColumn ? 300 : plantScreenDetailsPopup.height / 3
 
                         visible: plant['images_plantes']?.length ?? 0 > 0
                         clip: true
@@ -476,8 +471,8 @@ Popup {
                                     Repeater {
                                         model: plant['images_plantes']
                                         delegate: Image {
-                                            source: "https://blume.mahoudev.com/assets/"
-                                                    + model['directus_files_id']
+                                            source: model['directus_files_id'] ? "https://blume.mahoudev.com/assets/"
+                                                    + model['directus_files_id'] : ""
                                         }
                                     }
                                 }

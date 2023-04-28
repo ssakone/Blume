@@ -24,6 +24,7 @@ import "../../components_generic"
 import "../../components_js/Http.js" as Http
 
 BPage {
+    property bool isLoading: true
     header: AppBar {
         title: "Encyclopedie des plantes"
     }
@@ -40,6 +41,7 @@ BPage {
                        }).then(response => {
                                    let data = JSON.parse(response).data
                                    fetched_deseases = data
+                                   isLoading = false
                                })
         }
 
@@ -221,5 +223,10 @@ BPage {
 
             }
         }
+    }
+
+    BusyIndicator {
+        running: isLoading
+        anchors.centerIn: parent
     }
 }

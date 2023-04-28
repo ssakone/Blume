@@ -186,6 +186,7 @@ Page {
                                     padding: 25
 
                                     title: 'Identifier un insecte'
+                                    subtitle: 'Assurez-vous de prendre une photo nette et lumineuse comprenant uniquement le parasite que vous souhaitez identifier.'
                                     onClicked: function() {
                                         if (Qt.platform.os === 'ios') {
                                             imgPicker.openPicker()

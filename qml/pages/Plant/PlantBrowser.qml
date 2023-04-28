@@ -350,7 +350,6 @@ BPage {
                                                         pk = 6
                                                     }
 
-                                                    plantListByCategory.title = title
                                                     plantListByCategory.category_id = pk
                                                     plantListByCategory.open()
                                                 }

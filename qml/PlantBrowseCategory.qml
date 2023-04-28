@@ -20,7 +20,6 @@ Popup {
     height: appWindow.height
     padding: 0
 
-    property string title: "Catégorie"
     property int category_id
     property variant plants_list: []
     property bool isLoaded: false
@@ -40,7 +39,6 @@ Popup {
     }
 
     onClosed: {
-        listCategoryPlants.title = ""
         listCategoryPlants.category_id = 0
         plants_list = []
     }
@@ -104,13 +102,6 @@ Popup {
         anchors.fill: parent
         anchors.topMargin: header.height
         model: plants_list
-
-        header: Label {
-            text: title
-            font.pixelSize: 35
-            font.weight: Font.Light
-            anchors.leftMargin: 15
-        }
 
         delegate: ItemDelegate {
             required property variant modelData
