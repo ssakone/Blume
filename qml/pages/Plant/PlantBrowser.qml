@@ -290,27 +290,16 @@ BPage {
                                             source: icon
                                             color: 'white'
                                         }
-                                        Image {
-                                            id: img
-                                            visible: image.toString() !== ""
-                                            source: image
+                                        Components.ClipRRect {
                                             anchors.fill: parent
-                                            layer.enabled: true
-                                            layer.effect: OpacityMask {
-                                                maskSource: Item {
-                                                    width: img.width
-                                                    height: img.height
-                                                    Rectangle {
-                                                        anchors.centerIn: parent
-                                                        width: img.adapt ? img.width : Math.min(
-                                                                               img.width,
-                                                                               img.height)
-                                                        height: img.adapt ? img.height : width
-                                                        radius: 10
-                                                    }
-                                                }
+                                            visible: image.toString() !== ""
+                                            Image {
+                                                id: img
+                                                source: image
+                                                anchors.fill: parent
                                             }
                                         }
+
                                         MouseArea {
                                             id: mArea
                                             anchors.fill: parent
