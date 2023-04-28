@@ -22,7 +22,7 @@ BPage {
     id: plantBrowser
 
     header: Components.AppBar {
-        title: "Plant browser"
+        title: "Plants menu"
         noAutoPop: true
         leading.onClicked: plantBrowser.StackView.view.pop()
     }
@@ -161,55 +161,55 @@ BPage {
 
                     Component.onCompleted: {
                         let data = [{
-                                        "name": qsTr("Plantes recommandees"),
+                                        "name": qsTr("Suggested plants"),
                                         "icon": "qrc:/assets/icons_custom/thumbs.png",
                                         "image": "",
                                         "action": "",
                                         "style": "darkblue"
                                     }, {
-                                        "name": qsTr("Identifier la plante"),
+                                        "name": qsTr("Identify plant"),
                                         "icon": "qrc:/assets/icons_custom/plant_scan.png",
                                         "image": "",
                                         "action": "identify",
                                         "style": "lightenYellow"
                                     }, {
-                                        "name": qsTr("Posemetre"),
+                                        "name": qsTr("Light sensor"),
                                         "icon": "qrc:/assets/icons_custom/posometre.svg",
                                         "image": "",
                                         "action": "posometre",
                                         "style": "sunrise"
                                     }, {
-                                        "name": qsTr("Plante fleuries"),
+                                        "name": qsTr("Floral plants"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/fleure.jpg",
                                         "action": "categorie_plantes_fleuries",
                                         "style": ""
                                     }, {
-                                        "name": qsTr("Orchidees"),
+                                        "name": qsTr("Orchids"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/orchidee.jpg",
                                         "action": "categorie_plantes_orchidee",
                                         "style": ""
                                     }, {
-                                        "name": qsTr("Cactus et succulentes"),
+                                        "name": qsTr("Cactus and succulents"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/cactus.jpg",
                                         "action": "categorie_plantes_cactus_succulentes",
                                         "style": ""
                                     }, {
-                                        "name": qsTr("Legumes"),
+                                        "name": qsTr("Vegetables"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/legume.jpg",
                                         "action": "categorie_plantes_legumes",
                                         "style": ""
                                     }, {
-                                        "name": qsTr("Herbes"),
+                                        "name": qsTr("Herbal"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/herbe.jpeg",
                                         "action": "categorie_plantes_herbes",
                                         "style": ""
                                     }, {
-                                        "name": qsTr("Plantes a feuillage"),
+                                        "name": qsTr("Foliage plants"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/feuillage.jpg",
                                         "action": "categorie_plantes_feuillage",

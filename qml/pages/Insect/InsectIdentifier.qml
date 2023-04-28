@@ -43,7 +43,7 @@ Page {
         preferredPositioningMethods: PositionSource.SatellitePositioningMethods
     }
     header: AppBar {
-        title: identifierLayoutView.currentIndex === 0 ? "Identification d'insecte" : "Resultat"
+        title: identifierLayoutView.currentIndex === 0 ? "Identify insects" : "Results"
         noAutoPop: true
         leading.onClicked: {
             if (identifierLayoutView.currentIndex === 0) {
@@ -131,10 +131,10 @@ Page {
                         visible: Qt.platform.os !== 'ios'
                                  && Qt.platform.os !== 'android'
                         TabButton {
-                            text: "Fichier"
+                            text: qsTr("File image")
                         }
                         TabButton {
-                            text: "Camera"
+                            text: qsTr("Camera")
                             visible: Qt.platform.os !== 'ios'
                         }
                         onCurrentIndexChanged: {
@@ -185,8 +185,8 @@ Page {
                                     spacing: 10
                                     padding: 25
 
-                                    title: 'Identifier un insecte'
-                                    subtitle: 'Assurez-vous de prendre une photo nette et lumineuse comprenant uniquement le parasite que vous souhaitez identifier.'
+                                    title: qsTr("Identify insect")
+                                    subtitle: qsTr("Be sure to take a clear, bright picture that includes only the pest you want to identify.")
                                     onClicked: function() {
                                         if (Qt.platform.os === 'ios') {
                                             imgPicker.openPicker()
@@ -314,7 +314,7 @@ Page {
                         }
 
                         NiceButton {
-                            text: "Nouveau"
+                            text: qsTr("New")
                             Layout.preferredHeight: 60
                             Layout.preferredWidth: 120
                             visible: tabBar.currentIndex === 1
@@ -332,7 +332,7 @@ Page {
                         NiceButton {
                             id: analyserButton
                             Layout.alignment: Qt.AlignHCenter
-                            text: "Analyser"
+                            text: qsTr("Analyse")
                             icon.source: Icons.magnify
                             Layout.preferredWidth: Qt.platform.os === 'ios' ? 120 : 180
                             Layout.preferredHeight: 60
@@ -402,7 +402,7 @@ Page {
                         Layout.alignment: Qt.AlignHCenter
                         spacing: 10
                         ButtonWireframe {
-                            text: "Fichier"
+                            text: qsTr("File image")
                             Layout.fillWidth: true
                             Layout.preferredHeight: 45
                             height: 45
@@ -435,7 +435,7 @@ Page {
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
                             visible: pageControl.insects.length > 0 ?? false
-                            text: "Un de ces résultats devrait correspondre à votre recherche"
+                            text: qsTr("One of these results should match your search")
                         }
                         Label {
                             font.pixelSize: 28
@@ -445,7 +445,7 @@ Page {
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
                             visible: pageControl.insects.length === 0
-                            text: "Ceci n'est pas un insecte"
+                            text: qsTr("No insects detected")
                         }
                     }
 

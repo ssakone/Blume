@@ -11,14 +11,14 @@ import "../components_js/Http.js" as Http
 
 Page {
     header: AppBar {
-        title: "Demander à un botaniste"
+        title: qsTr("Ask a botanist about")
     }
 
     property variant form_schema: [{
             "group_title": "",
             "fields": [{
                     "name": "user_email",
-                    "label": "Adresse email de l'utilisateur",
+                    "label": "User email",
                     "is_required": true,
                     "placeholder": "",
                 }]
@@ -26,66 +26,66 @@ Page {
             "group_title": "",
             "fields": [{
                     "name": "description",
-                    "label": "Décrivez le problème",
+                    "label": "Describe the issue",
                     "is_required": true,
                     "placeholder": "",
                     "type": "textarea"
                 }]
         }, {
-            "group_title": "Exposition et température",
+            "group_title": "Exposure and temperature",
             "group_icon": "qrc:/assets/icons_material/baseline-autorenew-24px.svg",
             "fields": [{
                     "name": "sun_time",
-                    "label": "De combien d'ensoleillement bénéficie votre plante chaque jour ?",
+                    "label": "How much sun your plant gets each day ?",
                     "is_required": true,
-                    "placeholder": "6h de lumière naturelle indirecte"
+                    "placeholder": "6h a day"
                 }, {
                     "name": "sun_temp",
-                    "label": "Quelles sont les température de son environnement ?",
+                    "label": "What are the temperatures of its environment ?",
                     "is_required": false,
-                    "placeholder": "Journée: +24°C, Nuit: +1°C"
+                    "placeholder": "Day: +24°C, Night: +1°C"
                 }]
         }, {
-            "group_title": "Parasites et maladies",
+            "group_title": "Parasites and diseases",
             "group_icon": "qrc:/assets/icons_material/baseline-autorenew-24px.svg",
             "fields": [{
                     "name": "disease_list",
-                    "label": "Y a-t-il des toiles ou des insectes sur la plante ou dans la terre ?",
+                    "label": "Are there webs or insects on the plant or in the soil ?",
                     "is_required": false,
-                    "placeholder": "Insectes blancs sous les feuilles"
+                    "placeholder": "White insects under the leaves"
                 }]
         }, {
             "group_title": "Arrosage",
             "group_icon": "qrc:/assets/icons_material/baseline-autorenew-24px.svg",
             "fields": [{
                     "name": "watering_freq",
-                    "label": "A quelle fréquence arrosez-vous votre plante ?",
+                    "label": "How often do you water your plant ?",
                     "is_required": false,
-                    "placeholder": "1 à 2 fois par semaine"
+                    "placeholder": "1 to 2 times a week"
                 }, {
                     "name": "watering_qty",
-                    "label": "Quelle quantité d'eau utilisez-vous ?",
+                    "label": "How much water do you use ?",
                     "is_required": false,
-                    "placeholder": "Un verre et demi"
+                    "placeholder": "A glass and a half"
                 }, {
                     "name": "watering_drying",
-                    "label": "Laissez-vous la terre sécher entre les arrosages ?",
+                    "label": "Do you let the soil dry between waterings?",
                     "is_required": false,
-                    "placeholder": "Oui, les premiers centimètres"
+                    "placeholder": "Yes, the first few inches"
                 }, {
                     "name": "watering_container",
-                    "label": "Le fond du pot est-il percé ?",
+                    "label": "Is the bottom of the jar pierced?",
                     "is_required": false,
-                    "placeholder": "Oui"
+                    "placeholder": "yes"
                 }]
         }, {
-            "group_title": "Rempotage et engrais",
+            "group_title": "Potting and fertilizing",
             "group_icon": "qrc:/assets/icons_material/baseline-autorenew-24px.svg",
             "fields": [{
                     "name": "rampotage",
-                    "label": "A quelle fréquence arrosez-vous votre plante ?",
+                    "label": "How often do you pot your plant ?",
                     "is_required": false,
-                    "placeholder": "1 à 2 fois par semaine"
+                    "placeholder": "1 to 2 times a year"
                 }]
         }]
 
@@ -167,7 +167,7 @@ Page {
             spacing: 10
 
             Label {
-                text: "Votre adresse email"
+                text: qsTr("Your email address")
                 font {
                     pixelSize: 16
                     weight: Font.Bold
@@ -212,7 +212,7 @@ Page {
             Label {
                 id: txtError
                 visible: false
-                text: "Votre adresse email est incorrecte"
+                text: qsTr("Incorrect email address")
                 color: 'red'
                 font {
                     weight: Font.Light
@@ -225,7 +225,7 @@ Page {
 
                 ButtonWireframe {
                     id: backBtn
-                    text: "Retour"
+                    text: qsTr("Back")
                     fullColor: Material.color(Material.Grey, Material.Shade400)
                     fulltextColor: "back"
                     componentRadius: 10
@@ -245,7 +245,7 @@ Page {
 
                 ButtonWireframe {
                     id: sendBtn
-                    text: "Envoyer"
+                    text: qsTr("Submit")
                     fullColor: Theme.colorPrimary
                     fulltextColor: "white"
                     componentRadius: 10
@@ -274,7 +274,7 @@ Page {
                 Layout.alignment: Qt.AlignHCenter
             }
             Label {
-                text: "Votre requête est bien reçue et sera traitée dans les plus bref délais"
+                text: qsTr("Your request is received and will be processed as soon as possible")
                 color: Theme.colorPrimary
                 font {
                     pixelSize: 16
@@ -316,7 +316,7 @@ Page {
                 Layout.alignment: Qt.AlignHCenter
             }
             Label {
-                text: "Veuillez vérifier votre connexion internet et reéssayez"
+                text: qsTr("Please check your internet connection and try again")
                 font {
                     pixelSize: 14
                     weight: Font.Light
@@ -352,7 +352,7 @@ Page {
                 anchors.rightMargin: 10
 
                 Label {
-                    text: "Vous receverez un diagnostic et un plan de soin dans les trois jours après avoire rempli ce formulaire"
+                    text: qsTr("You will receive a diagnosis and care plan within three days of completing this form.")
                     color: "white"
                     font.pixelSize: 16
                     font.weight: Font.Light
@@ -394,7 +394,7 @@ Page {
                             width: parent.width
                             spacing: 10
                             Label {
-                                text: "Ajouter des images"
+                                text: qsTr("Attach images")
                                 font {
                                     pixelSize: 16
                                     weight: Font.Bold
@@ -405,7 +405,7 @@ Page {
                             }
 
                             Label {
-                                text: "Photographiez la plante entière ainsi que les parties qui semblent malades"
+                                text: qsTr("Photograph the entire plant as well as the parts that appear diseased.")
                                 font.weight: Font.Light
                                 Layout.fillWidth: true
                                 wrapMode: Text.Wrap
@@ -459,7 +459,7 @@ Page {
                                 Layout.fillWidth: true
                             }
                             ButtonWireframe {
-                                text: "Suivant"
+                                text: qsTr("Next")
                                 fullColor: Theme.colorPrimary
                                 fulltextColor: "white"
                                 componentRadius: 10

@@ -121,7 +121,7 @@ BPage {
 
                                 Row {
                                     Text {
-                                        text: qsTr("Commestibilité")
+                                        text: qsTr("Edible parts")
                                         font.pixelSize: 16
                                     }
                                     IconImage {
@@ -160,7 +160,7 @@ BPage {
                                                               Material.Shade600)
                                     }
                                     Label {
-                                        text: "Plante toxique"
+                                        text: qsTr("Toxic")
                                         color: Material.color(Material.Red,
                                                               Material.Shade600)
                                         font.pixelSize: 18
@@ -189,7 +189,7 @@ BPage {
                                         color: Theme.colorPrimary
                                     }
                                     Text {
-                                        text: qsTr("Méthode de propagation")
+                                        text: qsTr("Propagation method")
                                         font.pixelSize: 16
                                     }
                                 }
@@ -221,7 +221,7 @@ BPage {
                     }
 
                     ButtonWireframeIcon {
-                        text: "Plus d'informations sur Wikipédia"
+                        text: qsTr("More informations on Wikipédia")
                         fulltextColor: Theme.colorPrimary
                         primaryColor: "white"
                         fullColor: true

@@ -29,7 +29,7 @@ Column {
         width: parent.width - (2 * parent.padding)
         wrapMode: Label.Wrap
         font.pixelSize: 14
-        text: subtitle || 'Assurez-vous de prendre une photo nette et lumineuse comprenant uniquement la plante que vous souhaitez identifier.'
+        text: qsTr(subtitle)
         opacity: .6
         horizontalAlignment: Text.horizontalCenter
     }
@@ -66,7 +66,7 @@ Column {
         wrapMode: Label.Wrap
         font.pixelSize: 16
         horizontalAlignment: Label.AlignHCenter
-        text: 'Clickez pour importer une image'
+        text: qsTr("Click to load image")
         opacity: .6
     }
 }

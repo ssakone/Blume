@@ -226,7 +226,7 @@ Loader {
 
                     Component.onCompleted: {
                         let data = [{
-                                        "name": qsTr("Plantes recommandees"),
+                                        "name": qsTr("Suggested plants"),
                                         "icon": "qrc:/assets/icons_custom/thumbs.png",
                                         "image": "",
                                         "action": "",

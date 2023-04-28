@@ -44,7 +44,7 @@ BPage {
         preferredPositioningMethods: PositionSource.SatellitePositioningMethods
     }
     header: AppBar {
-        title: identifierLayoutView.currentIndex === 0 ? "Identification de plante" : "Resultat"
+        title: identifierLayoutView.currentIndex === 0 ? "Back" : "Results"
         noAutoPop: true
         leading.onClicked: {
             if (identifierLayoutView.currentIndex === 0) {
@@ -132,10 +132,10 @@ BPage {
                         visible: Qt.platform.os !== 'ios'
                                  && Qt.platform.os !== 'android'
                         TabButton {
-                            text: "Fichier"
+                            text: qsTr("File image")
                         }
                         TabButton {
-                            text: "Camera"
+                            text: qsTr("Camera")
                             visible: Qt.platform.os !== 'ios'
                         }
                         onCurrentIndexChanged: {
@@ -186,7 +186,8 @@ BPage {
                                     spacing: 10
                                     padding: 25
 
-                                    title: 'Identifier la plante'
+                                    title: qsTr("Identify plant")
+                                    subtitle: qsTr("Be sure to take a clear, bright photo that includes only the plant you want to identify")
                                     onClicked: function() {
                                         if (Qt.platform.os === 'ios') {
                                             imgPicker.openPicker()
@@ -314,7 +315,7 @@ BPage {
                         }
 
                         NiceButton {
-                            text: "Nouveau"
+                            text: qsTr("New")
                             Layout.preferredHeight: 60
                             Layout.preferredWidth: 120
                             visible: tabBar.currentIndex === 1
@@ -332,7 +333,7 @@ BPage {
                         NiceButton {
                             id: analyserButton
                             Layout.alignment: Qt.AlignHCenter
-                            text: "Analyser"
+                            text: qsTr("Analyse")
                             icon.source: Icons.magnify
                             Layout.preferredWidth: Qt.platform.os === 'ios' ? 120 : 180
                             Layout.preferredHeight: 60
@@ -348,7 +349,7 @@ BPage {
                                                     === "windows" ? "file:///" : "file://",
                                                     ""))],
                                         "modifiers": ["crops_fast", "similar_images"],
-                                        "language": "fr",
+                                        "language": "en",
                                         "plant_details": ["common_names", "taxonomy", "url", "wiki_description", "wiki_image", "wiki_images", "edible_parts", "propagation_methods"],
                                         "longitude": gps.position.coordinate.longitude,
                                         "latitude": gps.position.coordinate.latitude
@@ -402,7 +403,7 @@ BPage {
                         Layout.alignment: Qt.AlignHCenter
                         spacing: 10
                         ButtonWireframe {
-                            text: "Fichier"
+                            text: qsTr("File image")
                             Layout.fillWidth: true
                             Layout.preferredHeight: 45
                             height: 45
@@ -436,7 +437,7 @@ BPage {
                             verticalAlignment: Qt.AlignVCenter
                             visible: pageControl.plant_results?.is_plant
                                      ?? false
-                            text: "Un de ces résultats devrait correspondre à votre recherche"
+                            text: qsTr("One of these results should match your search")
                         }
                         Label {
                             font.pixelSize: 28
@@ -446,7 +447,7 @@ BPage {
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
                             visible: !pageControl.plant_results?.is_plant
-                            text: "Ceci n'est pas une plante"
+                            text: qsTr("No plant detected")
                         }
                     }
 

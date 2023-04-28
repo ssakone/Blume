@@ -85,7 +85,7 @@ Popup {
                 }
             }
             Label {
-                text: "Retour"
+                text: qsTr("Back")
                 font.pixelSize: 21
                 font.bold: true
                 font.weight: Font.Medium

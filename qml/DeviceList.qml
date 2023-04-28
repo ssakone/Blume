@@ -444,7 +444,7 @@ Page {
                     Label {
                         anchors.horizontalCenter: parent.horizontalCenter
                         color: "white"
-                        text: qsTr("Plantes")
+                        text: qsTr("Plants")
                     }
                 }
 
@@ -472,7 +472,7 @@ Page {
                     }
                     Label {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: qsTr("Santé")
+                        text: qsTr("Health")
                         color: "white"
                     }
                 }

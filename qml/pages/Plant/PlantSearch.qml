@@ -100,7 +100,6 @@ BPage {
             Layout.preferredHeight: 40
             Layout.margins: 15
 
-            placeholderText: qsTr("Search for plants")
             selectByMouse: true
             colorSelectedText: "white"
 
