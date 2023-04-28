@@ -36,13 +36,10 @@ BPage {
         color: Theme.colorPrimary
     }
 
-    header: AppBar {
-        title: plant_data.plant_name
-    }
+    header: AppBar {}
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 0
         spacing: 0
 
         ListModel {
@@ -50,187 +47,198 @@ BPage {
         }
 
         Rectangle {
-            height: resultIdentifierDetailPop.height / 3
+            Layout.preferredHeight: resultIdentifierDetailPop.height / 3
             Layout.fillWidth: true
             clip: true
             Image {
+                anchors.fill: parent
                 source: details['wiki_image']['value']
                 fillMode: Image.PreserveAspectCrop
             }
         }
 
-        ColumnLayout {
+        Flickable {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            contentHeight: _insideCol1.height
+            clip: true
 
-            Layout.leftMargin: 20
+            Column {
+                id: _insideCol1
+                width: parent.width - 20
+                padding: 10
 
-            spacing: 10
+                Column {
+                    width: parent.width
+                    spacing: 10
 
-            ColumnLayout {
-                spacing: 3
-                Label {
-                    text: plant_data['plant_name']
-                    font.pixelSize: 28
-                    color: "white"
-                    font.weight: Font.DemiBold
-                }
-
-                RowLayout {
-                    Layout.maximumWidth: resultIdentifierDetailPop.width - 40
-
-                    Repeater {
-                        model: details['common_names']
-                        delegate: Label {
-                            required property int index
-                            required property variant modelData
-
-                            text: modelData + (index < details['common_names'].length ? ", " : "")
+                    ColumnLayout {
+                        width: parent.width
+                        spacing: 3
+                        Label {
+                            text: plant_data['plant_name']
+                            font.pixelSize: 28
+                            color: "white"
+                            font.weight: Font.DemiBold
                         }
-                    }
-                    Item {
-                        Layout.fillHeight: true
-                    }
-                }
-            }
 
-            ScrollView {
-                width: resultIdentifierDetailPop.width - 40
-
-                RowLayout {
-                    spacing: 20
-
-                    Rectangle {
-                        Layout.preferredHeight: 80
-                        width: edibility_col.width + 20
-                        color: "white" //Material.color(Material.Grey, Material.Shade100)
-                        radius: 10
-
-                        ColumnLayout {
-                            id: edibility_col
+                        Row {
                             Layout.fillWidth: true
-                            Layout.fillHeight: true
 
-                            RowLayout {
-                                Layout.alignment: Qt.AlignHCenter
-                                Text {
-                                    text: qsTr("Commestibilité")
-                                    font.pixelSize: 16
-                                    Layout.alignment: Qt.AlignHCenter
-                                }
-                                IconImage {
-                                    source: "qrc:/assets/icons_material/baseline-check_circle-24px.svg"
-                                    width: 25
-                                    height: 25
-                                    visible: details['edible_parts'] !== null
-                                    color: Theme.colorPrimary
+                            Repeater {
+                                model: details['common_names']
+                                delegate: Label {
+                                    required property int index
+                                    required property variant modelData
+
+                                    text: modelData + (index < details['common_names'].length ? ", " : "")
                                 }
                             }
 
-                            RowLayout {
-                                Layout.alignment: Qt.AlignHCenter
-                                Repeater {
-                                    model: details['edible_parts']
-                                    delegate: Text {
-                                        required property int index
-                                        required property variant modelData
-                                        text: modelData
-                                        font.pixelSize: 14
-                                        Layout.margins: 20
+                        }
+                    }
+
+                    Flickable {
+                        width: parent.width
+                        height: _insideRow1.height
+                        contentWidth: _insideRow1.width
+
+                        Row {
+                            id: _insideRow1
+                            spacing: 20
+
+                            Container {
+                                width: resultIdentifierDetailPop.width / 2
+
+                                background: Rectangle {
+                                    color: "white"
+                                    radius: 10
+                                }
+                                contentItem: Column {
+                                    width: parent.width
+
+                                }
+
+                                Row {
+                                    Text {
+                                        text: qsTr("Commestibilité")
+                                        font.pixelSize: 16
+                                    }
+                                    IconImage {
+                                        source: "qrc:/assets/icons_material/baseline-check_circle-24px.svg"
+                                        width: 25
+                                        height: 25
+                                        visible: details['edible_parts'] !== null
+                                        color: Theme.colorPrimary
+                                    }
+                                }
+
+                                Row {
+                                    Repeater {
+                                        model: details['edible_parts']
+                                        delegate: Text {
+                                            required property int index
+                                            required property variant modelData
+                                            text: modelData
+                                            font.pixelSize: 14
+                                            padding: 5
+                                            Layout.fillWidth: true
+                                            wrapMode: Text.Wrap
+                                        }
+                                    }
+                                }
+
+                                Row {
+                                    spacing: 5
+                                    visible: details['edible_parts'] === null
+                                    Layout.alignment: Qt.AlignCenter
+                                    IconImage {
+                                        source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
+                                        width: 25
+                                        height: 25
+                                        color: Material.color(Material.Red,
+                                                              Material.Shade600)
+                                    }
+                                    Label {
+                                        text: "Plante toxique"
+                                        color: Material.color(Material.Red,
+                                                              Material.Shade600)
+                                        font.pixelSize: 18
+                                    }
+                                }
+
+                            }
+
+                            Container {
+                                width: resultIdentifierDetailPop.width / 2
+                                background: Rectangle {
+                                    color: "white"
+                                    radius: 10
+                                }
+                                contentItem: Column {
+                                    width: parent.width
+                                    padding: 5
+                                }
+
+                                Row {
+                                    IconImage {
+                                        source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
+                                        width: 25
+                                        height: 25
+                                        visible: details['propagation_methods'] !== null
+                                        color: Theme.colorPrimary
+                                    }
+                                    Text {
+                                        text: qsTr("Méthode de propagation")
+                                        font.pixelSize: 16
+                                    }
+                                }
+
+                                Row {
+                                    Repeater {
+                                        model: details['propagation_methods']
+                                        delegate: Text {
+                                            required property int index
+                                            required property variant modelData
+                                            text: modelData
+                                            font.pixelSize: 14
+                                            padding: 5
+                                        }
                                     }
                                 }
                             }
-
-                            RowLayout {
-                                spacing: 5
-                                visible: details['edible_parts'] === null
-                                Layout.alignment: Qt.AlignCenter
-                                IconImage {
-                                    source: "qrc:/assets/icons_material/baseline-warning-24px.svg"
-                                    width: 25
-                                    height: 25
-                                    color: Material.color(Material.Red,
-                                                          Material.Shade600)
-                                }
-                                Label {
-                                    text: "Plante toxique"
-                                    color: Material.color(Material.Red,
-                                                          Material.Shade600)
-                                    font.pixelSize: 18
-                                }
-                            }
                         }
                     }
-                    Rectangle {
-                        Layout.preferredHeight: 80
-                        width: propagation_methods_col.width + 20
-                        color: "white"
-                        radius: 10
-                        visible: details['propagation_methods'] !== null
 
-                        ColumnLayout {
-                            id: propagation_methods_col
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-
-                            Text {
-                                text: qsTr("Méthode de propagation")
-                                font.pixelSize: 16
-                                Layout.alignment: Qt.AlignHCenter
-                            }
-
-                            RowLayout {
-                                Layout.alignment: Qt.AlignCenter
-                                Repeater {
-                                    model: details['propagation_methods']
-                                    delegate: Text {
-                                        required property int index
-                                        required property variant modelData
-                                        text: modelData
-                                        font.pixelSize: 14
-                                        Layout.margins: 20
-                                    }
-                                }
-                            }
+                    Label {
+                        text: details['wiki_description']['value']
+                        wrapMode: Text.Wrap
+                        width: parent.width
+                        font {
+                            weight: Font.Light
+                            pixelSize: 16
                         }
                     }
-                }
-            }
 
-            Label {
-                text: details['wiki_description']['value']
-                color: "white"
-                Layout.maximumWidth: resultIdentifierDetailPop.width - 40
-                wrapMode: Text.Wrap
-            }
-
-            RowLayout {
-
-                Label {
-                    text: "Plus d'informations sur Wikipédia"
-                    color: "white"
-                    font.pixelSize: 16
-                }
-
-                IconSvg {
-                    source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
-                    color: "white"
-                    width: 25
-
-                    MouseArea {
-                        anchors.fill: parent
+                    ButtonWireframeIcon {
+                        text: "Plus d'informations sur Wikipédia"
+                        fulltextColor: Theme.colorPrimary
+                        primaryColor: "white"
+                        fullColor: true
+                        font.pixelSize: 16
+                        source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
                         onClicked: Qt.openUrlExternally(details['url'])
                     }
-                }
 
-                Item {
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
+                    Item {
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                    }
                 }
             }
 
-            Item {
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-            }
+
         }
     }
+
 }

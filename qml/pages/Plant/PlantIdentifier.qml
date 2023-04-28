@@ -428,10 +428,10 @@ BPage {
                         padding: 10
                         spacing: 3
                         Label {
-                            font.pixelSize: 18
+                            font.pixelSize: 16
                             width: 300
                             wrapMode: Label.Wrap
-                            horizontalAlignment: Label.AlignLeft
+                            horizontalAlignment: Label.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
                             visible: pageControl.plant_results?.is_plant
