@@ -33,6 +33,7 @@
 #include "utils_language.h"
 #include "image2base64.h"
 #include "posometrecamera.h"
+#include "database/sqlplugin.h"
 #if defined(Q_OS_MACOS)
 #include "utils_os_macosdock.h"
 #endif
@@ -97,6 +98,8 @@ int main(int argc, char *argv[])
         app.setOrganizationName("Blume");
         app.setOrganizationDomain("Blume");
 
+
+
         SettingsManager *sm = SettingsManager::getInstance();
         DatabaseManager *db = DatabaseManager::getInstance();
         NotificationManager *nm = NotificationManager::getInstance();
@@ -132,6 +135,7 @@ int main(int argc, char *argv[])
         return EXIT_SUCCESS;
 #endif
     }
+
 
     // GUI application /////////////////////////////////////////////////////////
 

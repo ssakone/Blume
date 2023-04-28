@@ -45,6 +45,7 @@ SOURCES  += src/main.cpp \
                         src/DeviceManager_nearby.cpp \
                         src/DeviceManager_export.cpp \
                         src/DeviceFilter.cpp \
+                        src/database/sqlplugin.cpp \
                         src/device.cpp \
                         src/device_infos.cpp \
                         src/device_sensor.cpp \
@@ -86,6 +87,7 @@ HEADERS  += src/SettingsManager.h \
                         src/Journal.h \
                         src/DeviceManager.h \
                         src/DeviceFilter.h \
+                        src/database/sqlplugin.h \
                         src/device.h \
                         src/device_utils.h \
                         src/device_firmwares.h \
