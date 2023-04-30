@@ -8,6 +8,9 @@ import DeviceUtils 1.0
 import "pages/Plant/"
 import "services/"
 import "models/"
+import "components/"
+import "components_js/"
+import "components_js/Http.js" as HTTP
 
 ApplicationWindow {
     id: appWindow
@@ -23,6 +26,9 @@ ApplicationWindow {
 
     property var selectedDevice: null
     property alias $SqlClient: _sqliClient
+    property alias $Model: _relay
+    property alias $Colors: _colors
+    property var $Http: HTTP
 
     // Desktop stuff ///////////////////////////////////////////////////////////
     minimumWidth: isHdpi ? 400 : 480
@@ -60,36 +66,82 @@ ApplicationWindow {
         }
     }
 
-    SqlClient {
-        id: _sqliClient
-        Component.onCompleted: open()
-        onDatabaseOpened: {
-            Promise.all([alarmModel, plantModel, spaceModel]).then(
-                        function (rs) {
-                            console.info("[+] All table ready")
-                        }).catch(function (rs) {
-                            console.error("Something happen => ", rs)
+    Item {
+        id: _relay
+        property alias space: spaceModel
+        property alias plant: plantModel
+        property alias globalPlant: _globalPlantList
+        property alias plantSelect: _searchPopup
+        ////// MODEL BEBIN ->
+        PlantModel {
+            id: plantModel
+            db: _sqliClient
+        }
+
+        SpaceModel {
+            id: spaceModel
+            db: _sqliClient
+        }
+
+        AlarmModel {
+            id: alarmModel
+            db: _sqliClient
+        }
+
+        // OTHER MODE
+        ListModel {
+            id: _globalPlantList
+        }
+
+        PlantSearchPopup {
+            id: _searchPopup
+        }
+
+        function replaceNullWithEmptyString(obj) {
+            for (let key in obj) {
+                if (obj[key] === null) {
+                    delete obj[key]
+                } else if (typeof obj[key] === "object") {
+                    replaceNullWithEmptyString(obj[key])
+                }
+            }
+            return obj
+        }
+
+        ///// <- END MODEL
+        Component.onCompleted: {
+            $Http.request(
+                        "GET",
+                        "https://blume.mahoudev.com/items/Plantes?fields[]=*.*").then(
+                        function (res) {
+                            let datas = replaceNullWithEmptyString(
+                                    JSON.parse(res).data)
+                            for (var i = 0; i < datas.length; i++) {
+                                _globalPlantList.append(datas[i])
+                            }
+                        }).catch(function (err) {
+                            console.log(err)
                         })
         }
     }
 
-    ////// MODEL BEBIN ->
-    PlantModel {
-        id: plantModel
-        db: _sqliClient
+    Colors {
+        id: _colors
     }
 
-    SpaceModel {
-        id: spaceModel
-        db: _sqliClient
+    SqlClient {
+        id: _sqliClient
+        dbName: "/Users/mac/db.sqlite3"
+        Component.onCompleted: open()
+        onDatabaseOpened: {
+            Promise.all([alarmModel.init(), plantModel.init(), spaceModel.init(
+                             )]).then(function (rs) {
+                                 console.info("[+] All table ready")
+                             }).catch(function (rs) {
+                                 console.error("Something happen => ", rs)
+                             })
+        }
     }
-
-    AlarmModel {
-        id: alarmModel
-        db: _sqliClient
-    }
-
-    ///// <- END MODEL
 
     // Mobile stuff ////////////////////////////////////////////////////////////
     property int screenOrientation: Screen.primaryOrientation

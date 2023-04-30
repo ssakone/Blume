@@ -81,9 +81,13 @@
         <file>popups/PopupLocationNotification.qml</file>
         <file>PlantBrowseCategory.qml</file>
         <file>PlantScreenDetails.qml</file>
+
+        <!-- Plant Search popup -->
         <file>components/Accordion.qml</file>
         <file>components/ImagePickerArea.qml</file>
-        <file>components_js/Http.js</file>
+        <file>components/PlantSearchPopup.qml</file>
+        <!-- End plant search popup -->
+
         <file>components_generic/ActionMenuItem.qml</file>
         <file>components_generic/ButtonCompactable.qml</file>
         <file>components_generic/ButtonWireframe.qml</file>
@@ -93,6 +97,11 @@
         <file>components_generic/ToolTipFlat.qml</file>
         <file>components_generic/RoundButtonIcon.qml</file>
         <file>pages/Garden/GardenSpaceDetails.qml</file>
+
+        <!-- Object -->
+        <file>components_js/Http.js</file>
+        <file>components_js/Utils.js</file>
+        <file>components_js/Colors.qml</file>
 
         <!-- SERVICES -->
         <file>services/SqlClient.qml</file>

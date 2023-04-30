@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+import Qt5Compat.GraphicalEffects as QGE
+
 import ThemeEngine
 import "../components_generic"
 
@@ -16,13 +18,9 @@ Rectangle {
     property string hours: "15"
     property string minutes: "00"
 
-    property var onClicked
+    signal clicked
 
-    radius: 15
-    border {
-        color: "#e5e5e5"
-        width: 1
-    }
+    radius: 4
 
     RowLayout {
         anchors {
@@ -32,13 +30,22 @@ Rectangle {
         }
         spacing: 10
         Rectangle {
-            Layout.preferredHeight: 30
-            Layout.preferredWidth: 30
+            Layout.preferredHeight: 60
+            Layout.preferredWidth: 60
             radius: 15
             color: "#fefefe"
 
-            IconSvg {
+            ColorImage {
                 id: iconSvg
+                color: $Colors.green300
+                width: 48
+                height: 48
+                layer.enabled: true
+                layer.effect: QGE.DropShadow {
+                    radius: 2
+                    color: $Colors.green700
+                }
+
                 anchors.centerIn: parent
             }
         }
@@ -51,18 +58,22 @@ Rectangle {
                 Layout.fillHeight: true
             }
 
-            Label {
-                text: title
-                font.pixelSize: 18
+            Column {
                 Layout.fillWidth: true
-                clip: true
-            }
+                spacing: 2
+                Label {
+                    text: title
+                    font.pixelSize: 19
+                    font.weight: Font.Medium
+                    clip: true
+                }
 
-            Label {
-                text: subtitle
-                font.pixelSize: 14
-                Layout.fillWidth: true
-                elide: Text.ElideRight
+                Label {
+                    text: subtitle
+                    font.pixelSize: 14
+                    opacity: .6
+                    elide: Text.ElideRight
+                }
             }
 
             Item {
@@ -73,22 +84,29 @@ Rectangle {
         Rectangle {
             Layout.fillHeight: true
             Layout.preferredWidth: 1
-            color: "#ccc"
+            color: $Colors.gray100
         }
 
         Column {
             visible: !time_inline
-            Layout.preferredWidth: 50
+            Layout.preferredWidth: 60
+            spacing: -5
             Label {
                 text: qsTr(hours)
-                font.pixelSize: 24
+                font.pixelSize: 32
+                font.weight: Font.Bold
+                font.family: 'Impact'
                 color: Theme.colorPrimary
+                anchors.horizontalCenter: parent.horizontalCenter
             }
 
             Label {
                 text: qsTr(minutes)
-                font.pixelSize: 24
+                font.pixelSize: 26
+                font.weight: Font.Bold
+                font.family: 'Impact'
                 color: Theme.colorPrimary
+                anchors.horizontalCenter: parent.horizontalCenter
             }
         }
         Label {

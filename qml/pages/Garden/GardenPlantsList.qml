@@ -3,6 +3,8 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import ThemeEngine
 
+import SortFilterProxyModel
+
 import "../../components"
 import "../../components_generic"
 
@@ -12,53 +14,22 @@ BPage {
         title: "Mes plantes"
     }
 
-
-    ColumnLayout {
+    ListView {
+        id: plantListView
         anchors.fill: parent
-
-        Flickable {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            contentHeight: _insideColumn.height
-
-            Column {
-                id: _insideColumn
-                width: parent.width
-                padding: 15
-                spacing: 10
-
-                ColumnLayout {
-                    width: parent.width - 30
-                    spacing: 20
-
-                    SearchBar {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 50
-                    }
-
-                    Column {
-                        Layout.fillWidth: true
-                        spacing: 10
-
-                        Repeater {
-                            model: ["Aloe", "Vera", "Orchidée"]
-                            GardenPlantLine {
-                                width: parent.width
-                                title: modelData
-                                subtitle: "Plante carnivore. Faire très attention. "
-                                roomName: "Salon"
-                                imageSource: "qrc:/assets/img/orchidee.jpg"
-                            }
-
-                        }
-
-
-                    }
-                }
-            }
-
+        anchors.margins: 20
+        spacing: 10
+        model: $Model.space.plantInSpace
+        delegate: GardenPlantLine {
+            property var plant: JSON.parse(plant_json)
+            width: parent.width - 20
+            title: plant.name_scientific
+            subtitle: plant.description ?? ""
+            roomName: ""
+            imageSource: plant.images_plantes.length
+                         > 0 ? "https://blume.mahoudev.com/assets/"
+                               + plant.images_plantes[0].directus_files_id : ""
         }
-
     }
 
     ButtonWireframe {
@@ -80,7 +51,8 @@ BPage {
             font.pixelSize: 32
             anchors.centerIn: parent
         }
+        onClicked: $Model.plantSelect.show(function (plant) {
+            console.log(plant)
+        })
     }
-
-
 }

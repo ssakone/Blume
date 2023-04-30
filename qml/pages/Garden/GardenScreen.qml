@@ -3,6 +3,10 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import ThemeEngine
 
+import QtQuick.Shapes
+
+import Qt5Compat.GraphicalEffects as QGE
+
 import "../../components"
 import "../../components_generic"
 import "../../components_js/Http.js" as Http
@@ -10,30 +14,42 @@ import "../../components_js/Http.js" as Http
 BPage {
     id: control
     header: AppBar {
-        title: "Mon Jardin"
-        titleLabel.horizontalAlignment: Text.AlignHCenter
-        titleLabel.rightPadding: 60
-        titleLabel.font {
-            pixelSize: 18
-            weight: Font.Medium
-        }
-
-        leading.icon: Icons.chevronLeft
-        leading.iconSize: 36
-
-        backgroundColor: "white"
+        backgroundColor: "transparent"
         foregroundColor: "black"
     }
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.topMargin: 20
+        anchors.topMargin: 0
+
+        Column {
+            Layout.fillWidth: true
+            padding: 15
+            topPadding: 5
+            Label {
+                text: qsTr("Mon Jardin")
+                font {
+                    pixelSize: 36
+                    family: "Courrier"
+                    weight: Font.Bold
+                }
+            }
+            Label {
+                text: qsTr("Gerer votre jardin personnelle efficacement")
+                opacity: .5
+                font {
+                    pixelSize: 16
+                    family: "Courrier"
+                    weight: Font.Bold
+                }
+            }
+        }
 
         RowLayout {
             Layout.fillWidth: true
-            Layout.leftMargin: 10
-            Layout.rightMargin: 10
-            spacing: 10
+            Layout.leftMargin: 15
+            Layout.rightMargin: 20
+            spacing: 20
 
             Repeater {
                 model: [{
@@ -41,7 +57,7 @@ BPage {
                         "title": "Mes plantes",
                         "action": "plants"
                     }, {
-                        "icon": Icons.selectPlace,
+                        "icon": Icons.viewDashboardOutline,
                         "title": "Mes espaces",
                         "action": "spaces"
                     }, {
@@ -50,27 +66,75 @@ BPage {
                         "action": "alarm"
                     }]
                 delegate: Rectangle {
-                    Layout.preferredHeight: 80
+                    id: _insideControl
+                    property string foregroundColor: {
+                        switch (modelData.action) {
+                        case "alarm":
+                            return $Colors.brown600
+                        case "spaces":
+                            return $Colors.cyan600
+                        case "plants":
+                            return $Colors.green600
+                        }
+                    }
+                    Layout.preferredHeight: 100
                     Layout.fillWidth: true
-                    color: "#ccc"
-                    radius: 15
+                    radius: 2
+                    layer.enabled: true
+                    layer.effect: QGE.DropShadow {
+                        radius: 4
+                        color: $Colors.gray300
+                        verticalOffset: 2
+                    }
+                    Rectangle {
+                        height: parent.height
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 6
+                        color: _insideControl.foregroundColor
+                    }
+
+                    Behavior on scale {
+                        NumberAnimation {
+                            duration: 200
+                            easing.type: Easing.InOutCubic
+                        }
+                    }
+
+                    scale: _insideMouse.containsMouse
+                           || _insideMouse.containsPress ? 1.05 : 1
+
+                    color: _insideMouse.containsMouse
+                           || _insideMouse.containsPress ? "white" : foregroundColor
                     ColumnLayout {
                         anchors.fill: parent
                         anchors.margins: 10
 
-                        IconSvg {
-                            source: modelData.icon
+                        Item {
+                            ColorImage {
+                                anchors.centerIn: parent
+                                width: 42
+                                height: 42
+                                source: modelData.icon
+                                color: _insideMouse.containsMouse
+                                       || _insideMouse.containsPress ? _insideControl.foregroundColor : $Colors.white
+                            }
                             Layout.fillWidth: true
                             Layout.fillHeight: true
                         }
                         Label {
                             text: modelData.title
-                            font.pixelSize: 14
+                            font.pixelSize: 15
+                            font.weight: Font.Medium
+                            color: _insideMouse.containsMouse
+                                   || _insideMouse.containsPress ? _insideControl.foregroundColor : $Colors.white
                             Layout.alignment: Qt.AlignHCenter
                         }
                     }
                     MouseArea {
+                        id: _insideMouse
+                        hoverEnabled: true
                         anchors.fill: parent
+                        cursorShape: "PointingHandCursor"
                         onClicked: {
                             switch (modelData.action) {
                             case "plants":
@@ -86,34 +150,34 @@ BPage {
             }
         }
 
-        Flickable {
+        Label {
             Layout.fillWidth: true
+            text: "Vos Activite"
+            padding: 15
+            opacity: .7
+            font {
+                pixelSize: 16
+                weight: Font.Medium
+            }
+        }
+
+        ListView {
+            id: activityList
             Layout.fillHeight: true
-            contentHeight: _insideColumn.height
+            Layout.fillWidth: true
+            Layout.leftMargin: 20
+            Layout.rightMargin: 20
+            spacing: 15
             clip: true
-
-            Column {
-                id: _insideColumn
-                width: parent.width
-                padding: 15
-                spacing: 10
-
-                ColumnLayout {
-                    width: parent.width - 30
-
-                    Repeater {
-                        model: 10
-                        GardenActivityLine {
-                            title: "Arrosage"
-                            subtitle: "3 plantes"
-                            time_inline: false
-                            onClicked: console.log("Clicked")
-                            icon.source: Icons.water
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 70
-                        }
-                    }
-                }
+            model: 2
+            delegate: GardenActivityLine {
+                title: "Arrosage"
+                subtitle: "3 plantes"
+                time_inline: false
+                onClicked: console.log("Clicked")
+                icon.source: Icons.water
+                width: activityList.width
+                height: 80
             }
         }
     }

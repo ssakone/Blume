@@ -4,7 +4,7 @@ import "../services/"
 
 Model {
     debug: true
-    tableName: "Plant00001"
+    tableName: "Plant00002"
     column: [{
             "name": "id",
             "type": "INTEGER",
