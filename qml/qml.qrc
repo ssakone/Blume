@@ -39,6 +39,7 @@
         <file>pages/Plant/PlantDesease.qml</file>
         <file>pages/Plant/PlantDeseaseDetails.qml</file>
         <file>pages/Plant/PlantDeseaseEncylopedie.qml</file>
+        <file>pages/Plant/PlantSearch.qml</file>
         <file>pages/Posometre.qml</file>
         <file>pages/Faq.qml</file>
         <file>pages/AskHelp.qml</file>
@@ -79,6 +80,7 @@
         <file>PlantBrowseCategory.qml</file>
         <file>PlantScreenDetails.qml</file>
         <file>components/Accordion.qml</file>
+        <file>components/FormGroup.qml</file>
         <file>components/ImagePickerArea.qml</file>
         <file>components_js/Http.js</file>
         <file>components_generic/ActionMenuItem.qml</file>
