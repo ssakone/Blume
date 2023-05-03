@@ -56,23 +56,6 @@ BPage {
                 identifierLayoutView.currentIndex--
             }
         }
-        actions: [
-            AppBarButton {
-                icon: Icons.camera
-                visible: (Qt.platform.os == 'ios'
-                          || Qt.platform.os == 'android')
-                         && identifierLayoutView.currentIndex === 0
-                onClicked: {
-                    if (Qt.platform.os === 'ios') {
-                        imgPicker.openCamera()
-                    } else {
-                        androidToolsLoader.item.openCamera()
-                    }
-                }
-                width: 64
-                height: 64
-            }
-        ]
     }
 
     ColumnLayout {
@@ -85,10 +68,17 @@ BPage {
             active: Qt.platform.os === "android"
             sourceComponent: Component {
                 Item {
+                    property bool fromCamera: false
+                    property bool fromGalery: false
+
                     function openCamera() {
+                        fromCamera = true
+                        fromGalery = false
                         QtAndroidAppPermissions.openCamera()
                     }
                     function openGallery() {
+                        fromGalery = true
+                        fromCamera = false
                         QtAndroidAppPermissions.openGallery()
                     }
 
@@ -97,6 +87,9 @@ BPage {
                         function onImageSelected(path) {
                             image.source = "file://?" + Math.random()
                             image.source = "file://" + path
+                            if(fromCamera) analyserButton.clicked()
+                            fromGalery  = false
+                            fromCamera = false
                         }
                     }
                 }
@@ -161,6 +154,15 @@ BPage {
                                     tm.start()
                             }
 
+                            function chooseFile() {
+                                if (Qt.platform.os === 'ios') {
+                                    imgPicker.openPicker()
+                                } else if (Qt.platform.os === 'android') {
+                                    androidToolsLoader.item.openGallery()
+                                } else
+                                    fileDialog.open()
+                            }
+
                             Timer {
                                 id: tm
                                 interval: 1000
@@ -178,7 +180,8 @@ BPage {
                                 Image {
                                     id: image
                                     anchors.fill: parent
-                                    fillMode: Image.PreserveAspectFit
+                                    fillMode: (Qt.platform.os === 'ios'
+                                               || Qt.platform.os === 'android') ? Image.PreserveAspectCrop : Image.PreserveAspectFit
                                 }
                                 ItemNoImage {
                                     visible: image.source.toString() === ""
@@ -188,15 +191,66 @@ BPage {
 
                                     title: qsTr("Identify plant")
                                     subtitle: qsTr("Be sure to take a clear, bright photo that includes only the plant you want to identify")
-                                    onClicked: function() {
-                                        if (Qt.platform.os === 'ios') {
-                                            imgPicker.openPicker()
-                                        } else if (Qt.platform.os === 'android') {
-                                            androidToolsLoader.item.openGallery()
-                                        } else
-                                            fileDialog.open()
-                                    }
+                                    onClicked: tabView.chooseFile
                                 }
+
+                                Column {
+                                    width: 70
+                                    anchors {
+                                        bottom: parent.bottom
+                                        bottomMargin: 10
+
+                                        right: parent.right
+                                        rightMargin: 10
+                                    }
+                                    spacing: 7
+
+                                    ClipRRect {
+                                        visible: image.source.toString() !== ""
+                                        width: 60
+                                        height: width
+                                        radius: height / 2
+
+                                        ButtonWireframe {
+                                            fullColor: true
+                                            primaryColor: Theme.colorPrimary
+                                            anchors.fill: parent
+                                            onClicked: tabView.chooseFile()
+                                            IconSvg {
+                                                anchors.centerIn: parent
+                                                source: Icons.image
+                                                color: "white"
+                                            }
+                                        }
+                                    }
+
+                                    ClipRRect {
+                                        visible: Qt.platform.os == 'ios' || Qt.platform.os == 'android'
+                                        width: 60
+                                        height: width
+                                        radius: height / 2
+
+                                        ButtonWireframe {
+                                            fullColor: true
+                                            primaryColor: Theme.colorPrimary
+                                            anchors.fill: parent
+                                            onClicked: {
+                                                if (Qt.platform.os === 'ios') {
+                                                    imgPicker.openCamera()
+                                                } else {
+                                                    androidToolsLoader.item.openCamera()
+                                                }
+                                            }
+                                            IconSvg {
+                                                anchors.centerIn: parent
+                                                source: Icons.camera
+                                                color: "white"
+                                            }
+                                        }
+                                    }
+
+                                }
+
                             }
 
                             Loader {
@@ -389,9 +443,7 @@ BPage {
                                 }
                             }
                         }
-                        Item {
-                            Layout.fillWidth: true
-                        }
+
                     }
 
                     Image2Base64 {
@@ -411,10 +463,10 @@ BPage {
                         }
                     }
 
-                    Item {
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                    }
+//                    Item {
+//                        Layout.fillHeight: true
+//                        Layout.fillWidth: true
+//                    }
                 }
             }
             Item {

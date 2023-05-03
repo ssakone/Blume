@@ -12,7 +12,6 @@ Column {
     property string subtitle
 
     visible: image.source.toString() === ""
-    anchors.fill: parent
     spacing: 10
     padding: 25
 
@@ -35,7 +34,7 @@ Column {
     }
 
     ClipRRect {
-        width: parent.width - (2 * parent.padding) - 50
+        width: Math.min(parent.width, parent.height) - (2 * parent.padding) - 50
         height: width
         anchors.horizontalCenter: parent.horizontalCenter
         radius: height / 2
