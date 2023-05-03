@@ -347,25 +347,22 @@ Page {
                                                     Qt.platform.os
                                                     === "windows" ? "file:///" : "file://",
                                                     ""))],
+                                        "similar_images": true,
                                         "longitude": gps.position.coordinate.longitude,
                                         "latitude": gps.position.coordinate.latitude
                                     }
                                     Http.request(
                                                 "POST",
-                                                "https://insect.mlapi.ai/api/v1/identification",
+                                                "https://insect.mlapi.ai/api/v1/identification?language=en&details=common_names,url,description,taxonomy,image,images",
                                                 data,
                                                 "0GqFkaJYbGLGG4tKMTjZ5FymjSbhlGfUriiZ7FkGIyX2Tm0qK4").then(
                                                 function (r) {
                                                     let datas = JSON.parse(r)
-                                                    console.log(JSON.stringify(
-                                                                    datas))
                                                     imgAnalysisSurface.loading = false
                                                     pageControl.insects = datas.result.classification.suggestions
                                                     identifedPlantListView.model
                                                             = pageControl.insects
                                                     identifierLayoutView.currentIndex = 1
-                                                    console.log(JSON.stringify(
-                                                                    datas))
                                                 }).catch(function (e) {
                                                     imgAnalysisSurface.loading = false
                                                     console.log('Erreur',
@@ -453,6 +450,9 @@ Page {
                         required property int index
                         required property variant modelData
 
+                        height: 100
+                        width: identifedPlantListView.width
+
                         Column {
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.left: parent.left
@@ -460,27 +460,32 @@ Page {
                             spacing: 10
                             Label {
                                 text: modelData["name"]
-                                font.pixelSize: 21
+                                font.pixelSize: 16
+                            }
+                            Label {
+                                text: modelData["details"]["common_names"]?.length > 0 ? modelData["details"]["common_names"][0] : ""
                             }
                         }
 
-                        height: 60
-                        width: identifedPlantListView.width
-                        Rectangle {
+                        ClipRRect {
                             anchors.right: parent.right
                             anchors.rightMargin: 10
                             anchors.verticalCenter: parent.verticalCenter
-                            width: 55
-                            height: 55
-                            radius: width / 2
-                            color: "teal"
-                            Label {
-                                anchors.centerIn: parent
-                                color: "white"
-                                text: parseInt(
-                                          modelData["probability"] * 100) + "%"
+                            width: 80
+                            height: width
+                            radius: height / 2
+
+                            Rectangle {
+                                anchors.fill: parent
+                                color: "#e5e5e5"
+                                Image {
+                                    source: modelData["details"]["image"]['value']
+                                    anchors.fill: parent
+                                }
                             }
                         }
+
+                        onClicked: page_view.push(navigator.insectDetailPage, {insect_data: modelData})
                     }
                 }
             }

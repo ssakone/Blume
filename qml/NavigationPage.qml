@@ -21,6 +21,9 @@ QtObject {
         PlantScreenDetails {}
     }
     property var plantSearchPage: Component {
-        PlantSearch{}
+        PlantSearch {}
+    }
+    property var insectDetailPage: Component {
+        InsectDetailsScreen {}
     }
 }
