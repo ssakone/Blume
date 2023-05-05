@@ -25,9 +25,9 @@ ApplicationWindow {
                            || utilsScreen.screenPar > 1.0)
 
     property var selectedDevice: null
-    property alias $SqlClient: _sqliClient
+    property alias $SqlClient: _relay._sqliClient
     property alias $Model: _relay
-    property alias $Colors: _colors
+    property alias $Colors: _relay._colors
     property var $Http: HTTP
 
     // Desktop stuff ///////////////////////////////////////////////////////////
@@ -66,81 +66,8 @@ ApplicationWindow {
         }
     }
 
-    Item {
+    ModelManager {
         id: _relay
-        property alias space: spaceModel
-        property alias plant: plantModel
-        property alias globalPlant: _globalPlantList
-        property alias plantSelect: _searchPopup
-        ////// MODEL BEBIN ->
-        PlantModel {
-            id: plantModel
-            db: _sqliClient
-        }
-
-        SpaceModel {
-            id: spaceModel
-            db: _sqliClient
-        }
-
-        AlarmModel {
-            id: alarmModel
-            db: _sqliClient
-        }
-
-        // OTHER MODE
-        ListModel {
-            id: _globalPlantList
-        }
-
-        PlantSearchPopup {
-            id: _searchPopup
-        }
-
-        function replaceNullWithEmptyString(obj) {
-            for (let key in obj) {
-                if (obj[key] === null) {
-                    delete obj[key]
-                } else if (typeof obj[key] === "object") {
-                    replaceNullWithEmptyString(obj[key])
-                }
-            }
-            return obj
-        }
-
-        ///// <- END MODEL
-        Component.onCompleted: {
-            $Http.request(
-                        "GET",
-                        "https://blume.mahoudev.com/items/Plantes?fields[]=*.*").then(
-                        function (res) {
-                            let datas = replaceNullWithEmptyString(
-                                    JSON.parse(res).data)
-                            for (var i = 0; i < datas.length; i++) {
-                                _globalPlantList.append(datas[i])
-                            }
-                        }).catch(function (err) {
-                            console.log(err)
-                        })
-        }
-    }
-
-    Colors {
-        id: _colors
-    }
-
-    SqlClient {
-        id: _sqliClient
-        dbName: "/Users/mac/db.sqlite3"
-        Component.onCompleted: open()
-        onDatabaseOpened: {
-            Promise.all([alarmModel.init(), plantModel.init(), spaceModel.init(
-                             )]).then(function (rs) {
-                                 console.info("[+] All table ready")
-                             }).catch(function (rs) {
-                                 console.error("Something happen => ", rs)
-                             })
-        }
     }
 
     // Mobile stuff ////////////////////////////////////////////////////////////

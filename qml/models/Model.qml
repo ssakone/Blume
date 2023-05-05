@@ -126,10 +126,10 @@ ListModel {
 
     function sqlDelete(id) {
         return new Promise(function (resolve, reject) {
-            let query = 'DELETE FROM %1 WHERE id= %2'.arg(
+            let query = 'DELETE FROM %1 WHERE id=%2'.arg(
                     control.tableName).arg(id)
-            control.db.executeSql(logQuery(query)).then(function (rs) {
-                removed(id)
+            db.executeSql(logQuery(query)).then(function (rs) {
+                fetchAll()
                 resolve(rs)
             })
         })
@@ -223,6 +223,7 @@ ListModel {
     function fetchAll() {
         db.executeSql(logQuery(__query__fetch__)).then(function (rs) {
             if (rs.isValid()) {
+                clear()
                 rs.datas.forEach(function (el) {
                     append(el)
                 })

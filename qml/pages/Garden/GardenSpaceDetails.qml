@@ -3,6 +3,8 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import ThemeEngine
 
+import SortFilterProxyModel
+
 import Qt5Compat.GraphicalEffects as QGE
 
 import "../../components"
@@ -22,8 +24,22 @@ BPage {
         title: "Space - " + control.space_name
     }
 
-    ListModel {
+    SortFilterProxyModel {
         id: plantInSpace
+        sourceModel: $Model.space.plantInSpace
+        filters: ValueFilter {
+            value: control.space_id
+            roleName: "space_id"
+        }
+    }
+
+    SortFilterProxyModel {
+        id: alarmInSpace
+        sourceModel: $Model.alarm
+        filters: ValueFilter {
+            value: control.space_id
+            roleName: "space"
+        }
     }
 
     ColumnLayout {
@@ -73,7 +89,7 @@ BPage {
                                     anchors.horizontalCenter: parent.horizontalCenter
                                 }
                                 Label {
-                                    text: "0"
+                                    text: plantInSpace.count
                                     font {
                                         pixelSize: 42
                                         family: 'Courrier'
@@ -92,7 +108,7 @@ BPage {
                                 Layout.fillWidth: true
                                 Layout.alignment: Qt.AlignVCenter
                                 Label {
-                                    text: "Nombre de plante"
+                                    text: "Nombre d'alarm"
                                     font {
                                         pixelSize: 16
                                         weight: Font.Normal
@@ -101,7 +117,7 @@ BPage {
                                     anchors.horizontalCenter: parent.horizontalCenter
                                 }
                                 Label {
-                                    text: "0"
+                                    text: alarmInSpace.count
                                     font {
                                         pixelSize: 42
                                         family: 'Courrier'
@@ -114,6 +130,7 @@ BPage {
                     }
 
                     Column {
+                        id: _colLayout
                         Layout.fillWidth: true
                         spacing: 10
                         leftPadding: 10
@@ -138,13 +155,41 @@ BPage {
                                 leftPadding: 20
                                 rightPadding: leftPadding
                                 onClicked: {
+                                    function generateUUID() {
+                                        // Public Domain/MIT
+                                        var d = new Date().getTime()
+                                        //Timestamp
+                                        var d2 = ((typeof performance !== 'undefined')
+                                                  && performance.now
+                                                  && (performance.now(
+                                                          ) * 1000)) || 0
+                                        //Time in microseconds since page-load or 0 if unsupported
+                                        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+                                                    /[xy]/g, function (c) {
+                                                        var r = Math.random(
+                                                                    ) * 16
+                                                        //random number between 0 and 16
+                                                        if (d > 0) {
+                                                            //Use timestamp until depleted
+                                                            r = (d + r) % 16 | 0
+                                                            d = Math.floor(
+                                                                        d / 16)
+                                                        } else {
+                                                            //Use microseconds since page-load if supported
+                                                            r = (d2 + r) % 16 | 0
+                                                            d2 = Math.floor(
+                                                                        d2 / 16)
+                                                        }
+                                                        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(
+                                                                    16)
+                                                    })
+                                    }
                                     $Model.plantSelect.show(function (plant) {
                                         let data = {
                                             "libelle": plant.name_scientific,
-                                            "_url": plant.images_plantes.length > 0 ? plant.images_plantes[0].directus_files_id : "",
+                                            "image_url": "-1",
                                             "remote_id": plant.id,
-                                            "uuid": new Date(plant.date_created).getTime(
-                                                        ) / 1000
+                                            "uuid": generateUUID()
                                         }
                                         data["plant_json"] = JSON.stringify(
                                                     plant)
@@ -168,14 +213,21 @@ BPage {
                         }
 
                         Repeater {
-                            model: $Model.space.plantInSpace
+                            model: plantInSpace
                             GardenPlantLine {
                                 property var plant: JSON.parse(plant_json)
-                                width: parent.width - 20
+                                width: _colLayout.width - 20
+                                height: 100
                                 title: plant.name_scientific
-                                visible: model.space_id === control.space_id
                                 subtitle: plant.description ?? ""
                                 roomName: ""
+                                onClicked: {
+                                    removePlantPopup.show({
+                                                              "id": model.id,
+                                                              "name_scientific": plant.name_scientific
+                                                          })
+                                }
+
                                 imageSource: plant.images_plantes.length
                                              > 0 ? "https://blume.mahoudev.com/assets/"
                                                    + plant.images_plantes[0].directus_files_id : ""
@@ -211,14 +263,20 @@ BPage {
                         }
 
                         Repeater {
-                            model: ["Arrosage", "Rampotage"]
+                            model: alarmInSpace
                             GardenActivityLine {
-                                title: modelData
-                                subtitle: "3 plantes"
-                                onClicked: console.log("Clicked")
+                                title: model.libelle === "" ? (model.type === 0 ? "Rampotage" : "Arrosage") : model.libelle
+                                subtitle: model.type === 0 ? "Rampotage" : "Arrosage"
+                                onClicked: {
+                                    removeAlarmPopup.show(model)
+                                }
+
                                 icon.source: Icons.water
                                 width: parent.width - 20
                                 height: 70
+                                hours: model.hours.toString().padStart(2, '0')
+                                minutes: model.minute.toString().padStart(2,
+                                                                          '0')
                             }
                         }
                     }
@@ -227,10 +285,95 @@ BPage {
         }
     }
 
+    Popup {
+        id: removeAlarmPopup
+        property var alarm
+        anchors.centerIn: parent
+        width: 300
+        height: 160
+        dim: true
+        modal: true
+        function show(al) {
+            alarm = al
+            open()
+        }
+
+        Column {
+            anchors.centerIn: parent
+            spacing: 20
+            Label {
+                text: "Enlever cette alarm"
+                font.pixelSize: 16
+            }
+            Row {
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: 10
+                NiceButton {
+                    text: "Oui, enlever"
+                    width: 120
+                    height: 50
+                    onClicked: {
+                        $Model.alarm.sqlDelete(removeAlarmPopup.alarm.id)
+                        removeAlarmPopup.close()
+                    }
+                }
+                NiceButton {
+                    text: "Annuler"
+                    width: 100
+                    height: 50
+                    onClicked: removeAlarmPopup.close()
+                }
+            }
+        }
+    }
+
+    Popup {
+        id: removePlantPopup
+        property var plant
+        anchors.centerIn: parent
+        width: 300
+        height: 160
+        dim: true
+        modal: true
+        function show(pl) {
+            plant = pl
+            open()
+        }
+
+        Column {
+            anchors.centerIn: parent
+            spacing: 20
+            Label {
+                text: "Enlever " + removePlantPopup.plant?.name_scientific
+                font.pixelSize: 16
+            }
+            Row {
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: 10
+                NiceButton {
+                    text: "Oui, enlever"
+                    width: 120
+                    height: 50
+                    onClicked: {
+                        $Model.space.plantInSpace.sqlDelete(
+                                    removePlantPopup.plant.id)
+                        removePlantPopup.close()
+                    }
+                }
+                NiceButton {
+                    text: "Annuler"
+                    width: 100
+                    height: 50
+                    onClicked: removePlantPopup.close()
+                }
+            }
+        }
+    }
+
     Drawer {
         id: addAlarmPopup
         width: parent.width
-        height: parent.height - 20
+        height: parent.height - 45
         edge: Qt.BottomEdge
         dim: true
         modal: true
@@ -244,11 +387,13 @@ BPage {
         }
         ClipRRect {
             anchors.fill: parent
+            anchors.margins: -1
             radius: 18
             BPage {
                 anchors.fill: parent
                 header: AppBar {
                     title: "New Alarm"
+                    statusBarVisible: false
                     leading.icon: Icons.close
                     leading.onClicked: {
                         addAlarmPopup.close()
@@ -281,6 +426,7 @@ BPage {
                                 anchors.fill: parent
                                 spacing: 5
                                 TextField {
+                                    id: _hours
                                     Layout.fillWidth: true
                                     Layout.fillHeight: true
                                     text: "00"
@@ -291,6 +437,7 @@ BPage {
                                     Layout.minimumWidth: 90
                                     Layout.maximumWidth: 90
                                     background: Item {}
+                                    onTextChanged: errorView.text = ""
                                     validator: IntValidator {
                                         top: 23
                                         bottom: 0
@@ -314,6 +461,7 @@ BPage {
                                 }
 
                                 TextField {
+                                    id: _minutes
                                     Layout.fillWidth: true
                                     Layout.fillHeight: true
                                     Layout.minimumWidth: 90
@@ -324,6 +472,7 @@ BPage {
                                     verticalAlignment: Label.AlignVCenter
                                     horizontalAlignment: Label.AlignHCenter
                                     background: Item {}
+                                    onTextChanged: errorView.text = ""
                                     validator: IntValidator {
                                         top: 59
                                         bottom: 0
@@ -342,9 +491,17 @@ BPage {
                     }
 
                     Label {
+                        id: errorView
+                        color: $Colors.red
+                        visible: text.length > 0
+                        text: ""
+                    }
+
+                    Label {
                         text: "Etiquette"
                     }
                     TextField {
+                        id: etiquette
                         width: parent.width
                         height: 50
                         placeholderText: "An alarm description name"
@@ -353,9 +510,10 @@ BPage {
                         text: "Type"
                     }
                     ComboBox {
-                        model: ["Rampotage", 'Arrosage']
+                        id: typeAlarm
                         width: parent.width
                         height: 55
+                        model: ["Rampotage", "Arrosage"]
                     }
                     Label {
                         text: "Recurrence"
@@ -442,6 +600,47 @@ BPage {
                         font.pixelSize: 16
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.horizontalCenterOffset: 25
+                        onClicked: {
+                            if (parseInt(_minutes.text) > 59) {
+                                errorView.text = "The minutes can't reach 60"
+                                return
+                            }
+
+                            if (parseInt(_hours.text) > 23) {
+                                errorView.text = "The hours can't reach 24"
+                                return
+                            }
+
+                            if (gardenLine.plant === undefined) {
+                                errorView.text = "No plant choosed"
+                                return
+                            }
+
+                            let data = {
+                                "mon": _control.recurrence[0],
+                                "tue": _control.recurrence[1],
+                                "wed": _control.recurrence[2],
+                                "thu": _control.recurrence[3],
+                                "fri": _control.recurrence[4],
+                                "sat": _control.recurrence[5],
+                                "sun": _control.recurrence[6],
+                                "libelle": etiquette.text,
+                                "minute": _minutes.text,
+                                "hours": _hours.text,
+                                "type": typeAlarm.currentIndex,
+                                "space": control.space_id,
+                                "plant_json": JSON.stringify(gardenLine.plant)
+                            }
+                            $Model.alarm.sqlCreate(data).then(function (res) {
+                                console.info("First alarm created")
+                                addAlarmPopup.close()
+                                _control.recurrence = [0, 0, 0, 0, 0, 0, 0]
+                                etiquette.text = ""
+                                _hours.text = ""
+                                _minutes.text = ""
+                                gardenLine.plant = null
+                            }).catch(err => console.error(JSON.stringify(err)))
+                        }
                     }
                 }
             }
@@ -452,7 +651,7 @@ BPage {
         id: choosePlantPopup
         property var callback
         width: parent.width
-        height: parent.height - 35
+        height: parent.height - 55
         edge: Qt.BottomEdge
         dim: true
         modal: true
@@ -471,11 +670,13 @@ BPage {
 
         ClipRRect {
             anchors.fill: parent
+            anchors.margins: -1
             radius: 18
             BPage {
                 anchors.fill: parent
                 header: AppBar {
                     title: "Choose plant"
+                    statusBarVisible: false
                     leading.icon: Icons.close
                     leading.onClicked: {
                         choosePlantPopup.close()
@@ -488,7 +689,7 @@ BPage {
                     anchors.fill: parent
                     anchors.margins: 20
                     spacing: 10
-                    model: $Model.space.plantInSpace
+                    model: plantInSpace
                     delegate: Item {
                         id: insideControl
                         property var plant: JSON.parse(plant_json)
@@ -496,8 +697,8 @@ BPage {
                         height: inside.height
                         GardenPlantLine {
                             id: inside
-                            visible: model.space_id === control.space_id
                             width: plantListView.width - 10
+                            height: 100
                             title: insideControl.plant.name_scientific
                             subtitle: insideControl.plant.description ?? ""
                             roomName: ""

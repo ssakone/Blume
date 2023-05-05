@@ -13,9 +13,8 @@ import "../../components_js/Http.js" as Http
 
 BPage {
     id: control
-    header: AppBar {
-        backgroundColor: "transparent"
-        foregroundColor: "black"
+    header: AppBar {// backgroundColor: "transparent"
+        // foregroundColor: "black"
     }
 
     ColumnLayout {
@@ -24,7 +23,7 @@ BPage {
 
         Column {
             Layout.fillWidth: true
-            padding: 15
+            padding: 25
             topPadding: 5
             Label {
                 text: qsTr("Mon Jardin")
@@ -173,7 +172,6 @@ BPage {
             delegate: GardenActivityLine {
                 title: "Arrosage"
                 subtitle: "3 plantes"
-                time_inline: false
                 onClicked: console.log("Clicked")
                 icon.source: Icons.water
                 width: activityList.width

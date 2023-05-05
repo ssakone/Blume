@@ -8,7 +8,7 @@ import ThemeEngine
 import "../components_generic"
 
 Rectangle {
-    id: root
+    id: control
 
     property string title: ""
     property string subtitle: ""
@@ -59,12 +59,17 @@ Rectangle {
             }
 
             Column {
+                padding: 2
                 Layout.fillWidth: true
-                spacing: 2
+                spacing: 1
                 Label {
                     text: title
-                    font.pixelSize: 19
+                    font.pixelSize: 18
                     font.weight: Font.Medium
+                    width: parent.width
+                    height: 35
+                    elide: Label.ElideRight
+                    wrapMode: Label.Wrap
                     clip: true
                 }
 
@@ -89,7 +94,8 @@ Rectangle {
 
         Column {
             visible: !time_inline
-            Layout.preferredWidth: 60
+            Layout.preferredWidth: 80
+            Layout.minimumWidth: 80
             spacing: -5
             Label {
                 text: qsTr(hours)
@@ -110,16 +116,19 @@ Rectangle {
             }
         }
         Label {
+            Layout.minimumWidth: 80
             visible: time_inline
-            text: qsTr(hours + ":" + minutes)
+            text: qsTr(hours + " : " + minutes)
             font.pixelSize: 24
+            font.weight: Font.Medium
             color: Theme.colorPrimary
+            horizontalAlignment: Label.AlignHCenter
         }
     }
 
     MouseArea {
         anchors.fill: parent
         cursorShape: "PointingHandCursor"
-        onClicked: root.onClicked()
+        onClicked: control.clicked()
     }
 }
