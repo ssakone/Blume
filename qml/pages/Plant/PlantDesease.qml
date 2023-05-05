@@ -18,6 +18,7 @@ import MaterialIcons
 
 import "../"
 import "../Insect/"
+import "../Garden/"
 import "../../"
 import "../../components"
 import "../../components_generic"
@@ -80,6 +81,11 @@ BPage {
                 identifierLayoutView.currentIndex--
             }
         }
+    }
+
+    Component {
+        id: gardenScreen
+        GardenScreen {}
     }
 
     Component {
@@ -175,6 +181,12 @@ BPage {
                                                 "image": "",
                                                 "action": "insect",
                                                 "style": "lightBlue"
+                                            }, {
+                                                "name": qsTr("Mon Jardin"),
+                                                "icon": Icons.flower,
+                                                "image": "",
+                                                "action": "garden",
+                                                "style": "lightenYellow"
                                             }, {
                                                 "name": qsTr("Book of diseases"),
                                                 "icon": Icons.bookOpenOutline,
@@ -297,6 +309,10 @@ BPage {
                                             case "insect":
                                                 page_view.push(
                                                             insectIndentifier)
+                                                break
+                                            case "garden":
+                                                page_view.push(
+                                                            gardenScreen)
                                                 break
                                             }
                                         }

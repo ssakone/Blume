@@ -8,6 +8,9 @@ import DeviceUtils 1.0
 import "pages/Plant/"
 import "services/"
 import "models/"
+import "components/"
+import "components_js/"
+import "components_js/Http.js" as HTTP
 
 ApplicationWindow {
     id: appWindow
@@ -22,7 +25,10 @@ ApplicationWindow {
                            || utilsScreen.screenPar > 1.0)
 
     property var selectedDevice: null
-    property alias $SqlClient: _sqliClient
+    property alias $SqlClient: _relay._sqliClient
+    property alias $Model: _relay
+    property alias $Colors: _relay._colors
+    property var $Http: HTTP
 
     // Desktop stuff ///////////////////////////////////////////////////////////
     minimumWidth: isHdpi ? 400 : 480
@@ -60,36 +66,9 @@ ApplicationWindow {
         }
     }
 
-    SqlClient {
-        id: _sqliClient
-        Component.onCompleted: open()
-        onDatabaseOpened: {
-            Promise.all([alarmModel, plantModel, spaceModel]).then(
-                        function (rs) {
-                            console.info("[+] All table ready")
-                        }).catch(function (rs) {
-                            console.error("Something happen => ", rs)
-                        })
-        }
+    ModelManager {
+        id: _relay
     }
-
-    ////// MODEL BEBIN ->
-    PlantModel {
-        id: plantModel
-        db: _sqliClient
-    }
-
-    SpaceModel {
-        id: spaceModel
-        db: _sqliClient
-    }
-
-    AlarmModel {
-        id: alarmModel
-        db: _sqliClient
-    }
-
-    ///// <- END MODEL
 
     // Mobile stuff ////////////////////////////////////////////////////////////
     property int screenOrientation: Screen.primaryOrientation

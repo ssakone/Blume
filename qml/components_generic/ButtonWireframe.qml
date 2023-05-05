@@ -1,10 +1,11 @@
-import QtQuick 2.15
-import QtQuick.Controls.impl 2.15
-import QtQuick.Templates 2.15 as T
+import QtQuick
+import QtQuick.Controls.impl
+import QtQuick.Templates as T
 
 //import QtGraphicalEffects 1.15 // Qt5
-import Qt5Compat.GraphicalEffects // Qt6
+import Qt5Compat.GraphicalEffects
 
+// Qt6
 import ThemeEngine 1.0
 
 T.Button {
@@ -36,7 +37,6 @@ T.Button {
     property int componentRadius: Theme.componentRadius
 
     ////////////////////////////////////////////////////////////////////////////
-
     MouseArea {
         id: mousearea
         anchors.fill: parent
@@ -69,28 +69,39 @@ T.Button {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     background: Rectangle {
         implicitWidth: 80
         implicitHeight: Theme.componentHeight
 
         radius: componentRadius
-        opacity: enabled ? (control.down && !control.hoverAnimation ? 0.8 : 1.0) : 0.4
+        opacity: enabled ? (control.down
+                            && !control.hoverAnimation ? 0.8 : 1.0) : 0.4
         color: control.fullColor ? control.primaryColor : control.secondaryColor
         border.width: Theme.componentBorderWidth
         border.color: control.fullColor ? control.primaryColor : Theme.colorComponentBorder
 
-        Rectangle { // mouseBackground
+        Rectangle {
+            // mouseBackground
             id: mouseBackground
-            width: 0; height: width; radius: width;
+            width: 0
+            height: width
+            radius: width
             x: mousearea.mouseX - (width / 2)
             y: mousearea.mouseY - (width / 2)
 
             visible: control.hoverAnimation
             color: "white"
             opacity: mousearea.containsMouse ? 0.16 : 0
-            Behavior on opacity { NumberAnimation { duration: 333 } }
-            Behavior on width { NumberAnimation { duration: 200 } }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 333
+                }
+            }
+            Behavior on width {
+                NumberAnimation {
+                    duration: 200
+                }
+            }
         }
 
         layer.enabled: control.hoverAnimation
@@ -106,7 +117,6 @@ T.Button {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     contentItem: Text {
         text: control.text
         textFormat: Text.PlainText
@@ -117,7 +127,8 @@ T.Button {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
 
-        opacity: enabled ? (control.down && !control.hoverAnimation ? 0.8 : 1.0) : 0.66
+        opacity: enabled ? (control.down
+                            && !control.hoverAnimation ? 0.8 : 1.0) : 0.66
         color: control.fullColor ? control.fulltextColor : control.primaryColor
     }
 }

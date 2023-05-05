@@ -1,17 +1,18 @@
 // Copyright (C) 2017 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
-
 import QtQuick
 import QtQuick.Templates as T
 import QtQuick.Controls.impl
 import QtQuick.Controls.Material
 import QtQuick.Controls.Material.impl
 
+import ThemeEngine
+
 T.Button {
     id: control
 
-    property color backgroundColor: "#00c395"
-    property color foregroundColor: "white"
+    property color backgroundColor: Theme.colorPrimary
+    property color foregroundColor: Theme.colorHeaderContent
     property int radius: 18
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
@@ -33,8 +34,9 @@ T.Button {
     icon.height: 24
     icon.color: foregroundColor
 
-    Material.elevation: flat ? control.down || (enabled && control.hovered) ? 2 : 0
-                             : control.down ? 8 : 2
+    Material.elevation: flat ? control.down
+                               || (enabled
+                                   && control.hovered) ? 2 : 0 : control.down ? 8 : 2
     Material.background: flat ? "transparent" : undefined
 
     contentItem: IconLabel {
@@ -65,8 +67,10 @@ T.Button {
             height: parent.height
             pressed: control.pressed
             anchor: control
-            active: enabled && (control.down || control.visualFocus || control.hovered)
-            color: control.flat && control.highlighted ? control.Material.highlightedRippleColor : control.Material.rippleColor
+            active: enabled && (control.down || control.visualFocus
+                                || control.hovered)
+            color: control.flat
+                   && control.highlighted ? control.Material.highlightedRippleColor : control.Material.rippleColor
         }
     }
 }
