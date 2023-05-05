@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 
         return app.exec();
     }
-#if defined(Q_OS_MACOS)
+#if defined(Q_OS_MACOS) || defined (Q_OS_IOS)
      QQuickStyle::setStyle("Material");
 #endif
 

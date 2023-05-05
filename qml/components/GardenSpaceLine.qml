@@ -8,25 +8,11 @@ import Qt5Compat.GraphicalEffects as QGE
 
 import "../components_generic"
 
-ClipRRect {
+ItemDelegate {
     id: root
     property string title: ""
     property string subtitle: ""
     property string iconSource: ""
-
-    signal clicked
-
-    radius: 15
-
-    Rectangle {
-        anchors.fill: parent
-        radius: parent.radius
-
-        border {
-            color: "#e5e5e5"
-            width: 1
-        }
-    }
 
     RowLayout {
         anchors {
@@ -47,15 +33,16 @@ ClipRRect {
                 visible: false
                 width: 85
                 height: 85
+                radius: 18
                 anchors.centerIn: parent
                 gradient: Gradient {
                     GradientStop {
                         position: 0.00
-                        color: "#00c395"
+                        color: Theme.colorPrimary
                     }
                     GradientStop {
                         position: 1.00
-                        color: "#0c765a"
+                        color: Qt.darker(Theme.colorPrimary)
                     }
                 }
             }
@@ -86,6 +73,8 @@ ClipRRect {
             Label {
                 text: title
                 font.pixelSize: 18
+                font.family: 'Roboto'
+                font.weight: Font.Medium
             }
             Label {
                 text: subtitle
@@ -106,10 +95,5 @@ ClipRRect {
                 }
             }
         }
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: root.clicked()
     }
 }

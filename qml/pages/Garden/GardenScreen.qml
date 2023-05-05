@@ -21,25 +21,58 @@ BPage {
         anchors.fill: parent
         anchors.topMargin: 0
 
-        Column {
+        Item {
             Layout.fillWidth: true
-            padding: 25
-            topPadding: 5
-            Label {
-                text: qsTr("Mon Jardin")
-                font {
-                    pixelSize: 36
-                    family: "Courrier"
-                    weight: Font.Bold
-                }
+            Layout.preferredHeight: 200
+            Rectangle {
+                width: parent.width
+                height: parent.height
+                color: Theme.colorPrimary
             }
-            Label {
-                text: qsTr("Gerer votre jardin personnelle efficacement")
-                opacity: .5
-                font {
-                    pixelSize: 16
-                    family: "Courrier"
-                    weight: Font.Bold
+
+            Column {
+                Layout.fillWidth: true
+                padding: 25
+                topPadding: 5
+                Label {
+                    text: qsTr("Mon Jardin")
+                    font {
+                        pixelSize: 36
+                        family: "Courrier"
+                        weight: Font.Bold
+                    }
+                }
+                Label {
+                    text: qsTr("Gerer votre jardin personnelle efficacement")
+                    opacity: .5
+                    font {
+                        pixelSize: 16
+                        family: "Courrier"
+                        weight: Font.Bold
+                    }
+                }
+                Column {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width - 60
+                    spacing: 20
+                    topPadding: 20
+                    Label {
+                        text: $Model.plant.count
+                        font.pixelSize: 36
+                        font.weight: Font.Medium
+                        font.family: 'Roboto'
+                        width: parent.width
+                        horizontalAlignment: Label.AlignHCenter
+                    }
+                    Label {
+                        text: "Nombre de plante(s)"
+                        font.pixelSize: 14
+                        font.weight: Font.Normal
+                        font.family: 'Roboto'
+                        opacity: .7
+                        width: parent.width
+                        horizontalAlignment: Label.AlignHCenter
+                    }
                 }
             }
         }
@@ -49,6 +82,7 @@ BPage {
             Layout.leftMargin: 15
             Layout.rightMargin: 20
             spacing: 20
+            visible: false
 
             Repeater {
                 model: [{
@@ -150,32 +184,37 @@ BPage {
         }
 
         Label {
-            Layout.fillWidth: true
-            text: "Vos Activite"
-            padding: 15
-            opacity: .7
-            font {
-                pixelSize: 16
-                weight: Font.Medium
-            }
+            padding: 10
+            text: "Vos espaces"
+            font.pixelSize: 14
+            font.weight: Font.Medium
         }
 
         ListView {
             id: activityList
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Layout.leftMargin: 20
-            Layout.rightMargin: 20
+            Layout.leftMargin: 10
+            Layout.rightMargin: 10
             spacing: 15
             clip: true
-            model: 2
-            delegate: GardenActivityLine {
-                title: "Arrosage"
-                subtitle: "3 plantes"
-                onClicked: console.log("Clicked")
-                icon.source: Icons.water
-                width: activityList.width
-                height: 80
+            model: $Model.space
+            delegate: GardenSpaceLine {
+                width: parent.width
+                height: 85
+                title: libelle
+                subtitle: description
+                iconSource: type === 1 ? Icons.homeOutline : Icons.landFields
+                onClicked: {
+                    let data = {
+                        "name": libelle,
+                        "type": type,
+                        "description": description,
+                        "status": model.status ?? 0,
+                        "space_id": id
+                    }
+                    page_view.push(navigator.gardenSpaceDetails, data)
+                }
             }
         }
     }
