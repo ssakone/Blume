@@ -51,7 +51,7 @@ BPage {
                     Repeater {
                         model: desease_data['similar_images']
                         delegate: Image {
-                            source: modelData.url
+                            source: modelData.url || modelData || ""
                         }
                     }
                 }
@@ -78,6 +78,8 @@ BPage {
                         text: desease_data['name']
                         font.pixelSize: 32
                         font.weight: Font.Bold
+                        width: parent.width
+                        wrapMode: Text.Wrap
                     }
 
                     RowLayout {
@@ -97,8 +99,10 @@ BPage {
 
                 Text {
                     text: details['description']
+                    font.pixelSize: 14
+                    font.weight: Font.Light
                     wrapMode: Text.Wrap
-                    width: parent.width
+                    width: parent.width - 10
                 }
 
                 Label {

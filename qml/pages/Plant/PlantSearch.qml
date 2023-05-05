@@ -8,7 +8,6 @@ import SortFilterProxyModel
 
 import "../../components"
 import "../../components_generic"
-//import "../../components_themed"
 import "../../components_js/Http.js" as Http
 
 import "../.."
@@ -20,7 +19,7 @@ BPage {
     property int pageLimit: 20
 
     property bool isLoading: true
-    property variant plantsModel: []
+//    property variant plantsModel: []
     property string previousDisplayText: ""
 
     header: AppBar {
@@ -94,66 +93,82 @@ BPage {
         anchors.fill: parent
         spacing: 5
 
-        TextFieldThemed {
-            id: plantSearchBox
+        RowLayout {
             Layout.fillWidth: true
-            Layout.preferredHeight: 40
+            spacing: 5
             Layout.margins: 15
 
-            selectByMouse: true
-            colorSelectedText: "white"
+            TextFieldThemed {
+                id: plantSearchBox
+                Layout.fillWidth: true
+                Layout.preferredHeight: 40
 
-            onAccepted: {
-                plantListView.currentPage = 0
-                plantListView.fetchMore()
-            }
-            onTextChanged: {
+                selectByMouse: true
+                colorSelectedText: "white"
 
-                plantListView.isLoading = true
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                anchors.rightMargin: 70
-                onClicked: {
-                    parent.forceActiveFocus()
+                onAccepted: {
+                    plantListView.currentPage = 0
+                    plantListView.fetchMore()
                 }
-            }
+                onTextChanged: {
 
-            Row {
-                anchors.right: parent.right
-                anchors.rightMargin: 12
-                anchors.verticalCenter: parent.verticalCenter
-                spacing: 12
-
-                RoundButtonIcon {
-                    width: 24
-                    height: 24
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    visible: plantSearchBox.text.length
-                    highlightMode: "color"
-                    source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
-
-                    onClicked: plantSearchBox.text = ""
+                    plantListView.isLoading = true
                 }
 
-                RoundButtonIcon {
-                    width: 30
-                    height: 30
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    visible: plantSearchBox.text.length
-                    highlightMode: "color"
-                    source: "qrc:/assets/icons_material/baseline-search-24px.svg"
-
+                MouseArea {
+                    anchors.fill: parent
+                    anchors.rightMargin: 70
                     onClicked: {
-                        plantListView.currentPage = 0
-                        plantListView.fetchMore()
+                        parent.forceActiveFocus()
+                    }
+                }
+
+                Row {
+                    anchors.right: parent.right
+                    anchors.rightMargin: 12
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 12
+
+                    RoundButtonIcon {
+                        width: 24
+                        height: 24
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        visible: plantSearchBox.text.length
+                        highlightMode: "color"
+                        source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
+
+                        onClicked: plantSearchBox.text = ""
+                    }
+
+                    RoundButtonIcon {
+                        width: 30
+                        height: 30
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        visible: plantSearchBox.text.length
+                        highlightMode: "color"
+                        source: "qrc:/assets/icons_material/baseline-search-24px.svg"
+
+                        onClicked: {
+                            plantListView.currentPage = 0
+                            plantListView.fetchMore()
+                        }
                     }
                 }
             }
+
+            IconSvg {
+                source: Icons.camera
+                color: Theme.colorPrimary
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: "PointingHandCursor"
+                    onClicked: page_view.push(navigator.plantIdentifierPage)
+                }
+            }
         }
+
 
         ListView {
             id: plantList
