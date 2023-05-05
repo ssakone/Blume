@@ -24,7 +24,7 @@ Page {
             spacing: 20
 
             Label {
-                text: "Foire aux questions"
+                text: qsTr("Frequently asked questions")
                 color: Theme.colorPrimary
                 font.pixelSize: 32
                 wrapMode: Text.Wrap
@@ -44,7 +44,7 @@ Page {
                         header_color: Qt.lighter("#ccc")
                         content_color_expanded: "white"
                         header_radius: 0
-                        header: "Questions " + index
+                        header: "Question " + index
 
                         contentItems: [
                             Label {
@@ -63,7 +63,7 @@ Page {
     }
 
     ButtonWireframe {
-        text: "Contacter un expert"
+        text: qsTr("Contacting an expert")
         componentRadius: 15
         fullColor: Theme.colorPrimary
         fulltextColor: "white"

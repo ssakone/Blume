@@ -15,11 +15,20 @@ QtObject {
     property var deseasePage: Component {
         PlantDesease {}
     }
+    property var deseaseDetailsPage: Component {
+        PlantDeseaseDetails {}
+    }
     property var plantBrowserPage: Component {
         PlantBrowser {}
     }
     property var plantDetailPage: Component {
-        PlantScreen {}
+        PlantScreenDetails {}
+    }
+    property var plantSearchPage: Component {
+        PlantSearch {}
+    }
+    property var insectDetailPage: Component {
+        InsectDetailsScreen {}
     }
     property var gardenPlantsList: Component {
         GardenPlantsList {}

@@ -40,7 +40,7 @@ BPage {
             spacing: 10
 
             Rectangle {
-                height: 300
+                height: singleColumn ? 300 : pageControl.height / 3
                 width: parent.width
                 clip: true
                 color: "#f0f0f0"
@@ -51,7 +51,7 @@ BPage {
                     Repeater {
                         model: desease_data['similar_images']
                         delegate: Image {
-                            source: modelData.url
+                            source: modelData.url || modelData || ""
                         }
                     }
                 }
@@ -78,6 +78,8 @@ BPage {
                         text: desease_data['name']
                         font.pixelSize: 32
                         font.weight: Font.Bold
+                        width: parent.width
+                        wrapMode: Text.Wrap
                     }
 
                     RowLayout {
@@ -97,8 +99,10 @@ BPage {
 
                 Text {
                     text: details['description']
+                    font.pixelSize: 14
+                    font.weight: Font.Light
                     wrapMode: Text.Wrap
-                    Layout.maximumWidth: pageControl.width - 40
+                    width: parent.width - 10
                 }
 
                 Label {

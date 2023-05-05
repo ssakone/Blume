@@ -42,7 +42,7 @@ BPage {
         // colors
         itemColorLeaf.visible = (currentPlant.colorsLeaf?.length > 0)
         plantColorLeaf.model = currentPlant.colorsLeaf
-        itemColorBract.visible = (currentPlant.colorsBract.length > 0)
+        itemColorBract.visible = (currentPlant.colorsBract?.length > 0)
         plantColorBract.model = currentPlant.colorsBract
         itemColorFlower.visible = (currentPlant.colorsFlower.length > 0)
         plantColorFlower.model = currentPlant.colorsFlower

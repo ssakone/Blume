@@ -13,31 +13,32 @@ import "../../components_js/Http.js" as Http
 import "../.."
 
 BPage {
-    id: diseaseListView
+    id: plantListView
 
     property int currentPage: 0
     property int pageLimit: 20
 
     property bool isLoading: true
+//    property variant plantsModel: []
     property string previousDisplayText: ""
 
     header: AppBar {
-        title: "Liste des maladies"
+        title: "Chercher une plante"
         noAutoPop: true
         leading.onClicked: page_view.pop()
     }
 
     Component.onCompleted: {
         fetchMore()
-        diseaseSearchBox.forceActiveFocus()
+        plantSearchBox.forceActiveFocus()
     }
 
     function fetchMore() {
         console.log("Gonna fetch_more...")
         isLoading = true
-        let query = `https://blume.mahoudev.com/items/Maladies?fields[]=*.*&limit=${diseaseSearchBox.displayText !== "" ? 70 : pageLimit}&offset=${currentPage
-            * pageLimit}${diseaseSearchBox.displayText
-            === "" ? '' : "&filter[nom_scientifique][_contains]=" + diseaseSearchBox.displayText}`
+        let query = `https://blume.mahoudev.com/items/Plantes?fields[]=*.*&limit=${plantSearchBox.displayText !== "" ? 70 : pageLimit}&offset=${currentPage
+            * pageLimit}${plantSearchBox.displayText
+            === "" ? '' : "&filter[name_scientific][_contains]=" + plantSearchBox.displayText}`
 
         Http.fetch({
                        "method": 'GET',
@@ -46,8 +47,8 @@ BPage {
                                let data = JSON.parse(response).data
 
                                // Remove null value
-                               if (diseaseSearchBox.displayText !== "") {
-                                   diseasesModel.clear()
+                               if (plantSearchBox.displayText !== "") {
+                                   plantsModel.clear()
                                 }
                                for (var i = 0; i < data.length; i++) {
                                    let item = data[i]
@@ -56,11 +57,12 @@ BPage {
                                        let key = itemKeys[j]
                                        let value = item[key]
                                        if ( value === null) {
-                                           if('noms_communs' === key) item[key] = []
+                                           if('categorie' === key) item[key] = {}
+                                           else if(['sites', 'light_level', 'noms_communs'].includes(key)) item[key] = []
                                            else item[key] = ""
                                        }
                                    }
-                                   diseasesModel.append(item)
+                                   plantsModel.append(item)
                                }
 
                                isLoading = false
@@ -69,17 +71,21 @@ BPage {
 
 
     ListModel {
-        id: diseasesModel
+        id: plantsModel
+    }
+
+    PlantScreenDetails {
+        id: plantScreenDetailsPopup
     }
 
     Timer {
         id: searchTimer
         interval: 1500
         repeat: true
-        running: diseaseSearchBox.displayText !== "" && diseaseListView.previousDisplayText !== diseaseSearchBox.text
+        running: plantSearchBox.displayText !== "" && plantListView.previousDisplayText !== plantSearchBox.text
         onTriggered: {
             fetchMore()
-            diseaseListView.previousDisplayText = diseaseSearchBox.text
+            plantListView.previousDisplayText = plantSearchBox.text
         }
     }
 
@@ -93,7 +99,7 @@ BPage {
             Layout.margins: 15
 
             TextFieldThemed {
-                id: diseaseSearchBox
+                id: plantSearchBox
                 Layout.fillWidth: true
                 Layout.preferredHeight: 40
 
@@ -101,12 +107,12 @@ BPage {
                 colorSelectedText: "white"
 
                 onAccepted: {
-                    diseaseListView.currentPage = 0
-                    diseaseListView.fetchMore()
+                    plantListView.currentPage = 0
+                    plantListView.fetchMore()
                 }
                 onTextChanged: {
 
-                    diseaseListView.isLoading = true
+                    plantListView.isLoading = true
                 }
 
                 MouseArea {
@@ -128,11 +134,11 @@ BPage {
                         height: 24
                         anchors.verticalCenter: parent.verticalCenter
 
-                        visible: diseaseSearchBox.text.length
+                        visible: plantSearchBox.text.length
                         highlightMode: "color"
                         source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
 
-                        onClicked: diseaseSearchBox.text = ""
+                        onClicked: plantSearchBox.text = ""
                     }
 
                     RoundButtonIcon {
@@ -140,36 +146,45 @@ BPage {
                         height: 30
                         anchors.verticalCenter: parent.verticalCenter
 
-                        visible: diseaseSearchBox.text.length
+                        visible: plantSearchBox.text.length
                         highlightMode: "color"
                         source: "qrc:/assets/icons_material/baseline-search-24px.svg"
 
                         onClicked: {
-                            diseaseListView.currentPage = 0
-                            diseaseListView.fetchMore()
+                            plantListView.currentPage = 0
+                            plantListView.fetchMore()
                         }
                     }
                 }
             }
 
+            IconSvg {
+                source: Icons.camera
+                color: Theme.colorPrimary
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: "PointingHandCursor"
+                    onClicked: page_view.push(navigator.plantIdentifierPage)
+                }
+            }
         }
 
 
         ListView {
-            id: diseaseList
+            id: plantList
             Layout.fillWidth: true
             Layout.fillHeight: true
             spacing: 0
             clip: true
-            model: diseasesModel
+            model: plantsModel
 
             ScrollBar.vertical: ScrollBar {
                 property bool isLoading: false
                 id: searchScrollBar
                 onPositionChanged: {
-                    if (diseaseListView.isLoading === false
+                    if (plantListView.isLoading === false
                             && (searchScrollBar.size + searchScrollBar.position > 0.99)
-                            && diseaseSearchBox.displayText === "") {
+                            && plantSearchBox.displayText === "") {
                         currentPage++
                         fetchMore()
                     }
@@ -202,7 +217,7 @@ BPage {
                         anchors.fill: parent
 
                         Repeater {
-                            model: modelData.images
+                            model: modelData.images_plantes
                             delegate: Image {
                                 required property variant model
                                 source: "https://blume.mahoudev.com/assets/"
@@ -213,7 +228,7 @@ BPage {
                     Rectangle {
                         color: "#e5e5e5"
                         anchors.fill: parent
-                        visible: modelData['images'].count === 0
+                        visible: modelData['images_plantes'].count === 0
                     }
                 }
 
@@ -223,7 +238,7 @@ BPage {
                     width: parent.width - leftPadding - 20
 
                     Text {
-                        text: modelData.nom_scientifique
+                        text: modelData.name_scientific
                         color: Theme.colorText
                         fontSizeMode: Text.Fit
                         font.pixelSize: 18
@@ -237,41 +252,14 @@ BPage {
                     cursorShape: "PointingHandCursor"
 
                     onClicked: {
-                        let formated = {}
-
-                        let desease_details = {
-                            "common_names": [],
-                            "treatment": {
-                                "prevention": modelData.traitement_preventif || "",
-                                "chemical": modelData.traitement_chimique || "",
-                                "biological": modelData.traitement_biologique || ""
-                            },
-                            "description": modelData.description,
-                            "cause": modelData.cause
-                        }
-
-                        formated['name'] = modelData.nom_scientifique
-                        formated['similar_images'] = []
-
-//                        for(let i=0; i<modelData.noms_communs.count; i++ ) {
-//                            desease_details["common_names"].push(modelData.noms_communs.get(i))
-//                        }
-
-                        for(let j=0; j<modelData.images.count; j++ ) {
-                            formated['similar_images'].push({"url": "https://blume.mahoudev.com/assets/" + modelData.images.get(j).directus_files_id})
-                        }
-
-                        formated['disease_details'] = desease_details
-
-                        page_view.push(resultDeseaseDetailPage, {
-                                           "desease_data": formated
-                                       })
+                        plantScreenDetailsPopup.plant = modelData
+                        plantScreenDetailsPopup.open()
                     }
                 }
             }
 
             ItemNoPlants {
-                visible: diseaseList.count === 0 && !isLoading
+                visible: plantList.count === 0 && !isLoading
             }
         }
     }

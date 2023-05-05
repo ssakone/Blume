@@ -42,6 +42,7 @@
         <file>pages/Garden/GardenScreen.qml</file>
         <file>pages/Garden/GardenPlantsList.qml</file>
         <file>pages/Garden/GardenSpacesList.qml</file>
+        <file>pages/Plant/PlantSearch.qml</file>
         <file>pages/Posometre.qml</file>
         <file>pages/Faq.qml</file>
         <file>pages/AskHelp.qml</file>
@@ -83,10 +84,15 @@
         <file>PlantScreenDetails.qml</file>
 
         <!-- Plant Search popup -->
+
         <file>components/Accordion.qml</file>
+        <file>components/FormGroup.qml</file>
         <file>components/ImagePickerArea.qml</file>
+
         <file>components/PlantSearchPopup.qml</file>
         <!-- End plant search popup -->
+
+        <file>components_js/Http.js</file>
 
         <file>components_generic/ActionMenuItem.qml</file>
         <file>components_generic/ButtonCompactable.qml</file>
@@ -96,6 +102,7 @@
         <file>components_generic/BPage.qml</file>
         <file>components_generic/ToolTipFlat.qml</file>
         <file>components_generic/RoundButtonIcon.qml</file>
+
         <file>pages/Garden/GardenSpaceDetails.qml</file>
 
         <!-- Object -->
@@ -104,14 +111,16 @@
         <file>components_js/Colors.qml</file>
 
         <!-- SERVICES -->
-        <file>services/SqlClient.qml</file>
 
-        <!-- DATABASE MODEL -->
+        <file>services/SqlClient.qml</file>
         <file>models/AlarmModel.qml</file>
         <file>models/Model.qml</file>
         <file>models/PlantModel.qml</file>
         <file>models/SpaceModel.qml</file>
+
         <file>models/ModelManager.qml</file>
+
+        <file>pages/Insect/InsectDetailsScreen.qml</file>
 
     </qresource>
     <qresource prefix="/">

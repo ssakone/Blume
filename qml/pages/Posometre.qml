@@ -22,7 +22,7 @@ BPage {
     padding: 0
 
     header: AppBar {
-        title: "Posometre"
+        title: qsTr("Light sensor")
     }
     background: Rectangle {
         color: "black"
@@ -80,7 +80,7 @@ BPage {
         Column {
             Layout.fillWidth: true
             Label {
-                text: "Les agriculteurs peuvent utiliser un posemètre pour mesurer la quantité de lumière disponible pour les plantes, afin d'ajuster leur emplacement ou leur exposition à la lumière pour maximiser leur croissance et leur production."
+                text: qsTr("Farmers can use a light meter to measure the amount of light available to plants to adjust their location or light exposure to maximize growth and production.")
                 font.pixelSize: 18
                 color: "white"
                 width: parent.width - 25
@@ -243,31 +243,31 @@ BPage {
             level: 5
             l_color: "red"
             textColor: 'white'
-            label: "Ensolleilé"
+            label: qsTr("Sunny")
         }
         ListElement {
             level: 4
             l_color: "yellow"
             textColor: 'black'
-            label: "Très lumineux"
+            label: qsTr("Very bright")
         }
         ListElement {
             level: 3
             l_color: "orange"
             textColor: 'black'
-            label: "Lumineux"
+            label: qsTr("Luminous")
         }
         ListElement {
             level: 2
             l_color: "white"
             textColor: 'black'
-            label: "Normal"
+            label: qsTr("Normal")
         }
         ListElement {
             level: 1
             l_color: "gray"
             textColor: 'black'
-            label: "Sombre"
+            label: qsTr("Dark")
         }
     }
 }

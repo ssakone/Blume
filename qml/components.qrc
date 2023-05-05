@@ -38,6 +38,7 @@
         <file>components/SearchBar.qml</file>
         <file>components/GardenPlantLine.qml</file>
         <file>components/GardenSpaceLine.qml</file>
+        <file>components/ItemNoImage.qml</file>
     </qresource>
     <qresource prefix="/js">
         <file alias="Http.js">components_js/Http.js</file>

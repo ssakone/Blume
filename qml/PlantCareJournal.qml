@@ -368,7 +368,7 @@ Item {
                             height: isPhone ? 128 : 160
 
                             colorBackground: Theme.colorBackground
-                            placeholderText: qsTr("Add a comment")
+                            placeholderText: qsTr("Ajouter un commentaire") // qsTr("Add a comment")
                         }
                     }
                 }

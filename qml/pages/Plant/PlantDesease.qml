@@ -29,68 +29,6 @@ BPage {
     property variant analyseResults
     padding: 0
 
-    property variant form_schema: [{
-            "group_title": "Exposition et température",
-            "fields": [{
-                    "label": "De combien d'ensoleillement bénéficie votre plante chaque jour ?",
-                    "is_required": true,
-                    "placeholder": "6h de lumière naturelle indirecte"
-                }, {
-                    "label": "Quelles sont les température de son environnement ?",
-                    "is_required": false,
-                    "placeholder": "Journée: +24°C, Nuit: +1°C"
-                }]
-        }, {
-            "group_title": "Parasites et maladies",
-            "fields": [{
-                    "label": "Y a-t-il des toiles ou des insectes sur la plante ou dans la terre ?",
-                    "is_required": false,
-                    "placeholder": "Insectes blancs sous les feuilles"
-                }, {
-                    "label": "Quelles sont les température de son environnement ?",
-                    "is_required": false,
-                    "placeholder": "Journée: +24°C, Nuit: +1°C"
-                }]
-        }, {
-            "group_title": "Arrosage",
-            "fields": [{
-                    "label": "A quelle fréquence arrosez-vous votre plante ?",
-                    "is_required": false,
-                    "placeholder": "1 à 2 fois par semaine"
-                }, {
-                    "label": "Quelle quantité d'eau utilisez-vous ?",
-                    "is_required": false,
-                    "placeholder": "Un verre et demi"
-                }, {
-                    "label": "Laissez-vous la terre sécher entre les arrosages ?",
-                    "is_required": false,
-                    "placeholder": "Oui, les premiers centimètres"
-                }, {
-                    "label": "Le fond du pot est-il percé ?",
-                    "is_required": false,
-                    "placeholder": "Oui"
-                }]
-        }, {
-            "group_title": "Rempotage et engrais",
-            "fields": [{
-                    "label": "A quelle fréquence arrosez-vous votre plante ?",
-                    "is_required": false,
-                    "placeholder": "1 à 2 fois par semaine"
-                }, {
-                    "label": "Quelle quantité d'eau utilisez-vous ?",
-                    "is_required": false,
-                    "placeholder": "Un verre et demi"
-                }, {
-                    "label": "Laissez-vous la terre sécher entre les arrosages ?",
-                    "is_required": false,
-                    "placeholder": "Oui, les premiers centimètres"
-                }, {
-                    "label": "Le fond du pot est-il percé ?",
-                    "is_required": false,
-                    "placeholder": "Oui"
-                }]
-        }]
-
     onVisibleChanged: {
         if (visible)
             image.source = ""
@@ -123,13 +61,13 @@ BPage {
         title: {
             switch (identifierLayoutView.currentIndex) {
             case 0:
-                return "Maladie des plantes"
+                return "Health menu"
             case 1:
-                return "Analyse de plante"
+                return "Disease detection"
             case 2:
-                return "Resultat de l'analyse"
+                return "Results"
             default:
-                return "Non trouvé"
+                return "Not found"
             }
         }
         noAutoPop: true
@@ -143,23 +81,6 @@ BPage {
                 identifierLayoutView.currentIndex--
             }
         }
-        actions: [
-            AppBarButton {
-                icon: Icons.camera
-                visible: (Qt.platform.os == 'ios'
-                          || Qt.platform.os == 'android')
-                         && identifierLayoutView.currentIndex === 1
-                onClicked: {
-                    if (Qt.platform.os === 'ios') {
-                        imgPicker.openCamera()
-                    } else {
-                        androidToolsLoader.item.openCamera()
-                    }
-                }
-                height: 64
-                width: 64
-            }
-        ]
     }
 
     Component {
@@ -191,10 +112,17 @@ BPage {
             active: Qt.platform.os === "android"
             sourceComponent: Component {
                 Item {
+                    property bool fromCamera: false
+                    property bool fromGalery: false
+
                     function openCamera() {
+                        fromCamera = true
+                        fromGalery = false
                         QtAndroidAppPermissions.openCamera()
                     }
                     function openGallery() {
+                        fromGalery = true
+                        fromCamera = false
                         QtAndroidAppPermissions.openGallery()
                     }
 
@@ -203,6 +131,9 @@ BPage {
                         function onImageSelected(path) {
                             image.source = "file://?" + Math.random()
                             image.source = "file://" + path
+                            if(fromCamera) analyserButton.clicked()
+                            fromGalery  = false
+                            fromCamera = false
                         }
                     }
                 }
@@ -217,7 +148,7 @@ BPage {
             Layout.margins: 0
             currentIndex: 0
             onCurrentIndexChanged: {
-                if (currentIndex != 1) {
+                if (currentIndex !== 1) {
                     if (accessCam.active) {
                         tabView.currentIndex = 0
                         tabBar.currentIndex = 0
@@ -239,13 +170,13 @@ BPage {
 
                             Component.onCompleted: {
                                 let data = [{
-                                                "name": qsTr("Analyser une plantes"),
+                                                "name": qsTr("Détecter disease"),
                                                 "icon": Icons.magnifyScan,
                                                 "image": "",
                                                 "action": "analyser",
                                                 "style": "darkblue"
                                             }, {
-                                                "name": qsTr("Identifier un insecte"),
+                                                "name": qsTr("Identify parasits"),
                                                 "icon": Icons.bug,
                                                 "image": "",
                                                 "action": "insect",
@@ -257,13 +188,13 @@ BPage {
                                                 "action": "garden",
                                                 "style": "lightenYellow"
                                             }, {
-                                                "name": qsTr("Encyclopedie des maladies"),
+                                                "name": qsTr("Book of diseases"),
                                                 "icon": Icons.bookOpenOutline,
                                                 "image": "",
                                                 "action": "encyclopedie",
                                                 "style": "lightenYellow"
-                                            },{
-                                                "name": qsTr("Contacter des experts"),
+                                            }, {
+                                                "name": qsTr("Get help"),
                                                 "icon": Icons.helpCircle,
                                                 "image": "",
                                                 "action": "faq",
@@ -278,11 +209,11 @@ BPage {
                             interactive: false
                             width: parent.width
                             height: parent.height - 20
-                            cellWidth: (parent.width - (10)) / 3
+                            cellWidth: gr.width > 800 ? gr.width / 5 : (gr.width > 500 ? gr.width/ 4 : gr.width /3)
                             cellHeight: cellWidth
                             model: optionModel
                             delegate: Item {
-                                width: (gr.width - (20)) / 3
+                                width: gr.cellWidth
                                 height: width
                                 Rectangle {
                                     anchors.fill: parent
@@ -329,8 +260,8 @@ BPage {
                                         }
                                     }
                                     IconSvg {
-                                        width: 64
-                                        height: 64
+                                        width: parent.width / 2
+                                        height: width
                                         visible: icon !== ""
                                         anchors.centerIn: parent
 
@@ -422,11 +353,11 @@ BPage {
                                                         Material.Shade50)
                         Layout.fillWidth: true
                         TabButton {
-                            text: "Fichier"
+                            text: qsTr("File image")
                             onClicked: tabView.currentIndex = 0
                         }
                         TabButton {
-                            text: "Camera"
+                            text: qsTr("Camera")
                             visible: Qt.platform.os !== 'ios'
                             onClicked: tabView.currentIndex = 1
                         }
@@ -453,6 +384,15 @@ BPage {
                                 }
                             }
 
+                            function chooseFile() {
+                                if (Qt.platform.os === 'ios') {
+                                    imgPicker.openPicker()
+                                } else if (Qt.platform.os === 'android') {
+                                    androidToolsLoader.item.openGallery()
+                                } else
+                                    fileDialog.open()
+                            }
+
                             Timer {
                                 id: tm
                                 interval: 500
@@ -470,42 +410,74 @@ BPage {
                                 Image {
                                     id: image
                                     anchors.fill: parent
-                                    fillMode: Image.PreserveAspectFit
+                                    fillMode: (Qt.platform.os == 'ios'
+                                               || Qt.platform.os == 'android') ? Image.PreserveAspectCrop : Image.PreserveAspectFit
+                                }
+                                ItemNoImage {
+                                    visible: image.source.toString() === ""
+                                    anchors.fill: parent
+                                    spacing: 10
+                                    padding: 25
+
+                                    title: qsTr("Detect disease")
+                                    subtitle: qsTr("Be sure to take a clear, bright photo that includes only the sick part of the plant you want to identify")
+                                    onClicked: tabView.chooseFile
                                 }
                                 Column {
-                                    visible: image.source.toString() === ""
-                                    anchors.centerIn: parent
-                                    spacing: 10
-                                    IconSvg {
-                                        width: 64
-                                        height: 64
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        source: Icons.fileDocument
-                                        opacity: .5
-                                        color: 'black'
+                                    width: 70
+                                    anchors {
+                                        bottom: parent.bottom
+                                        bottomMargin: 10
+
+                                        right: parent.right
+                                        rightMargin: 10
                                     }
-                                    Label {
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        width: 140
-                                        wrapMode: Label.Wrap
-                                        font.pixelSize: 16
-                                        horizontalAlignment: Label.AlignHCenter
-                                        text: 'Clickez pour importer une image'
-                                        opacity: .6
-                                    }
-                                }
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        if (Qt.platform.os === 'ios') {
-                                            imgPicker.openPicker()
-                                        } else if (Qt.platform.os === 'android') {
-                                            androidToolsLoader.item.openGallery(
-                                                        )
-                                        } else {
-                                            fileDialog.open()
+                                    spacing: 7
+
+                                    ClipRRect {
+                                        visible: image.source.toString() !== ""
+                                        width: 60
+                                        height: width
+                                        radius: height / 2
+
+                                        ButtonWireframe {
+                                            fullColor: true
+                                            primaryColor: Theme.colorPrimary
+                                            anchors.fill: parent
+                                            onClicked: tabView.chooseFile()
+                                            IconSvg {
+                                                anchors.centerIn: parent
+                                                source: Icons.image
+                                                color: "white"
+                                            }
                                         }
                                     }
+
+                                    ClipRRect {
+                                        visible: Qt.platform.os == 'ios' || Qt.platform.os == 'android'
+                                        width: 60
+                                        height: width
+                                        radius: height / 2
+
+                                        ButtonWireframe {
+                                            fullColor: true
+                                            primaryColor: Theme.colorPrimary
+                                            anchors.fill: parent
+                                            onClicked: {
+                                                if (Qt.platform.os === 'ios') {
+                                                    imgPicker.openCamera()
+                                                } else {
+                                                    androidToolsLoader.item.openCamera()
+                                                }
+                                            }
+                                            IconSvg {
+                                                anchors.centerIn: parent
+                                                source: Icons.camera
+                                                color: "white"
+                                            }
+                                        }
+                                    }
+
                                 }
                             }
 
@@ -625,7 +597,7 @@ BPage {
                         }
 
                         NiceButton {
-                            text: "Nouveau"
+                            text: qsTr("New")
                             Layout.preferredHeight: 60
                             Layout.preferredWidth: 120
                             visible: tabView.currentIndex === 1
@@ -643,7 +615,7 @@ BPage {
                         NiceButton {
                             id: analyserButton
                             Layout.alignment: Qt.AlignHCenter
-                            text: "Analyser"
+                            text: qsTr("Analyse")
                             icon.source: Icons.magnify
                             Layout.preferredWidth: Qt.platform.os === 'ios' ? 120 : 180
                             Layout.preferredHeight: 60
@@ -660,7 +632,7 @@ BPage {
                                                     ""))],
                                         "disease_details": ["cause", "treatment", "common_names", "classification", "description", "url"],
                                         "modifiers": ["similar_images"],
-                                        "language": "fr",
+                                        "language": "en",
                                         "longitude": gps.position.coordinate.longitude,
                                         "latitude": gps.position.coordinate.latitude
                                     }
@@ -701,19 +673,17 @@ BPage {
                                 }
                             }
                         }
-                        Item {
-                            Layout.fillWidth: true
-                        }
+
                     }
 
                     Image2Base64 {
                         id: imgTool
                     }
 
-                    Item {
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                    }
+//                    Item {
+//                        Layout.fillHeight: true
+//                        Layout.fillWidth: true
+//                    }
                 }
             }
             Item {
@@ -736,7 +706,7 @@ BPage {
                             verticalAlignment: Qt.AlignVCenter
                             visible: planteDeseaseControl.analyseResults?.is_plant
                                      ?? false
-                            text: qsTr(planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.7 ? "<font color='green'> Votre plante est en bonne santé</font>" : (planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.4) ? "Votre plante semble en bonne santé" : "<font color='red'>Votre plante est malade</font>")
+                            text: qsTr(planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.7 ? "<font color='green'> Your plant seems healthy</font>" : (planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.4) ? "Healthy" : "<font color='red'>Sick plant</font>")
                             //                            text: "Plante en bonne sante ? <b><font color='%1'>%2</font></b>".arg(
                             //                                      planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "green" : "red").arg(
                             //                                      planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "Oui" : "Non")
@@ -756,7 +726,7 @@ BPage {
                                 return false
                             }
 
-                            text: "Quelques maladies détectées"
+                            text: qsTr("Detected diseases")
                         }
                         Label {
                             font.pixelSize: 28
@@ -773,7 +743,7 @@ BPage {
                                     return false
                             }
 
-                            text: "Ceci n'est pas une plante"
+                            text: qsTr("No plant detected")
                         }
                     }
 
