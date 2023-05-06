@@ -5,7 +5,9 @@ import QtQuick.Window
 import ThemeEngine 1.0
 import DeviceUtils 1.0
 
+import "pages/Auth"
 import "pages/Plant/"
+import "pages"
 import "services/"
 import "models/"
 
@@ -454,6 +456,11 @@ ApplicationWindow {
         Component {
             id: plantScreen
             PlantScreen {}
+        }
+
+        Component {
+            id: loginPage
+            Login {}
         }
 
         StackView {

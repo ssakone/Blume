@@ -3,6 +3,7 @@ import QtQuick
 import "pages"
 import "pages/Plant"
 import "pages/Insect"
+import "pages/Auth"
 
 QtObject {
     property var plantIdentifierPage: Component {
@@ -28,5 +29,11 @@ QtObject {
     }
     property var insectDetailPage: Component {
         InsectDetailsScreen {}
+    }
+    property var loginPage: Component {
+        Login {}
+    }
+    property var registerPage: Component {
+        Register {}
     }
 }

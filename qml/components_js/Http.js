@@ -95,3 +95,27 @@ function send_mail({to, recv_name, subject = "Blume: contacter un expert", conte
     }
     return fetch(query)
 }
+
+function login({email, password}) {
+    return fetch({
+      "method": "POST",
+      "url": "https://blume.mahoudev.com/auth/login",
+      "headers": {
+          "Accept": 'application/json',
+          "Content-Type": 'application/json'
+      },
+      "params": {email, password}
+    })
+}
+
+function register({email, password}) {
+    return fetch({
+      "method": "POST",
+      "url": "https://blume.mahoudev.com/auth/login",
+      "headers": {
+          "Accept": 'application/json',
+          "Content-Type": 'application/json'
+      },
+      "params": {email, password}
+    })
+}

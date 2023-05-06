@@ -97,6 +97,8 @@
         <file>models/PlantModel.qml</file>
         <file>models/SpaceModel.qml</file>
         <file>pages/Insect/InsectDetailsScreen.qml</file>
+        <file>pages/Auth/Login.qml</file>
+        <file>pages/Auth/Register.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>
