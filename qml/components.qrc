@@ -34,6 +34,10 @@
         <file>components/ClipRRect.qml</file>
         <file>components/AppBarButton.qml</file>
         <file>components/AppBar.qml</file>
+        <file>components/GardenActivityLine.qml</file>
+        <file>components/SearchBar.qml</file>
+        <file>components/GardenPlantLine.qml</file>
+        <file>components/GardenSpaceLine.qml</file>
         <file>components/ItemNoImage.qml</file>
         <file>components_generic/Alert.qml</file>
         <file>NotAuthenticated.qml</file>
