@@ -411,5 +411,5 @@ DISTFILES += \
     qml/components/ImagePickerArea.qml \
     qml/components_generic/Carousel.qml
     
-# android: include(C:/Users/HP/AppData/Local/Android/Sdk/android_openssl/openssl.pri)
-android: include(/Users/mac/Library/Android/sdk/android_openssl/openssl.pri)
+android: include(C:/Users/HP/AppData/Local/Android/Sdk/android_openssl/openssl.pri)
+# android: include(/Users/mac/Library/Android/sdk/android_openssl/openssl.pri)
