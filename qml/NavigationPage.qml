@@ -16,6 +16,9 @@ QtObject {
     property var deseasePage: Component {
         PlantDesease {}
     }
+    property var deseaseEncyclopedie: Component {
+        PlantDeseaseEncylopedie {}
+    }
     property var deseaseDetailsPage: Component {
         PlantDeseaseDetails {}
     }

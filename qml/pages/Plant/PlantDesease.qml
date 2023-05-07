@@ -140,6 +140,63 @@ BPage {
             }
         }
 
+        TextFieldThemed {
+            id: plantSearchBox
+            Layout.fillWidth: true
+            Layout.preferredHeight: 40
+            Layout.margins: 12
+
+            placeholderText: qsTr("Search for diseases")
+            selectByMouse: true
+            colorSelectedText: "white"
+
+
+            onFocusChanged: {
+                if(focus){
+                    diseaseSearchBoxMS.clicked()
+                    focus = false
+                }
+            }
+
+            MouseArea {
+                id: diseaseSearchBoxMS
+                anchors.fill: parent
+                anchors.rightMargin: 70
+                onClicked: {
+                    page_view.push(navigator.deseaseEncyclopedie)
+                }
+            }
+
+            Row {
+                anchors.right: parent.right
+                anchors.rightMargin: 12
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 12
+
+                RoundButtonIcon {
+                    width: 24
+                    height: 24
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    visible: plantSearchBox.text.length
+                    highlightMode: "color"
+                    source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
+
+                    onClicked: plantSearchBox.text = ""
+                }
+
+                IconSvg {
+                    width: 24
+                    height: 24
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    source: "qrc:/assets/icons_material/baseline-search-24px.svg"
+                    color: Theme.colorText
+                }
+            }
+
+        }
+
         StackLayout {
             id: identifierLayoutView
             property bool viewCamera: false
