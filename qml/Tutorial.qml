@@ -13,9 +13,8 @@ Rectangle {
     property string entryPoint: "DeviceList"
 
     ////////////////////////////////////////////////////////////////////////////
-
     function loadScreen() {
-        entryPoint = "DeviceList"
+        entryPoint = "Navigator"
         appContent.state = "Tutorial"
     }
 
@@ -25,7 +24,6 @@ Rectangle {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Loader {
         id: tutorialLoader
         anchors.fill: parent
@@ -43,7 +41,6 @@ Rectangle {
             }
 
             ////////////////
-
             SwipeView {
                 id: tutorialPages
                 anchors.fill: parent
@@ -54,8 +51,9 @@ Rectangle {
 
                 currentIndex: 0
                 onCurrentIndexChanged: {
-                    if (currentIndex < 0) currentIndex = 0
-                    if (currentIndex > count-1) {
+                    if (currentIndex < 0)
+                        currentIndex = 0
+                    if (currentIndex > count - 1) {
                         currentIndex = 0 // reset
                         appContent.state = entryPoint
                     }
@@ -69,7 +67,6 @@ Rectangle {
                 }
 
                 ////////
-
                 Item {
                     id: page1
 
@@ -93,8 +90,9 @@ Rectangle {
                             horizontalAlignment: Text.AlignHCenter
                         }
                         IconSvg {
-                            width: tutorialPages.width * (tutorialPages.height > tutorialPages.width ? 0.8 : 0.4)
-                            height: width*0.229
+                            width: tutorialPages.width * (tutorialPages.height
+                                                          > tutorialPages.width ? 0.8 : 0.4)
+                            height: width * 0.229
                             anchors.horizontalCenter: parent.horizontalCenter
 
                             source: "qrc:/assets/tutorial/welcome-devices.svg"
@@ -121,7 +119,8 @@ Rectangle {
                             primaryColor: Theme.colorHeaderHighlight
                             text: qsTr("Supported sensors")
                             source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
-                            onClicked: Qt.openUrlExternally("https://mahoudev.com/shop")
+                            onClicked: Qt.openUrlExternally(
+                                           "https://mahoudev.com/shop")
                         }
                     }
                 }
@@ -149,8 +148,9 @@ Rectangle {
                             horizontalAlignment: Text.AlignHCenter
                         }
                         IconSvg {
-                            width: tutorialPages.width * (tutorialPages.height > tutorialPages.width ? 0.95 : 0.5)
-                            height: width*0.55
+                            width: tutorialPages.width * (tutorialPages.height
+                                                          > tutorialPages.width ? 0.95 : 0.5)
+                            height: width * 0.55
                             anchors.horizontalCenter: parent.horizontalCenter
 
                             source: "qrc:/assets/tutorial/api-identity.svg"
@@ -182,8 +182,9 @@ Rectangle {
                             horizontalAlignment: Text.AlignHCenter
                         }
                         IconSvg {
-                            width: tutorialPages.width * (tutorialPages.height > tutorialPages.width ? 0.95 : 0.5)
-                            height: width*0.55
+                            width: tutorialPages.width * (tutorialPages.height
+                                                          > tutorialPages.width ? 0.95 : 0.5)
+                            height: width * 0.55
                             anchors.horizontalCenter: parent.horizontalCenter
 
                             source: "qrc:/assets/tutorial/api-health-status.svg"
@@ -193,7 +194,6 @@ Rectangle {
                 }
 
                 ////////
-
                 Item {
                     id: page2
 
@@ -217,8 +217,9 @@ Rectangle {
                             horizontalAlignment: Text.AlignHCenter
                         }
                         IconSvg {
-                            width: tutorialPages.width * (tutorialPages.height > tutorialPages.width ? 0.8 : 0.4)
-                            height: width*0.777
+                            width: tutorialPages.width * (tutorialPages.height
+                                                          > tutorialPages.width ? 0.8 : 0.4)
+                            height: width * 0.777
                             anchors.horizontalCenter: parent.horizontalCenter
 
                             source: "qrc:/assets/tutorial/welcome-bluetooth-searching.svg"
@@ -242,7 +243,6 @@ Rectangle {
                 }
 
                 ////////
-
                 Item {
                     id: page3
 
@@ -280,8 +280,9 @@ Rectangle {
                             font.pixelSize: singleColumn ? Theme.fontSizeContent : Theme.fontSizeContentBig
                         }
                         IconSvg {
-                            width: tutorialPages.width * (tutorialPages.height > tutorialPages.width ? 0.8 : 0.4)
-                            height: width*0.229
+                            width: tutorialPages.width * (tutorialPages.height
+                                                          > tutorialPages.width ? 0.8 : 0.4)
+                            height: width * 0.229
                             anchors.horizontalCenter: parent.horizontalCenter
 
                             source: "qrc:/assets/tutorial/welcome-app-connected.svg"
@@ -305,7 +306,6 @@ Rectangle {
                 }
 
                 ////////
-
                 Item {
                     id: page4
 
@@ -321,8 +321,8 @@ Rectangle {
                             anchors.left: parent.left
                             anchors.leftMargin: tutorialPages.margins
 
-                            text: qsTr("Click on sensors to access <b>historical data</b>, <b>graphs</b> and <b>detailed infos</b>.") + "<br>" +
-                                  qsTr("You can set a custom <b>name</b> and a <b>location</b> for each sensor.")
+                            text: qsTr("Click on sensors to access <b>historical data</b>, <b>graphs</b> and <b>detailed infos</b>.") + "<br>" + qsTr(
+                                      "You can set a custom <b>name</b> and a <b>location</b> for each sensor.")
                             textFormat: Text.StyledText
                             color: Theme.colorHeaderContent
                             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -330,8 +330,9 @@ Rectangle {
                             font.pixelSize: singleColumn ? Theme.fontSizeContent : Theme.fontSizeContentBig
                         }
                         IconSvg {
-                            width: tutorialPages.width * (tutorialPages.height > tutorialPages.width ? 0.66 : 0.3)
-                            height: width*0.2
+                            width: tutorialPages.width * (tutorialPages.height
+                                                          > tutorialPages.width ? 0.66 : 0.3)
+                            height: width * 0.2
                             anchors.horizontalCenter: parent.horizontalCenter
 
                             source: "qrc:/assets/tutorial/welcome-plants.svg"
@@ -352,8 +353,9 @@ Rectangle {
                             font.pixelSize: singleColumn ? Theme.fontSizeContent : Theme.fontSizeContentBig
                         }
                         IconSvg {
-                            width: tutorialPages.width * (tutorialPages.height > tutorialPages.width ? 0.66 : 0.3)
-                            height: width*0.1797
+                            width: tutorialPages.width * (tutorialPages.height
+                                                          > tutorialPages.width ? 0.66 : 0.3)
+                            height: width * 0.1797
                             anchors.horizontalCenter: parent.horizontalCenter
 
                             source: "qrc:/assets/tutorial/welcome-limits.svg"
@@ -387,7 +389,6 @@ Rectangle {
             }
 
             ////////////////
-
             Text {
                 id: pagePrevious
                 anchors.left: parent.left
@@ -403,7 +404,11 @@ Rectangle {
                 font.pixelSize: Theme.fontSizeContent
 
                 opacity: 0.8
-                Behavior on opacity { OpacityAnimator { duration: 133 } }
+                Behavior on opacity {
+                    OpacityAnimator {
+                        duration: 133
+                    }
+                }
 
                 MouseArea {
                     anchors.fill: parent
@@ -419,7 +424,7 @@ Rectangle {
                 id: pageIndicator
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: tutorialPages.margins/2
+                anchors.bottomMargin: tutorialPages.margins / 2
 
                 count: tutorialPages.count
                 currentIndex: tutorialPages.currentIndex
@@ -431,14 +436,19 @@ Rectangle {
                 anchors.rightMargin: tutorialPages.margins
                 anchors.verticalCenter: pageIndicator.verticalCenter
 
-                text: (tutorialPages.currentIndex === tutorialPages.count-1) ? qsTr("Start") : qsTr("Next")
+                text: (tutorialPages.currentIndex === tutorialPages.count
+                       - 1) ? qsTr("Start") : qsTr("Next")
                 textFormat: Text.PlainText
                 color: Theme.colorHeaderContent
                 font.bold: true
                 font.pixelSize: Theme.fontSizeContent
 
                 opacity: 0.8
-                Behavior on opacity { OpacityAnimator { duration: 133 } }
+                Behavior on opacity {
+                    OpacityAnimator {
+                        duration: 133
+                    }
+                }
 
                 MouseArea {
                     anchors.fill: parent

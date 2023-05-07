@@ -7,6 +7,8 @@ import MobileUI 1.0
 import QtAndroidTools
 
 import "pages/Plant/"
+import "pages/Garden"
+import "pages/Auth"
 import "services/"
 import "models/"
 import "components/"
@@ -490,6 +492,11 @@ ApplicationWindow {
             PlantScreen {}
         }
 
+        Component {
+            id: loginPage
+            Login {}
+        }
+
         StackView {
             id: page_view
             property string previousState: ""
@@ -498,7 +505,7 @@ ApplicationWindow {
             width: parent.width
             height: parent.height + appHeader.height
             initialItem: Component {
-                Item {}
+                GardenScreen {}
             }
             onDepthChanged: {
                 if (depth === 1)
@@ -566,7 +573,7 @@ ApplicationWindow {
         }
 
         // Initial state
-        state: "DeviceList"
+        state: "Navigator"
 
         onStateChanged: {
             screenDeviceList.exitSelectionMode()

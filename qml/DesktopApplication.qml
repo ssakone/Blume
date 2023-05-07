@@ -7,6 +7,7 @@ import DeviceUtils 1.0
 
 import "pages/Auth"
 import "pages/Plant/"
+import "pages/Garden"
 import "pages"
 import "services/"
 import "models/"
@@ -467,13 +468,15 @@ ApplicationWindow {
             y: -appHeader.height
             width: parent.width
             height: parent.height + appHeader.height
-            visible: false
+            visible: true
             initialItem: Component {
-                Item {}
+                GardenScreen {}
             }
+
             onDepthChanged: {
-                if (depth === 1)
-                    parent.state = previousState
+
+                //                if (depth === 1)
+                //                    parent.state = previousState
             }
         }
 
@@ -483,9 +486,9 @@ ApplicationWindow {
         }
 
         DeviceList {
-            anchors.fill: parent
             id: screenDeviceList
         }
+
         DevicePlantSensor {
             anchors.fill: parent
             id: screenDevicePlantSensor
@@ -525,12 +528,12 @@ ApplicationWindow {
         }
 
         // Initial state
-        state: "DeviceList"
+        state: "Navigator"
 
         property var previousStates: []
 
         onStateChanged: {
-            screenDeviceList.exitSelectionMode()
+            //            screenDeviceList.exitSelectionMode()
             appHeader.setActiveMenu()
 
             if (state === "Tutorial")
@@ -555,12 +558,12 @@ ApplicationWindow {
                     enabled: true
                 }
                 PropertyChanges {
-                    target: screenTutorial
+                    target: screenDeviceList
                     visible: false
                     enabled: false
                 }
                 PropertyChanges {
-                    target: screenDeviceList
+                    target: screenTutorial
                     visible: false
                     enabled: false
                 }
@@ -668,6 +671,7 @@ ApplicationWindow {
                 PropertyChanges {
                     target: appHeader
                     visible: true
+                    enabled: true
                 }
                 PropertyChanges {
                     target: page_view

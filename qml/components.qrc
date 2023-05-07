@@ -41,6 +41,7 @@
         <file>components/ItemNoImage.qml</file>
         <file>components_generic/Alert.qml</file>
         <file>NotAuthenticated.qml</file>
+        <file>components/BottomTabBar.qml</file>
     </qresource>
     <qresource prefix="/js">
         <file alias="Http.js">components_js/Http.js</file>

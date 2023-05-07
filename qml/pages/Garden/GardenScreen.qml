@@ -13,9 +13,7 @@ import "../../components_js/Http.js" as Http
 
 BPage {
     id: control
-    header: AppBar {// backgroundColor: "transparent"
-        // foregroundColor: "black"
-    }
+    footer: BottomTabBar {}
 
     ColumnLayout {
         anchors.fill: parent
