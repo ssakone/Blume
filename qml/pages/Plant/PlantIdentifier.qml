@@ -33,21 +33,6 @@ BPage {
         }
     }
 
-    onFocusChanged: {
-        if(focus) {
-            settingsManager.authAccessToken = ""
-            if(settingsManager.authAccessToken === "") {
-                console.log("userNotAuthPop.open()")
-                userNotAuthPop.open()
-            } else console.log("CLose")
-        }
-
-    }
-
-    NotAuthenticated {
-        id: userNotAuthPop
-    }
-
     Component {
         id: plantResultPage
         PlantIdentifierDetails {}
