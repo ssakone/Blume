@@ -11,7 +11,7 @@ import "../../components_generic"
 BPage {
     id: control
     header: AppBar {
-        title: "Mes plantes"
+        title: qsTr("My plants")
     }
 
     ListView {

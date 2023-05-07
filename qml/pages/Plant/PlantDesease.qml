@@ -226,7 +226,7 @@ BPage {
 
                             Component.onCompleted: {
                                 let data = [{
-                                                "name": qsTr("Détecter disease"),
+                                                "name": qsTr("Detect disease"),
                                                 "icon": Icons.magnifyScan,
                                                 "image": "",
                                                 "action": "analyser",

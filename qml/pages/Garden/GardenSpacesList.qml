@@ -9,7 +9,7 @@ import "../../components_generic"
 BPage {
     id: control
     header: AppBar {
-        title: "Mes espaces"
+        title: qsTr("Rooms")
     }
 
     ListView {
@@ -59,7 +59,7 @@ BPage {
             BPage {
                 anchors.fill: parent
                 header: AppBar {
-                    title: "Nouvelle space"
+                    title: qsTr("New room")
                     statusBarVisible: false
                     leading.icon: Icons.close
                     leading.onClicked: {
@@ -78,14 +78,14 @@ BPage {
                         id: spaceName
                         width: parent.width - (parent.padding * 2)
                         height: 50
-                        placeholderText: "Nom de l'espace"
+                        placeholderText: qsTr("Room name")
                     }
 
                     Column {
                         width: parent.width - 20
                         spacing: 5
                         Label {
-                            text: "Une description"
+                            text: qsTr("Description")
                             opacity: .5
                         }
                         TextArea {
@@ -99,18 +99,18 @@ BPage {
                         width: parent.width - 20
                         spacing: 5
                         Label {
-                            text: "Type d'espace"
+                            text: qsTr("Room type")
                             opacity: .5
                         }
                         ComboBox {
                             id: typeSpace
                             width: parent.width
                             height: 50
-                            model: ["Espace ouverte", "Espace fermer"]
+                            model: [qsTr("Indoor"), qsTr("Outdoor")]
                         }
                     }
                     NiceButton {
-                        text: "Enregistrer"
+                        text: qsTr("Save")
                         width: 160
                         height: 60
                         anchors.right: parent.right

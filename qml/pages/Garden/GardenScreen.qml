@@ -28,7 +28,7 @@ BPage {
             padding: 25
             topPadding: 5
             Label {
-                text: qsTr("Mon Jardin")
+                text: qsTr("My Garden")
                 font {
                     pixelSize: 36
                     family: "Courrier"
@@ -36,7 +36,7 @@ BPage {
                 }
             }
             Label {
-                text: qsTr("Gerer votre jardin personnelle efficacement")
+                text: qsTr("Manage your personal garden efficiently")
                 opacity: .5
                 font {
                     pixelSize: 16
@@ -55,15 +55,15 @@ BPage {
             Repeater {
                 model: [{
                         "icon": Icons.flowerTulip,
-                        "title": "Mes plantes",
+                        "title": qsTr("My plants"),
                         "action": "plants"
                     }, {
                         "icon": Icons.viewDashboardOutline,
-                        "title": "Mes espaces",
+                        "title": qsTr("Rooms"),
                         "action": "spaces"
                     }, {
                         "icon": Icons.alarm,
-                        "title": "Alarme",
+                        "title": qsTr("History"),
                         "action": "alarm"
                     }]
                 delegate: Rectangle {
@@ -153,7 +153,7 @@ BPage {
 
         Label {
             Layout.fillWidth: true
-            text: "Vos Activite"
+            text: qsTr("Pending tasks")
             padding: 15
             opacity: .7
             font {
@@ -172,8 +172,8 @@ BPage {
             clip: true
             model: 2
             delegate: GardenActivityLine {
-                title: "Arrosage"
-                subtitle: "3 plantes"
+                title: qsTr("Watering")
+                subtitle: "3 plante"
                 onClicked: console.log("Clicked")
                 icon.source: Icons.water
                 width: activityList.width

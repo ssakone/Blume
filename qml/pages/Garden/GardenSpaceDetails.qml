@@ -21,7 +21,7 @@ BPage {
     required property int space_id
 
     header: AppBar {
-        title: "Space - " + control.space_name
+        title: qsTr("Room") + " - " + control.space_name
     }
 
     SortFilterProxyModel {
@@ -80,7 +80,7 @@ BPage {
                                 Layout.fillWidth: true
                                 Layout.alignment: Qt.AlignVCenter
                                 Label {
-                                    text: "Nombre de plante"
+                                    text: "Plants"
                                     font {
                                         pixelSize: 16
                                         weight: Font.Normal
@@ -108,7 +108,7 @@ BPage {
                                 Layout.fillWidth: true
                                 Layout.alignment: Qt.AlignVCenter
                                 Label {
-                                    text: "Nombre d'alarm"
+                                    text: "Tasks"
                                     font {
                                         pixelSize: 16
                                         weight: Font.Normal
@@ -139,7 +139,7 @@ BPage {
                         RowLayout {
                             width: parent.width - 20
                             Label {
-                                text: "Liste des plantes"
+                                text: qsTr("Plants in the room")
                                 Layout.fillWidth: true
                             }
                             Item {
@@ -148,7 +148,7 @@ BPage {
                             }
 
                             ButtonWireframe {
-                                text: "Ajouter"
+                                text: qsTr("Add new")
                                 componentRadius: 20
                                 fullColor: Theme.colorPrimary
                                 fulltextColor: "white"
@@ -244,7 +244,7 @@ BPage {
                         RowLayout {
                             width: parent.width - 20
                             Label {
-                                text: "Liste des plantes"
+                                text: qsTr("Tasks")
                                 Layout.fillWidth: true
                             }
                             Item {
@@ -252,7 +252,7 @@ BPage {
                             }
 
                             ButtonWireframe {
-                                text: "Ajouter"
+                                text: qsTr("Add new")
                                 componentRadius: 20
                                 fullColor: Theme.colorPrimary
                                 fulltextColor: "white"
@@ -302,14 +302,14 @@ BPage {
             anchors.centerIn: parent
             spacing: 20
             Label {
-                text: "Enlever cette alarm"
+                text: qsTr("Remove this task ?")
                 font.pixelSize: 16
             }
             Row {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 10
                 NiceButton {
-                    text: "Oui, enlever"
+                    text: qsTr("Yes remove")
                     width: 120
                     height: 50
                     onClicked: {
@@ -318,7 +318,7 @@ BPage {
                     }
                 }
                 NiceButton {
-                    text: "Annuler"
+                    text: qsTr("No")
                     width: 100
                     height: 50
                     onClicked: removeAlarmPopup.close()
@@ -344,14 +344,14 @@ BPage {
             anchors.centerIn: parent
             spacing: 20
             Label {
-                text: "Enlever " + removePlantPopup.plant?.name_scientific
+                text: qsTr("Remove") + " " + removePlantPopup.plant?.name_scientific
                 font.pixelSize: 16
             }
             Row {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 10
                 NiceButton {
-                    text: "Oui, enlever"
+                    text: qsTr("Yes remove")
                     width: 120
                     height: 50
                     onClicked: {
@@ -361,7 +361,7 @@ BPage {
                     }
                 }
                 NiceButton {
-                    text: "Annuler"
+                    text: qsTr("No")
                     width: 100
                     height: 50
                     onClicked: removePlantPopup.close()
@@ -392,7 +392,7 @@ BPage {
             BPage {
                 anchors.fill: parent
                 header: AppBar {
-                    title: "New Alarm"
+                    title: qsTr("New task")
                     statusBarVisible: false
                     leading.icon: Icons.close
                     leading.onClicked: {
@@ -498,13 +498,13 @@ BPage {
                     }
 
                     Label {
-                        text: "Etiquette"
+                        text: qsTr("Task name")
                     }
                     TextField {
                         id: etiquette
                         width: parent.width
                         height: 50
-                        placeholderText: "An alarm description name"
+                        placeholderText: "A description"
                     }
                     Label {
                         text: "Type"
@@ -516,7 +516,7 @@ BPage {
                         model: ["Rampotage", "Arrosage"]
                     }
                     Label {
-                        text: "Recurrence"
+                        text: qsTr("Days")
                     }
 
                     Row {
@@ -562,7 +562,7 @@ BPage {
                         border.color: $Colors.gray200
                         radius: 8
                         Label {
-                            text: "+ Choose plant"
+                            text: "+ " + qsTr("Choose plant")
                             anchors.centerIn: parent
                             opacity: .5
                             font.pixelSize: 16
@@ -594,7 +594,7 @@ BPage {
                     }
 
                     NiceButton {
-                        text: "Save alarm"
+                        text: qsTr("Save task")
                         width: 160
                         height: 60
                         font.pixelSize: 16
@@ -675,7 +675,7 @@ BPage {
             BPage {
                 anchors.fill: parent
                 header: AppBar {
-                    title: "Choose plant"
+                    title: qsTr("Choose plant")
                     statusBarVisible: false
                     leading.icon: Icons.close
                     leading.onClicked: {
