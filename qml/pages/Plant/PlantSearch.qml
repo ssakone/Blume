@@ -260,6 +260,7 @@ BPage {
 
             ItemNoPlants {
                 visible: plantList.count === 0 && !isLoading
+                textItem.text: qsTr("No plants found. Please, try using camera !")
             }
         }
     }

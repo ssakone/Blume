@@ -272,6 +272,7 @@ BPage {
 
             ItemNoPlants {
                 visible: diseaseList.count === 0 && !isLoading
+                textItem.text: qsTr("No plants found. Please, try using camera !")
             }
         }
     }
