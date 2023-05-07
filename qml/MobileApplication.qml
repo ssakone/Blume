@@ -520,7 +520,6 @@ ApplicationWindow {
 
         DeviceList {
             id: screenDeviceList
-            anchors.fill: parent
             anchors.bottomMargin: mobileMenu.hhv
         }
         DevicePlantSensor {
