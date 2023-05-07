@@ -13,8 +13,9 @@ import "../../components_js/Http.js" as Http
 
 BPage {
     id: control
-    header: AppBar {// backgroundColor: "transparent"
-        // foregroundColor: "black"
+    header: AppBar {
+        backgroundColor: "transparent"
+        foregroundColor: "black"
     }
 
     ColumnLayout {

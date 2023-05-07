@@ -7,11 +7,6 @@ import MobileUI 1.0
 import QtAndroidTools
 
 import "pages/Plant/"
-import "services/"
-import "models/"
-import "components/"
-import "components_js/"
-import "components_js/Http.js" as HTTP
 
 ApplicationWindow {
     id: appWindow
@@ -22,10 +17,6 @@ ApplicationWindow {
                                             | Qt.MaximizeUsingFullscreenGeometryHint
     color: Theme.colorBackground
     visible: true
-    property alias $SqlClient: _relay._sqliClient
-    property alias $Model: _relay
-    property alias $Colors: _relay._colors
-    property var $Http: HTTP
     readonly property var permissionsNameList: ["android.permission.READ_MEDIA_IMAGES", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.CAMERA", "android.permission.INTERNET", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.BLUETOOTH_ADMIN", "android.permission.BLUETOOTH"]
     Loader {
         active: Qt.platform.os === "android"
@@ -79,10 +70,6 @@ ApplicationWindow {
     property int screenPaddingLeft: 0
     property int screenPaddingRight: 0
     property int screenPaddingBottom: 0
-
-    ModelManager {
-        id: _relay
-    }
 
     Timer {
         id: handleNotchesTimer

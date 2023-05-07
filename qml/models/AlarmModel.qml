@@ -5,67 +5,40 @@ import "../services/"
 Model {
     id: control
     debug: true
-    tableName: "Alarm0003"
+    tableName: "Alarm0001"
     column: [{
-            "name": "id",
-            "type": "INTEGER",
-            "key": "PRIMARY KEY"
-        }, {
-            "name": "libelle",
-            "type": "TEXT"
-        }, {
-            "name": "type",
-            "type": "INTEGER"
-        }, {
-            "name": "hours",
-            "type": "INTEGER"
-        }, {
-            "name": "minute",
-            "type": "INTEGER",
-            "def": "0"
-        }, {
-            "name": "mon",
-            "type": "INTEGER",
-            "def": "0"
-        }, {
-            "name": "tue",
-            "type": "INTEGER",
-            "def": "0"
-        }, {
-            "name": "wed",
-            "type": "INTEGER",
-            "def": "0"
-        }, {
-            "name": "thu",
-            "type": "INTEGER",
-            "def": "0"
-        }, {
-            "name": "fri",
-            "type": "INTEGER",
-            "def": "0"
-        }, {
-            "name": "sat",
-            "type": "INTEGER",
-            "def": "0"
-        }, {
-            "name": "sun",
-            "type": "INTEGER",
-            "def": "0"
-        }, {
-            "name": "space",
-            "type": "INTEGER"
-        }, {
-            "name": "plant_json",
-            "type": "TEXT"
-        }, {
-            "name": "status",
-            "type": "INTEGER",
-            "def": 0
-        }, {
-            "name": "created_at",
-            "type": "REAL"
-        }, {
-            "name": "updated_at",
-            "type": "REAL"
-        }]
+            name: "id",
+            type: "INTEGER",
+            key: "PRIMARY KEY"
+        },
+        {
+            name: "libelle",
+            type: "TEXT"
+        },
+        {
+            name: "type",
+            type: "INTEGER"
+        },
+        {
+            name: "space",
+            type: "INTEGER"
+        },
+        {
+            name: "plant_list",
+            type: "TEXT"
+        },
+        {
+            name: "status",
+            type: "INTEGER",
+            def: 0
+        },
+        {
+            name: "created_at",
+            type: "REAL"
+        },
+        {
+            name: "updated_at",
+            type: "REAL"
+        }
+    ]
 }

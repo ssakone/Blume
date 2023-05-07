@@ -37,7 +37,6 @@ BPage {
         width: 60
         fullColor: Theme.colorPrimary
         componentRadius: 30
-        visible: false
         anchors {
             bottom: parent.bottom
             bottomMargin: 30

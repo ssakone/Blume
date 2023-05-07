@@ -16,16 +16,13 @@ Rectangle {
     property alias titleLabel: _label
     property alias actions: flowActions.children
     property bool noAutoPop: false
-    property bool statusBarVisible: true
 
     width: parent.width
-    height: statusBarVisible ? screenPaddingStatusbar + screenPaddingNotch
-                               + 52 : screenPaddingNotch + 52
+    height: screenPaddingStatusbar + screenPaddingNotch + 52
 
     RowLayout {
         width: parent.width
-        anchors.verticalCenterOffset: statusBarVisible ? (screenPaddingNotch
-                                                          + screenPaddingStatusbar) / 2 : 0
+        anchors.verticalCenterOffset: (screenPaddingNotch + screenPaddingStatusbar) / 2
         anchors.verticalCenter: parent.verticalCenter
         spacing: 2
         AppBarButton {

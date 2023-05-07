@@ -4,26 +4,28 @@ import QtQuick.Layouts
 
 import ThemeEngine
 
-ClipRRect {
+Container {
     id: control
     property string title: ""
     property string subtitle: ""
     property string roomName: ""
     property string imageSource: ""
 
-    signal clicked
-    radius: 15
+    background: ClipRRect {
+        radius: 15
 
-    Rectangle {
-        anchors.fill: parent
-        radius: parent.radius
+        Rectangle {
+            anchors.fill: parent
+            radius: parent.radius
 
-        border {
-            color: "#e5e5e5"
-            width: 1
+            border {
+                color: "#e5e5e5"
+                width: 1
+            }
         }
     }
-    RowLayout {
+
+    contentItem: RowLayout {
         width: parent.width
         Column {
             Layout.preferredWidth: 100
@@ -65,9 +67,6 @@ ClipRRect {
                 text: title
                 font.pixelSize: 21
                 font.weight: Font.Medium
-                Layout.fillWidth: true
-                rightPadding: 10
-                wrapMode: Label.Wrap
                 opacity: .8
             }
             Label {
@@ -94,10 +93,5 @@ ClipRRect {
                 }
             }
         }
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: parent.clicked()
     }
 }
