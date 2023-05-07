@@ -18,6 +18,7 @@ import MaterialIcons
 
 import "../"
 import "../Insect/"
+import "../Garden/"
 import "../../"
 import "../../components"
 import "../../components_generic"
@@ -134,63 +135,6 @@ BPage {
             }
         }
 
-        TextFieldThemed {
-            id: plantSearchBox
-            Layout.fillWidth: true
-            Layout.preferredHeight: 40
-            Layout.margins: 12
-
-            placeholderText: qsTr("Search for diseases")
-            selectByMouse: true
-            colorSelectedText: "white"
-
-
-            onFocusChanged: {
-                if(focus){
-                    diseaseSearchBoxMS.clicked()
-                    focus = false
-                }
-            }
-
-            MouseArea {
-                id: diseaseSearchBoxMS
-                anchors.fill: parent
-                anchors.rightMargin: 70
-                onClicked: {
-                    page_view.push(navigator.deseaseEncyclopedie)
-                }
-            }
-
-            Row {
-                anchors.right: parent.right
-                anchors.rightMargin: 12
-                anchors.verticalCenter: parent.verticalCenter
-                spacing: 12
-
-                RoundButtonIcon {
-                    width: 24
-                    height: 24
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    visible: plantSearchBox.text.length
-                    highlightMode: "color"
-                    source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
-
-                    onClicked: plantSearchBox.text = ""
-                }
-
-                IconSvg {
-                    width: 24
-                    height: 24
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    source: "qrc:/assets/icons_material/baseline-search-24px.svg"
-                    color: Theme.colorText
-                }
-            }
-
-        }
-
         StackLayout {
             id: identifierLayoutView
             property bool viewCamera: false
@@ -208,11 +152,72 @@ BPage {
                 }
             }
             Item {
+                TextFieldThemed {
+                    id: diseaseSearchBox
+                    anchors.top: parent.top
+                    anchors.topMargin: 14
+                    anchors.left: parent.left
+                    anchors.leftMargin: 12
+                    anchors.right: parent.right
+                    anchors.rightMargin: 12
+
+                    placeholderText: qsTr("Search for diseases")
+                    selectByMouse: true
+                    colorSelectedText: "white"
+
+
+                    onFocusChanged: {
+                        if(focus){
+                            diseaseSearchBoxMS.clicked()
+                            focus = false
+                        }
+                    }
+
+                    MouseArea {
+                        id: diseaseSearchBoxMS
+                        anchors.fill: parent
+                        anchors.rightMargin: 70
+                        onClicked: {
+                            page_view.push(navigator.deseaseEncyclopedie)
+                        }
+                    }
+
+                    Row {
+                        anchors.right: parent.right
+                        anchors.rightMargin: 12
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 12
+
+                        RoundButtonIcon {
+                            width: 24
+                            height: 24
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            visible: diseaseSearchBox.text.length
+                            highlightMode: "color"
+                            source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
+
+                            onClicked: diseaseSearchBox.text = ""
+                        }
+
+                        IconSvg {
+                            width: 24
+                            height: 24
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            source: "qrc:/assets/icons_material/baseline-search-24px.svg"
+                            color: Theme.colorText
+                        }
+                    }
+
+                }
+
                 Column {
                     width: parent.width - 10
                     anchors.horizontalCenter: parent.horizontalCenter
-                    topPadding: 20
+                    topPadding: diseaseSearchBox.height + 20
                     spacing: 20
+
                     Item {
                         width: parent.width
                         height: (3 * ((parent.width - (20)) / 3)) + 30
