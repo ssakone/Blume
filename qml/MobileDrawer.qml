@@ -20,10 +20,6 @@ Drawer {
         }
     }
 
-    PlantDesease {
-        id: deseasePopup
-    }
-
     contentItem: Item {
 
         Column {

@@ -498,6 +498,7 @@ ApplicationWindow {
         }
 
         StackView {
+            // This stack has a custom header that replaces AppHeader
             id: page_view
             property string previousState: ""
 
@@ -520,7 +521,6 @@ ApplicationWindow {
 
         DeviceList {
             id: screenDeviceList
-            anchors.bottomMargin: mobileMenu.hhv
         }
         DevicePlantSensor {
             id: screenDevicePlantSensor
@@ -567,7 +567,7 @@ ApplicationWindow {
         // Start on the tutorial?
         Component.onCompleted: {
             if (!deviceManager.areDevicesAvailable()) {
-                screenTutorial.loadScreen()
+               screenTutorial.loadScreen()
             }
         }
 
@@ -590,8 +590,8 @@ ApplicationWindow {
                 name: "Navigator"
                 PropertyChanges {
                     target: appHeader
-                    title: qsTr("Welcome")
                     visible: false
+                    enable: false
                 }
                 PropertyChanges {
                     target: page_view

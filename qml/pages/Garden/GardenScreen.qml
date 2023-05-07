@@ -13,6 +13,10 @@ import "../../components_js/Http.js" as Http
 
 BPage {
     id: control
+    header: AppBar {
+        title: "Blume"
+        isHomeScreen: true
+    }
     footer: BottomTabBar {}
 
     ColumnLayout {
