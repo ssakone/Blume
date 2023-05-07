@@ -507,10 +507,10 @@ ApplicationWindow {
             initialItem: Component {
                 GardenScreen {}
             }
-            onDepthChanged: {
-                if (depth === 1)
-                    parent.state = previousState
-            }
+//            onDepthChanged: {
+//                if (depth === 1)
+//                    parent.state = previousState
+//            }
         }
 
         Tutorial {
