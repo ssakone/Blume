@@ -591,7 +591,6 @@ ApplicationWindow {
                 PropertyChanges {
                     target: appHeader
                     visible: false
-                    enable: false
                 }
                 PropertyChanges {
                     target: page_view
