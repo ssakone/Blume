@@ -117,7 +117,6 @@
         <file>models/Model.qml</file>
         <file>models/PlantModel.qml</file>
         <file>models/SpaceModel.qml</file>
-
         <file>models/ModelManager.qml</file>
 
         <file>pages/Insect/InsectDetailsScreen.qml</file>

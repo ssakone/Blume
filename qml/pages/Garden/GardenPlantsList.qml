@@ -23,6 +23,7 @@ BPage {
         delegate: GardenPlantLine {
             property var plant: JSON.parse(plant_json)
             width: parent.width - 20
+            height: 100
             title: plant.name_scientific
             subtitle: plant.description ?? ""
             roomName: ""
@@ -37,6 +38,7 @@ BPage {
         width: 60
         fullColor: Theme.colorPrimary
         componentRadius: 30
+        visible: false
         anchors {
             bottom: parent.bottom
             bottomMargin: 30
