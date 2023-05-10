@@ -10,6 +10,8 @@ import "../components_generic"
 import "../components_js/Http.js" as Http
 
 Page {
+    id: askPage
+    property string currentObj: ""
     header: AppBar {
         title: qsTr("Ask a botanist about")
     }
@@ -20,9 +22,9 @@ Page {
                     "name": "user_email",
                     "label": "User email",
                     "is_required": true,
-                    "placeholder": "",
+                    "placeholder": ""
                 }]
-        },{
+        }, {
             "group_title": "",
             "fields": [{
                     "name": "description",
@@ -104,8 +106,9 @@ Page {
         }
 
         function extractFileNameFromURI(uri) {
-          var parts = uri.split(/[\\\/]/); // Séparer l'URI par des slashs ou des backslashes
-          return parts[parts.length - 1]; // Renvoyer la dernière partie qui est le nom du fichier
+            var parts = uri.split(/[\\\/]/)
+            // Séparer l'URI par des slashs ou des backslashes
+            return parts[parts.length - 1] // Renvoyer la dernière partie qui est le nom du fichier
         }
 
         function submit() {
@@ -117,42 +120,46 @@ Page {
                 let html_string = ""
 
                 for (var i = 0; i < form_schema.length; i++) {
-                    html_string += `<h1>Partie ${i+1}${form_schema[i].group_title ? (": "+form_schema[i].group_title) : "" }</h1> <br/>`
+                    html_string += `<h1>Partie ${i + 1}${form_schema[i].group_title ? (": " + form_schema[i].group_title) : ""}</h1> <br/>`
                     for (var j = 0; j < form_schema[i].fields.length; j++) {
                         let item = form_schema[i].fields[j]
                         data[item.name] = item.value
-                        html_string += `<strong>${item.label}</strong> <br/> ${item.value || ''} <hr/><br/><br/>`
+                        html_string += `<strong>${item.label}</strong> <br/> ${item.value
+                                || ''} <hr/><br/><br/>`
                     }
                 }
 
                 let pre_content = `<h1>Blume: demande d'assitance</h1><br/>`
-                pre_content += `Utilisateur: ${emailInput.text} <br/> Date: ${(new Date()).toLocaleDateString()} <br/><br/><br/>`
+                pre_content += `Utilisateur: ${emailInput.text} <br/> Date: ${(new Date()).toLocaleDateString(
+                            )} <br/><br/><br/>`
 
                 // Format data for mailing
                 let formatedData = {
-                   "to": emailInput.text,
-                   "recv_name": "Client",
-                   "subject": "Blume: demande de l'avis d'un expert",
-                   "content_html": pre_content + html_string,
-                    "attachements": attached_images.filter(item => item.uri).map((item, index) => {
-                                                                                     return {
-                                                                                       "ContentType": "text/plain",
-                                                                                       "Filename": extractFileNameFromURI(item.uri),
-                                                                                       "Base64Content": item.content
-                                                                               }
-                                                                                 })
+                    "to": emailInput.text,
+                    "recv_name": "Client",
+                    "subject": "Blume: demande de l'avis d'un expert",
+                    "content_html": pre_content + html_string,
+                    "attachements": attached_images.filter(
+                                        item => item.uri).map((item, index) => {
+                                                                  return {
+                                                                      "ContentType": "text/plain",
+                                                                      "Filename": extractFileNameFromURI(item.uri),
+                                                                      "Base64Content": item.content
+                                                                  }
+                                                              })
                 }
 
                 // Send mail
                 Http.send_mail(formatedData).then(res => {
-                                           loadingIndicator.running = false
-                                            userDataPopup.submited = true
-                                       }).catch(
-                            res => {
-                                loadingIndicator.running = false
-                                errorArea.visible = true
-                                console.log(JSON.stringify(res))
-                            })
+                                                      loadingIndicator.running = false
+                                                      userDataPopup.submited = true
+                                                  }).catch(res => {
+                                                               loadingIndicator.running = false
+                                                               errorArea.visible = true
+                                                               console.log(
+                                                                   JSON.stringify(
+                                                                       res))
+                                                           })
             } else {
                 loadingIndicator.running = false
                 txtError.visible = true
@@ -184,7 +191,9 @@ Page {
                 width: parent.width
                 height: 50
 
-                validator: RegularExpressionValidator { regularExpression: /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/ }
+                validator: RegularExpressionValidator {
+                    regularExpression: /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/
+                }
 
                 verticalAlignment: Text.AlignVCenter
 
@@ -255,10 +264,7 @@ Page {
 
                     onClicked: userDataPopup.submit()
                 }
-
-
             }
-
         }
 
         ColumnLayout {
@@ -299,11 +305,9 @@ Page {
                 running: false
                 repeat: false
                 onTriggered: errorArea.visible = false
-
             }
 
-
-            contentItem:  ColumnLayout {
+            contentItem: ColumnLayout {
                 width: parent.width
                 spacing: 10
             }
@@ -316,7 +320,8 @@ Page {
                 Layout.alignment: Qt.AlignHCenter
             }
             Label {
-                text: qsTr("Please check your internet connection and try again")
+                text: qsTr(
+                          "Please check your internet connection and try again")
                 font {
                     pixelSize: 14
                     weight: Font.Light
@@ -325,10 +330,7 @@ Page {
                 horizontalAlignment: Text.AlignHCenter
                 wrapMode: Text.Wrap
             }
-
-
         }
-
 
         BusyIndicator {
             id: loadingIndicator
@@ -430,13 +432,14 @@ Page {
                                         height: 70
                                         onImgChanged: function () {
                                             let b64str = imgTool.getBase64(
-                                                image_source.toString().replace(
-                                                    Qt.platform.os
-                                                    === "windows" ? "file:///" : "file://",
-                                                    ""))
+                                                    image_source.toString(
+                                                        ).replace(
+                                                        Qt.platform.os
+                                                        === "windows" ? "file:///" : "file://",
+                                                        ""))
                                             attached_images[index] = {
-                                                content: b64str,
-                                                uri: image_source.toString()
+                                                "content": b64str,
+                                                "uri": image_source.toString()
                                             }
                                         }
                                     }
@@ -454,7 +457,7 @@ Page {
                         }
 
                         RowLayout {
-                            width: parent.width - (2*parent.padding)
+                            width: parent.width - (2 * parent.padding)
                             Item {
                                 Layout.fillWidth: true
                             }
@@ -471,7 +474,6 @@ Page {
                             }
                         }
 
-
                         Item {
                             height: 70
                         }
@@ -480,5 +482,4 @@ Page {
             }
         }
     }
-
 }
