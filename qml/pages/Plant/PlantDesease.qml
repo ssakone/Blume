@@ -392,7 +392,7 @@ BPage {
                         topPadding: 0
                         visible: Qt.platform.os !== 'ios'
                                  && Qt.platform.os !== 'android'
-                        Material.background: "#00c395"
+                        Material.background: Theme.colorPrimary
                         Material.foreground: Material.color(Material.Grey,
                                                             Material.Shade50)
                         Material.accent: Material.color(Material.Grey,

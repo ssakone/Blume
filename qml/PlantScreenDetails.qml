@@ -6,9 +6,12 @@ import ThemeEngine 1.0
 //import PlantUtils 1.0
 import "qrc:/js/UtilsPlantDatabase.js" as UtilsPlantDatabase
 import "components"
+import "components_generic"
 
 Popup {
     id: plantScreenDetailsPopup
+
+    property string alertMsg: ""
 
     parent: appWindow.contentItem
     width: appWindow.width
@@ -22,13 +25,19 @@ Popup {
         id: modelImagesPlantes
     }
 
+    SpaceSearchPopup {
+        id: spaceSearchPop
+        width: parent.width
+        height: Qt.platform.os === "ios" ? parent.height - 45 : parent.height - 20
+    }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
 
         Rectangle {
             id: header
-            color: "#00c395"
+            color: Theme.colorPrimary
             Layout.preferredHeight: 65
             Layout.preferredWidth: plantScreenDetailsPopup.width
             RowLayout {
@@ -74,6 +83,29 @@ Popup {
             }
         }
 
+        Alert {
+            Layout.fillWidth: true
+            Layout.minimumHeight: 40
+            time: 5000
+            visible: plantScreenDetailsPopup.alertMsg !== ""
+            text: plantScreenDetailsPopup.alertMsg
+            background {
+                color: $Colors.green600
+                radius: 0
+            }
+            textItem {
+                text: plantScreenDetailsPopup.alertMsg
+                color: "white"
+                font {
+                    pixelSize: 16
+                    weight: Font.Light
+                }
+            }
+
+            callback: function() {
+                plantScreenDetailsPopup.alertMsg = "";
+            }
+        }
         Flickable {
             y: header.height
             contentHeight: mainContent.height
@@ -98,14 +130,34 @@ Popup {
                         Layout.fillWidth: true
                         Layout.preferredHeight: singleColumn ? 300 : plantScreenDetailsPopup.height / 3
 
-                        visible: plant['images_plantes']?.length ?? 0 > 0
                         clip: true
                         color: "#f0f0f0"
 
+
+                        Label {
+                            text: "No image"
+                            font.pixelSize: 18
+                            anchors.centerIn: parent
+//                            visible: (plant['images_plantes']?.length ?? ( plant['images_plantes']?.count ?? 0) ) > 0
+                        }
+
                         Image {
                             anchors.fill: parent
-                            source: plant['images_plantes']?.length
-                                    ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/" + plant['images_plantes'][0].directus_files_id) : ""
+                            source: {
+                                if(plant['images_plantes']?.count !== undefined) {
+                                    console.log("First agent")
+                                    return plant['images_plantes']?.count
+                                                                       ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/" + plant['images_plantes']?.get(0).directus_files_id) : ""
+                                }
+                                else if(plant['images_plantes']?.length !== undefined) {
+                                    console.log("Second agent")
+                                    return plant['images_plantes']?.length
+                                                                       ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/" + plant['images_plantes'][0].directus_files_id) : ""
+                                }
+                                return ""
+
+                            }
+
                             clip: true
                         }
                     }
@@ -125,6 +177,7 @@ Popup {
                             font.pixelSize: 24
                             font.weight: Font.DemiBold
                             Layout.alignment: Qt.AlignHCenter
+                            Layout.fillWidth: true
                         }
 
                         Rectangle {
@@ -160,6 +213,7 @@ Popup {
                                         horizontalAlignment: Text.AlignLeft
                                         color: Theme.colorPrimary
                                         wrapMode: Text.Wrap
+                                        Layout.fillWidth: true
                                     }
                                     Item {
                                         Layout.fillWidth: true
@@ -178,6 +232,7 @@ Popup {
                                     Layout.fillWidth: true
                                     Layout.fillHeight: true
                                     Layout.leftMargin: 10
+                                    Layout.rightMargin: 10
 
                                     Label {
                                         text: qsTr("Common names")
@@ -189,15 +244,15 @@ Popup {
                                         text: {
                                             let res = ""
                                             if (plant['noms_communs']) {
-                                                let common_names = plant['noms_communs']?.slice(
-                                                        1)
-                                                let len = common_names.length
-                                                common_names.forEach(
-                                                            (level, index) => res += (level + (len === index + 1 ? "" : ", ")))
+                                                let common_names = plant['noms_communs']
+                                                let len = common_names?.length
+                                                console.log("noms_communs ", len, " -- ")
+                                                common_names?.forEach(
+                                                            (item, index) => res += (item.name ?? item + (len === index + 1 ? "" : ", ")))
                                             }
                                             return res
                                         }
-                                        font.pixelSize: 16
+                                        font.pixelSize: 14
                                         font.weight: Font.DemiBold
                                         wrapMode: Text.Wrap
                                         horizontalAlignment: Text.AlignLeft
@@ -218,6 +273,67 @@ Popup {
                             componentRadius: 20
                             Layout.fillWidth: true
                             Layout.preferredHeight: 50
+                            onClicked: {
+                                function generateUUID() {
+                                    // Public Domain/MIT
+                                    var d = new Date().getTime()
+                                    //Timestamp
+                                    var d2 = ((typeof performance !== 'undefined')
+                                              && performance.now
+                                              && (performance.now(
+                                                      ) * 1000)) || 0
+                                    //Time in microseconds since page-load or 0 if unsupported
+                                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+                                                /[xy]/g, function (c) {
+                                                    var r = Math.random(
+                                                                ) * 16
+                                                    //random number between 0 and 16
+                                                    if (d > 0) {
+                                                        //Use timestamp until depleted
+                                                        r = (d + r) % 16 | 0
+                                                        d = Math.floor(
+                                                                    d / 16)
+                                                    } else {
+                                                        //Use microseconds since page-load if supported
+                                                        r = (d2 + r) % 16 | 0
+                                                        d2 = Math.floor(
+                                                                    d2 / 16)
+                                                    }
+                                                    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(
+                                                                16)
+                                                })
+                                }
+
+                                spaceSearchPop.show(function (space){
+                                    let data = {
+                                        "libelle": plant?.name_scientific,
+                                        "image_url": "-1",
+                                        "remote_id": plant.id,
+                                        "uuid": generateUUID()
+                                    }
+                                    data["plant_json"] = JSON.stringify(
+                                                plant)
+
+                                    $Model.plant.sqlCreate(data).then(
+                                                function (new_plant) {
+                                                    console.log('\n NEW PLANT ', typeof new_plant, new_plant.libelle)
+                                                    let inData = {
+                                                        "space_id": space.id,
+                                                        "space_name": space.libelle,
+                                                        "plant_json": new_plant["plant_json"],
+                                                        "plant_id": new_plant.id
+                                                    }
+                                                    console.log("Continue...", )
+                                                    $Model.space.plantInSpace.sqlCreate(
+                                                                inData).then(
+                                                                function () {
+                                                                    console.log("Created AGAIN...")
+                                                                    console.info("Done")
+                                                                })
+                                                    plantScreenDetailsPopup.alertMsg = qsTr("Plant added to garden")
+                                                }).catch(console.warn)
+                                })
+                            }
                         }
 
                         RowLayout {

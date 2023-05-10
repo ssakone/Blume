@@ -30,7 +30,8 @@ ListModel {
                                                tableName)
     property string __query__create__: 'INSERT INTO %1(%2) VALUES(%3)'
     property string __query__creates__: 'INSERT INTO %1(%2) VALUES%3'
-    property string __query__update__: 'UPDATE %1 SET %2 WHERE id = %3'
+    property string __query__update__: 'UPDATE %1 %2 WHERE id = %3'.arg(
+                                           tableName)
 
     property string __order__by__: 'ORDER BY %1 DESC'
     property string __order__by__field: 'id'
@@ -53,8 +54,18 @@ ListModel {
                     let uu = control.column[u]
                     if (uu['name'] === v) {
                         if (uu['type'] === "TEXT") {
-                            completer = completer.replace(
-                                        '?', "'%1'".arg(value[i].toString()))
+                            let argument = value[i].toString()
+
+                            argument = argument.replace(/'+/g, "")
+                            if(!v.includes('json')) {
+                                completer = completer.replace(
+                                            '?', "quote('%1')".arg(argument))
+                            } else {
+                                console.log("Found a JSON field ", v)
+                                completer = completer.replace(
+                                            '?', "'%1'".arg(argument))
+                            }
+
                         } else {
                             completer = completer.replace(
                                         '?', "%1".arg(value[i].toString()))
@@ -66,12 +77,14 @@ ListModel {
                                                control.tableName).arg(
                                                column_str).arg(
                                                completer))).then(function (rs) {
+//                                                   console.log('CREATEd', rs)
                                                    data['id'] = parseInt(
                                                                rs.insertId)
                                                    control.append(data)
                                                    control.created(data)
                                                    resolve(data)
                                                }).catch(function (err) {
+                                                   console.log("CREATE ERR", JSON.stringify(err))
                                                    reject(err)
                                                })
         })
@@ -124,6 +137,59 @@ ListModel {
         })
     }
 
+    function sqlUpdate(id, data) {
+        if (beforeUpdate !== undefined) {
+            data = control.beforeUpdate(data)
+        }
+        return new Promise(function (resolve, reject) {
+            let column = [], value = [], column_str = '', completer = ''
+            for (let col in data) {
+                column.push(col)
+            }
+            column_str = column.join(',')
+            column.map(col => value.push(data[col]))
+            completer = "SET "
+            console.log("Start update 3 ) ", value.length)
+
+            for (var i = 0; i < value.length; i++) {
+//                console.log("In val ", i)
+                let v = column[i]
+                for (var u = 0; u < control.column.length; u++) {
+                    let uu = control.column[u]
+//                    console.log("\tIn col ", uu['name'], uu['type'])
+                    if (uu['name'] === v) {
+                        const val = value[i]
+//                        console.log(v, ' ->>> ', value[i], ' ******* ', completer)
+                        if (uu['type'] === "TEXT") {
+//                            console.log("Chic")
+                            completer += " %1 = '%2'".arg(v).arg(val.toString())
+//                            console.log("Choc")
+                        } else {
+//                            console.log("Bif")
+                            completer += " %1 = %2".arg(v).arg(val.toString())
+//                            console.log("Bof")
+                        }
+                        if(i !== value.length-1) completer += ','
+                    }
+                }
+            }
+//            console.log("Start update 4", completer)
+//            completer = "SET wed = 0"
+            const query = logQuery(__query__update__.arg(
+                                                           completer).arg(
+                                                           id))
+
+//            console.log(" p ", p)
+            control.db.executeSql(query).then(function (rs) {
+                console.log("Inserted ", JSON.stringify(rs))
+                                                   control.updated(data)
+                                                   resolve(data)
+                                               }).catch(function (err) {
+                                                   reject(err)
+                                               })
+        })
+    }
+
     function sqlDelete(id) {
         return new Promise(function (resolve, reject) {
             let query = 'DELETE FROM %1 WHERE id=%2'.arg(
@@ -131,7 +197,7 @@ ListModel {
             db.executeSql(logQuery(query)).then(function (rs) {
                 fetchAll()
                 resolve(rs)
-            })
+            }).catch(console.warn)
         })
     }
 
@@ -168,7 +234,9 @@ ListModel {
     }
 
     function sqlGetWhere(data) {
+        console.log("Batsta")
         return new Promise(function (resolve, reject) {
+            console.log("\n Gonna sqlGetWhere")
             let values = "", column = []
             for (var i in data) {
                 if (typeof (data[i]) === "string") {
@@ -177,7 +245,9 @@ ListModel {
                     column.push("%1 = %2".arg(i).arg(data[i]))
                 }
             }
+            console.log(column)
             values = column.join(' and ')
+            console.log(values)
             let query = logQuery(__query__get__where__.arg(values))
             var rs = db.executeSql(query)
             resolve(rs.rows)

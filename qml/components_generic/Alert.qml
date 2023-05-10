@@ -41,7 +41,7 @@ Item {
         Label {
             id: _text
             Layout.fillWidth: true
-            text: errorText
+            text: text
             font.pixelSize: 14
             font.weight: Font.Light
             padding: 7
@@ -54,7 +54,7 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 cursorShape: "PointingHandCursor"
-                onClicked: tm.stop()
+                onClicked: root.callback()
             }
         }
     }

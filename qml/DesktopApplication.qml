@@ -84,7 +84,7 @@ ApplicationWindow {
         onDatabaseOpened: {
             Promise.all([alarmModel.init(), plantModel.init(), spaceModel.init(
                              )]).then(function (rs) {
-                                 console.info("[+] All table ready")
+                                 console.info("[+] All Desktop tables ready")
                              }).catch(function (rs) {
                                  console.error("Something happen => ", rs)
                              })

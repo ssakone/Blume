@@ -133,11 +133,11 @@ BPage {
                         id: _colLayout
                         Layout.fillWidth: true
                         spacing: 10
-                        leftPadding: 10
-                        rightPadding: 10
+//                        leftPadding: 10
+//                        rightPadding: 10
 
                         RowLayout {
-                            width: parent.width - 20
+                            width: parent.width - 10
                             Label {
                                 text: qsTr("Plants in the room")
                                 Layout.fillWidth: true
@@ -215,8 +215,12 @@ BPage {
                         Repeater {
                             model: plantInSpace
                             GardenPlantLine {
-                                property var plant: JSON.parse(plant_json)
-                                width: _colLayout.width - 20
+                                property var plant: {
+                                    console.log(plant_json)
+                                    return JSON.parse(plant_json)
+                                }
+
+                                width: _colLayout.width - 10
                                 height: 100
                                 title: plant.name_scientific
                                 subtitle: plant.description ?? ""
@@ -224,7 +228,8 @@ BPage {
                                 onClicked: {
                                     removePlantPopup.show({
                                                               "id": model.id,
-                                                              "name_scientific": plant.name_scientific
+                                                              "name_scientific": plant.name_scientific,
+                                                              "origin_id": plant.id
                                                           })
                                 }
 
@@ -265,18 +270,48 @@ BPage {
                         Repeater {
                             model: alarmInSpace
                             GardenActivityLine {
-                                title: model.libelle === "" ? (model.type === 0 ? "Rampotage" : "Arrosage") : model.libelle
-                                subtitle: model.type === 0 ? "Rampotage" : "Arrosage"
-                                onClicked: {
+                                property var plantObj: JSON.parse(
+                                                           model.plant_json)
+                                title: model.libelle || "NULL"
+                                plant_name: plantObj.name_scientific
+                                subtitle: {
+                                    let countPerWeek = 0
+                                    const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+                                    for (let _dayIndex in days) {
+                                        if (model[days[_dayIndex]] === 1)
+                                            countPerWeek++
+                                    }
+
+                                    return countPerWeek + ' ' + qsTr(
+                                                "times par week")
+                                }
+                                isDone: model.done
+
+                                onDeleteClicked: {
                                     removeAlarmPopup.show(model)
                                 }
+                                onClicked: {
+                                    addAlarmPopup.initialAlarm = model
+                                    addAlarmPopup.open()
+                                }
 
-                                icon.source: Icons.water
-                                width: parent.width - 20
-                                height: 70
-                                hours: model.hours.toString().padStart(2, '0')
-                                minutes: model.minute.toString().padStart(2,
-                                                                          '0')
+                                onChecked: newStatus => {
+                                               $Model.alarm.sqlUpdateTaskStatus(
+                                                   model.id,
+                                                   newStatus).then(res => {
+                                                                       $Model.alarm.fetchAll()
+                                                                   }).catch(
+                                                   console.warn)
+                                           }
+
+                                icon.source: model.type === 0 ? Icons.shovel : model.type === 1 ? Icons.waterOutline : model.type === 2 ? Icons.potMixOutline : Icons.flowerOutline
+                                image.source: {
+                                    let value = plantObj.images_plantes[0] ? "https://blume.mahoudev.com/assets/" + plantObj.images_plantes[0].directus_files_id : ""
+                                    return value
+                                }
+
+                                width: parent.width - 10
+                                height: 80
                             }
                         }
                     }
@@ -313,7 +348,14 @@ BPage {
                     width: 120
                     height: 50
                     onClicked: {
-                        $Model.alarm.sqlDelete(removeAlarmPopup.alarm.id)
+                        $Model.alarm.sqlDelete(
+                                    removeAlarmPopup.alarm.id).then(res => {
+                                                                        if ($Model.alarm.count === 1) {
+                                                                            $Model.alarm.clear()
+                                                                            $Model.alarm.fetchAll()
+                                                                        }
+                                                                    })
+
                         removeAlarmPopup.close()
                     }
                 }
@@ -340,13 +382,41 @@ BPage {
             open()
         }
 
+        SortFilterProxyModel {
+            id: alarmsForPlantInSpace
+            sourceModel: $Model.alarm
+            filters: [
+                ValueFilter {
+                    value: control.space_id
+                    roleName: "space"
+                },
+                ValueFilter {
+                    value: {
+                        return removePlantPopup.plant?.origin_id || 0
+                    }
+
+                    roleName: "plant"
+                }
+            ]
+        }
+
         Column {
             anchors.centerIn: parent
             spacing: 20
-            Label {
-                text: qsTr("Remove") + " " + removePlantPopup.plant?.name_scientific
-                font.pixelSize: 16
+            Column {
+                width: parent.width
+                Label {
+                    text: qsTr("Remove") + " " + removePlantPopup.plant?.name_scientific
+                    font.pixelSize: 16
+                }
+                Label {
+                    text: alarmsForPlantInSpace.count + " " + qsTr(
+                              "Related tasks will also be removed")
+                    font.pixelSize: 16
+                    visible: alarmsForPlantInSpace.count > 0
+                }
             }
+
             Row {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 10
@@ -354,9 +424,29 @@ BPage {
                     text: qsTr("Yes remove")
                     width: 120
                     height: 50
+                    backgroundColor: $Colors.red500
                     onClicked: {
+                        const plant_id = removePlantPopup.plant.id
                         $Model.space.plantInSpace.sqlDelete(
-                                    removePlantPopup.plant.id)
+                                    removePlantPopup.plant.id).then(res => {
+                                                                        // A trouble occured when going to delete the last plant.
+                                                                        // So we clear() and fecthAll() to solved that case
+                                                                        if ($Model.space.plantInSpace.count === 1) {
+                                                                            $Model.space.plantInSpace.clear()
+                                                                            $Model.space.plantInSpace.fetchAll()
+                                                                        }
+
+                                                                        // Delete alarms related to that plant in current space
+                                                                        for (var i = 0; i < alarmsForPlantInSpace.count; i++) {
+                                                                            const deleteAlarmID = alarmsForPlantInSpace.get(i).id
+                                                                            $Model.alarm.sqlDelete(
+                                                                                deleteAlarmID).then(() => {
+                                                                                                        $Model.alarm.clear()
+                                                                                                        $Model.alarm.fetchAll()
+                                                                                                    })
+                                                                        }
+                                                                    })
+
                         removePlantPopup.close()
                     }
                 }
@@ -372,8 +462,11 @@ BPage {
 
     Drawer {
         id: addAlarmPopup
+        property var initialAlarm: ({})
+        property bool shouldUpdate: addAlarmPopup.initialAlarm.space !== undefined
+
         width: parent.width
-        height: parent.height - 45
+        height: parent.height - 90
         edge: Qt.BottomEdge
         dim: true
         modal: true
@@ -385,6 +478,31 @@ BPage {
                 radius: 18
             }
         }
+        onOpened: {
+            const _days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+            let recur = [0, 0, 0, 0, 0, 0, 0]
+            for (var i = 0; i < _days.length; i++) {
+                const _day = _days[i]
+                recur[i] = addAlarmPopup.initialAlarm[_day] === 1 ? 1 : 0
+            }
+            _control.recurrence = recur
+            gardenLine.plant = JSON.parse(addAlarmPopup.initialAlarm?.plant_json
+                                          || 'null') || undefined
+            typeAlarm.currentIndex = addAlarmPopup.initialAlarm.type || 0
+            if (typeAlarm.currentIndex === 3)
+                anotherAlarmType.text = addAlarmPopup.initialAlarm.libelle
+
+            //            console.log("typeAlarm.currentIndex = ", typeAlarm.currentIndex )
+            //            console.log("addAlarmPopup.initialAlarm.libelle = ", addAlarmPopup.initialAlarm.libelle)
+        }
+
+        onClosed: {
+            addAlarmPopup.initialAlarm = {}
+            gardenLine.plant = undefined
+            anotherAlarmType.text = ""
+            _control.recurrence = [0, 0, 0, 0, 0, 0, 0]
+        }
+
         ClipRRect {
             anchors.fill: parent
             anchors.margins: -1
@@ -392,7 +510,8 @@ BPage {
             BPage {
                 anchors.fill: parent
                 header: AppBar {
-                    title: qsTr("New task")
+                    title: addAlarmPopup.shouldUpdate ? qsTr("Update task ") : qsTr(
+                                                            "New task")
                     statusBarVisible: false
                     leading.icon: Icons.close
                     leading.onClicked: {
@@ -405,90 +524,6 @@ BPage {
                     width: parent.width - 40
                     padding: 20
                     spacing: 10
-                    Item {
-                        width: parent.width
-                        height: 100
-                        Rectangle {
-                            width: 200
-                            height: 80
-                            radius: 8
-                            color: $Colors.gray100
-                            border.color: $Colors.gray300
-                            anchors.centerIn: parent
-                            layer.enabled: true
-                            layer.effect: QGE.InnerShadow {
-                                radius: 1
-                                samples: 8
-                                color: $Colors.gray400
-                                verticalOffset: 2
-                            }
-                            RowLayout {
-                                anchors.fill: parent
-                                spacing: 5
-                                TextField {
-                                    id: _hours
-                                    Layout.fillWidth: true
-                                    Layout.fillHeight: true
-                                    text: "00"
-                                    font.pixelSize: 48
-                                    font.weight: Font.Bold
-                                    verticalAlignment: Label.AlignVCenter
-                                    horizontalAlignment: Label.AlignHCenter
-                                    Layout.minimumWidth: 90
-                                    Layout.maximumWidth: 90
-                                    background: Item {}
-                                    onTextChanged: errorView.text = ""
-                                    validator: IntValidator {
-                                        top: 23
-                                        bottom: 0
-                                    }
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        onClicked: {
-                                            parent.forceActiveFocus()
-                                            parent.focus = true
-                                            parent.selectAll()
-                                        }
-                                    }
-                                }
-                                Label {
-                                    text: ":"
-                                    font.pixelSize: 42
-                                    font.weight: Font.Medium
-                                    Layout.alignment: Qt.AlignVCenter
-                                    verticalAlignment: Label.AlignVCenter
-                                    horizontalAlignment: Label.AlignHCenter
-                                }
-
-                                TextField {
-                                    id: _minutes
-                                    Layout.fillWidth: true
-                                    Layout.fillHeight: true
-                                    Layout.minimumWidth: 90
-                                    Layout.maximumWidth: 90
-                                    text: "00"
-                                    font.pixelSize: 48
-                                    font.weight: Font.Bold
-                                    verticalAlignment: Label.AlignVCenter
-                                    horizontalAlignment: Label.AlignHCenter
-                                    background: Item {}
-                                    onTextChanged: errorView.text = ""
-                                    validator: IntValidator {
-                                        top: 59
-                                        bottom: 0
-                                    }
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        onClicked: {
-                                            parent.forceActiveFocus()
-                                            parent.focus = true
-                                            parent.selectAll()
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
 
                     Label {
                         id: errorView
@@ -498,23 +533,55 @@ BPage {
                     }
 
                     Label {
-                        text: qsTr("Task name")
+                        text: "Task"
                     }
+                    Flickable {
+                        width: parent.width
+                        height: typeAlarm.height
+                        contentWidth: typeAlarm.width
+
+                        Row {
+                            id: typeAlarm
+
+                            property int currentIndex: 0
+                            property variant model: ["Rampotage", "Arrosage", "Fertilisation", "Autre"]
+
+                            spacing: 20
+
+                            Repeater {
+                                model: typeAlarm.model
+                                delegate: ButtonWireframe {
+                                    text: modelData
+                                    fullColor: true
+                                    primaryColor: index === typeAlarm.currentIndex ? Theme.colorPrimary : $Colors.gray300
+                                    fulltextColor: index === typeAlarm.currentIndex ? "white" : Theme.colorPrimary
+                                    font.pixelSize: 14
+                                    componentRadius: implicitHeight / 2
+                                    onClicked: {
+                                        typeAlarm.currentIndex = index
+                                        if (typeAlarm.currentIndex === typeAlarm.model.length - 1)
+                                            anotherAlarmType.forceActiveFocus()
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     TextField {
-                        id: etiquette
+                        id: anotherAlarmType
+                        visible: typeAlarm.currentIndex === typeAlarm.model.length - 1
                         width: parent.width
-                        height: 50
-                        placeholderText: "A description"
+                        height: 60
+                        text: ""
+                        font.pixelSize: 16
+                        font.weight: Font.Bold
+                        verticalAlignment: Label.AlignVCenter
+                        background: Rectangle {
+                            radius: 10
+                            color: $Colors.gray200
+                        }
                     }
-                    Label {
-                        text: "Type"
-                    }
-                    ComboBox {
-                        id: typeAlarm
-                        width: parent.width
-                        height: 55
-                        model: ["Rampotage", "Arrosage"]
-                    }
+
                     Label {
                         text: qsTr("Days")
                     }
@@ -522,17 +589,25 @@ BPage {
                     Row {
                         id: _control
                         property var recurrence: [0, 0, 0, 0, 0, 0, 0]
+
                         property var day: ["Mon", "Tue", "Wed", "Thu", "Fry", "Sat", "Sun"]
                         width: parent.width
                         spacing: 6
                         Repeater {
                             model: parent.day
                             Rectangle {
+                                required property var modelData
+                                required property int index
                                 width: (parent.width / 7) - 6
                                 height: width
                                 radius: width / 2
-                                border.color: $Colors.gray200
-                                color: _control.recurrence[index] === 1 ? $Colors.gray300 : "white"
+                                border.color: Theme.colorPrimary
+                                border.width: {
+                                    //                                    console.log("_control.recurrence[index] ", index, _control.recurrence[index])
+                                    return _control.recurrence[index] === 1 ? 1 : 0
+                                }
+
+                                color: _control.recurrence[index] === 1 ? $Colors.gray200 : "white"
                                 Label {
                                     anchors.centerIn: parent
                                     text: modelData
@@ -545,11 +620,12 @@ BPage {
                                     onClicked: {
                                         let g = _control.recurrence
                                         if (_control.recurrence[index] === 1) {
-                                            g[index] = 0
+                                            _control.recurrence[index] = 0
                                         } else
-                                            g[index] = 1
+                                            _control.recurrence[index] = 1
                                         _control.recurrence = g
-                                        parent.color = g[index] === 1 ? $Colors.gray300 : "white"
+                                        //                                        parent.color = g[index] === 1 ? $Colors.gray300 : "white"
+                                        //                                        parent.border.width = g[index]
                                     }
                                 }
                             }
@@ -559,20 +635,24 @@ BPage {
                     Rectangle {
                         width: parent.width
                         height: 80
-                        border.color: $Colors.gray200
                         radius: 8
                         Label {
                             text: "+ " + qsTr("Choose plant")
                             anchors.centerIn: parent
                             opacity: .5
                             font.pixelSize: 16
+                            visible: gardenLine.plant === undefined
                         }
 
                         GardenPlantLine {
                             id: gardenLine
                             property var plant
-                            width: parent.width - 10
-                            title: plant?.name_scientific ?? ""
+
+                            anchors.fill: parent
+                            title: {
+                                return plant?.name_scientific ?? ""
+                            }
+
                             subtitle: plant?.description ?? ""
                             roomName: ""
                             visible: plant !== undefined
@@ -584,6 +664,7 @@ BPage {
                         MouseArea {
                             anchors.fill: parent
                             onClicked: choosePlantPopup.show(function (item) {
+                                console.log(addAlarmPopup.initialAlarm.plant_json)
                                 gardenLine.plant = item
                             })
                         }
@@ -594,28 +675,24 @@ BPage {
                     }
 
                     NiceButton {
-                        text: qsTr("Save task")
+                        text: addAlarmPopup.shouldUpdate ? qsTr("Update task") : qsTr(
+                                                               "Save task")
                         width: 160
                         height: 60
+                        radius: height / 2
                         font.pixelSize: 16
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.horizontalCenterOffset: 25
                         onClicked: {
-                            if (parseInt(_minutes.text) > 59) {
-                                errorView.text = "The minutes can't reach 60"
-                                return
-                            }
-
-                            if (parseInt(_hours.text) > 23) {
-                                errorView.text = "The hours can't reach 24"
-                                return
-                            }
-
                             if (gardenLine.plant === undefined) {
                                 errorView.text = "No plant choosed"
                                 return
                             }
 
+                            //                            if(addAlarmPopup.shouldUpdate) {
+                            //                                errorView.text = "'Task Update' is not net implemented"
+                            //                                return
+                            //                            }
                             let data = {
                                 "mon": _control.recurrence[0],
                                 "tue": _control.recurrence[1],
@@ -624,22 +701,34 @@ BPage {
                                 "fri": _control.recurrence[4],
                                 "sat": _control.recurrence[5],
                                 "sun": _control.recurrence[6],
-                                "libelle": etiquette.text,
-                                "minute": _minutes.text,
-                                "hours": _hours.text,
+                                "libelle": typeAlarm.currentIndex === typeAlarm.model.length
+                                           - 1 ? anotherAlarmType.text : typeAlarm.model[typeAlarm.currentIndex],
                                 "type": typeAlarm.currentIndex,
                                 "space": control.space_id,
+                                "plant": gardenLine.plant.id,
                                 "plant_json": JSON.stringify(gardenLine.plant)
                             }
-                            $Model.alarm.sqlCreate(data).then(function (res) {
-                                console.info("First alarm created")
-                                addAlarmPopup.close()
-                                _control.recurrence = [0, 0, 0, 0, 0, 0, 0]
-                                etiquette.text = ""
-                                _hours.text = ""
-                                _minutes.text = ""
-                                gardenLine.plant = null
-                            }).catch(err => console.error(JSON.stringify(err)))
+
+                            if (addAlarmPopup.shouldUpdate) {
+                                $Model.alarm.sqlUpdate(
+                                            addAlarmPopup.initialAlarm.id,
+                                            data).then(function (res) {
+                                                gardenLine.plant = undefined
+                                                $Model.alarm.clear()
+                                                $Model.alarm.fetchAll()
+                                                addAlarmPopup.close()
+                                            }).catch(err => console.error(
+                                                         JSON.stringify(err)))
+                            } else {
+                                $Model.alarm.sqlCreate(data).then(
+                                            function (res) {
+                                                console.info(
+                                                            "New alarm created")
+                                                gardenLine.plant = undefined
+                                                addAlarmPopup.close()
+                                            }).catch(err => console.error(
+                                                         JSON.stringify(err)))
+                            }
                         }
                     }
                 }
@@ -687,7 +776,7 @@ BPage {
                 ListView {
                     id: plantListView
                     anchors.fill: parent
-                    anchors.margins: 20
+                    anchors.margins: 10
                     spacing: 10
                     model: plantInSpace
                     delegate: Item {

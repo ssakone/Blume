@@ -39,7 +39,7 @@ Model {
     property Model plantInSpace: Model {
         debug: true
         db: control.db
-        tableName: "PlantInSpace0001"
+        tableName: "PlantInSpace01"
         column: [{
                 "name": "id",
                 "type": "INTEGER",

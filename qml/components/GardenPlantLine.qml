@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-
+import Qt5Compat.GraphicalEffects as QGE
 import ThemeEngine
 
 ClipRRect {
@@ -18,22 +18,24 @@ ClipRRect {
         anchors.fill: parent
         radius: parent.radius
 
-        border {
-            color: "#e5e5e5"
-            width: 1
+        layer.enabled: true
+        layer.effect: QGE.DropShadow {
+            radius: 2
+            verticalOffset: 1
+            color: "#ccc"
         }
     }
     RowLayout {
         width: parent.width
         Column {
-            Layout.preferredWidth: 100
+            Layout.preferredWidth: control.height
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignCenter
             padding: 10
             ClipRRect {
                 width: parent.width - 20
                 height: width
-                radius: 12
+                radius: height / 2
                 Rectangle {
                     anchors.fill: parent
                     color: $Colors.gray100
@@ -57,13 +59,12 @@ ClipRRect {
 
         ColumnLayout {
             Layout.fillWidth: true
-            Layout.fillHeight: true
             Layout.topMargin: 10
             Layout.bottomMargin: 15
 
             Label {
                 text: title
-                font.pixelSize: 21
+                font.pixelSize: 18
                 font.weight: Font.Medium
                 Layout.fillWidth: true
                 rightPadding: 10
@@ -73,9 +74,12 @@ ClipRRect {
             Label {
                 text: subtitle
                 font.pixelSize: 14
+                font.weight: Font.Light
                 opacity: .6
                 Layout.fillWidth: true
-                wrapMode: Text.Wrap
+                wrapMode: Label.Wrap
+                elide: Text.ElideRight
+                rightPadding: 20
             }
             Item {
                 Layout.fillHeight: true

@@ -11,16 +11,26 @@ Rectangle {
     id: control
 
     property string title: ""
+    property string plant_name: ""
     property string subtitle: ""
     property alias icon: iconSvg
+    property alias image: image
 
-    property bool time_inline: true
-    property string hours: "15"
-    property string minutes: "00"
+    property bool isDone: false
+    property bool hideDelete: false
 
     signal clicked
+    signal deleteClicked
+    signal checked(bool newStatus)
 
     radius: 4
+
+    layer.enabled: true
+    layer.effect: QGE.DropShadow {
+        radius: 2
+        verticalOffset: 1
+        color: "#ccc"
+    }
 
     RowLayout {
         anchors {
@@ -29,61 +39,112 @@ Rectangle {
             rightMargin: 5
         }
         spacing: 10
-        Rectangle {
-            Layout.preferredHeight: 60
-            Layout.preferredWidth: 60
-            radius: 15
-            color: "#fefefe"
 
-            ColorImage {
-                id: iconSvg
-                color: $Colors.green300
-                width: 48
-                height: 48
-                layer.enabled: true
-                layer.effect: QGE.DropShadow {
-                    radius: 2
-                    color: $Colors.green700
+        Item {
+            Layout.preferredWidth: 30
+            Layout.preferredHeight: 30
+            Rectangle {
+                anchors.fill: parent
+                radius: height / 2
+                color: control.isDone ? Theme.colorPrimary : $Colors.gray100
+                border.color: control.isDone ?  Theme.colorPrimary : $Colors.gray600
+                border.width: 1
+                IconSvg {
+                    visible: control.isDone
+                    source: Icons.check
+                    anchors.fill: parent
+                    color: 'white'
                 }
 
-                anchors.centerIn: parent
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked:  {
+                        control.isDone = !control.isDone
+                        control.checked(control.isDone)
+                    }
+                }
             }
         }
 
-        ColumnLayout {
+        Item {
+            id: content
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            Item {
-                Layout.fillHeight: true
-            }
-
-            Column {
-                padding: 2
-                Layout.fillWidth: true
-                spacing: 1
-                Label {
-                    text: title
-                    font.pixelSize: 18
-                    font.weight: Font.Medium
-                    width: parent.width
-                    height: 35
-                    elide: Label.ElideRight
-                    wrapMode: Label.Wrap
-                    clip: true
+            ColumnLayout {
+                anchors.fill: parent
+                Item {
+                    Layout.fillHeight: true
                 }
 
-                Label {
-                    text: subtitle
-                    font.pixelSize: 14
-                    opacity: .6
-                    elide: Text.ElideRight
+                Column {
+                    padding: 2
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    spacing: 0
+
+                    Row {
+                        width: parent.width
+                        padding: 0
+                        spacing: 5
+
+                        ColorImage {
+                            id: iconSvg
+                            color: Theme.colorPrimary
+                        }
+
+                        Label {
+                            text: title
+                            font.pixelSize: 18
+                            font.weight: Font.Medium
+                            font.strikeout: control.isDone
+                            width: parent.width - iconSvg.width - 5
+                            elide: Label.ElideRight
+                            wrapMode: Label.Wrap
+                            clip: true
+                        }
+                    }
+
+                    Label {
+                        text: plant_name
+                        font.pixelSize: 16
+                        opacity: .6
+                        elide: Text.ElideRight
+                        leftPadding: iconSvg.width / 2
+                    }
+
+                    Label {
+                        text: subtitle
+                        font.pixelSize: 14
+                        opacity: .6
+                        elide: Text.ElideRight
+                        leftPadding: iconSvg.width / 2
+                    }
+                }
+
+                Item {
+                    Layout.fillHeight: true
                 }
             }
+        }
 
-            Item {
-                Layout.fillHeight: true
+        ClipRRect {
+            Layout.fillHeight: true
+            Layout.preferredWidth: height
+            Layout.margins: 3
+            radius: height / 2
+
+            Rectangle {
+                anchors.fill: parent
+                color: '#e5e5e5'
+                radius: height / 2
             }
+
+            Image {
+                id: image
+                anchors.fill: parent
+            }
+
         }
 
         Rectangle {
@@ -92,41 +153,29 @@ Rectangle {
             color: $Colors.gray100
         }
 
-        Column {
-            visible: !time_inline
-            Layout.preferredWidth: 80
-            Layout.minimumWidth: 80
-            spacing: -5
-            Label {
-                text: qsTr(hours)
-                font.pixelSize: 32
-                font.weight: Font.Bold
-                font.family: 'Impact'
-                color: Theme.colorPrimary
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
+        Item {
+            visible: !control.hideDelete
+            Layout.preferredHeight: 30
+            Layout.preferredWidth: 30
 
-            Label {
-                text: qsTr(minutes)
-                font.pixelSize: 26
-                font.weight: Font.Bold
-                font.family: 'Impact'
-                color: Theme.colorPrimary
-                anchors.horizontalCenter: parent.horizontalCenter
+            ColorImage {
+                color: $Colors.red400
+                anchors.fill: parent
+                layer.enabled: true
+                source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
+                anchors.centerIn: parent
+            }
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: "PointingHandCursor"
+                onClicked: control.deleteClicked()
             }
         }
-        Label {
-            Layout.minimumWidth: 80
-            visible: time_inline
-            text: qsTr(hours + " : " + minutes)
-            font.pixelSize: 24
-            font.weight: Font.Medium
-            color: Theme.colorPrimary
-            horizontalAlignment: Label.AlignHCenter
-        }
+
     }
 
     MouseArea {
+        parent: content
         anchors.fill: parent
         cursorShape: "PointingHandCursor"
         onClicked: control.clicked()

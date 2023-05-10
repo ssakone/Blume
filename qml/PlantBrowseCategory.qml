@@ -49,7 +49,7 @@ Popup {
 
     Rectangle {
         id: header
-        color: "#00c395"
+        color: Theme.colorPrimary
         height: 65
         width: listCategoryPlants.width
         RowLayout {
@@ -143,7 +143,7 @@ Popup {
 
                 Text {
                     text: modelData.name_scientific
-                    color: Theme.colorText
+                    color: $Colors.black
                     fontSizeMode: Text.Fit
                     font.pixelSize: 18
                     minimumPixelSize: Theme.fontSizeContentSmall
@@ -156,7 +156,8 @@ Popup {
                         return ""
                     }
 
-                    color: Theme.colorSubText
+                    color: $Colors.black
+                    opacity: 0.6
                     fontSizeMode: Text.Fit
                     font.pixelSize: 14
                     minimumPixelSize: Theme.fontSizeContentSmall

@@ -63,7 +63,7 @@ BPage {
                     statusBarVisible: false
                     leading.icon: Icons.close
                     leading.onClicked: {
-                        addAlarmPopup.close()
+                        addSpacePopup.close()
                     }
 
                     noAutoPop: true
@@ -74,11 +74,20 @@ BPage {
                     spacing: 10
                     anchors.horizontalCenter: parent.horizontalCenter
 
+                    Label {
+                        text: qsTr("Room name")
+                        opacity: .5
+                    }
                     TextField {
                         id: spaceName
                         width: parent.width - (parent.padding * 2)
                         height: 50
-                        placeholderText: qsTr("Room name")
+                        verticalAlignment: Text.AlignVCenter
+                        padding: 5
+                        background: Rectangle {
+                            radius: 10
+                            color: $Colors.gray200
+                        }
                     }
 
                     Column {
@@ -92,6 +101,10 @@ BPage {
                             id: descriptionArea
                             width: parent.width
                             height: 100
+                            background: Rectangle {
+                                radius: 10
+                                color: $Colors.gray200
+                            }
                         }
                     }
 
@@ -102,12 +115,35 @@ BPage {
                             text: qsTr("Room type")
                             opacity: .5
                         }
-                        ComboBox {
-                            id: typeSpace
+
+                        Flickable {
                             width: parent.width
-                            height: 50
-                            model: [qsTr("Indoor"), qsTr("Outdoor")]
+                            height: typeSpace.height
+                            contentWidth: typeSpace.width
+
+                            Row {
+                                id: typeSpace
+
+                                property int currentIndex: 0
+                                property variant model: [qsTr("Indoor"), qsTr("Outdoor")]
+
+                                spacing: 20
+
+                                Repeater {
+                                    model: typeSpace.model
+                                    delegate: ButtonWireframe {
+                                        text: modelData
+                                        fullColor: true
+                                        primaryColor: index === typeSpace.currentIndex ? Theme.colorPrimary : $Colors.gray300
+                                        fulltextColor: index === typeSpace.currentIndex ? "white" : Theme.colorPrimary
+                                        font.pixelSize: 14
+                                        componentRadius: implicitHeight / 2
+                                        onClicked: typeSpace.currentIndex = index
+                                    }
+                                }
+                            }
                         }
+
                     }
                     NiceButton {
                         text: qsTr("Save")

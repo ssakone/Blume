@@ -49,4 +49,7 @@ QtObject {
     property var gardenSpaceDetails: Component {
         GardenSpaceDetails {}
     }
+    property var gardenAlarmsCalendar: Component {
+        AlarmsCalendar {}
+    }
 }

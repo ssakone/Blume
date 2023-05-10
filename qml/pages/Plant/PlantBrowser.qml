@@ -69,12 +69,12 @@ BPage {
             id: itemPlantBrowser
             anchors.fill: parent
 
-            Rectangle {
-                anchors.fill: plantSearchBox
-                anchors.margins: -12
-                z: 4
-                color: Theme.colorBackground
-            }
+//            Rectangle {
+//                anchors.fill: plantSearchBox
+//                anchors.margins: -12
+//                z: 4
+//                color: Theme.colorBackground
+//            }
 
             Image {
                 y: 20

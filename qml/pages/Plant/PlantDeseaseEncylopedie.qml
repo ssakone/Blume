@@ -58,7 +58,7 @@ BPage {
                                        if ( value === null) {
                                            if('noms_communs' === key) item[key] = []
                                            else item[key] = ""
-                                       }
+                                       } else if('noms_communs' === key) item[key] = value?.map(_ => ({name: _}))
                                    }
                                    diseasesModel.append(item)
                                }
@@ -224,11 +224,32 @@ BPage {
 
                     Text {
                         text: modelData.nom_scientifique
-                        color: Theme.colorText
+                        color: $Colors.black
                         fontSizeMode: Text.Fit
                         font.pixelSize: 18
                         width: parent.width - 10
                         elide: Text.ElideRight
+                    }
+
+                    Row {
+                        spacing: 10
+                        width: parent.width - 20
+                        clip: true
+
+                        Repeater {
+                            model: modelData.noms_communs.get(
+                                       0) ?? []
+                            delegate: Text {
+                                required property variant modelData
+                                text: modelData.name
+                                color: $Colors.black
+                                opacity: 0.6
+                                fontSizeMode: Text.Fit
+                                font.pixelSize: 14
+                                width: parent.width
+                                elide: Text.ElideRight
+                            }
+                        }
                     }
                 }
 
@@ -253,9 +274,9 @@ BPage {
                         formated['name'] = modelData.nom_scientifique
                         formated['similar_images'] = []
 
-//                        for(let i=0; i<modelData.noms_communs.count; i++ ) {
-//                            desease_details["common_names"].push(modelData.noms_communs.get(i))
-//                        }
+                        for(let i=0; i<modelData.noms_communs.count; i++ ) {
+                            desease_details["common_names"].push(modelData.noms_communs.get(i))
+                        }
 
                         for(let j=0; j<modelData.images.count; j++ ) {
                             formated['similar_images'].push({"url": "https://blume.mahoudev.com/assets/" + modelData.images.get(j).directus_files_id})
@@ -263,7 +284,7 @@ BPage {
 
                         formated['disease_details'] = desease_details
 
-                        page_view.push(resultDeseaseDetailPage, {
+                        page_view.push(navigator.deseaseDetailsPage, {
                                            "desease_data": formated
                                        })
                     }

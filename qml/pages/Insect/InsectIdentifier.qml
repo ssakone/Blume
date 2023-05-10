@@ -116,7 +116,7 @@ Page {
                     TabBar {
                         id: tabBar
                         topPadding: 0
-                        Material.background: "#00c395"
+                        Material.background: Theme.colorPrimary
                         Material.foreground: Material.color(Material.Grey,
                                                             Material.Shade50)
                         Material.accent: Material.color(Material.Grey,

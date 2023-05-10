@@ -22,7 +22,7 @@ BPage {
         model: $Model.space.plantInSpace
         delegate: GardenPlantLine {
             property var plant: JSON.parse(plant_json)
-            width: parent.width - 20
+            width: parent.width
             height: 100
             title: plant.name_scientific
             subtitle: plant.description ?? ""

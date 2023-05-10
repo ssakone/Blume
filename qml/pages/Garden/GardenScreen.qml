@@ -7,6 +7,7 @@ import QtQuick.Shapes
 
 import Qt5Compat.GraphicalEffects as QGE
 
+import SortFilterProxyModel
 import "../../components"
 import "../../components_generic"
 import "../../components_js/Http.js" as Http
@@ -18,6 +19,22 @@ BPage {
         isHomeScreen: true
     }
     footer: BottomTabBar {}
+
+    function getDay() {
+        const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+        let today = new Date()
+        let day_index = today.getDay()
+        return days[day_index]
+    }
+
+    SortFilterProxyModel {
+        id: alarmsToday
+        sourceModel: $Model.alarm
+        filters: ValueFilter {
+            value: 1
+            roleName: getDay()
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -63,7 +80,7 @@ BPage {
                         "action": "spaces"
                     }, {
                         "icon": Icons.alarm,
-                        "title": qsTr("History"),
+                        "title": qsTr("Calendar"),
                         "action": "alarm"
                     }]
                 delegate: Rectangle {
@@ -144,6 +161,9 @@ BPage {
                             case "spaces":
                                 page_view.push(navigator.gardenSpacesList)
                                 break
+                            case "alarm":
+                                page_view.push(navigator.gardenAlarmsCalendar)
+                                break
                             }
                         }
                     }
@@ -153,7 +173,7 @@ BPage {
 
         Label {
             Layout.fillWidth: true
-            text: qsTr("Pending tasks")
+            text: qsTr("Today tasks")
             padding: 15
             opacity: .7
             font {
@@ -162,23 +182,123 @@ BPage {
             }
         }
 
-        ListView {
-            id: activityList
+        Rectangle {
+            Layout.preferredWidth: 150
+            Layout.preferredHeight: 150
+            Layout.alignment: Qt.AlignHCenter
+            radius: Layout.preferredHeight / 2
+            color: Theme.colorSecondary
+            visible: $Model.alarm.count === 0
+
+            Label {
+                text: "No pending task"
+                color: "white"
+                anchors.centerIn: parent
+                font {
+                    weight: Font.Light
+                    pixelSize: 18
+                }
+            }
+        }
+
+        Flickable {
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Layout.leftMargin: 20
-            Layout.rightMargin: 20
-            spacing: 15
-            clip: true
-            model: 2
-            delegate: GardenActivityLine {
-                title: qsTr("Watering")
-                subtitle: "3 plante"
-                onClicked: console.log("Clicked")
-                icon.source: Icons.water
-                width: activityList.width
-                height: 80
+            contentHeight: alarmsCol.height
+
+            Column {
+                id: alarmsCol
+                width: parent.width
+                Repeater {
+                    model: alarmsToday
+                    GardenActivityLine {
+                        property var plantObj: JSON.parse(model.plant_json)
+                        title: model.libelle || "NULL"
+                        plant_name: plantObj.name_scientific
+                        subtitle: {
+                            let countPerWeek = 0
+                            const days = ['mon', 'tue', 'wed', 'thu', 'fry', 'sat', 'sun']
+                            for(let _dayIndex in days) {
+                                console.log(model[days[_dayIndex]], model.mon, model.tue)
+                                if(model[days[_dayIndex]] === 1) countPerWeek ++
+                            }
+
+                            return countPerWeek + ' ' + qsTr("times par week")
+                        }
+                        isDone: model.done
+
+                        onDeleteClicked: {
+                            removeAlarmPopup.show(model)
+                        }
+
+                        onChecked: (newStatus) => {
+                            $Model.alarm.sqlUpdateTaskStatus(model.id, newStatus).then(res => {
+                                                                                          $Model.alarm.fetchAll()
+                                                                                       }).catch(console.warn)
+                        }
+
+                        icon.source: model.type === 0 ? Icons.shovel : model.type === 1 ? Icons.waterOutline : model.type === 2 ? Icons.potMixOutline : Icons.flowerOutline
+                        image.source: {
+                            let value = plantObj.images_plantes[0] ? "https://blume.mahoudev.com/assets/" + plantObj.images_plantes[0].directus_files_id : ""
+                            return value
+                        }
+
+                        width: parent.width - 20
+                        height: 80
+                    }
+                }
+
+            }
+
+        }
+
+
+        Item {
+            Layout.fillHeight: true
+        }
+
+    }
+
+    Popup {
+        id: removeAlarmPopup
+        property var alarm
+        anchors.centerIn: parent
+        width: 300
+        height: 160
+        dim: true
+        modal: true
+        function show(al) {
+            alarm = al
+            open()
+        }
+
+        Column {
+            anchors.centerIn: parent
+            spacing: 20
+            Label {
+                text: qsTr("Remove this task ?")
+                font.pixelSize: 16
+            }
+            Row {
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: 10
+                NiceButton {
+                    text: qsTr("Yes remove")
+                    width: 120
+                    height: 50
+                    onClicked: {
+                        $Model.alarm.sqlDelete(removeAlarmPopup.alarm.id)
+                        removeAlarmPopup.close()
+                    }
+                }
+                NiceButton {
+                    text: qsTr("No")
+                    width: 100
+                    height: 50
+                    onClicked: removeAlarmPopup.close()
+                }
             }
         }
     }
+
 }

@@ -9,8 +9,6 @@ import "../components_generic"
 
 Drawer {
     id: control
-    width: parent.width
-    height: Qt.platform.os === "ios" ? parent.height - 45 : parent.height - 20
     edge: "BottomEdge"
     property var callback
 
@@ -33,7 +31,7 @@ Drawer {
         BPage {
             anchors.fill: parent
             header: AppBar {
-                title: "Choose plant"
+                title: "Choose space"
                 statusBarVisible: false
                 leading.icon: Icons.close
                 leading.onClicked: {
@@ -42,14 +40,28 @@ Drawer {
 
                 noAutoPop: true
             }
-            SearchPlants {
+            ListView {
                 anchors.fill: parent
-                preventDefaultOnClick: true
-                hideCameraSearch: true
-                property variant cool: ({})
-                onItemClicked: (data) => {
-                    control.callback(data)
-                    control.close()
+                model: $Model.space
+                anchors.margins: 10
+                delegate: ItemDelegate {
+                    required property variant model
+                    required property int index
+
+                    width: ListView.view.width
+                    height: 80
+
+                    GardenSpaceLine {
+                        anchors.fill: parent
+                        title: model.libelle
+                        subtitle: model.description
+                        iconSource: model.type === 1 ? Icons.homeOutline : Icons.landFields
+
+                        onClicked: {
+                            control.callback($Model.space.get(index))
+                            control.close()
+                        }
+                    }
                 }
             }
         }

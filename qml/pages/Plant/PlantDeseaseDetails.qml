@@ -90,7 +90,7 @@ BPage {
                                 required property int index
                                 required property variant modelData
 
-                                text: modelData
+                                text: (modelData?.name ?? modelData)
                                       + (index < details['common_names'].length ? ", " : "")
                             }
                         }
