@@ -209,23 +209,23 @@ BPage {
             Column {
                 id: alarmsCol
                 width: parent.width
+                leftPadding: 10
+                rightPadding: 10
                 Repeater {
-                    model: alarmsToday
+                    model: $Model.alarm
                     GardenActivityLine {
                         property var plantObj: JSON.parse(model.plant_json)
                         title: model.libelle || "NULL"
                         plant_name: plantObj.name_scientific
                         subtitle: {
-                            let countPerWeek = 0
-                            const days = ['mon', 'tue', 'wed', 'thu', 'fry', 'sat', 'sun']
-                            for(let _dayIndex in days) {
-                                console.log(model[days[_dayIndex]], model.mon, model.tue)
-                                if(model[days[_dayIndex]] === 1) countPerWeek ++
-                            }
-
-                            return countPerWeek + ' ' + qsTr("times par week")
+                            $Model.space.sqlGet(model.space)
+                            .then(res => {
+                                      subtitle = "Space - " + res.libelle
+                                  })
+                            .catch(console.warn)
+                            return ""
                         }
-                        isDone: model.done
+                        isDone: model.done === 1
 
                         onDeleteClicked: {
                             removeAlarmPopup.show(model)

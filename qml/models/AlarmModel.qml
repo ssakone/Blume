@@ -56,9 +56,17 @@ Model {
             "type": "INTEGER",
             "def": "0"
         }, {
+            "name": "frequence", // Nombre de jours
+            "type": "INTEGER",
+            "def": "1"
+        }, {
+            // toISOString() format
+            "name": "last_done",
+            "type": "REAL"
+        }, {
             "name": "space",
             "type": "INTEGER"
-        }, {
+        },{
             "name": "plant",
             "type": "INTEGER"
         }, {
@@ -98,4 +106,49 @@ Model {
         })
     }
 
+    function sqlFormatFrequence(id) {
+        return new Promise(function (resolve, reject){
+            sqlGet(id).then(function (res) {
+                console.log("Formating ", res.frequence, JSON.stringify(res))
+                let freq = res.frequence
+                let period = "NULL"
+                let periodIndex = 3
+
+                // Is it yearly
+                if(freq > 365 ) {
+                    period = qsTr("Years")
+                    periodIndex = 3
+                    freq = Math.floor(freq/365)
+                } else  {
+                    // is it monthly
+                    if(freq > 30 ) {
+                        period = qsTr("Months")
+                        periodIndex = 2
+                        freq = Math.floor(freq/30)
+                    } else {
+                        // is it weekly
+                        if(freq > 7 ) {
+                            period = qsTr("Weeks")
+                            periodIndex = 1
+                            freq = Math.floor(freq/7)
+                        } else {
+                            // else, it is certainly a number of days between [0-7]
+                            if(freq > 0) {
+                                period = qsTr("Days")
+                                periodIndex = 0
+                            } else period = qsTr("Never")
+                        }
+                    }
+                }
+
+                const data = {
+                    freq: freq,
+                    period_label: period,
+                    period_index: periodIndex
+                }
+                console.log(data)
+                resolve(data)
+            }).catch(err => reject(err))
+        })
+    }
 }

@@ -223,7 +223,7 @@ BPage {
                                 width: _colLayout.width - 10
                                 height: 100
                                 title: plant.name_scientific
-                                subtitle: plant.description ?? ""
+                                subtitle: plant.noms_communs[0]?.name ?? ""
                                 roomName: ""
                                 onClicked: {
                                     removePlantPopup.show({
@@ -275,17 +275,13 @@ BPage {
                                 title: model.libelle || "NULL"
                                 plant_name: plantObj.name_scientific
                                 subtitle: {
-                                    let countPerWeek = 0
-                                    const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
-                                    for (let _dayIndex in days) {
-                                        if (model[days[_dayIndex]] === 1)
-                                            countPerWeek++
-                                    }
-
-                                    return countPerWeek + ' ' + qsTr(
-                                                "times par week")
+                                    $Model.alarm.sqlFormatFrequence(model.id).then(data => {
+                                                                                   subtitle = data.freq + " " + data.period_label
+                                                                                   })
+                                    return ""
                                 }
-                                isDone: model.done
+
+                                isDone: model.done === 1
 
                                 onDeleteClicked: {
                                     removeAlarmPopup.show(model)
@@ -463,7 +459,7 @@ BPage {
     Drawer {
         id: addAlarmPopup
         property var initialAlarm: ({})
-        property bool shouldUpdate: addAlarmPopup.initialAlarm.space !== undefined
+        property bool shouldUpdate: addAlarmPopup.initialAlarm?.space !== undefined
 
         width: parent.width
         height: parent.height - 90
@@ -485,12 +481,21 @@ BPage {
                 const _day = _days[i]
                 recur[i] = addAlarmPopup.initialAlarm[_day] === 1 ? 1 : 0
             }
-            _control.recurrence = recur
+//            _control.recurrence = recur
+//            frequencyInput.text = addAlarmPopup.initialAlarm.frequence ?? "3"
+
             gardenLine.plant = JSON.parse(addAlarmPopup.initialAlarm?.plant_json
                                           || 'null') || undefined
             typeAlarm.currentIndex = addAlarmPopup.initialAlarm.type || 0
             if (typeAlarm.currentIndex === 3)
                 anotherAlarmType.text = addAlarmPopup.initialAlarm.libelle
+
+            $Model.alarm.sqlFormatFrequence(addAlarmPopup.initialAlarm.id).then(data => {
+                                                               frequencyInput.text = data.freq
+                                                               periodComboBox.currentIndex = data.period_index
+//                                                               periodComboBox.currentIndex = periodComboBox.model.findIndex(it => it === data.period_label)
+//                                                           subtitle = data.freq + " " + data.period_label
+                                                           })
 
             //            console.log("typeAlarm.currentIndex = ", typeAlarm.currentIndex )
             //            console.log("addAlarmPopup.initialAlarm.libelle = ", addAlarmPopup.initialAlarm.libelle)
@@ -500,7 +505,8 @@ BPage {
             addAlarmPopup.initialAlarm = {}
             gardenLine.plant = undefined
             anotherAlarmType.text = ""
-            _control.recurrence = [0, 0, 0, 0, 0, 0, 0]
+            frequencyInput.text = "3"
+            periodComboBox.currentIndex = 0
         }
 
         ClipRRect {
@@ -523,7 +529,7 @@ BPage {
                 Column {
                     width: parent.width - 40
                     padding: 20
-                    spacing: 10
+                    spacing: 20
 
                     Label {
                         id: errorView
@@ -545,7 +551,7 @@ BPage {
 
                             property int currentIndex: 0
                             property variant model: ["Rampotage", "Arrosage", "Fertilisation", "Autre"]
-
+                            property variant fields_frequences: ['frequence_rampotage', 'frequence_arrosage', 'fertilisation_frequency']
                             spacing: 20
 
                             Repeater {
@@ -582,55 +588,6 @@ BPage {
                         }
                     }
 
-                    Label {
-                        text: qsTr("Days")
-                    }
-
-                    Row {
-                        id: _control
-                        property var recurrence: [0, 0, 0, 0, 0, 0, 0]
-
-                        property var day: ["Mon", "Tue", "Wed", "Thu", "Fry", "Sat", "Sun"]
-                        width: parent.width
-                        spacing: 6
-                        Repeater {
-                            model: parent.day
-                            Rectangle {
-                                required property var modelData
-                                required property int index
-                                width: (parent.width / 7) - 6
-                                height: width
-                                radius: width / 2
-                                border.color: Theme.colorPrimary
-                                border.width: {
-                                    //                                    console.log("_control.recurrence[index] ", index, _control.recurrence[index])
-                                    return _control.recurrence[index] === 1 ? 1 : 0
-                                }
-
-                                color: _control.recurrence[index] === 1 ? $Colors.gray200 : "white"
-                                Label {
-                                    anchors.centerIn: parent
-                                    text: modelData
-                                }
-
-                                MouseArea {
-                                    hoverEnabled: true
-                                    cursorShape: "PointingHandCursor"
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        let g = _control.recurrence
-                                        if (_control.recurrence[index] === 1) {
-                                            _control.recurrence[index] = 0
-                                        } else
-                                            _control.recurrence[index] = 1
-                                        _control.recurrence = g
-                                        //                                        parent.color = g[index] === 1 ? $Colors.gray300 : "white"
-                                        //                                        parent.border.width = g[index]
-                                    }
-                                }
-                            }
-                        }
-                    }
 
                     Rectangle {
                         width: parent.width
@@ -653,7 +610,7 @@ BPage {
                                 return plant?.name_scientific ?? ""
                             }
 
-                            subtitle: plant?.description ?? ""
+                            subtitle: plant?.noms_communs[0]?.name ?? ""
                             roomName: ""
                             visible: plant !== undefined
                             imageSource: plant?.images_plantes?.length
@@ -664,11 +621,87 @@ BPage {
                         MouseArea {
                             anchors.fill: parent
                             onClicked: choosePlantPopup.show(function (item) {
-                                console.log(addAlarmPopup.initialAlarm.plant_json)
                                 gardenLine.plant = item
                             })
                         }
                     }
+
+                    RowLayout {
+                        id: _control
+                        width: parent.width
+                        spacing: 10
+
+                        Label {
+                            text: qsTr("Every")
+                        }
+
+                        TextField {
+                            id: frequencyInput
+                            Layout.preferredWidth: 40
+                            Layout.preferredHeight: 40
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            text: "3"
+                            font.pixelSize: 18
+                            validator: IntValidator {
+                                bottom: 1
+                                top: 367
+                            }
+                            background: Rectangle {
+                                radius: 10
+                                color: $Colors.gray200
+                            }
+                        }
+
+                        ComboBox {
+                            id: periodComboBox
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 40
+                            model: ["Days", "Weeks", "Months", "Years"]
+                            popup {
+                                z: 10000
+                            }
+
+                            background: Rectangle {
+                                color: $Colors.gray200
+                                radius: 10
+                            }
+                        }
+
+                    }
+
+                    RowLayout {
+                        visible: gardenLine.plant !== undefined && typeAlarm.currentIndex < typeAlarm.model.length -1
+                        width: parent.width
+                        Label {
+                            visible: recommandation_value.text !== ""
+                            text: qsTr("Recommandations: ")
+                            font {
+                                weight: Font.Light
+                                pixelSize: 16
+                            }
+                        }
+                        Label {
+                            id: recommandation_value
+                            Layout.fillWidth: true
+                            wrapMode: Text.Wrap
+                            text: {
+                                if(typeAlarm.currentIndex < typeAlarm.model.length -1) {
+                                    const freq_field = typeAlarm.fields_frequences[typeAlarm.currentIndex]
+                                    let plant_json = gardenLine.plant?.plant_json
+                                    if(!plant_json) plant_json = gardenLine.plant // So it comes from local DB with fields 'libelle', 'done', 'frequence', ...
+                                    return plant_json ? (plant_json[freq_field] ?? "") : ""
+                                }
+                                return ""
+                            }
+                            font {
+                                weight: Font.Light
+                                pixelSize: 16
+                            }
+                        }
+                    }
+
+
                     Item {
                         height: 5
                         width: 1
@@ -689,18 +722,20 @@ BPage {
                                 return
                             }
 
-                            //                            if(addAlarmPopup.shouldUpdate) {
-                            //                                errorView.text = "'Task Update' is not net implemented"
-                            //                                return
-                            //                            }
+                            let freq = parseInt(frequencyInput.text)
+                            if(periodComboBox.currentIndex === 1) {
+                                // Weekly
+                                freq *= 7
+                            } else if(periodComboBox.currentIndex === 2) {
+                                // Monthly
+                                freq *= 30
+                            } else if(periodComboBox.currentIndex === 3) {
+                                // Yearly
+                                freq *= 365
+                            }
+
                             let data = {
-                                "mon": _control.recurrence[0],
-                                "tue": _control.recurrence[1],
-                                "wed": _control.recurrence[2],
-                                "thu": _control.recurrence[3],
-                                "fri": _control.recurrence[4],
-                                "sat": _control.recurrence[5],
-                                "sun": _control.recurrence[6],
+                                "frequence": freq,
                                 "libelle": typeAlarm.currentIndex === typeAlarm.model.length
                                            - 1 ? anotherAlarmType.text : typeAlarm.model[typeAlarm.currentIndex],
                                 "type": typeAlarm.currentIndex,
@@ -708,6 +743,8 @@ BPage {
                                 "plant": gardenLine.plant.id,
                                 "plant_json": JSON.stringify(gardenLine.plant)
                             }
+
+                            console.log("Data ", JSON.stringify(data))
 
                             if (addAlarmPopup.shouldUpdate) {
                                 $Model.alarm.sqlUpdate(
@@ -729,6 +766,7 @@ BPage {
                                             }).catch(err => console.error(
                                                          JSON.stringify(err)))
                             }
+
                         }
                     }
                 }
@@ -789,7 +827,7 @@ BPage {
                             width: plantListView.width - 10
                             height: 100
                             title: insideControl.plant.name_scientific
-                            subtitle: insideControl.plant.description ?? ""
+                            subtitle: insideControl.plant.noms_communs[0]?.name ?? ""
                             roomName: ""
                             imageSource: insideControl.plant.images_plantes.length
                                          > 0 ? "https://blume.mahoudev.com/assets/"

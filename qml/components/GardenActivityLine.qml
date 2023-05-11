@@ -18,6 +18,7 @@ Rectangle {
 
     property bool isDone: false
     property bool hideDelete: false
+    property bool hideCheckbox: false
 
     signal clicked
     signal deleteClicked
@@ -41,6 +42,7 @@ Rectangle {
         spacing: 10
 
         Item {
+            visible: !control.hideCheckbox
             Layout.preferredWidth: 30
             Layout.preferredHeight: 30
             Rectangle {

@@ -25,7 +25,7 @@ BPage {
             width: parent.width
             height: 100
             title: plant.name_scientific
-            subtitle: plant.description ?? ""
+            subtitle: plant.noms_communs[0]?.name ?? ""
             roomName: ""
             imageSource: plant.images_plantes.length
                          > 0 ? "https://blume.mahoudev.com/assets/"
