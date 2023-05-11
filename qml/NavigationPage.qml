@@ -7,7 +7,9 @@ import "pages/Auth"
 import "pages/Garden"
 
 QtObject {
-    property var plantIdentifierPage: Component {
+    property var deviceList: Component {
+        DeviceList {}
+    }property var plantIdentifierPage: Component {
         PlantIdentifier {}
     }
     property var posometrePage: Component {

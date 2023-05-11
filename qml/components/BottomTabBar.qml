@@ -6,6 +6,7 @@ import ThemeEngine
 import "../components_generic"
 
 Loader {
+    property string activePage
     width: parent.width
     asynchronous: true
     sourceComponent: RowLayout {
@@ -36,10 +37,18 @@ Loader {
 
             componentRadius: 0
             fullColor: true
-            primaryColor: appContent.state
-                          === "Navigator" ? Theme.colorPrimary : Theme.colorSecondary
+//            primaryColor: appContent.state
+//                          === "Navigator" ? Theme.colorPrimary : Theme.colorSecondary
+            primaryColor: activePage
+                          === "Garden" ? Theme.colorPrimary : Theme.colorSecondary
             onClicked: {
-                appContent.state = "Navigator"
+                console.log("Depth ", page_view.depth)
+                if(activePage !== "Garden") {
+                    for(let i=0; i<=page_view.depth; i++) {
+                        page_view.pop()
+                    }
+                }
+
             }
         }
 
@@ -67,9 +76,10 @@ Loader {
 
             componentRadius: 0
             fullColor: true
-            primaryColor: Theme.colorSecondary
+            primaryColor: activePage
+                          === "Plants" ? Theme.colorPrimary : Theme.colorSecondary
             onClicked: {
-                appContent.openStackView(plantBrowserPage)
+                activePage !== "Plants" && appContent.openStackView(plantBrowserPage)
             }
         }
         ButtonWireframe {
@@ -96,9 +106,10 @@ Loader {
 
             componentRadius: 0
             fullColor: true
-            primaryColor: Theme.colorSecondary
+            primaryColor: activePage
+                          === "Health" ? Theme.colorPrimary : Theme.colorSecondary
             onClicked: {
-                appContent.openStackView(desease)
+                activePage !== "Health" && appContent.openStackView(desease)
             }
         }
         ButtonWireframe {
@@ -125,10 +136,11 @@ Loader {
 
             componentRadius: 0
             fullColor: true
-            primaryColor: appContent.state
+            primaryColor: activePage
                           === "DeviceList" ? Theme.colorPrimary : Theme.colorSecondary
             onClicked: {
-                appContent.state = "DeviceList"
+                activePage !== "DeviceList" && page_view.push(navigator.deviceList)
+//                appContent.state = "DeviceList"
             }
         }
     }

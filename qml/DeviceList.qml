@@ -14,13 +14,34 @@ import "pages/Plant/"
 
 import ThemeEngine 1.0
 
-Page {
+BPage {
     id: screenDeviceList
-    anchors.fill: parent
+
+    header: Loader {
+        id: deviceListHeader
+        sourceComponent: AppBar {
+            id: mobileDeviceHeader
+            title: qsTr("Devices")
+            noAutoPop: true
+            isHomeScreen: true
+        }
+    }
+
     background: Item {}
+
+
+
+    footer: BottomTabBar {
+        activePage: "DeviceList"
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     Component.onCompleted: {
+        if(Qt.platform.os === 'android' || Qt.platform.os === 'ios') {
+//            deviceListHeader.sourceComponent = mobileDeviceHeader
+            console
+        } else deviceListHeader.source = "DesktopHeader.qml"
+
         checkStatus()
         loadList()
     }
@@ -419,7 +440,6 @@ Page {
         enabled: (deviceManager.bluetooth && deviceManager.bluetoothPermissions)
     }
 
-    footer: BottomTabBar {}
     ////////////////////////////////////////////////////////////////////////////
     function scan() {
         if (!deviceManager.updating) {

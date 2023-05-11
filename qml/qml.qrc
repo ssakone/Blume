@@ -109,6 +109,7 @@
         <file>pages/Auth/Login.qml</file>
         <file>pages/Auth/Register.qml</file>
         <file>pages/Garden/AlarmsCalendar.qml</file>
+        <file>StackPage.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>

@@ -18,7 +18,10 @@ BPage {
         title: "Blume"
         isHomeScreen: true
     }
-    footer: BottomTabBar {}
+
+    footer: BottomTabBar {
+        activePage: "Garden"
+    }
 
     function getDay() {
         const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']

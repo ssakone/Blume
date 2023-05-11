@@ -289,58 +289,58 @@ ApplicationWindow {
 
     // User generated events handling //////////////////////////////////////////
     function backAction() {
-        if (appContent.state === "Tutorial"
-                && screenTutorial.entryPoint === "DeviceList") {
-            return
-            // do nothing
-        }
+//        if (appContent.state === "Tutorial"
+//                && screenTutorial.entryPoint === "DeviceList") {
+//            return
+//            // do nothing
+//        }
 
-        if (appContent.state === "DeviceList") {
-            screenDeviceList.backAction()
-        } else if (appContent.state === "DevicePlantSensor") {
-            screenDevicePlantSensor.backAction()
-        } else if (appContent.state === "DeviceThermometer") {
-            screenDeviceThermometer.backAction()
-        } else if (appContent.state === "DeviceEnvironmental") {
-            screenDeviceEnvironmental.backAction()
-        } else if (appContent.state === "DeviceBrowser") {
-            screenDeviceBrowser.backAction()
-        } else if (appContent.state === "PlantBrowser") {
-            screenPlantBrowser.backAction()
-        } else if (appContent.state === "Tutorial") {
-            appContent.state = screenTutorial.entryPoint
-        } else {
-            // default
-            if (appContent.previousStates.length) {
-                appContent.previousStates.pop()
-                appContent.state = appContent.previousStates[appContent.previousStates.length - 1]
-            } else {
-                appContent.state = "DeviceList"
-            }
-        }
+//        if (appContent.state === "DeviceList") {
+//            screenDeviceList.backAction()
+//        } else if (appContent.state === "DevicePlantSensor") {
+//            screenDevicePlantSensor.backAction()
+//        } else if (appContent.state === "DeviceThermometer") {
+//            screenDeviceThermometer.backAction()
+//        } else if (appContent.state === "DeviceEnvironmental") {
+//            screenDeviceEnvironmental.backAction()
+//        } else if (appContent.state === "DeviceBrowser") {
+//            screenDeviceBrowser.backAction()
+//        } else if (appContent.state === "PlantBrowser") {
+//            screenPlantBrowser.backAction()
+//        } else if (appContent.state === "Tutorial") {
+//            appContent.state = screenTutorial.entryPoint
+//        } else {
+//            // default
+//            if (appContent.previousStates.length) {
+//                appContent.previousStates.pop()
+//                appContent.state = appContent.previousStates[appContent.previousStates.length - 1]
+//            } else {
+//                appContent.state = "DeviceList"
+//            }
+//        }
     }
     function forwardAction() {
-        if (appContent.state === "DeviceList") {
-            appContent.previousStates.pop()
+//        if (appContent.state === "DeviceList") {
+//            appContent.previousStates.pop()
 
-            if (appContent.previousStates[appContent.previousStates.length - 1]
-                    === "DevicePlantSensor")
-                appContent.state = "DevicePlantSensor"
-            else if (appContent.previousStates[appContent.previousStates.length
-                                               - 1] === "DeviceThermometer")
-                appContent.state = "DeviceThermometer"
-            else if (appContent.previousStates[appContent.previousStates.length
-                                               - 1] === "DeviceEnvironmental")
-                appContent.state = "DeviceEnvironmental"
-            else if (appContent.previousStates[appContent.previousStates.length
-                                               - 1] === "DeviceBrowser")
-                appContent.state = "DeviceBrowser"
-            else if (appContent.previousStates[appContent.previousStates.length
-                                               - 1] === "PlantBrowser")
-                appContent.state = "PlantBrowser"
-        } else if (appContent.state === "PlantBrowser") {
-            screenPlantBrowser.forwardAction()
-        }
+//            if (appContent.previousStates[appContent.previousStates.length - 1]
+//                    === "DevicePlantSensor")
+//                appContent.state = "DevicePlantSensor"
+//            else if (appContent.previousStates[appContent.previousStates.length
+//                                               - 1] === "DeviceThermometer")
+//                appContent.state = "DeviceThermometer"
+//            else if (appContent.previousStates[appContent.previousStates.length
+//                                               - 1] === "DeviceEnvironmental")
+//                appContent.state = "DeviceEnvironmental"
+//            else if (appContent.previousStates[appContent.previousStates.length
+//                                               - 1] === "DeviceBrowser")
+//                appContent.state = "DeviceBrowser"
+//            else if (appContent.previousStates[appContent.previousStates.length
+//                                               - 1] === "PlantBrowser")
+//                appContent.state = "PlantBrowser"
+//        } else if (appContent.state === "PlantBrowser") {
+//            screenPlantBrowser.forwardAction()
+//        }
     }
 
     MouseArea {
@@ -431,8 +431,8 @@ ApplicationWindow {
         anchors.bottom: parent.bottom
 
         function openStackView(page) {
-            if (state !== "Navigator")
-                page_view.previousState = state
+//            if (state !== "Navigator")
+//                page_view.previousState = state
             state = "Navigator"
             page_view.push(page, {}, StackView.Immediate)
         }
@@ -480,13 +480,15 @@ ApplicationWindow {
             }
         }
 
+//        StackPage {
+//            id: page_view
+//            width: parent.width
+//            height: parent.height
+//        }
+
         Tutorial {
             anchors.fill: parent
             id: screenTutorial
-        }
-
-        DeviceList {
-            id: screenDeviceList
         }
 
         DevicePlantSensor {
@@ -557,11 +559,11 @@ ApplicationWindow {
                     visible: true
                     enabled: true
                 }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenTutorial
                     visible: false
@@ -620,11 +622,11 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -678,12 +680,12 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: true
-                    enabled: true
-                    focus: true
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: true
+//                    enabled: true
+//                    focus: true
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -736,11 +738,11 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: true
@@ -794,11 +796,11 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -852,11 +854,11 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -910,11 +912,11 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -968,11 +970,11 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -1026,11 +1028,11 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -1084,11 +1086,11 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -1127,5 +1129,6 @@ ApplicationWindow {
                 }
             }
         ]
+
     }
 }

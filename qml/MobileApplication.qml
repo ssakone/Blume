@@ -285,6 +285,7 @@ ApplicationWindow {
     Connections {
         target: appHeader
         function onLeftMenuClicked() {
+            console.log("\n\n Menu clicked " + appContent.state + "\n\n")
             if (appContent.state === "DeviceList") {
                 appDrawer.open()
             } else {
@@ -292,10 +293,9 @@ ApplicationWindow {
                     appContent.state = screenTutorial.entryPoint
                 else if (appContent.state === "PlantBrowser")
                     appContent.state = screenPlantBrowser.entryPoint
-                else if (appContent.state === "Permissions")
-                    appContent.state = screenPermissions.entryPoint
-                else
-                    appContent.state = "DeviceList"
+                else {
+                    appContent.state = "Navigator"
+                }
             }
         }
         function onRightMenuClicked() {}
@@ -437,7 +437,8 @@ ApplicationWindow {
 
             if (appContent.state === "DeviceList") {
                 if (screenDeviceList.isSelected()) {
-                    screenDeviceList.exitSelectionMode()
+                    console.log()
+//                    screenDeviceList.exitSelectionMode()
                 } else {
                     if (exitTimer.running)
                         Qt.quit()
@@ -462,8 +463,8 @@ ApplicationWindow {
         }
 
         function openStackView(page) {
-            if (state !== "Navigator")
-                page_view.previousState = state
+//            if (state !== "Navigator")
+//                page_view.previousState = state
             state = "Navigator"
             page_view.push(page, {}, StackView.Immediate)
         }
@@ -519,9 +520,9 @@ ApplicationWindow {
             id: screenTutorial
         }
 
-        DeviceList {
-            id: screenDeviceList
-        }
+//        DeviceList {
+//            id: screenDeviceList
+//        }
         DevicePlantSensor {
             id: screenDevicePlantSensor
             anchors.fill: parent
@@ -575,7 +576,7 @@ ApplicationWindow {
         state: "Navigator"
 
         onStateChanged: {
-            screenDeviceList.exitSelectionMode()
+//            screenDeviceList.exitSelectionMode()
 
             if (state === "DeviceList")
                 appHeader.leftMenuMode = "drawer"
@@ -597,13 +598,13 @@ ApplicationWindow {
                     visible: true
                     enabled: true
                 }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenTutorial
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenDeviceList
                     visible: false
                     enabled: false
                 }
@@ -651,8 +652,13 @@ ApplicationWindow {
             State {
                 name: "Tutorial"
                 PropertyChanges {
+                    target: screenTutorial
+                    visible: true
+                    enabled: true
+                    focus: true
+                }
+                PropertyChanges {
                     target: appHeader
-                    title: qsTr("Welcome")
                     visible: true
                 }
                 PropertyChanges {
@@ -660,16 +666,11 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenTutorial
-                    visible: true
-                    enabled: true
-                }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -714,25 +715,26 @@ ApplicationWindow {
             State {
                 name: "DeviceList"
                 PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
                     target: appHeader
-                    title: "Blume"
                     visible: true
+                    enabled: true
                 }
                 PropertyChanges {
                     target: page_view
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenTutorial
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: true
-                    enabled: true
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: true
+//                    enabled: true
+//                    focus: true
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -777,8 +779,12 @@ ApplicationWindow {
             State {
                 name: "DevicePlantSensor"
                 PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
                     target: appHeader
-                    title: selectedDevice.deviceName
                     visible: true
                 }
                 PropertyChanges {
@@ -786,20 +792,16 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenTutorial
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: true
                     enabled: true
+                    focus: true
                 }
                 PropertyChanges {
                     target: screenDeviceThermometer
@@ -840,8 +842,12 @@ ApplicationWindow {
             State {
                 name: "DeviceThermometer"
                 PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
                     target: appHeader
-                    title: qsTr("Thermometer")
                     visible: true
                 }
                 PropertyChanges {
@@ -849,16 +855,11 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenTutorial
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -868,6 +869,7 @@ ApplicationWindow {
                     target: screenDeviceThermometer
                     visible: true
                     enabled: true
+                    focus: true
                 }
                 PropertyChanges {
                     target: screenDeviceEnvironmental
@@ -903,8 +905,12 @@ ApplicationWindow {
             State {
                 name: "DeviceEnvironmental"
                 PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
                     target: appHeader
-                    title: selectedDevice.deviceName
                     visible: true
                 }
                 PropertyChanges {
@@ -912,16 +918,11 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenTutorial
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -936,6 +937,7 @@ ApplicationWindow {
                     target: screenDeviceEnvironmental
                     visible: true
                     enabled: true
+                    focus: true
                 }
                 PropertyChanges {
                     target: screenSettings
@@ -966,25 +968,24 @@ ApplicationWindow {
             State {
                 name: "Settings"
                 PropertyChanges {
-                    target: appHeader
-                    title: qsTr("Settings")
-                    visible: true
-                }
-                PropertyChanges {
                     target: screenTutorial
                     visible: false
                     enabled: false
+                }
+                PropertyChanges {
+                    target: appHeader
+                    visible: true
                 }
                 PropertyChanges {
                     target: page_view
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -1004,74 +1005,12 @@ ApplicationWindow {
                     target: screenSettings
                     visible: true
                     enabled: true
+                    focus: true
                 }
                 PropertyChanges {
                     target: screenPermissions
                     visible: false
                     enabled: false
-                }
-                PropertyChanges {
-                    target: screenAbout
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenPlantBrowser
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenDeviceBrowser
-                    visible: false
-                    enabled: false
-                }
-            },
-            State {
-                name: "Permissions"
-                PropertyChanges {
-                    target: appHeader
-                    title: qsTr("Permissions")
-                    visible: true
-                }
-                PropertyChanges {
-                    target: page_view
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenTutorial
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenDevicePlantSensor
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenDeviceThermometer
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenDeviceEnvironmental
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenSettings
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenPermissions
-                    visible: true
-                    enabled: true
                 }
                 PropertyChanges {
                     target: screenAbout
@@ -1092,8 +1031,12 @@ ApplicationWindow {
             State {
                 name: "About"
                 PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
                     target: appHeader
-                    title: qsTr("About")
                     visible: true
                 }
                 PropertyChanges {
@@ -1101,16 +1044,11 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenTutorial
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -1140,6 +1078,7 @@ ApplicationWindow {
                     target: screenAbout
                     visible: true
                     enabled: true
+                    focus: true
                 }
                 PropertyChanges {
                     target: screenPlantBrowser
@@ -1155,8 +1094,12 @@ ApplicationWindow {
             State {
                 name: "PlantBrowser"
                 PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
                     target: appHeader
-                    title: qsTr("Plant browser")
                     visible: true
                 }
                 PropertyChanges {
@@ -1164,16 +1107,11 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenTutorial
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -1208,6 +1146,7 @@ ApplicationWindow {
                     target: screenPlantBrowser
                     visible: true
                     enabled: true
+                    focus: true
                 }
                 PropertyChanges {
                     target: screenDeviceBrowser
@@ -1218,8 +1157,12 @@ ApplicationWindow {
             State {
                 name: "DeviceBrowser"
                 PropertyChanges {
+                    target: screenTutorial
+                    visible: false
+                    enabled: false
+                }
+                PropertyChanges {
                     target: appHeader
-                    title: qsTr("Device browser")
                     visible: true
                 }
                 PropertyChanges {
@@ -1227,16 +1170,11 @@ ApplicationWindow {
                     visible: false
                     enabled: false
                 }
-                PropertyChanges {
-                    target: screenTutorial
-                    visible: false
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: screenDeviceList
-                    visible: false
-                    enabled: false
-                }
+//                PropertyChanges {
+//                    target: screenDeviceList
+//                    visible: false
+//                    enabled: false
+//                }
                 PropertyChanges {
                     target: screenDevicePlantSensor
                     visible: false
@@ -1276,9 +1214,11 @@ ApplicationWindow {
                     target: screenDeviceBrowser
                     visible: true
                     enabled: true
+                    focus: true
                 }
             }
         ]
+
     }
 
     ////////////////

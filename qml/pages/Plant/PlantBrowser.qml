@@ -24,7 +24,12 @@ BPage {
     header: Components.AppBar {
         title: "Plants menu"
         noAutoPop: true
+        isHomeScreen: true
         leading.onClicked: plantBrowser.StackView.view.pop()
+    }
+
+    footer: Components.BottomTabBar {
+        activePage: "Plants"
     }
 
     property string entryPoint: "DeviceList"

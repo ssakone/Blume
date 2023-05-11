@@ -29,6 +29,10 @@ BPage {
     property variant analyseResults
     padding: 0
 
+    footer: BottomTabBar {
+        activePage: "Health"
+    }
+
     onVisibleChanged: {
         if (visible)
             image.source = ""
@@ -58,6 +62,7 @@ BPage {
 
     header: AppBar {
         width: parent.width
+        isHomeScreen: true
         title: {
             switch (identifierLayoutView.currentIndex) {
             case 0:
