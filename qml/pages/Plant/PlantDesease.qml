@@ -29,9 +29,7 @@ BPage {
     property variant analyseResults
     padding: 0
 
-    footer: BottomTabBar {
-        activePage: "Health"
-    }
+    objectName: "Health"
 
     onVisibleChanged: {
         if (visible)
@@ -131,8 +129,9 @@ BPage {
                         function onImageSelected(path) {
                             image.source = "file://?" + Math.random()
                             image.source = "file://" + path
-                            if(fromCamera) analyserButton.clicked()
-                            fromGalery  = false
+                            if (fromCamera)
+                                analyserButton.clicked()
+                            fromGalery = false
                             fromCamera = false
                         }
                     }
@@ -170,9 +169,8 @@ BPage {
                     selectByMouse: true
                     colorSelectedText: "white"
 
-
                     onFocusChanged: {
-                        if(focus){
+                        if (focus) {
                             diseaseSearchBoxMS.clicked()
                             focus = false
                         }
@@ -214,7 +212,6 @@ BPage {
                             color: Theme.colorText
                         }
                     }
-
                 }
 
                 Column {
@@ -243,7 +240,8 @@ BPage {
                                                 "action": "insect",
                                                 "style": "lightBlue"
                                             }, {
-                                                "name": qsTr("Book of diseases"),
+                                                "name": qsTr(
+                                                            "Book of diseases"),
                                                 "icon": Icons.bookOpenOutline,
                                                 "image": "",
                                                 "action": "encyclopedie",
@@ -264,7 +262,7 @@ BPage {
                             interactive: false
                             width: parent.width
                             height: parent.height - 20
-                            cellWidth: gr.width > 800 ? gr.width / 5 : (gr.width > 500 ? gr.width/ 4 : gr.width /3)
+                            cellWidth: gr.width > 800 ? gr.width / 5 : (gr.width > 500 ? gr.width / 4 : gr.width / 3)
                             cellHeight: cellWidth
                             model: optionModel
                             delegate: Item {
@@ -505,7 +503,8 @@ BPage {
                                     }
 
                                     ClipRRect {
-                                        visible: Qt.platform.os == 'ios' || Qt.platform.os == 'android'
+                                        visible: Qt.platform.os == 'ios'
+                                                 || Qt.platform.os == 'android'
                                         width: 60
                                         height: width
                                         radius: height / 2
@@ -528,7 +527,6 @@ BPage {
                                             }
                                         }
                                     }
-
                                 }
                             }
 
@@ -724,17 +722,16 @@ BPage {
                                 }
                             }
                         }
-
                     }
 
                     Image2Base64 {
                         id: imgTool
                     }
 
-//                    Item {
-//                        Layout.fillHeight: true
-//                        Layout.fillWidth: true
-//                    }
+                    //                    Item {
+                    //                        Layout.fillHeight: true
+                    //                        Layout.fillWidth: true
+                    //                    }
                 }
             }
             Item {

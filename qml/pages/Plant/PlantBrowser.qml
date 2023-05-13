@@ -20,16 +20,12 @@ import ThemeEngine 1.0
 
 BPage {
     id: plantBrowser
-
+    objectName: "Plants"
     header: Components.AppBar {
         title: "Plants menu"
         noAutoPop: true
         isHomeScreen: true
         leading.onClicked: plantBrowser.StackView.view.pop()
-    }
-
-    footer: Components.BottomTabBar {
-        activePage: "Plants"
     }
 
     property string entryPoint: "DeviceList"
@@ -74,18 +70,17 @@ BPage {
             id: itemPlantBrowser
             anchors.fill: parent
 
-//            Rectangle {
-//                anchors.fill: plantSearchBox
-//                anchors.margins: -12
-//                z: 4
-//                color: Theme.colorBackground
-//            }
-
+            //            Rectangle {
+            //                anchors.fill: plantSearchBox
+            //                anchors.margins: -12
+            //                z: 4
+            //                color: Theme.colorBackground
+            //            }
             Image {
                 y: 20
                 x: 16
                 source: Components.Icons.close
-//                visible: plantListView.visible
+                //                visible: plantListView.visible
                 MouseArea {
                     anchors.fill: parent
                     onClicked: plantListView.close()
@@ -107,14 +102,12 @@ BPage {
                 selectByMouse: true
                 colorSelectedText: "white"
 
-
                 onFocusChanged: {
-                    if(focus){
+                    if (focus) {
                         plantSearchBoxMS.clicked()
                         focus = false
                     }
                 }
-
 
                 //onDisplayTextChanged: plantDatabase.filter(displayText)
                 MouseArea {
@@ -240,7 +233,7 @@ BPage {
                                 interactive: false
                                 width: parent.width
                                 height: parent.height - 20
-                                cellWidth: gr.width > 800 ? gr.width / 5 : (gr.width > 500 ? gr.width/ 4 : gr.width /3)
+                                cellWidth: gr.width > 800 ? gr.width / 5 : (gr.width > 500 ? gr.width / 4 : gr.width / 3)
                                 cellHeight: cellWidth
                                 model: plantOptionModel
                                 delegate: Item {
