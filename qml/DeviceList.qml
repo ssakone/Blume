@@ -17,7 +17,7 @@ import ThemeEngine 1.0
 BPage {
     id: screenDeviceList
 
-    objectName: "Devices"
+    objectName: "DeviceList"
 
     header: Loader {
         id: deviceListHeader

@@ -483,7 +483,7 @@ ApplicationWindow {
             }
             BottomTabBar {
                 Layout.fillWidth: true
-                visible: ["Health", "Garden", "Devices", "Plants"].indexOf(
+                visible: ["Health", "Garden", "DeviceList", "Plants"].indexOf(
                     activePage) !== -1
                 activePage: page_view.currentItem.objectName
             }
