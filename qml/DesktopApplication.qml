@@ -121,7 +121,7 @@ ApplicationWindow {
             } else if (appContent.state === "PlantBrowser") {
                 appContent.state = screenPlantBrowser.entryPoint
             } else if (appContent.state !== "DeviceList") {
-                appContent.state = "DeviceList"
+                appContent.state = "Navigator"
             }
         }
 
@@ -289,35 +289,35 @@ ApplicationWindow {
                }
 
     // User generated events handling //////////////////////////////////////////
-    function backAction() {//        if (appContent.state === "Tutorial"
-        //                && screenTutorial.entryPoint === "DeviceList") {
-        //            return
-        //            // do nothing
-        //        }
+    function backAction() {//                if (appContent.state === "Tutorial"
+        //                        && screenTutorial.entryPoint === "DeviceList") {
+        //                    return
+        //                    // do nothing
+        //                }
 
-        //        if (appContent.state === "DeviceList") {
-        //            screenDeviceList.backAction()
-        //        } else if (appContent.state === "DevicePlantSensor") {
-        //            screenDevicePlantSensor.backAction()
-        //        } else if (appContent.state === "DeviceThermometer") {
-        //            screenDeviceThermometer.backAction()
-        //        } else if (appContent.state === "DeviceEnvironmental") {
-        //            screenDeviceEnvironmental.backAction()
-        //        } else if (appContent.state === "DeviceBrowser") {
-        //            screenDeviceBrowser.backAction()
-        //        } else if (appContent.state === "PlantBrowser") {
-        //            screenPlantBrowser.backAction()
-        //        } else if (appContent.state === "Tutorial") {
-        //            appContent.state = screenTutorial.entryPoint
-        //        } else {
-        //            // default
-        //            if (appContent.previousStates.length) {
-        //                appContent.previousStates.pop()
-        //                appContent.state = appContent.previousStates[appContent.previousStates.length - 1]
-        //            } else {
-        //                appContent.state = "DeviceList"
-        //            }
-        //        }
+        //                if (appContent.state === "DeviceList") {
+        //                    screenDeviceList.backAction()
+        //                } else if (appContent.state === "DevicePlantSensor") {
+        //                    screenDevicePlantSensor.backAction()
+        //                } else if (appContent.state === "DeviceThermometer") {
+        //                    screenDeviceThermometer.backAction()
+        //                } else if (appContent.state === "DeviceEnvironmental") {
+        //                    screenDeviceEnvironmental.backAction()
+        //                } else if (appContent.state === "DeviceBrowser") {
+        //                    screenDeviceBrowser.backAction()
+        //                } else if (appContent.state === "PlantBrowser") {
+        //                    screenPlantBrowser.backAction()
+        //                } else if (appContent.state === "Tutorial") {
+        //                    appContent.state = screenTutorial.entryPoint
+        //                } else {
+        //                    // default
+        //                    if (appContent.previousStates.length) {
+        //                        appContent.previousStates.pop()
+        //                        appContent.state = appContent.previousStates[appContent.previousStates.length - 1]
+        //                    } else {
+        //                        appContent.state = "Navigator"
+        //                    }
+        //                }
     }
     function forwardAction() {//        if (appContent.state === "DeviceList") {
         //            appContent.previousStates.pop()
@@ -451,11 +451,6 @@ ApplicationWindow {
         }
 
         Component {
-            id: plantScreen
-            PlantScreen {}
-        }
-
-        Component {
             id: loginPage
             Login {}
         }
@@ -476,24 +471,19 @@ ApplicationWindow {
                 }
 
                 onDepthChanged: {
-
                     //                if (depth === 1)
                     //                    parent.state = previousState
                 }
             }
             BottomTabBar {
                 Layout.fillWidth: true
-                visible: ["Health", "Garden", "DeviceList", "Plants"].indexOf(
-                    activePage) !== -1
+                visible: appContent.state === "Navigator"
+                         && ["Health", "Garden", "DeviceList", "Plants"].indexOf(
+                             activePage) !== -1
                 activePage: page_view.currentItem.objectName
             }
         }
 
-        //        StackPage {
-        //            id: page_view
-        //            width: parent.width
-        //            height: parent.height
-        //        }
         Tutorial {
             anchors.fill: parent
             id: screenTutorial
@@ -520,7 +510,7 @@ ApplicationWindow {
             id: screenAbout
         }
 
-        Item {
+        PlantBrowserOld {
             anchors.fill: parent
             id: screenPlantBrowser
         }
