@@ -71,21 +71,15 @@ Item {
                                    ).replace(
                                    "file://",
                                    "") + "/db00001.db" : "db00001.sqlite3"
-        Component.onCompleted: {
-            console.log(Qt.resolvedUrl(
-                            StandardPaths.writableLocation(
-                                StandardPaths.AppDataLocation)).toString(
-                            ).replace("file://", "") + "/enokad0001.db")
-            open()
-        }
+        Component.onCompleted: open()
         onDatabaseOpened: {
             const shoulReset = false
-                if(shoulReset) {
-                    __sqliClient.execute("DROP TABLE Alarm01")
-                     __sqliClient.execute("DROP TABLE Plant01")
-                     __sqliClient.execute("DROP TABLE PlantInSpace01")
-                     __sqliClient.execute("DROP TABLE Space01")
-                }
+            if (shoulReset) {
+                __sqliClient.execute("DROP TABLE Alarm01")
+                __sqliClient.execute("DROP TABLE Plant01")
+                __sqliClient.execute("DROP TABLE PlantInSpace01")
+                __sqliClient.execute("DROP TABLE Space01")
+            }
 
             Promise.all([alarmModel.init(), plantModel.init(), spaceModel.init(
                              )]).then(function (rs) {
