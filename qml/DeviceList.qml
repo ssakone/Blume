@@ -17,6 +17,8 @@ import ThemeEngine 1.0
 BPage {
     id: screenDeviceList
 
+    objectName: "Devices"
+
     header: Loader {
         id: deviceListHeader
         sourceComponent: AppBar {
@@ -29,18 +31,13 @@ BPage {
 
     background: Item {}
 
-
-
-    footer: BottomTabBar {
-        activePage: "DeviceList"
-    }
-
     ////////////////////////////////////////////////////////////////////////////
     Component.onCompleted: {
-        if(Qt.platform.os === 'android' || Qt.platform.os === 'ios') {
-//            deviceListHeader.sourceComponent = mobileDeviceHeader
+        if (Qt.platform.os === 'android' || Qt.platform.os === 'ios') {
+            //            deviceListHeader.sourceComponent = mobileDeviceHeader
             console
-        } else deviceListHeader.source = "DesktopHeader.qml"
+        } else
+            deviceListHeader.source = "DesktopHeader.qml"
 
         checkStatus()
         loadList()

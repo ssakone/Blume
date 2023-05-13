@@ -14,13 +14,10 @@ import "../../components_js/Http.js" as Http
 
 BPage {
     id: control
+    objectName: "Garden"
     header: AppBar {
         title: "Blume"
         isHomeScreen: true
-    }
-
-    footer: BottomTabBar {
-        activePage: "Garden"
     }
 
     function getDay() {
@@ -221,11 +218,11 @@ BPage {
                         title: model.libelle || "NULL"
                         plant_name: plantObj.name_scientific
                         subtitle: {
-                            $Model.space.sqlGet(model.space)
-                            .then(res => {
-                                      subtitle = "Space - " + res.libelle
-                                  })
-                            .catch(console.warn)
+                            $Model.space.sqlGet(model.space).then(res => {
+                                                                      subtitle = "Space - "
+                                                                      + res.libelle
+                                                                  }).catch(
+                                        console.warn)
                             return ""
                         }
                         isDone: model.done === 1
@@ -234,11 +231,13 @@ BPage {
                             removeAlarmPopup.show(model)
                         }
 
-                        onChecked: (newStatus) => {
-                            $Model.alarm.sqlUpdateTaskStatus(model.id, newStatus).then(res => {
-                                                                                          $Model.alarm.fetchAll()
-                                                                                       }).catch(console.warn)
-                        }
+                        onChecked: newStatus => {
+                                       $Model.alarm.sqlUpdateTaskStatus(
+                                           model.id, newStatus).then(res => {
+                                                                         $Model.alarm.fetchAll()
+                                                                     }).catch(
+                                           console.warn)
+                                   }
 
                         icon.source: model.type === 0 ? Icons.shovel : model.type === 1 ? Icons.waterOutline : model.type === 2 ? Icons.potMixOutline : Icons.flowerOutline
                         image.source: {
@@ -250,16 +249,12 @@ BPage {
                         height: 80
                     }
                 }
-
             }
-
         }
-
 
         Item {
             Layout.fillHeight: true
         }
-
     }
 
     Popup {
@@ -303,5 +298,4 @@ BPage {
             }
         }
     }
-
 }
