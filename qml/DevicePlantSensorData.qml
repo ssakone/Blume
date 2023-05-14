@@ -131,7 +131,7 @@ Item {
             return
         }
 
-        appContent.state = "DeviceList"
+        appContent.state = "Navigator"
     }
 
     function isHistoryMode() {

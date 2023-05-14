@@ -459,7 +459,7 @@ ApplicationWindow {
             } else if (appContent.state === "PlantBrowser") {
                 screenPlantBrowser.backAction()
             } else {
-                appContent.state = "DeviceList"
+                appContent.state = "Navigator"
             }
         }
 
@@ -567,7 +567,7 @@ ApplicationWindow {
             anchors.bottomMargin: mobileMenu.hhv
         }
 
-        Item {
+        PlantBrowserOld {
             id: screenPlantBrowser
             anchors.fill: parent
             anchors.bottomMargin: mobileMenu.hhv
