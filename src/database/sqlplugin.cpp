@@ -28,7 +28,7 @@ void SqlPlugin::close()
 }
 
 void SqlPlugin::open() {
-  db = QSqlDatabase(QSqlDatabase::addDatabase(driver()));
+  db = QSqlDatabase::addDatabase(driver(), "sqlplugin_connection");
 
   db.setDatabaseName(this->dbName());
   db.setUserName(_username);

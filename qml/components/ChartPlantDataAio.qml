@@ -537,12 +537,12 @@ Item {
             anchors.bottomMargin: 6
             spacing: 6
 
-            RoundButtonIcon {
+            ButtonWireframeIcon {
                 width: 34
                 height: 34
                 anchors.verticalCenter: parent.verticalCenter
 
-                background: true
+//                background: true
                 source: "qrc:/assets/icons_material/outline-settings-24px.svg"
 
                 visible: isDesktop

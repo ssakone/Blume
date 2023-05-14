@@ -13,6 +13,7 @@ import java.net.*;
 import android.net.Uri;
 import androidx.core.content.FileProvider;
 import android.graphics.Bitmap; 
+import java.util.UUID;
 
 
 public class ImagePicker extends Activity {
@@ -26,8 +27,8 @@ public class ImagePicker extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("Hello World");
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        photoFileName = UUID.randomUUID().toString() + ".jpg";
         photoFile = getPhotoFileUri(photoFileName);  
 
 
