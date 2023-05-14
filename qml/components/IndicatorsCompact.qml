@@ -3,6 +3,7 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "components"
 
 Item {
     id: indicatorsCompact
@@ -123,17 +124,15 @@ Item {
     Column {
         id: columnData
         anchors.left: parent.left
-        anchors.leftMargin: 12
+        anchors.leftMargin: 20
         anchors.right: parent.right
-        anchors.rightMargin: 12
+        anchors.rightMargin: 20
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -2
 
-        spacing: 4
+        spacing: 10
 
-        ////////
-
-        DataBarCompact {
+        SensorDataMeasureLine {
             id: soil_moisture
             width: parent.width
 
@@ -153,7 +152,7 @@ Item {
 
         ////////
 
-        DataBarCompact {
+        SensorDataMeasureLine {
             id: soil_conductivity
             width: parent.width
 
@@ -172,7 +171,7 @@ Item {
 
         ////////
 
-        DataBarCompact {
+        SensorDataMeasureLine {
             id: soil_temperature
             width: parent.width
 
@@ -192,7 +191,7 @@ Item {
 
         ////////
 
-        DataBarCompact {
+        SensorDataMeasureLine {
             id: water_tank
             width: parent.width
 
@@ -212,7 +211,7 @@ Item {
 
         ////////
 
-        DataBarCompact {
+        SensorDataMeasureLine {
             id: temp
             width: parent.width
 
@@ -233,7 +232,7 @@ Item {
 
         ////////
 
-        DataBarCompact {
+        SensorDataMeasureLine {
             id: humi
             width: parent.width
 
@@ -252,7 +251,7 @@ Item {
 
         ////////
 
-        DataBarCompact {
+        SensorDataMeasureLine {
             id: lumi
             width: parent.width
 

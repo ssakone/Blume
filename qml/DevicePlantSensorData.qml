@@ -46,7 +46,7 @@ Item {
     function loadIndicators() {
         if (indicatorsLoader.status !== Loader.Ready) {
             if (settingsManager.bigIndicator)
-                indicatorsLoader.source = "IndicatorsSolid.qml"
+                indicatorsLoader.source = "IndicatorsCompact.qml"
             else
                 indicatorsLoader.source = "IndicatorsCompact.qml"
         } else {
