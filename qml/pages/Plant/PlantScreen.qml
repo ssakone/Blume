@@ -520,13 +520,13 @@ Grid {
 
             ////////
 
-            //            ItemTag {
-            //                id: itemType
-            //                visible: text
-            //                color: Theme.colorGreen
-            //                textColor: "white"
-            //                textSize: Theme.fontSizeContentSmall
-            //            }
+                        ItemTag {
+                            id: itemType
+                            visible: text
+                            color: Theme.colorGreen
+                            textColor: "white"
+                            textSize: Theme.fontSizeContentSmall
+                        }
             Flow {
                 id: itemTags
                 anchors.left: parent.left

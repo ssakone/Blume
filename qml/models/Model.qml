@@ -16,6 +16,7 @@ ListModel {
     signal created(var id)
     signal createds(var id)
     signal updated(var id)
+    signal deleted(var id)
 
     property variant beforeCreate
     property variant beforeCreates
@@ -25,6 +26,8 @@ ListModel {
     property string __query__fetch__: 'SELECT * FROM %1 WHERE status = 0'.arg(
                                           tableName)
     property string __query__get__: 'SELECT * FROM %1 WHERE id=%2'.arg(
+                                        tableName)
+    property string __query__get__all__: 'SELECT * FROM %1'.arg(
                                         tableName)
     property string __query__get__where__: 'SELECT * FROM %1 WHERE %2'.arg(
                                                tableName)
@@ -224,12 +227,28 @@ ListModel {
     function sqlGet(id) {
         return new Promise(function (resolve, reject) {
             db.executeSql(logQuery(__query__get__.arg(id))).then(function (rs) {
+                console.log("sqlGet ", JSON.stringify(rs))
                 if (rs.isValid()) {
                     resolve(rs.datas[0])
                 } else {
+                    console.log("sqlGet 02 ", JSON.stringify(rs))
                     resolve({})
                 }
-            })
+            }).catch(rr => console.log("rr ", JSON.stringify(rr)))
+        })
+    }
+
+    function sqlGetAll() {
+        return new Promise(function (resolve, reject) {
+            db.executeSql(logQuery(__query__get__all__)).then(function (rs) {
+                if (rs.isValid()) {
+                    console.log("sqlGetAll valid ", JSON.stringify(rs) )
+                    resolve(rs.datas[0])
+                } else {
+                    console.log("sqlGetAll No Valid ", JSON.stringify(rs))
+                    resolve({})
+                }
+            }).catch(rr => console.log("rr ", JSON.stringify(rr)))
         })
     }
 

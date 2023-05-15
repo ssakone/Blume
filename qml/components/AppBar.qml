@@ -21,9 +21,17 @@ Rectangle {
     // You display a menu icon that opens drawer or back icon that go back inside current stack
     property bool isHomeScreen: false
 
+    signal backButtonClicked()
+
     width: parent.width
     height: statusBarVisible ? screenPaddingStatusbar + screenPaddingNotch
                                + 52 : screenPaddingNotch + 52
+
+    onBackButtonClicked: {
+        if(isHomeScreen) appDrawer.open()
+        else if (!noAutoPop)
+            control.parent.StackView.view.pop()
+    }
 
     RowLayout {
         width: parent.width
@@ -38,11 +46,7 @@ Rectangle {
             Layout.preferredWidth: 64
             Layout.alignment: Qt.AlignVCenter
             foregroundColor: control.foregroundColor
-            onClicked: {
-                if(isHomeScreen) appDrawer.open()
-                else if (!noAutoPop)
-                    control.parent.StackView.view.pop()
-            }
+            onClicked: backButtonClicked()
         }
         Label {
             id: _label

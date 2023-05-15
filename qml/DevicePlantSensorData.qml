@@ -1,9 +1,12 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 import ThemeEngine 1.0
 import DeviceUtils 1.0
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
+import "components"
+import "./pages/Plant"
 
 Item {
     id: devicePlantSensorData
@@ -15,6 +18,9 @@ Item {
 
     property var dataIndicators: indicatorsLoader.item
     property var dataChart: graphLoader.item
+
+    property variant linkedPlant
+    property variant deviceDB
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -400,6 +406,257 @@ Item {
                             font.bold: false
                             elide: Text.ElideRight
                         }
+                    }
+
+                    Connections {
+                        target: $Model.device
+                        function onUpdated() {
+                            $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
+                                devicePlantSensorData.linkedPlant = JSON.parse(rs.plant_json)
+                                console.log("\n\n\n Catch onUpdated()")
+                            })
+                        }
+                    }
+                    Connections {
+                        target: $Model.device
+                        function onCreated() {
+                            $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
+//                                console.log(typeof rs.device_address, rs.device_address, " \n\n\n")
+                                devicePlantSensorData.linkedPlant = JSON.parse(rs.plant_json)
+                                console.log("\n\n\n Catch onCreated() ")
+                            })
+                        }
+                    }
+
+                    Connections {
+                        target: $Model.device
+                        function onDeleted() {
+                            $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
+//                                console.log(typeof rs.device_address, rs.device_address, " \n\n\n")
+                                devicePlantSensorData.linkedPlant = undefined
+                                console.log("\n\n\n Catch onCreated() ")
+                            })
+                        }
+                    }
+
+                    Rectangle {
+                        id: itemPlantPreview
+                        height: 80
+                        width: parent.width
+                        radius: height / 2
+                        color: $Colors.gray200
+
+                        visible: !(devicePlantSensorData.linkedPlant === undefined || devicePlantSensorData.linkedPlant === null)
+
+                        Component.onCompleted: {
+                            $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
+                                console.log("\n\n START ", rs?.plant_name, rs?.device_address)
+                                if(rs) {
+                                    devicePlantSensorData.linkedPlant = JSON.parse(rs.plant_json)
+                                }
+                            })
+                        }
+
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.leftMargin: 15
+                            anchors.rightMargin: 15
+                            spacing: 10
+
+                            ClipRRect {
+                                height: itemPlantPreview.height - 10
+                                width: height
+                                radius: width / 2
+
+                                Rectangle {
+                                    anchors.fill: parent
+                                    color: Theme.colorPrimary
+
+                                    Image {
+                                        anchors.fill: parent
+                                        source: !devicePlantSensorData.linkedPlant.images_plantes[0] ? "" : "https://blume.mahoudev.com/assets/" + devicePlantSensorData.linkedPlant.images_plantes[0].directus_files_id
+                                    }
+                                }
+                            }
+
+
+                            Column {
+                                Layout.fillWidth: true
+                                spacing: 5
+                                Label {
+                                    text: devicePlantSensorData.linkedPlant?.name_scientific  || ""
+                                    font.pixelSize: 16
+                                }
+                                Label {
+                                    text: devicePlantSensorData.linkedPlant?.noms_communs?.length > 0 ? devicePlantSensorData.linkedPlant?.noms_communs[0].name : ""
+                                    font.pixelSize: 13
+                                }
+                            }
+
+                            IconSvg {
+                                Layout.preferredHeight: 30
+                                Layout.preferredWidth: 30
+                                source: Icons.chevronRight
+                            }
+                        }
+
+                        PlantScreenDetails {
+                            id: plantScreenDetails
+
+                            RowLayout {
+                                width: parent.width
+                                anchors.bottom: parent.bottom
+
+                                ButtonWireframe {
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 60
+                                    text: "Remove"
+                                    fullColor: true
+                                    primaryColor: $Colors.red400
+                                    fulltextColor: $Colors.white
+                                    componentRadius: 0
+                                    onClicked: {
+                                        $Model.device.sqlDeleteByDeviceAddress(currentDevice.deviceAddress)
+                                        .then(function (rs) {
+                                            plantScreenDetails.close()
+                                        })
+                                    }
+                                }
+                            }
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                plantScreenDetails.plant = devicePlantSensorData.linkedPlant
+                                plantScreenDetails.open()
+                            }
+                        }
+                    }
+
+                    Item {
+                        width: parent.width
+                        height: 70
+                        visible: !itemPlantPreview.visible
+
+                        Drawer {
+                            id: plantBrowserPop
+                            parent: appWindow.contentItem
+                            width: appWindow.width
+                            height: appWindow.height
+                            padding: 0
+
+                            AppBar {
+                                id: plantBrowserAppBar
+                                title: qsTr("Back")
+                                onBackButtonClicked: plantBrowserPop.close()
+                            }
+
+                            Loader {
+                                id: plantScreenDetailsLoader
+                                active: false
+                                sourceComponent: PlantScreenDetails {
+                                            id: plantScreenDetailsPopup
+
+                                            function loadPlantDetails(data) {
+                                                plantScreenDetailsPopup.plant = data
+                                                plantScreenDetailsPopup.open()
+                                            }
+
+                                            RowLayout {
+                                                id: bottomSelector
+                                                width: parent.width
+                                                height: 60
+                                                anchors.bottom: parent.bottom
+                                                spacing: 0
+
+                                                ButtonWireframe {
+                                                    Layout.fillWidth: true
+                                                    Layout.preferredHeight: parent.height
+                                                    text:  qsTr("Cancel")
+                                                    componentRadius: 0
+                                                    onClicked:{
+                                                         plantScreenDetailsPopup.close()
+                                                         plantScreenDetailsPopup.plant = null
+                                                    }
+                                                }
+
+                                                ButtonWireframe {
+                                                    Layout.fillWidth: true
+                                                    Layout.preferredHeight: parent.height
+                                                    fullColor: true
+                                                    primaryColor: Theme.colorPrimary
+                                                    fulltextColor: "white"
+                                                    componentRadius: 0
+                                                    text:  qsTr("Choose this plant")
+                                                    onClicked: {
+                                                        $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
+                                                            if(rs) {
+                                                                $Model.device.sqlUpdateByDeviceAddress(currentDevice.deviceAddress, {
+                                                                                        plant_name: plantScreenDetailsPopup.plant.name_scientific,
+                                                                                            plant_json: JSON.stringify(plantScreenDetailsPopup.plant)
+                                                                                        }).then(function (res) {
+                                                                                            plantScreenDetailsPopup.close()
+                                                                                            plantBrowserPop.close()
+                                                                                        }).catch(err => console.warn(JSON.stringify(err)))
+                                                            } else {
+//                                                                console.log("\n\nCREATION RS ", rs?.plant_name, rs?.device_address)
+                                                                $Model.device.sqlCreate({
+                                                                                        device_address: currentDevice.deviceAddress,
+                                                                                        plant_name: plantScreenDetailsPopup.plant.name_scientific,
+                                                                                            plant_json: JSON.stringify(plantScreenDetailsPopup.plant)
+                                                                                        }).then(function (res) {
+                                                                                            plantScreenDetailsPopup.close()
+                                                                                            plantBrowserPop.close()
+                                                                                        }).catch(err => console.warn(JSON.stringify(err)))
+
+                                                                $Model.device.sqlGetAll().then(function (res){
+                                                                    console.log("\n\n ALL -- ", JSON.stringify(res))
+                                                                })
+                                                            }
+
+                                                        })
+
+                                                    }
+                                                }
+                                            }
+                                        }
+
+
+                            }
+
+
+
+                            SearchPlants {
+                                anchors.fill: parent
+                                anchors.topMargin: plantBrowserAppBar.height
+                                preventDefaultOnClick: true
+                                hideCameraSearch: true
+                                onItemClicked: plantData => {
+                                                   plantScreenDetailsLoader.active = true
+                                                   plantScreenDetailsLoader.item.loadPlantDetails(plantData)
+                                    console.log(currentDevice.deviceAddress)
+                                }
+                            }
+                        }
+
+                        ButtonWireframe {
+                            text: "Attach a plant"
+                            anchors.centerIn: parent
+                            fullColor: true
+                            primaryColor: Theme.colorPrimary
+                            fulltextColor: "white"
+                            height: 45
+                            componentRadius: height / 2
+
+                            onClicked: {
+                                plantBrowserPop.open()
+                            }
+                        }
+                    }
+
+                    Item {
+                        height: 50
                     }
                 }
             }
