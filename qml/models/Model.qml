@@ -264,12 +264,15 @@ ListModel {
                     column.push("%1 = %2".arg(i).arg(data[i]))
                 }
             }
-            console.log(column)
             values = column.join(' and ')
-            console.log(values)
             let query = logQuery(__query__get__where__.arg(values))
-            var rs = db.executeSql(query)
-            resolve(rs.rows)
+            db.executeSql(query).then(function (rs) {
+                if (rs.isValid()) {
+                    resolve(rs.datas)
+                } else {
+                    resolve(undefined)
+                }
+            }).catch(rr => console.log("rr ", JSON.stringify(rr)))
         })
     }
 
