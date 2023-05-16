@@ -680,7 +680,7 @@ Item {
                 else return contentGrid_lvl1.height
             }
             clip: true
-            visible: devicePlantSensorData.linkedPlant !== undefined
+            visible: false
 
             ItemNoData {
                 id: noDataIndicator
