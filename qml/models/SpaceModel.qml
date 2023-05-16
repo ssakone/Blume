@@ -68,4 +68,32 @@ Model {
                 "type": "REAL"
             }]
     }
+
+    function listSpacesOfPlantRemoteID(remote_id) {
+        return new Promise(function (resolve, reject) {
+            $Model.plant.sqlGetWhere({remote_id: remote_id}).then(function (res) {
+                console.log("\n\n LEVEL 01 (plants) --", res[0].id, res.length)
+                if(res.length > 0) {
+                    const firstPlantID = res[0].id
+                    console.log("\n firstID ", firstPlantID)
+                    $Model.space.plantInSpace.sqlGetWhere({space_id: firstPlantID}).then(function (resPS) {
+                        console.log("\n\n LEVEL 02 (plantInSpace) ---", JSON.stringify(resPS))
+                        if(resPS.length > 0) {
+                            const firstSpaceID = resPS[0].id
+                            $Model.space.sqlGetWhere({id: firstSpaceID}).then(function (resS) {
+                                console.log("\n\n LEVEL 03 (space) ----", JSON.stringify(resS))
+                                resolve(resS)
+                            })
+                        } else {
+                            resolve([])
+                        }
+                    })
+                } else {
+                    resolve([])
+                }
+            })
+
+        })
+
+    }
 }

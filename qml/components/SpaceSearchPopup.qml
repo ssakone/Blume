@@ -12,7 +12,8 @@ Drawer {
     edge: "BottomEdge"
     property var callback
 
-    function show(c) {
+    function show(c, customModel) {
+        if(customModel) listView.model = customModel
         callback = c
         open()
     }
@@ -41,6 +42,7 @@ Drawer {
                 noAutoPop: true
             }
             ListView {
+                id: listView
                 anchors.fill: parent
                 model: $Model.space
                 anchors.margins: 10
@@ -58,6 +60,7 @@ Drawer {
                         iconSource: model.type === 1 ? Icons.homeOutline : Icons.landFields
 
                         onClicked: {
+                            console.log(JSON.stringify($Model.space.get(index)))
                             control.callback($Model.space.get(index))
                             control.close()
                         }

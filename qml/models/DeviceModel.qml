@@ -15,15 +15,24 @@ Model {
     tableName: "Device01"
     column: [{
             "name": "id",
-            "type": "TEXT",
+            "type": "INTEGER",
             "key": "PRIMARY KEY"
         }, {
             "name": "device_address",
             "type": "TEXT"
         }, {
-            "name": "plant_name",
+            "name": "plant_id",
+            "type": "INTEGER"
+        }, {
+            "name": "space_id",
+            "type": "INTEGER"
+        },{
+            "name": "space_name",
             "type": "TEXT"
         }, {
+            "name": "plant_name",
+            "type": "TEXT"
+        },{
             "name": "plant_json",
             "type": "TEXT"
          }, {

@@ -7,6 +7,7 @@ import ThemeEngine 1.0
 import "qrc:/js/UtilsPlantDatabase.js" as UtilsPlantDatabase
 import "components"
 import "components_generic"
+import SortFilterProxyModel
 
 Popup {
     id: plantScreenDetailsPopup
@@ -65,7 +66,7 @@ Popup {
 
             $Model.plant.sqlCreate(data).then(
                         function (new_plant) {
-                            console.log('\n NEW PLANT ', typeof new_plant, new_plant.libelle)
+                            console.log('\n\n NEW PLANT ', typeof new_plant, JSON.stringify(new_plant))
                             let inData = {
                                 "space_id": space.id,
                                 "space_name": space.libelle,
@@ -78,11 +79,43 @@ Popup {
                                         function () {
                                             console.log("Created AGAIN...")
                                             console.info("Done")
-                                            if(onSuccess) onSuccess()
+                                            if(onSuccess) onSuccess(new_plant, space)
                                         })
                             plantScreenDetailsPopup.alertMsg = qsTr("Plant added to garden")
                         }).catch(console.warn)
         })
+    }
+
+    function selectGardenSpace(onSuccess) {
+
+        spaceSearchPop.show(function (space){
+            let data = {
+                "libelle": plant?.name_scientific,
+                "image_url": "-1",
+                "remote_id": plant.id,
+                "uuid": generateUUID()
+            }
+            data["plant_json"] = JSON.stringify(
+                        plant)
+
+            if(onSuccess) onSuccess(plantScreenDetailsPopup.plant, space)
+        }, currentPlantSpaces)
+    }
+
+    ListModel {
+        id: currentPlantSpaces
+    }
+
+    onPlantChanged: {
+        if(plantScreenDetailsPopup.plant.id) {
+            $Model.space.listSpacesOfPlantRemoteID(plantScreenDetailsPopup.plant.id).then(function (res){
+                currentPlantSpaces.clear()
+                for(let i=0; i<res?.length; i++) {
+                    currentPlantSpaces.append(res[i])
+                }
+            })
+        }
+
     }
 
     ListModel {

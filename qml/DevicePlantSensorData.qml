@@ -20,7 +20,7 @@ Item {
     property var dataChart: graphLoader.item
 
     property variant linkedPlant
-    property variant deviceDB
+    property variant linkedSpace
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -61,7 +61,7 @@ Item {
     }
     function reloadIndicators() {
         if (settingsManager.bigIndicator)
-            indicatorsLoader.source = "IndicatorsSolid.qml"
+            indicatorsLoader.source = "IndicatorsCompact.qml"
         else
             indicatorsLoader.source = "IndicatorsCompact.qml"
 
@@ -215,9 +215,25 @@ Item {
 
                         Component.onCompleted: {
                             $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
-                                console.log("\n\n START ", rs?.plant_name, rs?.device_address)
+                                console.log("\n\n START ", rs, rs?.plant_name, rs?.space_name, rs?.device_address)
                                 if(rs) {
                                     devicePlantSensorData.linkedPlant = JSON.parse(rs.plant_json)
+                                    devicePlantSensorData.linkedSpace = rs?.space_name
+                                    $Model.plant.sqlGetWhere({remote_id: `${devicePlantSensorData.linkedPlant.id}`}).then(function (res){
+                                        console.log("\n My STARTER ", devicePlantSensorData.linkedSpace, res)
+                                        if(res?.length > 0) {
+                                            // This plant has at least one Room
+                                            console.log("\n\n // This plant has at least one Room", res)
+                                            save()
+                                            console.log("\n end")
+                                        } else {
+                                            console.log("\n\n Gonna add new plant to garden")
+                                            plantScreenDetailsPopup.addToGarden(save)
+
+                                        }
+                                      }).catch(function (err){
+                                      console.warn(JSON.stringify(err))
+                                      })
                                 }
                             })
                         }
@@ -303,6 +319,7 @@ Item {
                         id: itemLocation
                         height: 28
                         width: parent.width
+                        visible: devicePlantSensorData.linkedPlant !== undefined
 
                         Text {
                             id: labelLocation
@@ -329,28 +346,7 @@ Item {
                             font.bold: false
                             color: Theme.colorHighContrast
 
-                            text: currentDevice ? currentDevice.deviceLocationName : ""
-                            onEditingFinished: {
-                                currentDevice.deviceLocationName = text
-                                focus = false
-                            }
-
-                            MouseArea {
-                                id: textInputLocationArea
-                                anchors.fill: parent
-                                anchors.topMargin: -4
-                                anchors.leftMargin: -4
-                                anchors.rightMargin: -24
-                                anchors.bottomMargin: -4
-
-                                hoverEnabled: true
-                                propagateComposedEvents: true
-
-                                onPressed: (mouse) => {
-                                    textInputLocation.forceActiveFocus()
-                                    mouse.accepted = false
-                                }
-                            }
+                            text: devicePlantSensorData?.linkedSpace || ""
                         }
 
                         IconSvg {
@@ -364,7 +360,7 @@ Item {
                             source: "qrc:/assets/icons_material/duotone-edit-24px.svg"
                             color: Theme.colorSubText
 
-                            opacity: (isMobile || !textInputLocation.text || textInputLocation.focus || textInputLocationArea.containsMouse) ? 0.9 : 0
+                            opacity: (isMobile || !textInputLocation.text || textInputLocation.focus) ? 0.9 : 0
                             Behavior on opacity { OpacityAnimator { duration: 133 } }
                         }
                     }
@@ -410,6 +406,7 @@ Item {
                         function onUpdated() {
                             $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
                                 devicePlantSensorData.linkedPlant = JSON.parse(rs.plant_json)
+                                devicePlantSensorData.linkedSpace = rs?.space_name
                                 currentDevice.devicePlantName = devicePlantSensorData.linkedPlant?.name_scientific
                                 console.log("\n\n\n Catch onUpdated()")
                             })
@@ -419,8 +416,8 @@ Item {
                         target: $Model.device
                         function onCreated() {
                             $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
-//                                console.log(typeof rs.device_address, rs.device_address, " \n\n\n")
                                 devicePlantSensorData.linkedPlant = JSON.parse(rs.plant_json)
+                                devicePlantSensorData.linkedSpace = rs?.space_name
                                 currentDevice.devicePlantName = devicePlantSensorData.linkedPlant?.name_scientific
                                 console.log("\n\n\n Catch onCreated() ")
                             })
@@ -431,10 +428,10 @@ Item {
                         target: $Model.device
                         function onDeleted() {
                             $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
-//                                console.log(typeof rs.device_address, rs.device_address, " \n\n\n")
                                 currentDevice.devicePlantName = ""
                                 devicePlantSensorData.linkedPlant = undefined
-                                console.log("\n\n\n Catch onCreated() ")
+                                devicePlantSensorData.linkedSpace = ""
+                                console.log("\n\n\n Catch onDeleted() ")
                             })
                         }
                     }
@@ -572,29 +569,35 @@ Item {
                                                     componentRadius: 0
                                                     text:  qsTr("Choose this plant")
 
-                                                    function save() {
+                                                    function save(plant, space) {
+                                                        console.log("\n\n\n function save ", plant, space)
                                                         $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
                                                             if(rs) {
+                                                                console.log("\n\n IN update -------------------- ", plant.id, space.id)
                                                                 $Model.device.sqlUpdateByDeviceAddress(currentDevice.deviceAddress, {
+                                                                                        plant_id: plant.id,
+                                                                                        space_id: space.id,
+                                                                                        space_name: space.libelle,
                                                                                         plant_name: plantScreenDetailsPopup.plant.name_scientific,
-                                                                                            plant_json: JSON.stringify(plantScreenDetailsPopup.plant)
+                                                                                        plant_json: JSON.stringify(plantScreenDetailsPopup.plant)
                                                                                         }).then(function (res) {
                                                                                             plantScreenDetailsPopup.close()
                                                                                             plantBrowserPop.close()
                                                                                         }).catch(err => console.warn(JSON.stringify(err)))
                                                             } else {
+                                                                console.log("\n\n IN create -------------------- ", plant.id, space.id)
                                                                 $Model.device.sqlCreate({
                                                                                         device_address: currentDevice.deviceAddress,
+                                                                                        plant_id: plant.id,
+                                                                                        space_id: space.id,
+                                                                                        space_name: space.libelle,
                                                                                         plant_name: plantScreenDetailsPopup.plant.name_scientific,
-                                                                                            plant_json: JSON.stringify(plantScreenDetailsPopup.plant)
+                                                                                        plant_json: JSON.stringify(plantScreenDetailsPopup.plant)
                                                                                         }).then(function (res) {
                                                                                             plantScreenDetailsPopup.close()
                                                                                             plantBrowserPop.close()
                                                                                         }).catch(err => console.warn(JSON.stringify(err)))
 
-                                                                $Model.device.sqlGetAll().then(function (res){
-                                                                    console.log("\n\n ALL -- ", JSON.stringify(res))
-                                                                })
                                                             }
 
                                                         })
@@ -603,9 +606,9 @@ Item {
                                                     onClicked: {
                                                         $Model.plant.sqlGetWhere({remote_id: `${plantScreenDetailsPopup.plant.id}`}).then(function (res){
                                                             console.log("\n My RES ", res)
-                                                            if(res?.length > 0) {
-                                                                // This plant has at least one Room
-                                                                save()
+                                                            if(res?.length > 1) {
+                                                                console.log("\n\n // This plant already has one Room")
+                                                                plantScreenDetailsPopup.selectGardenSpace(save)
                                                                 console.log("\n end")
                                                             } else {
                                                                 console.log("\n gonna add to garden")
@@ -653,6 +656,7 @@ Item {
                 id: itemIndicators
                 height: Math.max(itemHeader.height, indicatorsLoader.height)
                 width: (parent.columns === 1) ? parent.width : (parent.width * 0.64)
+                visible: devicePlantSensorData.linkedPlant !== undefined
 
                 Loader {
                     id: indicatorsLoader
@@ -676,6 +680,7 @@ Item {
                 else return contentGrid_lvl1.height
             }
             clip: true
+            visible: devicePlantSensorData.linkedPlant !== undefined
 
             ItemNoData {
                 id: noDataIndicator
