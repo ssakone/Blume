@@ -20,7 +20,7 @@ Item {
     property var dataChart: graphLoader.item
 
     property variant linkedPlant
-    property variant linkedSpace
+    property variant linkedSpaceName
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -218,9 +218,9 @@ Item {
                                 console.log("\n\n START ", rs, rs?.plant_name, rs?.space_name, rs?.device_address)
                                 if(rs) {
                                     devicePlantSensorData.linkedPlant = JSON.parse(rs.plant_json)
-                                    devicePlantSensorData.linkedSpace = rs?.space_name
+                                    devicePlantSensorData.linkedSpaceName = rs?.space_name
                                     $Model.plant.sqlGetWhere({remote_id: `${devicePlantSensorData.linkedPlant.id}`}).then(function (res){
-                                        console.log("\n My STARTER ", devicePlantSensorData.linkedSpace, res)
+                                        console.log("\n My STARTER ", devicePlantSensorData.linkedSpaceName, res)
                                         if(res?.length > 0) {
                                             // This plant has at least one Room
                                             console.log("\n\n // This plant has at least one Room", res)
@@ -346,7 +346,7 @@ Item {
                             font.bold: false
                             color: Theme.colorHighContrast
 
-                            text: devicePlantSensorData?.linkedSpace || ""
+                            text: devicePlantSensorData?.linkedSpaceName || ""
                         }
 
                         IconSvg {
@@ -406,8 +406,9 @@ Item {
                         function onUpdated() {
                             $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
                                 devicePlantSensorData.linkedPlant = JSON.parse(rs.plant_json)
-                                devicePlantSensorData.linkedSpace = rs?.space_name
+                                devicePlantSensorData.linkedSpaceName = rs?.space_name
                                 currentDevice.devicePlantName = devicePlantSensorData.linkedPlant?.name_scientific
+                                currentDevice.deviceLocationName = devicePlantSensorData.linkedSpaceName
                                 console.log("\n\n\n Catch onUpdated()")
                             })
                         }
@@ -417,8 +418,9 @@ Item {
                         function onCreated() {
                             $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
                                 devicePlantSensorData.linkedPlant = JSON.parse(rs.plant_json)
-                                devicePlantSensorData.linkedSpace = rs?.space_name
+                                devicePlantSensorData.linkedSpaceName = rs?.space_name
                                 currentDevice.devicePlantName = devicePlantSensorData.linkedPlant?.name_scientific
+                                currentDevice.deviceLocationName = devicePlantSensorData.linkedSpaceName
                                 console.log("\n\n\n Catch onCreated() ")
                             })
                         }
@@ -428,9 +430,10 @@ Item {
                         target: $Model.device
                         function onDeleted() {
                             $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
-                                currentDevice.devicePlantName = ""
                                 devicePlantSensorData.linkedPlant = undefined
-                                devicePlantSensorData.linkedSpace = ""
+                                devicePlantSensorData.linkedSpaceName = ""
+                                currentDevice.devicePlantName = ""
+                                currentDevice.deviceLocationName = devicePlantSensorData.linkedSpaceName
                                 console.log("\n\n\n Catch onDeleted() ")
                             })
                         }
