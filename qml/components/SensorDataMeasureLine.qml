@@ -73,7 +73,7 @@ Rectangle {
                 }
 
                 Label {
-                    text: valueMin + ' - ' + valueMax
+                    text: valueMin + ' - ' + valueMax + ' (' + suffix + ')'
                     font {
                         weight: Font.Light
                         pixelSize: 14

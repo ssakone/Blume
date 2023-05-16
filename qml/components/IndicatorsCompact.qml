@@ -257,7 +257,7 @@ Item {
 
             legend: qsTr("Luminosity")
             legendWidth: indicatorsCompact.legendWidth
-            suffix: " " + qsTr("lux")
+            suffix: qsTr("lux")
             colorForeground: Theme.colorYellow
             colorBackground: indicatorsCompact.colorBackground
 
