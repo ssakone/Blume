@@ -12,6 +12,8 @@ Item {
     implicitWidth: 480
     implicitHeight: 128
 
+    property var linkedPlant
+
     property var boxDevice: pointer
     property bool hasHygro: boxDevice.isPlantSensor &&
                             ((boxDevice.soilMoisture > 0 || boxDevice.soilConductivity > 0) ||
@@ -48,7 +50,7 @@ Item {
             updateSensorData()
         }
         function onTempUnitChanged() {
-            if (loaderIndicators.item) loaderIndicators.item.updateData()
+//            if (loaderIndicators.item) loaderIndicators.item.updateData()
         }
     }
 
@@ -63,35 +65,35 @@ Item {
         imageDevice.source = UtilsDeviceSensors.getDeviceIcon(boxDevice, hasHygro)
 
         // Load indicators
-        if (!loaderIndicators.sourceComponent) {
-            if (boxDevice.isPlantSensor) {
-                loaderIndicators.sourceComponent = componentPlantSensor
-            } else if (boxDevice.isThermometer) {
-                if (boxDevice.hasHumiditySensor)
-                    loaderIndicators.sourceComponent = componentText_2l
-                else
-                    loaderIndicators.sourceComponent = componentText_1l
-            } else if (boxDevice.isEnvironmentalSensor) {
-                if (boxDevice.hasSetting("primary")) {
-                    var primary = boxDevice.getSetting("primary")
-                    if (primary === "hygrometer") {
-                        if (boxDevice.hasHumiditySensor)
-                            loaderIndicators.sourceComponent = componentText_2l
-                        else
-                            loaderIndicators.sourceComponent = componentText_1l
-                    } else if (primary === "radioactivity") {
-                        loaderIndicators.sourceComponent = componentText_1l
-                    } else {
-                        loaderIndicators.sourceComponent = componentEnvironmentalGauge
-                    }
-                }
-            }
+//        if (!loaderIndicators.sourceComponent) {
+//            if (boxDevice.isPlantSensor) {
+//                loaderIndicators.sourceComponent = componentPlantSensor
+//            } else if (boxDevice.isThermometer) {
+//                if (boxDevice.hasHumiditySensor)
+//                    loaderIndicators.sourceComponent = componentText_2l
+//                else
+//                    loaderIndicators.sourceComponent = componentText_1l
+//            } else if (boxDevice.isEnvironmentalSensor) {
+//                if (boxDevice.hasSetting("primary")) {
+//                    var primary = boxDevice.getSetting("primary")
+//                    if (primary === "hygrometer") {
+//                        if (boxDevice.hasHumiditySensor)
+//                            loaderIndicators.sourceComponent = componentText_2l
+//                        else
+//                            loaderIndicators.sourceComponent = componentText_1l
+//                    } else if (primary === "radioactivity") {
+//                        loaderIndicators.sourceComponent = componentText_1l
+//                    } else {
+//                        loaderIndicators.sourceComponent = componentEnvironmentalGauge
+//                    }
+//                }
+//            }
 
-            if (loaderIndicators.item) {
-                loaderIndicators.item.initData()
-                loaderIndicators.item.updateData()
-            }
-        }
+//            if (loaderIndicators.item) {
+//                loaderIndicators.item.initData()
+//                loaderIndicators.item.updateData()
+//            }
+//        }
 
         updateSensorSettings()
         updateSensorStatus()
@@ -167,8 +169,8 @@ Item {
     function updateSensorIcon() {
         if (boxDevice.isPlantSensor) {
             $Model.device.sqlGetByDeviceAddress(boxDevice.deviceAddress).then(function (_deviceDBData) {
-                const plant_json = JSON.parse(_deviceDBData?.plant_json ?? null)
-                const firstImageID = plant_json?.images_plantes[0]?.directus_files_id
+                deviceWidget.linkedPlant = JSON.parse(_deviceDBData?.plant_json ?? null)
+                const firstImageID = deviceWidget.linkedPlant?.images_plantes[0]?.directus_files_id
                 if(firstImageID) {
                     imageDevice.source = "https://blume.mahoudev.com/assets/" + firstImageID
                 }
@@ -199,18 +201,18 @@ Item {
                 alarmFreeze.visible = false
 
                 // Water me notif
-                if (hasHygro && boxDevice.soilMoisture < boxDevice.soilMoisture_limitMin) {
+                if (hasHygro && boxDevice.soilMoisture < deviceWidget.linkedPlant?.metrique_humidite_minimale_du_sol) {
                     alarmWater.visible = true
                     alarmWater.source = "qrc:/assets/icons_material/duotone-water_mid-24px.svg"
                     alarmFreeze.color = Theme.colorBlue
-                } else if (boxDevice.soilMoisture > boxDevice.soilMoisture_limitMax) {
+                } else if (boxDevice.soilMoisture > deviceWidget.linkedPlant?.metrique_humidite_maximale_du_sol) {
                     alarmWater.visible = true
                     alarmWater.source = "qrc:/assets/icons_material/duotone-water_full-24px.svg"
                     alarmFreeze.color = Theme.colorYellow
                 }
 
                 // Extreme temperature notif
-                if (boxDevice.temperatureC > 40) {
+                if (boxDevice.temperatureC > deviceWidget.linkedPlant?.metrique_temperature_maximale) {
                     alarmFreeze.visible = true
                     alarmFreeze.color = Theme.colorYellow
                     alarmFreeze.source = "qrc:/assets/icons_material/duotone-wb_sunny-24px.svg"
@@ -264,7 +266,7 @@ Item {
     function updateSensorData() {
         updateSensorIcon()
         updateSensorWarnings()
-        if (loaderIndicators.item) loaderIndicators.item.updateData()
+//        if (loaderIndicators.item) loaderIndicators.item.updateData()
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -603,15 +605,15 @@ Item {
 
             ////
 
-            Loader {
-                id: loaderIndicators
-                anchors.verticalCenter: parent.verticalCenter
+//            Loader {
+//                id: loaderIndicators
+//                anchors.verticalCenter: parent.verticalCenter
 
-                visible: boxDevice.hasDataToday
+//                visible: boxDevice.hasDataToday
 
-                sourceComponent: null
-                asynchronous: false
-            }
+//                sourceComponent: null
+//                asynchronous: false
+//            }
 
             ////
 
