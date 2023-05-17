@@ -144,8 +144,8 @@ Item {
             colorBackground: indicatorsCompact.colorBackground
 
             value: currentDevice.soilMoisture
-            valueMin: linkedPlant?.metrique_conductivite_minimale_du_sol ?? 0
-            valueMax: linkedPlant?.metrique_conductivite_maximale_du_sol ?? 0
+            valueMin: linkedPlant?.metrique_humidite_plante_minimale ?? 0
+            valueMax: linkedPlant?.metrique_humidite_plante_maximale ?? 0
             limitMin: currentDevice.soilMoisture_limitMin
             limitMax: currentDevice.soilMoisture_limitMax
         }

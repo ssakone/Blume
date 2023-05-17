@@ -9,9 +9,19 @@ Flickable {
     contentWidth: -1
     contentHeight: column.height
 
+    function updatePlantInDB() {
+        $Model.device.sqlUpdateByRemoteID(linkedPlant.id, {
+                                              "plant_json": JSON.stringify(
+                                                                linkedPlant)
+                                          }).then(function (res) {
+                                              linkedPlant = linkedPlant
+                                          })
+    }
+
     function updateLimits() {
         console.log("\n\n\t PlantCareLimits // updateLimits() >> " + currentDevice)
-        if (typeof currentDevice === "undefined" || !currentDevice) return
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
 
         plantCareLimits.contentY = 0
 
@@ -20,14 +30,17 @@ Flickable {
         itemTemp.visible = currentDevice.hasTemperatureSensor
         itemLumi.visible = currentDevice.hasLuminositySensor
 
-        rangeSlider_hygro.setValues(currentDevice.soilMoisture_limitMin, currentDevice.soilMoisture_limitMax)
-        rangeSlider_condu.setValues(currentDevice.soilConductivity_limitMin, currentDevice.soilConductivity_limitMax)
-        rangeSlider_temp.setValues(currentDevice.temperature_limitMin, currentDevice.temperature_limitMax)
-        rangeSlider_lumi.setValues(currentDevice.luminosityLux_limitMin, currentDevice.luminosityLux_limitMax)
+        rangeSlider_hygro.setValues(currentDevice.soilMoisture_limitMin,
+                                    currentDevice.soilMoisture_limitMax)
+        rangeSlider_condu.setValues(currentDevice.soilConductivity_limitMin,
+                                    currentDevice.soilConductivity_limitMax)
+        rangeSlider_temp.setValues(currentDevice.temperature_limitMin,
+                                   currentDevice.temperature_limitMax)
+        rangeSlider_lumi.setValues(currentDevice.luminosityLux_limitMin,
+                                   currentDevice.luminosityLux_limitMax)
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Column {
         id: column
         anchors.left: parent.left
@@ -38,7 +51,6 @@ Flickable {
         spacing: 16
 
         ////////////////
-
         Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
@@ -73,7 +85,6 @@ Flickable {
         }
 
         ////////////////
-
         Item {
             id: itemHygro
             height: 40
@@ -122,14 +133,21 @@ Flickable {
                 colorFg: Theme.colorGreen
                 unit: "%"
                 from: 0
-                to: 66
+                to: 100
                 stepSize: 1
 
                 first.onPressedChanged: plantSensorPages.interactive = !first.pressed
-                first.onMoved: if (currentDevice) currentDevice.soilMoisture_limitMin = first.value.toFixed(0)
+                first.onMoved: if (currentDevice) {
+                                   linkedPlant['metrique_humidite_plante_minimale']
+                                           = first.value.toFixed(0)
+                               }
 
                 second.onPressedChanged: plantSensorPages.interactive = !second.pressed
-                second.onMoved: if (currentDevice) currentDevice.soilMoisture_limitMax = second.value.toFixed(0)
+                second.onMoved: if (currentDevice) {
+                                    linkedPlant['metrique_humidite_plante_maximale']
+                                            = second.value.toFixed(0)
+                                    linkedPlant = linkedPlant
+                                }
             }
         }
         Text {
@@ -141,9 +159,11 @@ Flickable {
 
             visible: itemHygro.visible
 
-            text: qsTr("Ideal soil moisture for indoor plants is usually 15 to 50%. Cacti and succulents can go as low as 7%. Tropical plants like to have more water.") +
-                  qsTr("<br><b>Tip: </b>") + qsTr("Be careful, too much water over long periods of time can be just as lethal as not enough!") +
-                  qsTr("<br><b>Tip: </b>") + qsTr("Water your plants more frequently during their growth period.")
+            text: qsTr("Ideal soil moisture for indoor plants is usually 15 to 50%. Cacti and succulents can go as low as 7%. Tropical plants like to have more water.") + qsTr(
+                      "<br><b>Tip: </b>") + qsTr(
+                      "Be careful, too much water over long periods of time can be just as lethal as not enough!") + qsTr(
+                      "<br><b>Tip: </b>") + qsTr(
+                      "Water your plants more frequently during their growth period.")
             textFormat: Text.StyledText
             wrapMode: Text.WordWrap
             color: Theme.colorSubText
@@ -151,7 +171,6 @@ Flickable {
         }
 
         ////////
-
         Item {
             id: itemCondu
             height: 40
@@ -204,10 +223,18 @@ Flickable {
                 stepSize: 50
 
                 first.onPressedChanged: plantSensorPages.interactive = !first.pressed
-                first.onMoved: if (currentDevice) currentDevice.soilConductivity_limitMin = first.value.toFixed(0)
+                first.onMoved: if (currentDevice) {
+                                   linkedPlant['metrique_conductivite_minimale_du_sol']
+                                           = first.value.toFixed(0)
+                                   updatePlantInDB()
+                               }
 
                 second.onPressedChanged: plantSensorPages.interactive = !second.pressed
-                second.onMoved: if (currentDevice) currentDevice.soilConductivity_limitMax = second.value.toFixed(0)
+                second.onMoved: if (currentDevice) {
+                                    linkedPlant['metrique_conductivite_maximale_du_sol']
+                                            = second.value.toFixed(0)
+                                    updatePlantInDB()
+                                }
             }
         }
         Text {
@@ -219,8 +246,9 @@ Flickable {
 
             visible: itemCondu.visible
 
-            text: qsTr("Soil 'Electrical Conductivity' value is an indication of the availability of nutrients in the soil. Use fertilizer (with moderation) to keep this value up.") +
-                  qsTr("<br><b>Tip: </b>") + qsTr("Be sure to use the right soil composition for your plants.")
+            text: qsTr("Soil 'Electrical Conductivity' value is an indication of the availability of nutrients in the soil. Use fertilizer (with moderation) to keep this value up.") + qsTr(
+                      "<br><b>Tip: </b>") + qsTr(
+                      "Be sure to use the right soil composition for your plants.")
             textFormat: Text.StyledText
             wrapMode: Text.WordWrap
             color: Theme.colorSubText
@@ -228,7 +256,6 @@ Flickable {
         }
 
         ////////
-
         Item {
             id: itemTemp
             height: 40
@@ -283,10 +310,17 @@ Flickable {
                 first.onPressedChanged: plantSensorPages.interactive = !first.pressed
                 first.onMoved: {
                     if (currentDevice) {
-                        if ((first.value > rangeSlider_temp.from && first.value < rangeSlider_temp.to) ||
-                            (first.value >= rangeSlider_temp.from && first.value <= rangeSlider_temp.to &&
-                             currentDevice.temperature_limitMin >= rangeSlider_temp.from && currentDevice.temperature_limitMin <= rangeSlider_temp.to)) {
-                            currentDevice.temperature_limitMin = first.value.toFixed(0)
+                        if ((first.value > rangeSlider_temp.from
+                             && first.value < rangeSlider_temp.to)
+                                || (first.value >= rangeSlider_temp.from
+                                    && first.value <= rangeSlider_temp.to
+                                    && linkedPlant['metrique_temperature_minimale']
+                                    >= rangeSlider_temp.from
+                                    && linkedPlant['metrique_temperature_minimale']
+                                    <= rangeSlider_temp.to)) {
+                            linkedPlant['metrique_temperature_minimale'] = first.value.toFixed(
+                                        0)
+                            updatePlantInDB()
                         }
                     }
                 }
@@ -294,10 +328,17 @@ Flickable {
                 second.onPressedChanged: plantSensorPages.interactive = !second.pressed
                 second.onMoved: {
                     if (currentDevice) {
-                        if ((second.value > rangeSlider_temp.from && second.value < rangeSlider_temp.to) ||
-                            (second.value >= rangeSlider_temp.from && second.value <= rangeSlider_temp.to &&
-                             currentDevice.temperature_limitMax >= rangeSlider_temp.from && currentDevice.temperature_limitMax <= rangeSlider_temp.to)) {
-                            currentDevice.temperature_limitMax = second.value.toFixed(0)
+                        if ((second.value > rangeSlider_temp.from
+                             && second.value < rangeSlider_temp.to)
+                                || (second.value >= rangeSlider_temp.from
+                                    && second.value <= rangeSlider_temp.to
+                                    && linkedPlant['metrique_temperature_maximale']
+                                    >= rangeSlider_temp.from
+                                    && linkedPlant['metrique_temperature_maximale']
+                                    <= rangeSlider_temp.to)) {
+                            linkedPlant['metrique_temperature_maximale'] = second.value.toFixed(
+                                        0)
+                            updatePlantInDB()
                         }
                     }
                 }
@@ -312,9 +353,11 @@ Flickable {
 
             visible: itemTemp.visible
 
-            text: qsTr("Most indoor plants thrive between 15 and 25°C (59 to 77°F). Not many plants can tolerate -2°C (28°F) and below.") +
-                  qsTr("<br><b>Tip: </b>") + qsTr("Having constant temperature is important for indoor plants.") +
-                  qsTr("<br><b>Tip: </b>") + qsTr("If you have an hygrometer, you can monitor the air humidity so it stays between 40 and 60% (and even above for tropical plants).")
+            text: qsTr("Most indoor plants thrive between 15 and 25°C (59 to 77°F). Not many plants can tolerate -2°C (28°F) and below.") + qsTr(
+                      "<br><b>Tip: </b>") + qsTr(
+                      "Having constant temperature is important for indoor plants.") + qsTr(
+                      "<br><b>Tip: </b>") + qsTr(
+                      "If you have an hygrometer, you can monitor the air humidity so it stays between 40 and 60% (and even above for tropical plants).")
             textFormat: Text.StyledText
             wrapMode: Text.WordWrap
             color: Theme.colorSubText
@@ -322,7 +365,6 @@ Flickable {
         }
 
         ////////
-
         Item {
             id: itemLumi
             height: 64
@@ -378,9 +420,13 @@ Flickable {
                 first.onPressedChanged: plantSensorPages.interactive = !first.pressed
                 first.onMoved: {
                     if (currentDevice) {
-                        if (first.value < rangeSlider_lumi.to ||
-                            (first.value <= rangeSlider_lumi.to && currentDevice.luminosityLux_limitMin <= rangeSlider_lumi.to)) {
-                            currentDevice.luminosityLux_limitMin = first.value.toFixed(0)
+                        if (first.value < rangeSlider_lumi.to
+                                || (first.value <= rangeSlider_lumi.to
+                                    && linkedPlant['metrique_luminosite_lux_minimale']
+                                    <= rangeSlider_lumi.to)) {
+                            linkedPlant['metrique_luminosite_lux_minimale'] = first.value.toFixed(
+                                        0)
+                            updatePlantInDB()
                         }
                     }
                 }
@@ -388,9 +434,13 @@ Flickable {
                 second.onPressedChanged: plantSensorPages.interactive = !second.pressed
                 second.onMoved: {
                     if (currentDevice) {
-                        if (second.value < rangeSlider_lumi.to ||
-                            (second.value <= rangeSlider_lumi.to && currentDevice.luminosityLux_limitMax <= rangeSlider_lumi.to)) {
-                            currentDevice.luminosityLux_limitMax = second.value.toFixed(0)
+                        if (second.value < rangeSlider_lumi.to
+                                || (second.value <= rangeSlider_lumi.to
+                                    && linkedPlant['metrique_luminosite_lux_maximale']
+                                    <= rangeSlider_lumi.to)) {
+                            linkedPlant['metrique_luminosite_lux_maximale'] = second.value.toFixed(
+                                        0)
+                            updatePlantInDB()
                         }
                     }
                 }
@@ -401,13 +451,13 @@ Flickable {
                     anchors.topMargin: 2
                     anchors.horizontalCenter: rangeSlider_lumi.horizontalCenter
 
-                    width: rangeSlider_lumi.width - 2*rangeSlider_lumi.padding - 4
+                    width: rangeSlider_lumi.width - 2 * rangeSlider_lumi.padding - 4
                     spacing: 3
 
                     Rectangle {
                         id: lux_1
                         height: 20
-                        width: (lumiScale.width - 3*parent.spacing) * 0.1 // 0 to 1k
+                        width: (lumiScale.width - 3 * parent.spacing) * 0.1 // 0 to 1k
                         visible: currentDevice.deviceIsInside
                         color: Theme.colorGrey
                         Text {
@@ -424,7 +474,7 @@ Flickable {
                     Rectangle {
                         id: lux_2
                         height: 20
-                        width: (lumiScale.width - 3*parent.spacing) * 0.2 // 1k to 3k
+                        width: (lumiScale.width - 3 * parent.spacing) * 0.2 // 1k to 3k
                         visible: currentDevice.deviceIsInside
                         color: "grey"
                         Text {
@@ -441,7 +491,7 @@ Flickable {
                     Rectangle {
                         id: lux_3
                         height: 20
-                        width: (lumiScale.width - 3*parent.spacing) * 0.5 // 3k to 8k
+                        width: (lumiScale.width - 3 * parent.spacing) * 0.5 // 3k to 8k
                         visible: currentDevice.deviceIsInside
                         color: Theme.colorYellow
                         Text {
@@ -458,7 +508,7 @@ Flickable {
                     Rectangle {
                         id: lux_4
                         height: 20
-                        width: (lumiScale.width - 3*parent.spacing) * 0.2 // 8k+
+                        width: (lumiScale.width - 3 * parent.spacing) * 0.2 // 8k+
                         visible: currentDevice.deviceIsInside
                         color: "orange"
                         Text {
@@ -476,7 +526,7 @@ Flickable {
                     Rectangle {
                         id: lux_5
                         height: 20
-                        width: (lumiScale.width - 2*parent.spacing) * 0.16 // 0-15k
+                        width: (lumiScale.width - 2 * parent.spacing) * 0.16 // 0-15k
                         visible: currentDevice.deviceIsOutside
                         color: "grey"
                         Text {
@@ -493,7 +543,7 @@ Flickable {
                     Rectangle {
                         id: lux_6
                         height: 20
-                        width: (lumiScale.width - 2*parent.spacing) * 0.84 // 15k+
+                        width: (lumiScale.width - 2 * parent.spacing) * 0.84 // 15k+
                         visible: currentDevice.deviceIsOutside
                         color: Theme.colorYellow
                         Text {
@@ -527,7 +577,6 @@ Flickable {
         }
 
         ////////
-
         Item {
             id: itemOther
             height: 256
@@ -599,7 +648,11 @@ Flickable {
                         radius: Theme.componentRadius
 
                         color: currentDevice.deviceIsInside ? Theme.colorForeground : Theme.colorBackground
-                        Behavior on color { ColorAnimation { duration: 133 } }
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 133
+                            }
+                        }
 
                         border.width: currentDevice.deviceIsInside ? 2 : 1
                         border.color: Theme.colorSeparator
@@ -614,11 +667,16 @@ Flickable {
                             spacing: 4
 
                             opacity: currentDevice.deviceIsInside ? 0.85 : 0.33
-                            Behavior on opacity { OpacityAnimator { duration: 133 } }
+                            Behavior on opacity {
+                                OpacityAnimator {
+                                    duration: 133
+                                }
+                            }
 
                             IconSvg {
                                 id: insideImage
-                                width: 72; height: 72;
+                                width: 72
+                                height: 72
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 color: Theme.colorText
                                 source: "qrc:/assets/icons_custom/inside-24px.svg"
@@ -640,14 +698,17 @@ Flickable {
                         radius: Theme.componentRadius
 
                         color: currentDevice.deviceIsOutside ? Theme.colorForeground : Theme.colorBackground
-                        Behavior on color { ColorAnimation { duration: 133 } }
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 133
+                            }
+                        }
 
                         border.width: currentDevice.deviceIsOutside ? 2 : 1
                         border.color: Theme.colorSeparator
 
                         //opacity: currentDevice.deviceIsOutside ? 0.8 : 0.25
                         //Behavior on opacity { OpacityAnimator { duration: 133 } }
-
                         MouseArea {
                             anchors.fill: parent
                             onClicked: currentDevice.deviceIsOutside = true
@@ -658,11 +719,16 @@ Flickable {
                             spacing: 4
 
                             opacity: currentDevice.deviceIsOutside ? 0.85 : 0.33
-                            Behavior on opacity { OpacityAnimator { duration: 133 } }
+                            Behavior on opacity {
+                                OpacityAnimator {
+                                    duration: 133
+                                }
+                            }
 
                             IconSvg {
                                 id: outsideImage
-                                width: 72; height: 72;
+                                width: 72
+                                height: 72
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 source: "qrc:/assets/icons_custom/outside-24px.svg"
                                 color: Theme.colorText

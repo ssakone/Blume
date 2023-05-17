@@ -263,11 +263,7 @@ ListModel {
             values = column.join(' and ')
             let query = logQuery(__query__get__where__.arg(values))
             db.executeSql(query).then(function (rs) {
-                if (rs.isValid()) {
-                    resolve(rs.datas)
-                } else {
-                    resolve(undefined)
-                }
+                    resolve(rs?.datas || [])
             }).catch(rr => console.log("rr ", JSON.stringify(rr)))
         })
     }
