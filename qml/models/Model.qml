@@ -241,13 +241,9 @@ ListModel {
     function sqlGetAll() {
         return new Promise(function (resolve, reject) {
             db.executeSql(logQuery(__query__get__all__)).then(function (rs) {
-                if (rs.isValid()) {
-                    console.log("sqlGetAll valid ", JSON.stringify(rs) )
-                    resolve(rs.datas[0])
-                } else {
-                    console.log("sqlGetAll No Valid ", JSON.stringify(rs))
-                    resolve({})
-                }
+                console.log("sqlGetAll valid ", JSON.stringify(rs) )
+                resolve(rs?.datas || [])
+
             }).catch(rr => console.log("rr ", JSON.stringify(rr)))
         })
     }

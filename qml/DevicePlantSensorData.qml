@@ -19,9 +19,6 @@ Item {
     property var dataIndicators: indicatorsLoader.item
     property var dataChart: graphLoader.item
 
-    property variant linkedPlant
-    property variant linkedSpaceName
-
     ////////////////////////////////////////////////////////////////////////////
 
     function loadData() {
@@ -211,32 +208,7 @@ Item {
                         radius: height / 2
                         color: $Colors.gray200
 
-                        visible: !(devicePlantSensorData.linkedPlant === undefined || devicePlantSensorData.linkedPlant === null)
-
-                        Component.onCompleted: {
-                            $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
-                                console.log("\n\n START ", rs, rs?.plant_name, rs?.space_name, rs?.device_address)
-                                if(rs) {
-                                    devicePlantSensorData.linkedPlant = JSON.parse(rs.plant_json)
-                                    devicePlantSensorData.linkedSpaceName = rs?.space_name
-                                    $Model.plant.sqlGetWhere({remote_id: `${devicePlantSensorData.linkedPlant.id}`}).then(function (res){
-                                        console.log("\n My STARTER ", devicePlantSensorData.linkedSpaceName, res)
-                                        if(res?.length > 0) {
-                                            // This plant has at least one Room
-                                            console.log("\n\n // This plant has at least one Room", res)
-                                            save()
-                                            console.log("\n end")
-                                        } else {
-                                            console.log("\n\n Gonna add new plant to garden")
-                                            plantScreenDetailsPopup.addToGarden(save)
-
-                                        }
-                                      }).catch(function (err){
-                                      console.warn(JSON.stringify(err))
-                                      })
-                                }
-                            })
-                        }
+                        visible: !(linkedPlant === undefined || linkedPlant === null)
 
                         RowLayout {
                             anchors.fill: parent
@@ -256,7 +228,7 @@ Item {
 
                                     Image {
                                         anchors.fill: parent
-                                        source: !devicePlantSensorData.linkedPlant.images_plantes[0] ? "" : "https://blume.mahoudev.com/assets/" + devicePlantSensorData.linkedPlant.images_plantes[0].directus_files_id
+                                        source: !linkedPlant.images_plantes[0] ? "" : "https://blume.mahoudev.com/assets/" + linkedPlant.images_plantes[0].directus_files_id
                                     }
                                 }
                             }
@@ -266,11 +238,11 @@ Item {
                                 Layout.fillWidth: true
                                 spacing: 5
                                 Label {
-                                    text: devicePlantSensorData.linkedPlant?.name_scientific  || ""
+                                    text: linkedPlant?.name_scientific  || ""
                                     font.pixelSize: 16
                                 }
                                 Label {
-                                    text: devicePlantSensorData.linkedPlant?.noms_communs?.length > 0 ? devicePlantSensorData.linkedPlant?.noms_communs[0].name : ""
+                                    text: linkedPlant?.noms_communs?.length > 0 ? linkedPlant?.noms_communs[0].name : ""
                                     font.pixelSize: 13
                                 }
                             }
@@ -309,7 +281,7 @@ Item {
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                plantScreenDetails.plant = devicePlantSensorData.linkedPlant
+                                plantScreenDetails.plant = linkedPlant
                                 plantScreenDetails.open()
                             }
                         }
@@ -319,7 +291,7 @@ Item {
                         id: itemLocation
                         height: 28
                         width: parent.width
-                        visible: devicePlantSensorData.linkedPlant !== undefined
+                        visible: linkedPlant !== undefined
 
                         Text {
                             id: labelLocation
@@ -405,10 +377,10 @@ Item {
                         target: $Model.device
                         function onUpdated() {
                             $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
-                                devicePlantSensorData.linkedPlant = JSON.parse(rs.plant_json)
-                                devicePlantSensorData.linkedSpaceName = rs?.space_name
-                                currentDevice.devicePlantName = devicePlantSensorData.linkedPlant?.name_scientific
-                                currentDevice.deviceLocationName = devicePlantSensorData.linkedSpaceName
+                                linkedPlant = JSON.parse(rs.plant_json)
+                                linkedSpaceName = rs?.space_name
+                                currentDevice.devicePlantName = linkedPlant?.name_scientific
+                                currentDevice.deviceLocationName = linkedSpaceName
                                 console.log("\n\n\n Catch onUpdated()")
                             })
                         }
@@ -417,10 +389,10 @@ Item {
                         target: $Model.device
                         function onCreated() {
                             $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
-                                devicePlantSensorData.linkedPlant = JSON.parse(rs.plant_json)
-                                devicePlantSensorData.linkedSpaceName = rs?.space_name
-                                currentDevice.devicePlantName = devicePlantSensorData.linkedPlant?.name_scientific
-                                currentDevice.deviceLocationName = devicePlantSensorData.linkedSpaceName
+                                linkedPlant = JSON.parse(rs.plant_json)
+                                linkedSpaceName = rs?.space_name
+                                currentDevice.devicePlantName = linkedPlant?.name_scientific
+                                currentDevice.deviceLocationName = linkedSpaceName
                                 console.log("\n\n\n Catch onCreated() ")
                             })
                         }
@@ -430,10 +402,10 @@ Item {
                         target: $Model.device
                         function onDeleted() {
                             $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
-                                devicePlantSensorData.linkedPlant = undefined
-                                devicePlantSensorData.linkedSpaceName = ""
+                                linkedPlant = undefined
+                                linkedSpaceName = ""
                                 currentDevice.devicePlantName = ""
-                                currentDevice.deviceLocationName = devicePlantSensorData.linkedSpaceName
+                                currentDevice.deviceLocationName = linkedSpaceName
                                 console.log("\n\n\n Catch onDeleted() ")
                             })
                         }
@@ -659,7 +631,7 @@ Item {
                 id: itemIndicators
                 height: Math.max(itemHeader.height, indicatorsLoader.height)
                 width: (parent.columns === 1) ? parent.width : (parent.width * 0.64)
-                visible: devicePlantSensorData.linkedPlant !== undefined
+                visible: linkedPlant !== undefined
 
                 Loader {
                     id: indicatorsLoader

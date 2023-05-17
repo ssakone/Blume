@@ -10,6 +10,11 @@ Model {
     property string __query__update__by__address: "UPDATE %1 %2 WHERE device_address = quote('%3')".arg(
                                            tableName)
 
+    property string __query__get__by__plant_id: "SELECT * FROM %1 WHERE plant_id = %2".arg(
+                                           tableName)
+
+    property string __query__delete_all__by__plant_id: "DELETE FROM %1 WHERE plant_id = %2".arg(
+                                           tableName)
 
     debug: true
     tableName: "Device01"
@@ -56,6 +61,29 @@ Model {
                 } else {
                     resolve(null)
                 }
+            }).catch(rr => console.log("rr ", JSON.stringify(rr)))
+        })
+    }
+
+    function sqlGetAllByPlantID(plantID) {
+        return new Promise(function (resolve, reject) {
+            db.executeSql(logQuery(__query__get__by__plant_id.arg(plantID))).then(function (rs) {
+                console.log("sqlGet ", JSON.stringify(rs))
+                if (rs.isValid()) {
+                    resolve(rs.datas)
+                } else {
+                    resolve(null)
+                }
+            }).catch(rr => console.log("rr ", JSON.stringify(rr)))
+        })
+    }
+
+
+    function sqlDeleteAllByPlantID(plantID) {
+        return new Promise(function (resolve, reject) {
+            db.executeSql(logQuery(__query__delete_all__by__plant_id.arg(plantID))).then(function (rs) {
+                console.log("sqlDeleteAllByPlantID ", JSON.stringify(rs))
+                resolve(rs)
             }).catch(rr => console.log("rr ", JSON.stringify(rr)))
         })
     }

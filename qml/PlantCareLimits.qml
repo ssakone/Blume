@@ -10,8 +10,8 @@ Flickable {
     contentHeight: column.height
 
     function updateLimits() {
+        console.log("\n\n\t PlantCareLimits // updateLimits() >> " + currentDevice)
         if (typeof currentDevice === "undefined" || !currentDevice) return
-        //console.log("PlantCareLimits // updateLimits() >> " + currentDevice)
 
         plantCareLimits.contentY = 0
 

@@ -441,6 +441,17 @@ BPage {
                                                                                                         $Model.alarm.fetchAll()
                                                                                                     })
                                                                         }
+
+                                                                        // Delete devices linked to that plant
+                                                                        $Model.device.sqlDeleteAllByPlantID(plant_id).then(function (result) {
+                                                                            console.log("\n\nRESULT ", JSON.stringify(result))
+                                                                            $Model.device.sqlGetAll().then(function (rs) {
+                                                                                console.log("ALLOA ", rs)
+                                                                                console.log(JSON.stringify(rs))
+                                                                            })
+                                                                        }).catch(function (err){
+                                                                            console.log("\n\nRESULT err", JSON.stringify(err))
+                                                                        })
                                                                     })
 
                         removePlantPopup.close()

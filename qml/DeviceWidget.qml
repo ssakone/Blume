@@ -138,10 +138,17 @@ Item {
     function updateSensorSettings() {
         // Title
         if (boxDevice.isPlantSensor) {
-            if (boxDevice.deviceAssociatedName !== "")
-                textTitle.text = boxDevice.deviceAssociatedName
-            else
-                textTitle.text = boxDevice.deviceName
+            $Model.device.sqlGetByDeviceAddress(boxDevice.deviceAddress).then(function (rs) {
+                console.log("\n Device = ", boxDevice.deviceAddress, " textTitle.text = ", rs, rs?.plant_name, rs?.space_name, rs?.device_address, " \n")
+                if(rs) {// If we have this device in our DB
+                    textTitle.visible = true
+                    textTitle.text = rs.plant_name.slice(1, -1)
+                    textLocation.text  = rs.space_name.slice(1, -1)
+                } else {
+                    textTitle.visible = false
+                    textLocation.text = `<font color='${$Colors.red200}'>No plant connected</font>`
+                }
+            })
         } else if (boxDevice.isThermometer) {
             if (boxDevice.deviceName === "ThermoBeacon")
                 textTitle.text = boxDevice.deviceName
@@ -154,14 +161,11 @@ Item {
         textLocation.font.pixelSize = bigAssMode ? 20 : 18
         if (boxDevice.deviceLocationName) {
             textLocation.visible = true
-            textLocation.text = boxDevice.deviceLocationName
         } else {
             if (Qt.platform.os === "osx" || Qt.platform.os === "ios") {
                 textLocation.visible = false
-                textLocation.text = ""
             } else {
                 textLocation.visible = true
-                textLocation.text = boxDevice.deviceAddress
             }
         }
     }
@@ -421,7 +425,7 @@ Item {
                     id: textTitle
                     width: rowLeft.width - imageDevice.width - rowLeft.spacing
 
-                    textFormat: Text.PlainText
+//                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: bigAssMode ? 22 : 20
                     //font.capitalization: Font.Capitalize
@@ -433,7 +437,7 @@ Item {
                     id: textLocation
                     width: rowLeft.width - imageDevice.width - rowLeft.spacing
 
-                    textFormat: Text.PlainText
+//                    textFormat: Text.PlainText
                     color: Theme.colorSubText
                     font.pixelSize: bigAssMode ? 20 : 18
                     //font.capitalization: Font.Capitalize
