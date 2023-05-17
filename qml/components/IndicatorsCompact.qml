@@ -144,8 +144,8 @@ Item {
             colorBackground: indicatorsCompact.colorBackground
 
             value: currentDevice.soilMoisture
-            valueMin: 0
-            valueMax: settingsManager.dynaScale ? Math.ceil(currentDevice.hygroMax*1.10) : 50
+            valueMin: linkedPlant?.metrique_conductivite_minimale_du_sol
+            valueMax: linkedPlant?.metrique_conductivite_maximale_du_sol
             limitMin: currentDevice.soilMoisture_limitMin
             limitMax: currentDevice.soilMoisture_limitMax
         }
@@ -163,8 +163,8 @@ Item {
             colorBackground: indicatorsCompact.colorBackground
 
             value: currentDevice.soilConductivity
-            valueMin: 0
-            valueMax: settingsManager.dynaScale ? Math.ceil(currentDevice.conduMax*1.10) : 2000
+            valueMin: linkedPlant?.metrique_conductivite_minimale_du_sol
+            valueMax: linkedPlant?.metrique_conductivite_maximale_du_sol
             limitMin: currentDevice.soilConductivity_limitMin
             limitMax: currentDevice.soilConductivity_limitMax
         }
@@ -224,8 +224,8 @@ Item {
 
             floatprecision: 1
             value: currentDevice.temperature
-            valueMin: tempHelper(settingsManager.dynaScale ? Math.floor(currentDevice.tempMin*0.80) : tempHelper(0))
-            valueMax: tempHelper(settingsManager.dynaScale ? Math.ceil(currentDevice.tempMax*1.20) : tempHelper(40))
+            valueMin: linkedPlant?.metrique_temperature_minimale
+            valueMax: linkedPlant?.metrique_temperature_maximale
             limitMin: tempHelper(currentDevice.temperature_limitMin)
             limitMax: tempHelper(currentDevice.temperature_limitMax)
         }
@@ -243,8 +243,8 @@ Item {
             colorBackground: indicatorsCompact.colorBackground
 
             value: currentDevice.humidity
-            valueMin: 0
-            valueMax: 100
+            valueMin: linkedPlant?.metrique_humidite_plante_minimale
+            valueMax: linkedPlant?.metrique_humidite_plante_maximale
             limitMin: 0
             limitMax: 100
         }
@@ -262,8 +262,8 @@ Item {
             colorBackground: indicatorsCompact.colorBackground
 
             value: currentDevice.luminosityLux
-            valueMin: 0
-            valueMax: settingsManager.dynaScale ? Math.ceil(currentDevice.luxMax*1.10) : 10000
+            valueMin: linkedPlant?.metrique_luminosite_lux_minimale
+            valueMax: linkedPlant?.metrique_luminosite_lux_maximale
             limitMin: currentDevice.luminosityLux_limitMin
             limitMax: currentDevice.luminosityLux_limitMax
         }
