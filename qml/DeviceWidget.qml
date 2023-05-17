@@ -2,8 +2,10 @@ import QtQuick
 
 import ThemeEngine 1.0
 import DeviceUtils 1.0
+import Qt5Compat.GraphicalEffects  as QGE
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
+import "components" as Components
 
 Item {
     id: deviceWidget
@@ -55,7 +57,7 @@ Item {
     ////////////////////////////////////////////////////////////////////////////
 
     function initBoxData() {
-        //console.log("DeviceWidget // initBoxData() >> " + boxDevice)
+//        console.log("DeviceWidget // initBoxData() >> " + JSON.stringify(boxDevice))
 
         // Set icon
         imageDevice.source = UtilsDeviceSensors.getDeviceIcon(boxDevice, hasHygro)
@@ -164,17 +166,25 @@ Item {
 
     function updateSensorIcon() {
         if (boxDevice.isPlantSensor) {
-            if (hasHygro) {
-                if (boxDevice.deviceName === "ropot" || boxDevice.deviceName === "Parrot pot")
-                    imageDevice.source = "qrc:/assets/icons_custom/pot_flower-24px.svg"
-                else
-                    imageDevice.source = "qrc:/assets/icons_material/outline-local_florist-24px.svg"
-            } else {
-                if (boxDevice.deviceName === "ropot" || boxDevice.deviceName === "Parrot pot")
-                    imageDevice.source = "qrc:/assets/icons_custom/pot_empty-24px.svg"
-                else
-                    imageDevice.source = "qrc:/assets/icons_material/outline-settings_remote-24px.svg"
-            }
+            $Model.device.sqlGetByDeviceAddress(boxDevice.deviceAddress).then(function (_deviceDBData) {
+                const plant_json = JSON.parse(_deviceDBData?.plant_json ?? null)
+                const firstImageID = plant_json?.images_plantes[0]?.directus_files_id
+                if(firstImageID) {
+                    imageDevice.source = "https://blume.mahoudev.com/assets/" + firstImageID
+                }
+
+            })
+//            if (hasHygro) {
+//                if (boxDevice.deviceName === "ropot" || boxDevice.deviceName === "Parrot pot")
+//                    imageDevice.source = "qrc:/assets/icons_custom/pot_flower-24px.svg"
+//                else
+//                    imageDevice.source = "qrc:/assets/icons_material/outline-local_florist-24px.svg"
+//            } else {
+//                if (boxDevice.deviceName === "ropot" || boxDevice.deviceName === "Parrot pot")
+//                    imageDevice.source = "qrc:/assets/icons_custom/pot_empty-24px.svg"
+//                else
+//                    imageDevice.source = "qrc:/assets/icons_material/outline-settings_remote-24px.svg"
+//            }
         }
     }
 
@@ -379,17 +389,28 @@ Item {
 
             spacing: bigAssMode ? (singleColumn ? 20 : 12) : (singleColumn ? 24 : 10)
 
-            IconSvg {
-                id: imageDevice
-                width: bigAssMode ? 32 : 24
-                height: bigAssMode ? 32 : 24
+            Components.ClipRRect {
+                width: 60
+                height: width
+                radius: height/2
                 anchors.verticalCenter: parent.verticalCenter
 
-                color: Theme.colorHighContrast
-                visible: (wideAssMode || bigAssMode)
-                fillMode: Image.PreserveAspectFit
-                asynchronous: true
+                Rectangle {
+                    color: $Colors.gray200
+                    anchors.fill: parent
+                    visible: imageDevice.source.toString().slice(0, 4) === "http"
+                }
+
+                Image {
+                    id: imageDevice
+                    anchors.fill: parent
+                    visible: (wideAssMode || bigAssMode)
+                    fillMode: Image.PreserveAspectFit
+                    asynchronous: true
+                }
+
             }
+
 
             Column {
                 anchors.verticalCenter: parent.verticalCenter
