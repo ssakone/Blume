@@ -144,8 +144,8 @@ Item {
             colorBackground: indicatorsCompact.colorBackground
 
             value: currentDevice.soilMoisture
-            valueMin: linkedPlant?.metrique_conductivite_minimale_du_sol
-            valueMax: linkedPlant?.metrique_conductivite_maximale_du_sol
+            valueMin: linkedPlant?.metrique_conductivite_minimale_du_sol ?? 0
+            valueMax: linkedPlant?.metrique_conductivite_maximale_du_sol ?? 0
             limitMin: currentDevice.soilMoisture_limitMin
             limitMax: currentDevice.soilMoisture_limitMax
         }
@@ -163,8 +163,8 @@ Item {
             colorBackground: indicatorsCompact.colorBackground
 
             value: currentDevice.soilConductivity
-            valueMin: linkedPlant?.metrique_conductivite_minimale_du_sol
-            valueMax: linkedPlant?.metrique_conductivite_maximale_du_sol
+            valueMin: linkedPlant?.metrique_conductivite_minimale_du_sol ?? 0
+            valueMax: linkedPlant?.metrique_conductivite_maximale_du_sol ?? 0
             limitMin: currentDevice.soilConductivity_limitMin
             limitMax: currentDevice.soilConductivity_limitMax
         }
@@ -224,8 +224,8 @@ Item {
 
             floatprecision: 1
             value: currentDevice.temperature
-            valueMin: linkedPlant?.metrique_temperature_minimale
-            valueMax: linkedPlant?.metrique_temperature_maximale
+            valueMin: linkedPlant?.metrique_temperature_minimale ?? 0
+            valueMax: linkedPlant?.metrique_temperature_maximale ?? 0
             limitMin: tempHelper(currentDevice.temperature_limitMin)
             limitMax: tempHelper(currentDevice.temperature_limitMax)
         }
@@ -243,8 +243,8 @@ Item {
             colorBackground: indicatorsCompact.colorBackground
 
             value: currentDevice.humidity
-            valueMin: linkedPlant?.metrique_humidite_plante_minimale
-            valueMax: linkedPlant?.metrique_humidite_plante_maximale
+            valueMin: linkedPlant?.metrique_humidite_plante_minimale ?? 0
+            valueMax: linkedPlant?.metrique_humidite_plante_maximale ?? 0
             limitMin: 0
             limitMax: 100
         }
@@ -262,8 +262,8 @@ Item {
             colorBackground: indicatorsCompact.colorBackground
 
             value: currentDevice.luminosityLux
-            valueMin: linkedPlant?.metrique_luminosite_lux_minimale
-            valueMax: linkedPlant?.metrique_luminosite_lux_maximale
+            valueMin: linkedPlant?.metrique_luminosite_lux_minimale ?? 0
+            valueMax: linkedPlant?.metrique_luminosite_lux_maximale ?? 0
             limitMin: currentDevice.luminosityLux_limitMin
             limitMax: currentDevice.luminosityLux_limitMax
         }

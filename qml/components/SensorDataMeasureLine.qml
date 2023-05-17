@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import "../components_generic"
 
 Rectangle {
+    id: root
     property int hhh: 8
     property bool animated: true
 
@@ -32,59 +33,53 @@ Rectangle {
     color: "#e5e5e5"
     height: 80
 
-    Column {
-        width: parent.width
-        height: parent.height
-        padding: 20
-
-        RowLayout {
-            id: row
-            width: parent.width - 2*parent.padding
-            Layout.alignment: Qt.AlignVCenter
-
-            Label {
-                id: item_legend
-                text: legend
-                font {
-                    weight: Font.Light
-                    pixelSize: 16
-                }
-            }
-
-            Item {
-                Layout.fillWidth: true
-            }
-
-            Column {
-                spacing: 5
-
-                Row {
-                    Label {
-                        text: value.toFixed(1)
-                        color: (valueMin <= value && value <= valueMax) ? $Colors.green400 : $Colors.red400
-                        font {
-                            pixelSize: 24
-                        }
-                    }
-                    IconSvg {
-                        source: (valueMin <= value && value <= valueMax) ? Icons.arrowUp : Icons.arrowDown
-                        color: (valueMin <= value && value <= valueMax) ? $Colors.green400 : $Colors.red400
-                    }
-                }
-
-                Label {
-                    text: valueMin + ' - ' + valueMax + ' (' + suffix + ')'
-                    font {
-                        weight: Font.Light
-                        pixelSize: 14
-                    }
-                }
-            }
-
+    Label {
+        id: item_legend
+        text: legend
+        font {
+            weight: Font.Light
+            pixelSize: 16
         }
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
+        anchors.leftMargin: 20
     }
 
+    Column {
+        anchors {
+//            right: parent.right
+//            rightMargin: 20
+            left: parent.left
+            leftMargin: (2*root.width)/3
+            verticalCenter: parent.verticalCenter
+        }
 
+        spacing: 5
+
+        Row {
+            Label {
+                text: value.toFixed(1)
+                color: (valueMin <= value && value <= valueMax) ? $Colors.green400 : $Colors.red400
+                font {
+                    pixelSize: 24
+                }
+            }
+            IconSvg {
+                source: Icons.chevronDown
+                visible: !(valueMin <= value && value <= valueMax)
+                color: $Colors.red400
+                anchors.verticalCenter: parent.verticalCenter
+            }
+        }
+
+        Label {
+            text: valueMin + ' - ' + valueMax + ' (' + suffix + ')'
+            font {
+                weight: Font.Light
+                pixelSize: 14
+            }
+        }
+    }
 
 
 }
