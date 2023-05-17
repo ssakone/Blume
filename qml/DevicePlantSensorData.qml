@@ -318,7 +318,7 @@ Item {
                             font.bold: false
                             color: Theme.colorHighContrast
 
-                            text: devicePlantSensorData?.linkedSpaceName || ""
+                            text: (linkedSpaceName && linkedSpaceName.slice(1, -1))  || ""
                         }
 
                         IconSvg {
