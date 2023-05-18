@@ -295,7 +295,7 @@ BPage {
                                                $Model.alarm.sqlUpdateTaskStatus(
                                                    model.id,
                                                    newStatus).then(res => {
-                                                                       $Model.alarm.fetchAll()
+                                                                       model.done = model.done === 0 ? 1 : 0
                                                                    }).catch(
                                                    console.warn)
                                            }
