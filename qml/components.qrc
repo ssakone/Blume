@@ -39,6 +39,7 @@
         <file>components/GardenPlantLine.qml</file>
         <file>components/GardenSpaceLine.qml</file>
         <file>components/ItemNoImage.qml</file>
+        <file>components/SensorDataMeasureLine.qml</file>
         <file>components_generic/Alert.qml</file>
         <file>NotAuthenticated.qml</file>
         <file>components/BottomTabBar.qml</file>

@@ -234,7 +234,7 @@ BPage {
                         onChecked: newStatus => {
                                        $Model.alarm.sqlUpdateTaskStatus(
                                            model.id, newStatus).then(res => {
-                                                                         $Model.alarm.fetchAll()
+                                                                         model.done = model.done === 0 ? 1 : 0
                                                                      }).catch(
                                            console.warn)
                                    }
@@ -285,7 +285,13 @@ BPage {
                     width: 120
                     height: 50
                     onClicked: {
-                        $Model.alarm.sqlDelete(removeAlarmPopup.alarm.id)
+                        $Model.alarm.sqlDelete(
+                                    removeAlarmPopup.alarm.id).then(res => {
+                                                                        if ($Model.alarm.count === 1) {
+                                                                            $Model.alarm.clear()
+                                                                            $Model.alarm.fetchAll()
+                                                                        }
+                                                                    })
                         removeAlarmPopup.close()
                     }
                 }

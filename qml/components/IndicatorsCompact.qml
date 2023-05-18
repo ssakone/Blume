@@ -3,6 +3,7 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "components"
 
 Item {
     id: indicatorsCompact
@@ -123,17 +124,15 @@ Item {
     Column {
         id: columnData
         anchors.left: parent.left
-        anchors.leftMargin: 12
+        anchors.leftMargin: 20
         anchors.right: parent.right
-        anchors.rightMargin: 12
+        anchors.rightMargin: 20
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -2
 
-        spacing: 4
+        spacing: 10
 
-        ////////
-
-        DataBarCompact {
+        SensorDataMeasureLine {
             id: soil_moisture
             width: parent.width
 
@@ -145,15 +144,15 @@ Item {
             colorBackground: indicatorsCompact.colorBackground
 
             value: currentDevice.soilMoisture
-            valueMin: 0
-            valueMax: settingsManager.dynaScale ? Math.ceil(currentDevice.hygroMax*1.10) : 50
+            valueMin: linkedPlant?.metrique_humidite_plante_minimale ?? 0
+            valueMax: linkedPlant?.metrique_humidite_plante_maximale ?? 0
             limitMin: currentDevice.soilMoisture_limitMin
             limitMax: currentDevice.soilMoisture_limitMax
         }
 
         ////////
 
-        DataBarCompact {
+        SensorDataMeasureLine {
             id: soil_conductivity
             width: parent.width
 
@@ -164,15 +163,15 @@ Item {
             colorBackground: indicatorsCompact.colorBackground
 
             value: currentDevice.soilConductivity
-            valueMin: 0
-            valueMax: settingsManager.dynaScale ? Math.ceil(currentDevice.conduMax*1.10) : 2000
+            valueMin: linkedPlant?.metrique_conductivite_minimale_du_sol ?? 0
+            valueMax: linkedPlant?.metrique_conductivite_maximale_du_sol ?? 0
             limitMin: currentDevice.soilConductivity_limitMin
             limitMax: currentDevice.soilConductivity_limitMax
         }
 
         ////////
 
-        DataBarCompact {
+        SensorDataMeasureLine {
             id: soil_temperature
             width: parent.width
 
@@ -192,7 +191,7 @@ Item {
 
         ////////
 
-        DataBarCompact {
+        SensorDataMeasureLine {
             id: water_tank
             width: parent.width
 
@@ -212,7 +211,7 @@ Item {
 
         ////////
 
-        DataBarCompact {
+        SensorDataMeasureLine {
             id: temp
             width: parent.width
 
@@ -225,15 +224,15 @@ Item {
 
             floatprecision: 1
             value: currentDevice.temperature
-            valueMin: tempHelper(settingsManager.dynaScale ? Math.floor(currentDevice.tempMin*0.80) : tempHelper(0))
-            valueMax: tempHelper(settingsManager.dynaScale ? Math.ceil(currentDevice.tempMax*1.20) : tempHelper(40))
+            valueMin: linkedPlant?.metrique_temperature_minimale ?? 0
+            valueMax: linkedPlant?.metrique_temperature_maximale ?? 0
             limitMin: tempHelper(currentDevice.temperature_limitMin)
             limitMax: tempHelper(currentDevice.temperature_limitMax)
         }
 
         ////////
 
-        DataBarCompact {
+        SensorDataMeasureLine {
             id: humi
             width: parent.width
 
@@ -244,27 +243,27 @@ Item {
             colorBackground: indicatorsCompact.colorBackground
 
             value: currentDevice.humidity
-            valueMin: 0
-            valueMax: 100
+            valueMin: linkedPlant?.metrique_humidite_plante_minimale ?? 0
+            valueMax: linkedPlant?.metrique_humidite_plante_maximale ?? 0
             limitMin: 0
             limitMax: 100
         }
 
         ////////
 
-        DataBarCompact {
+        SensorDataMeasureLine {
             id: lumi
             width: parent.width
 
             legend: qsTr("Luminosity")
             legendWidth: indicatorsCompact.legendWidth
-            suffix: " " + qsTr("lux")
+            suffix: qsTr("lux")
             colorForeground: Theme.colorYellow
             colorBackground: indicatorsCompact.colorBackground
 
             value: currentDevice.luminosityLux
-            valueMin: 0
-            valueMax: settingsManager.dynaScale ? Math.ceil(currentDevice.luxMax*1.10) : 10000
+            valueMin: linkedPlant?.metrique_luminosite_lux_minimale ?? 0
+            valueMax: linkedPlant?.metrique_luminosite_lux_maximale ?? 0
             limitMin: currentDevice.luminosityLux_limitMin
             limitMax: currentDevice.luminosityLux_limitMax
         }

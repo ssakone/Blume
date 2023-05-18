@@ -7,6 +7,7 @@ import ThemeEngine 1.0
 import "qrc:/js/UtilsPlantDatabase.js" as UtilsPlantDatabase
 import "components"
 import "components_generic"
+import SortFilterProxyModel
 
 Popup {
     id: plantScreenDetailsPopup
@@ -20,6 +21,102 @@ Popup {
     padding: 0
 
     property variant plant: ({})
+
+    function generateUUID() {
+        // Public Domain/MIT
+        var d = new Date().getTime()
+        //Timestamp
+        var d2 = ((typeof performance !== 'undefined')
+                  && performance.now
+                  && (performance.now(
+                          ) * 1000)) || 0
+        //Time in microseconds since page-load or 0 if unsupported
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+                    /[xy]/g, function (c) {
+                        var r = Math.random(
+                                    ) * 16
+                        //random number between 0 and 16
+                        if (d > 0) {
+                            //Use timestamp until depleted
+                            r = (d + r) % 16 | 0
+                            d = Math.floor(
+                                        d / 16)
+                        } else {
+                            //Use microseconds since page-load if supported
+                            r = (d2 + r) % 16 | 0
+                            d2 = Math.floor(
+                                        d2 / 16)
+                        }
+                        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(
+                                    16)
+                    })
+    }
+
+    function addToGarden(onSuccess) {
+
+        spaceSearchPop.show(function (space){
+            let data = {
+                "libelle": plant?.name_scientific,
+                "image_url": "-1",
+                "remote_id": plant.id,
+                "uuid": generateUUID()
+            }
+            data["plant_json"] = JSON.stringify(
+                        plant)
+
+            $Model.plant.sqlCreate(data).then(
+                        function (new_plant) {
+                            console.log('\n\n NEW PLANT ', typeof new_plant, JSON.stringify(new_plant))
+                            let inData = {
+                                "space_id": space.id,
+                                "space_name": space.libelle,
+                                "plant_json": new_plant["plant_json"],
+                                "plant_id": new_plant.id
+                            }
+                            console.log("Continue...", )
+                            $Model.space.plantInSpace.sqlCreate(
+                                        inData).then(
+                                        function () {
+                                            console.log("Created AGAIN...")
+                                            console.info("Done")
+                                            if(onSuccess) onSuccess(new_plant, space)
+                                        })
+                            plantScreenDetailsPopup.alertMsg = qsTr("Plant added to garden")
+                        }).catch(console.warn)
+        })
+    }
+
+    function selectGardenSpace(onSuccess) {
+
+        spaceSearchPop.show(function (space){
+            let data = {
+                "libelle": plant?.name_scientific,
+                "image_url": "-1",
+                "remote_id": plant.id,
+                "uuid": generateUUID()
+            }
+            data["plant_json"] = JSON.stringify(
+                        plant)
+
+            if(onSuccess) onSuccess(plantScreenDetailsPopup.plant, space)
+        }, currentPlantSpaces)
+    }
+
+    ListModel {
+        id: currentPlantSpaces
+    }
+
+    onPlantChanged: {
+        if(plantScreenDetailsPopup.plant.id) {
+            $Model.space.listSpacesOfPlantRemoteID(plantScreenDetailsPopup.plant.id).then(function (res){
+                currentPlantSpaces.clear()
+                for(let i=0; i<res?.length; i++) {
+                    currentPlantSpaces.append(res[i])
+                }
+            })
+        }
+
+    }
 
     ListModel {
         id: modelImagesPlantes
@@ -273,67 +370,7 @@ Popup {
                             componentRadius: 20
                             Layout.fillWidth: true
                             Layout.preferredHeight: 50
-                            onClicked: {
-                                function generateUUID() {
-                                    // Public Domain/MIT
-                                    var d = new Date().getTime()
-                                    //Timestamp
-                                    var d2 = ((typeof performance !== 'undefined')
-                                              && performance.now
-                                              && (performance.now(
-                                                      ) * 1000)) || 0
-                                    //Time in microseconds since page-load or 0 if unsupported
-                                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-                                                /[xy]/g, function (c) {
-                                                    var r = Math.random(
-                                                                ) * 16
-                                                    //random number between 0 and 16
-                                                    if (d > 0) {
-                                                        //Use timestamp until depleted
-                                                        r = (d + r) % 16 | 0
-                                                        d = Math.floor(
-                                                                    d / 16)
-                                                    } else {
-                                                        //Use microseconds since page-load if supported
-                                                        r = (d2 + r) % 16 | 0
-                                                        d2 = Math.floor(
-                                                                    d2 / 16)
-                                                    }
-                                                    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(
-                                                                16)
-                                                })
-                                }
-
-                                spaceSearchPop.show(function (space){
-                                    let data = {
-                                        "libelle": plant?.name_scientific,
-                                        "image_url": "-1",
-                                        "remote_id": plant.id,
-                                        "uuid": generateUUID()
-                                    }
-                                    data["plant_json"] = JSON.stringify(
-                                                plant)
-
-                                    $Model.plant.sqlCreate(data).then(
-                                                function (new_plant) {
-                                                    console.log('\n NEW PLANT ', typeof new_plant, new_plant.libelle)
-                                                    let inData = {
-                                                        "space_id": space.id,
-                                                        "space_name": space.libelle,
-                                                        "plant_json": new_plant["plant_json"],
-                                                        "plant_id": new_plant.id
-                                                    }
-                                                    console.log("Continue...", )
-                                                    $Model.space.plantInSpace.sqlCreate(
-                                                                inData).then(
-                                                                function () {
-                                                                    console.log("Created AGAIN...")
-                                                                    console.info("Done")
-                                                                })
-                                                    plantScreenDetailsPopup.alertMsg = qsTr("Plant added to garden")
-                                                }).catch(console.warn)
-                                })
-                            }
+                            onClicked: addToGarden()
                         }
 
                         RowLayout {

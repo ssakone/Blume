@@ -2,13 +2,17 @@ import QtQuick
 
 import ThemeEngine 1.0
 import DeviceUtils 1.0
+import Qt5Compat.GraphicalEffects  as QGE
 import "qrc:/js/UtilsNumber.js" as UtilsNumber
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
+import "components" as Components
 
 Item {
     id: deviceWidget
     implicitWidth: 480
     implicitHeight: 128
+
+    property var linkedPlant
 
     property var boxDevice: pointer
     property bool hasHygro: boxDevice.isPlantSensor &&
@@ -46,7 +50,7 @@ Item {
             updateSensorData()
         }
         function onTempUnitChanged() {
-            if (loaderIndicators.item) loaderIndicators.item.updateData()
+//            if (loaderIndicators.item) loaderIndicators.item.updateData()
         }
     }
 
@@ -55,41 +59,41 @@ Item {
     ////////////////////////////////////////////////////////////////////////////
 
     function initBoxData() {
-        //console.log("DeviceWidget // initBoxData() >> " + boxDevice)
+//        console.log("DeviceWidget // initBoxData() >> " + JSON.stringify(boxDevice))
 
         // Set icon
         imageDevice.source = UtilsDeviceSensors.getDeviceIcon(boxDevice, hasHygro)
 
         // Load indicators
-        if (!loaderIndicators.sourceComponent) {
-            if (boxDevice.isPlantSensor) {
-                loaderIndicators.sourceComponent = componentPlantSensor
-            } else if (boxDevice.isThermometer) {
-                if (boxDevice.hasHumiditySensor)
-                    loaderIndicators.sourceComponent = componentText_2l
-                else
-                    loaderIndicators.sourceComponent = componentText_1l
-            } else if (boxDevice.isEnvironmentalSensor) {
-                if (boxDevice.hasSetting("primary")) {
-                    var primary = boxDevice.getSetting("primary")
-                    if (primary === "hygrometer") {
-                        if (boxDevice.hasHumiditySensor)
-                            loaderIndicators.sourceComponent = componentText_2l
-                        else
-                            loaderIndicators.sourceComponent = componentText_1l
-                    } else if (primary === "radioactivity") {
-                        loaderIndicators.sourceComponent = componentText_1l
-                    } else {
-                        loaderIndicators.sourceComponent = componentEnvironmentalGauge
-                    }
-                }
-            }
+//        if (!loaderIndicators.sourceComponent) {
+//            if (boxDevice.isPlantSensor) {
+//                loaderIndicators.sourceComponent = componentPlantSensor
+//            } else if (boxDevice.isThermometer) {
+//                if (boxDevice.hasHumiditySensor)
+//                    loaderIndicators.sourceComponent = componentText_2l
+//                else
+//                    loaderIndicators.sourceComponent = componentText_1l
+//            } else if (boxDevice.isEnvironmentalSensor) {
+//                if (boxDevice.hasSetting("primary")) {
+//                    var primary = boxDevice.getSetting("primary")
+//                    if (primary === "hygrometer") {
+//                        if (boxDevice.hasHumiditySensor)
+//                            loaderIndicators.sourceComponent = componentText_2l
+//                        else
+//                            loaderIndicators.sourceComponent = componentText_1l
+//                    } else if (primary === "radioactivity") {
+//                        loaderIndicators.sourceComponent = componentText_1l
+//                    } else {
+//                        loaderIndicators.sourceComponent = componentEnvironmentalGauge
+//                    }
+//                }
+//            }
 
-            if (loaderIndicators.item) {
-                loaderIndicators.item.initData()
-                loaderIndicators.item.updateData()
-            }
-        }
+//            if (loaderIndicators.item) {
+//                loaderIndicators.item.initData()
+//                loaderIndicators.item.updateData()
+//            }
+//        }
 
         updateSensorSettings()
         updateSensorStatus()
@@ -134,10 +138,17 @@ Item {
     function updateSensorSettings() {
         // Title
         if (boxDevice.isPlantSensor) {
-            if (boxDevice.deviceAssociatedName !== "")
-                textTitle.text = boxDevice.deviceAssociatedName
-            else
-                textTitle.text = boxDevice.deviceName
+            $Model.device.sqlGetByDeviceAddress(boxDevice.deviceAddress).then(function (rs) {
+                console.log("\n Device = ", boxDevice.deviceAddress, " textTitle.text = ", rs, rs?.plant_name, rs?.space_name, rs?.device_address, " \n")
+                if(rs) {// If we have this device in our DB
+                    textTitle.visible = true
+                    textTitle.text = rs.plant_name.slice(1, -1)
+                    textLocation.text  = rs.space_name.slice(1, -1)
+                } else {
+                    textTitle.visible = false
+                    textLocation.text = `<font color='${$Colors.red200}'>No plant connected</font>`
+                }
+            })
         } else if (boxDevice.isThermometer) {
             if (boxDevice.deviceName === "ThermoBeacon")
                 textTitle.text = boxDevice.deviceName
@@ -150,31 +161,36 @@ Item {
         textLocation.font.pixelSize = bigAssMode ? 20 : 18
         if (boxDevice.deviceLocationName) {
             textLocation.visible = true
-            textLocation.text = boxDevice.deviceLocationName
         } else {
             if (Qt.platform.os === "osx" || Qt.platform.os === "ios") {
                 textLocation.visible = false
-                textLocation.text = ""
             } else {
                 textLocation.visible = true
-                textLocation.text = boxDevice.deviceAddress
             }
         }
     }
 
     function updateSensorIcon() {
         if (boxDevice.isPlantSensor) {
-            if (hasHygro) {
-                if (boxDevice.deviceName === "ropot" || boxDevice.deviceName === "Parrot pot")
-                    imageDevice.source = "qrc:/assets/icons_custom/pot_flower-24px.svg"
-                else
-                    imageDevice.source = "qrc:/assets/icons_material/outline-local_florist-24px.svg"
-            } else {
-                if (boxDevice.deviceName === "ropot" || boxDevice.deviceName === "Parrot pot")
-                    imageDevice.source = "qrc:/assets/icons_custom/pot_empty-24px.svg"
-                else
-                    imageDevice.source = "qrc:/assets/icons_material/outline-settings_remote-24px.svg"
-            }
+            $Model.device.sqlGetByDeviceAddress(boxDevice.deviceAddress).then(function (_deviceDBData) {
+                deviceWidget.linkedPlant = JSON.parse(_deviceDBData?.plant_json ?? null)
+                const firstImageID = deviceWidget.linkedPlant?.images_plantes[0]?.directus_files_id
+                if(firstImageID) {
+                    imageDevice.source = "https://blume.mahoudev.com/assets/" + firstImageID
+                }
+
+            })
+//            if (hasHygro) {
+//                if (boxDevice.deviceName === "ropot" || boxDevice.deviceName === "Parrot pot")
+//                    imageDevice.source = "qrc:/assets/icons_custom/pot_flower-24px.svg"
+//                else
+//                    imageDevice.source = "qrc:/assets/icons_material/outline-local_florist-24px.svg"
+//            } else {
+//                if (boxDevice.deviceName === "ropot" || boxDevice.deviceName === "Parrot pot")
+//                    imageDevice.source = "qrc:/assets/icons_custom/pot_empty-24px.svg"
+//                else
+//                    imageDevice.source = "qrc:/assets/icons_material/outline-settings_remote-24px.svg"
+//            }
         }
     }
 
@@ -189,18 +205,18 @@ Item {
                 alarmFreeze.visible = false
 
                 // Water me notif
-                if (hasHygro && boxDevice.soilMoisture < boxDevice.soilMoisture_limitMin) {
+                if (hasHygro && boxDevice.soilMoisture < deviceWidget.linkedPlant?.metrique_humidite_minimale_du_sol) {
                     alarmWater.visible = true
                     alarmWater.source = "qrc:/assets/icons_material/duotone-water_mid-24px.svg"
                     alarmFreeze.color = Theme.colorBlue
-                } else if (boxDevice.soilMoisture > boxDevice.soilMoisture_limitMax) {
+                } else if (boxDevice.soilMoisture > deviceWidget.linkedPlant?.metrique_humidite_maximale_du_sol) {
                     alarmWater.visible = true
                     alarmWater.source = "qrc:/assets/icons_material/duotone-water_full-24px.svg"
                     alarmFreeze.color = Theme.colorYellow
                 }
 
                 // Extreme temperature notif
-                if (boxDevice.temperatureC > 40) {
+                if (boxDevice.temperatureC > deviceWidget.linkedPlant?.metrique_temperature_maximale) {
                     alarmFreeze.visible = true
                     alarmFreeze.color = Theme.colorYellow
                     alarmFreeze.source = "qrc:/assets/icons_material/duotone-wb_sunny-24px.svg"
@@ -254,7 +270,7 @@ Item {
     function updateSensorData() {
         updateSensorIcon()
         updateSensorWarnings()
-        if (loaderIndicators.item) loaderIndicators.item.updateData()
+//        if (loaderIndicators.item) loaderIndicators.item.updateData()
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -379,17 +395,28 @@ Item {
 
             spacing: bigAssMode ? (singleColumn ? 20 : 12) : (singleColumn ? 24 : 10)
 
-            IconSvg {
-                id: imageDevice
-                width: bigAssMode ? 32 : 24
-                height: bigAssMode ? 32 : 24
+            Components.ClipRRect {
+                width: 60
+                height: width
+                radius: height/2
                 anchors.verticalCenter: parent.verticalCenter
 
-                color: Theme.colorHighContrast
-                visible: (wideAssMode || bigAssMode)
-                fillMode: Image.PreserveAspectFit
-                asynchronous: true
+                Rectangle {
+                    color: $Colors.gray200
+                    anchors.fill: parent
+                    visible: imageDevice.source.toString().slice(0, 4) === "http"
+                }
+
+                Image {
+                    id: imageDevice
+                    anchors.fill: parent
+                    visible: (wideAssMode || bigAssMode)
+                    fillMode: Image.PreserveAspectCrop
+                    asynchronous: true
+                }
+
             }
+
 
             Column {
                 anchors.verticalCenter: parent.verticalCenter
@@ -398,7 +425,7 @@ Item {
                     id: textTitle
                     width: rowLeft.width - imageDevice.width - rowLeft.spacing
 
-                    textFormat: Text.PlainText
+//                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: bigAssMode ? 22 : 20
                     //font.capitalization: Font.Capitalize
@@ -410,7 +437,7 @@ Item {
                     id: textLocation
                     width: rowLeft.width - imageDevice.width - rowLeft.spacing
 
-                    textFormat: Text.PlainText
+//                    textFormat: Text.PlainText
                     color: Theme.colorSubText
                     font.pixelSize: bigAssMode ? 20 : 18
                     //font.capitalization: Font.Capitalize
@@ -582,15 +609,15 @@ Item {
 
             ////
 
-            Loader {
-                id: loaderIndicators
-                anchors.verticalCenter: parent.verticalCenter
+//            Loader {
+//                id: loaderIndicators
+//                anchors.verticalCenter: parent.verticalCenter
 
-                visible: boxDevice.hasDataToday
+//                visible: boxDevice.hasDataToday
 
-                sourceComponent: null
-                asynchronous: false
-            }
+//                sourceComponent: null
+//                asynchronous: false
+//            }
 
             ////
 

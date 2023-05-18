@@ -18,6 +18,7 @@ Item {
     property alias space: spaceModel
     property alias plant: plantModel
     property alias alarm: alarmModel
+    property alias device: deviceModel
     property alias globalPlant: _globalPlantList
     property alias plantSelect: _searchPopup
     property alias _colors: __colors
@@ -35,6 +36,11 @@ Item {
 
     AlarmModel {
         id: alarmModel
+        db: _sqliClient
+    }
+
+    DeviceModel {
+        id: deviceModel
         db: _sqliClient
     }
 
@@ -79,13 +85,14 @@ Item {
                 __sqliClient.execute("DROP TABLE Plant01")
                 __sqliClient.execute("DROP TABLE PlantInSpace01")
                 __sqliClient.execute("DROP TABLE Space01")
+                __sqliClient.execute("DROP TABLE Device01")
             }
 
             Promise.all([alarmModel.init(), plantModel.init(), spaceModel.init(
-                             )]).then(function (rs) {
+                             ), deviceModel.init()]).then(function (rs) {
                                  console.info("[+] All table ready")
                              }).catch(function (rs) {
-                                 console.error("Something happen => ", rs)
+                                 console.error("Something happen when loading DB tables => ", rs)
                              })
         }
     }
