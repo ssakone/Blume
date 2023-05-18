@@ -411,7 +411,7 @@ Item {
                     id: imageDevice
                     anchors.fill: parent
                     visible: (wideAssMode || bigAssMode)
-                    fillMode: Image.PreserveAspectFit
+                    fillMode: Image.PreserveAspectCrop
                     asynchronous: true
                 }
 
