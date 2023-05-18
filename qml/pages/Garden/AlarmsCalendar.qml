@@ -15,7 +15,7 @@ BPage {
     id: control
 
     property int forXDays: 30
-    property var startDay: new Date(formatToISOString(new Date()))
+    property var startDay: new Date(Utils.humanizeToISOString(new Date()))
     property var endDay: new Date(startDay.getTime() + (forXDays * 1000 * 60 * 60 * 24))
 
     property bool isLoading: true
@@ -64,16 +64,6 @@ BPage {
         return dateBefore
     }
 
-    function formatToISOString(date) {
-        console.log("\n Date to format ", typeof date, date)
-        const d = date.getDate()
-        const m = date.getMonth() + 1
-        const y = date.getFullYear()
-        const formated = `${y}/${m>9 ? m : '0'+m }/${d > 9 ? d : '0'+d}`
-        console.log(formated , " -->> ", new Date(formated))
-        return formated
-    }
-
     function fetchMore() {
         console.log("Fetching more...")
         control.isLoading = true
@@ -102,8 +92,8 @@ BPage {
 
                 let lastDone = null
                 if(dayIndex===0) {
-                    let realLastestDoneDate = currentAlarm.last_done || control.getDateBefore(new Date(), currentAlarm.frequence+i)
-                    realLastestDoneDate = control.formatToISOString(realLastestDoneDate)
+                    let realLastestDoneDate = control.getDateBefore(new Date(), currentAlarm.frequence+i)
+                    realLastestDoneDate = Utils.humanizeToISOString(realLastestDoneDate)
                     lastDone = new Date(realLastestDoneDate)
                 } else {
                     // Already in ISONString format
