@@ -160,12 +160,11 @@ Item {
         // Location
         textLocation.font.pixelSize = bigAssMode ? 20 : 18
         if (boxDevice.deviceLocationName) {
+            textLocation.text = boxDevice.deviceLocationName
             textLocation.visible = true
         } else {
             if (Qt.platform.os === "osx" || Qt.platform.os === "ios") {
                 textLocation.visible = false
-            } else {
-                textLocation.visible = true
             }
         }
     }
@@ -410,7 +409,6 @@ Item {
                 Image {
                     id: imageDevice
                     anchors.fill: parent
-                    visible: (wideAssMode || bigAssMode)
                     fillMode: Image.PreserveAspectCrop
                     asynchronous: true
                 }
@@ -437,7 +435,8 @@ Item {
                     id: textLocation
                     width: rowLeft.width - imageDevice.width - rowLeft.spacing
 
-//                    textFormat: Text.PlainText
+                    text: qsTr("No location")
+                    visible: false
                     color: Theme.colorSubText
                     font.pixelSize: bigAssMode ? 20 : 18
                     //font.capitalization: Font.Capitalize

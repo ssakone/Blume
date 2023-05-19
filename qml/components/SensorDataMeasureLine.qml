@@ -47,30 +47,38 @@ Rectangle {
 
     Column {
         anchors {
-//            right: parent.right
-//            rightMargin: 20
-            left: parent.left
-            leftMargin: (2*root.width)/3
+            right: parent.right
+            rightMargin: 20
+//            left: parent.left
+//            leftMargin: (2*root.width)/3
             verticalCenter: parent.verticalCenter
         }
 
         spacing: 5
 
-        Row {
-            Label {
-                text: value.toFixed(1)
-                color: (valueMin <= value && value <= valueMax) ? $Colors.green400 : $Colors.red400
-                font {
-                    pixelSize: 24
+        Item  {
+            width: parent.width
+            height: _row.height
+
+            Row {
+                id: _row
+                anchors.right: parent.right
+                Label {
+                    text: value.toFixed(1)
+                    color: (valueMin <= value && value <= valueMax) ? $Colors.green400 : $Colors.red400
+                    font {
+                        pixelSize: 24
+                    }
+                }
+                IconSvg {
+                    source: Icons.chevronDown
+                    visible: !(valueMin <= value && value <= valueMax)
+                    color: $Colors.red400
+                    anchors.verticalCenter: parent.verticalCenter
                 }
             }
-            IconSvg {
-                source: Icons.chevronDown
-                visible: !(valueMin <= value && value <= valueMax)
-                color: $Colors.red400
-                anchors.verticalCenter: parent.verticalCenter
-            }
         }
+
 
         Label {
             text: valueMin + ' - ' + valueMax + ' (' + suffix + ')'

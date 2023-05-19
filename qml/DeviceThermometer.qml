@@ -427,31 +427,29 @@ Loader {
                     height: 24
                     spacing: 4
 
-                    IconSvg {
-                        id: imageEditLocation
-                        width: 20
-                        height: 20
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        source: "qrc:/assets/icons_material/duotone-edit-24px.svg"
-                        color: cccc
-
-                        opacity: (isMobile || !textInputLocation.text || textInputLocation.focus || textInputLocationArea.containsMouse) ? 0.9 : 0
-                        Behavior on opacity { OpacityAnimator { duration: 133 } }
-                    }
-                    TextInput {
+                    TextField {
                         id: textInputLocation
                         anchors.verticalCenter: parent.verticalCenter
 
                         padding: 4
                         font.pixelSize: 17
                         font.bold: false
-                        color: cccc
+                        color: Theme.colorPrimary
+
+                        background: Rectangle {
+                            color: $Colors.white
+                            radius: height/2
+                        }
 
                         text: currentDevice ? currentDevice.deviceLocationName : ""
                         onEditingFinished: {
                             currentDevice.deviceLocationName = text
                             focus = false
+                        }
+                        Component.onCompleted: {
+                            if(text === "") {
+                                forceActiveFocus()
+                            }
                         }
 
                         MouseArea {
@@ -479,6 +477,11 @@ Loader {
 
                         source: "qrc:/assets/icons_material/duotone-pin_drop-24px.svg"
                         color: cccc
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: textInputLocation.forceActiveFocus()
+                        }
                     }
                 }
 
