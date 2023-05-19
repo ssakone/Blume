@@ -21,9 +21,21 @@ BPage {
     id: root
     required property variant insect_data
     property variant details: insect_data["details"]
+    property bool fullScreen: false
+
+    onFullScreenChanged: {
+        if(fullScreen) fullScreenPop.close()
+        else fullScreenPop.open()
+    }
 
     header: AppBar {
         title: insect_data['name']
+    }
+
+    FullScreenPopup {
+        id: fullScreenPop
+        onSwithMode: fullScreen = !fullScreen
+        source: details['image']['value'] || ""
     }
 
     ColumnLayout {
@@ -49,6 +61,11 @@ BPage {
                         anchors.fill: parent
                         source: details['image']['value'] || ""
                         fillMode: Image.PreserveAspectCrop
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: fullScreen = !fullScreen
                     }
                 }
                 Column {

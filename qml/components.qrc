@@ -46,6 +46,7 @@
         <file>components/SearchPlants.qml</file>
         <file>components/SpaceSearchPopup.qml</file>
         <file>components/BottomTabDevices.qml</file>
+        <file>components/FullScreenPopup.qml</file>
     </qresource>
     <qresource prefix="/js">
         <file alias="Http.js">components_js/Http.js</file>

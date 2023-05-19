@@ -21,6 +21,8 @@ BPage {
     id: resultIdentifierDetailPop
     property variant plant_data
     property variant details: plant_data["plant_details"]
+    property bool fullScreen: false
+
 
     onVisibleChanged: {
         if (!visible)
@@ -32,11 +34,23 @@ BPage {
         }
     }
 
+    onFullScreenChanged: {
+        if(fullScreen) fullScreenPop.close()
+        else fullScreenPop.open()
+    }
+
     background: Rectangle {
         color: Theme.colorPrimary
     }
 
     header: AppBar {}
+
+    FullScreenPopup {
+        id: fullScreenPop
+        onSwithMode: fullScreen = !fullScreen
+        source: details['wiki_image']['value']
+    }
+
 
     ColumnLayout {
         anchors.fill: parent
@@ -54,6 +68,10 @@ BPage {
                 anchors.fill: parent
                 source: details['wiki_image']['value']
                 fillMode: Image.PreserveAspectCrop
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: fullScreen = !fullScreen
             }
         }
 

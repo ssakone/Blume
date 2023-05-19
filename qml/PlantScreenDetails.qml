@@ -21,6 +21,7 @@ Popup {
     padding: 0
 
     property variant plant: ({})
+    property bool fullScreen: false
 
     function generateUUID() {
         // Public Domain/MIT
@@ -117,6 +118,10 @@ Popup {
         }
 
     }
+    onFullScreenChanged: {
+        if(fullScreen) fullScreenPop.close()
+        else fullScreenPop.open()
+    }
 
     ListModel {
         id: modelImagesPlantes
@@ -126,6 +131,25 @@ Popup {
         id: spaceSearchPop
         width: parent.width
         height: Qt.platform.os === "ios" ? parent.height - 45 : parent.height - 20
+    }
+
+    FullScreenPopup {
+        id: fullScreenPop
+        onSwithMode: fullScreen = !fullScreen
+        source: {
+            if(plant['images_plantes']?.count !== undefined) {
+                console.log("First agent")
+                return plant['images_plantes']?.count
+                                                   ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/" + plant['images_plantes']?.get(0).directus_files_id) : ""
+            }
+            else if(plant['images_plantes']?.length !== undefined) {
+                console.log("Second agent")
+                return plant['images_plantes']?.length
+                                                   ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/" + plant['images_plantes'][0].directus_files_id) : ""
+            }
+            return ""
+
+        }
     }
 
     ColumnLayout {
@@ -224,6 +248,7 @@ Popup {
                     anchors.rightMargin: 10
 
                     Rectangle {
+                        property bool isFullScreen: false
                         Layout.fillWidth: true
                         Layout.preferredHeight: singleColumn ? 300 : plantScreenDetailsPopup.height / 3
 
@@ -256,6 +281,11 @@ Popup {
                             }
 
                             clip: true
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: fullScreen = !fullScreen
                         }
                     }
 

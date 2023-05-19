@@ -23,11 +23,22 @@ BPage {
     property variant desease_data
     property variant details: desease_data["disease_details"] ?? {}
     property bool header_hidden: false
+    property bool fullScreen: false
+
+    onFullScreenChanged: {
+        if(fullScreen) fullScreenPop.close()
+        else fullScreenPop.open()
+    }
 
     padding: 0
 
     header: AppBar {
         title: desease_data.name ?? ""
+    }
+
+    FullScreenPopup {
+        id: fullScreenPop
+        onSwithMode: fullScreen = !fullScreen
     }
 
     Flickable {
@@ -52,6 +63,13 @@ BPage {
                         model: desease_data['similar_images']
                         delegate: Image {
                             source: modelData.url || modelData || ""
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    fullScreenPop.source = source
+                                    fullScreen = !fullScreen
+                                }
+                            }
                         }
                     }
                 }
@@ -61,7 +79,7 @@ BPage {
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 10
                     currentIndex: imageSwipeView.currentIndex
-                    count: 3
+                    count: desease_data['similar_images'].length || desease_data['similar_images'].count
                 }
             }
 
