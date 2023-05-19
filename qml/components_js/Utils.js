@@ -139,3 +139,55 @@ let Flatted = (function (exports) {
 
     return exports
 })({})
+
+function humanizeToISOString(date) {
+    const d = date.getDate()
+    const m = date.getMonth() + 1
+    const y = date.getFullYear()
+    const formated = `${y}/${m>9 ? m : '0'+m }/${d > 9 ? d : '0'+d}`
+    console.log(formated , " -->> ", new Date(formated))
+    return formated
+}
+
+function humanizeDayPeriod(freq) {
+    let period = "NULL"
+    let periodIndex = 3
+
+    // Is it yearly
+    if(freq > 365 ) {
+        period = qsTr("Year")
+        periodIndex = 3
+        freq = Math.floor(freq/365)
+    } else  {
+        // is it monthly
+        if(freq > 30 ) {
+            period = qsTr("Month")
+            periodIndex = 2
+            freq = Math.floor(freq/30)
+        } else {
+            // is it weekly
+            if(freq > 7 ) {
+                period = qsTr("Week")
+                periodIndex = 1
+                freq = Math.floor(freq/7)
+            } else {
+                // else, it is certainly a number of days between [0-7]
+                if(freq > 0) {
+                    period = qsTr("Day")
+                    periodIndex = 0
+                } else period = qsTr("Never")
+            }
+        }
+    }
+
+    if(freq > 1) {
+        period += "s"
+    }
+
+    const data = {
+        freq: freq,
+        period_label: period,
+        period_index: periodIndex
+    }
+    return data
+}

@@ -1,7 +1,7 @@
 import QtQuick
 
 import "../services/"
-
+import "../components_js/Utils.js" as Utils
 Model {
     id: control
     debug: true
@@ -90,7 +90,8 @@ Model {
             data = control.beforeUpdate(data)
         }
         return new Promise(function (resolve, reject) {
-            let completer = "SET done = %1".arg(newStatus)
+            const today = Utils.humanizeToISOString(new Date())
+            let completer = "SET done = %1, last_done='%2'".arg(newStatus).arg(today)
 
             const query = logQuery(__query__update__.arg(
                                                            completer).arg(

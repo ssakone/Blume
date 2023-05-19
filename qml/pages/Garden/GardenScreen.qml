@@ -11,7 +11,7 @@ import SortFilterProxyModel
 import "../../components"
 import "../../components_generic"
 import "../../components_js/Http.js" as Http
-
+import "../../components_js/Utils.js" as Utils
 BPage {
     id: control
     objectName: "Garden"
@@ -217,12 +217,32 @@ BPage {
                         property var plantObj: JSON.parse(model.plant_json)
                         title: model.libelle || "NULL"
                         plant_name: plantObj.name_scientific
+
                         subtitle: {
-                            $Model.space.sqlGet(model.space).then(res => {
-                                                                      subtitle = "Space - "
-                                                                      + res.libelle
-                                                                  }).catch(
-                                        console.warn)
+                            if(model.done === 0 && model.last_done) {
+                                const today = new Date()
+                                const last_done = new Date(model.last_done)
+                                const diffDays = (new Date(today - last_done)).getDate()
+
+                                if(diffDays > model.frequence) {
+                                    const delay = diffDays - model.frequence
+                                    const formated = Utils.humanizeDayPeriod(delay)
+                                    return `<font color='${$Colors.red500}'> ${formated.freq < 10 ? '0'+formated.freq : formated.freq} ${formated.period_label} ${qsTr("late")} </font>`
+                                } else {
+                                    $Model.space.sqlGet(model.space).then(res => {
+                                                                              subtitle = "Space - "
+                                                                              + res.libelle
+                                                                          }).catch(
+                                                console.warn)
+                                }
+                            } else {
+                                $Model.space.sqlGet(model.space).then(res => {
+                                                                          subtitle = "Space - "
+                                                                          + res.libelle
+                                                                      }).catch(
+                                            console.warn)
+                            }
+
                             return ""
                         }
                         isDone: model.done === 1
