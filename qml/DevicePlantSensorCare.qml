@@ -7,7 +7,7 @@ Item {
     id: devicePlantSensorCare
 
     function loadData() {
-        plantInfos.visible = false
+//        plantInfos.visible = false
         plantLimits.visible = true
         plantJournal.visible = false
 
@@ -120,22 +120,22 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 12
 
-            ButtonWireframe {
-                width: 100
-                height: isPhone ? 32 : 36
+//            ButtonWireframe {
+//                width: 100
+//                height: isPhone ? 32 : 36
 
-                fullColor: (plantInfos.visible)
-                primaryColor: Theme.colorPrimary
-                secondaryColor: Theme.colorBackground
+//                fullColor: (plantInfos.visible)
+//                primaryColor: Theme.colorPrimary
+//                secondaryColor: Theme.colorBackground
 
-                text: qsTr("Plant")
-                onClicked: {
-                    plantInfos.visible = true
-                    plantInfos.load()
-                    plantLimits.visible = false
-                    plantJournal.visible = false
-                }
-            }
+//                text: qsTr("Plant")
+//                onClicked: {
+//                    plantInfos.visible = true
+//                    plantInfos.load()
+//                    plantLimits.visible = false
+//                    plantJournal.visible = false
+//                }
+//            }
 
             ButtonWireframe {
                 width: 100
@@ -147,7 +147,7 @@ Item {
 
                 text: qsTr("Limits")
                 onClicked: {
-                    plantInfos.visible = false
+//                    plantInfos.visible = false
                     plantLimits.visible = true
                     plantJournal.visible = false
                 }
@@ -163,7 +163,7 @@ Item {
 
                 text: qsTr("Journal")
                 onClicked: {
-                    plantInfos.visible = false
+//                    plantInfos.visible = false
                     plantLimits.visible = false
                     plantJournal.visible = true
                     plantJournal.load()
@@ -194,13 +194,13 @@ Item {
 */
     ////////////////////////////////////////////////////////////////////////////
 
-    PlantCareInfos {
-        id: plantInfos
-        anchors.top: subHeader.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-    }
+//    PlantCareInfos {
+//        id: plantInfos
+//        anchors.top: subHeader.bottom
+//        anchors.left: parent.left
+//        anchors.right: parent.right
+//        anchors.bottom: parent.bottom
+//    }
 
     ////////////////////////////////////////////////////////////////////////////
 

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 import ThemeEngine 1.0
+import "./pages/Plant"
 
 Item {
     id: plantCareInfos
@@ -41,10 +42,7 @@ Item {
             }
         }
         onLoaded: {
-            page_view.push(plantScreen, {
-                               "currentPlant": currentDevice.plant
-                           })
-            //plantScreenLoader.item.setPlant(currentDevice.plant)
+            plantScreenLoader.item.setPlant(currentDevice.plant)
         }
 
         active: false
@@ -62,9 +60,16 @@ Item {
                                       && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
 
             function setPlant() {
-                page_view.push(plantScreen, {
-                                   "currentPlant": currentDevice.plant
-                               })
+                plantScreen.currentPlant = currentDevice.plant
+
+                if (typeof itemPlantViewer !== "undefined" || itemPlantViewer) {
+                    itemPlantViewer.contentX = 0
+                    itemPlantViewer.contentY = 0
+                }
+            }
+            PlantScreen {
+                id: plantScreen
+                visible: true
             }
         }
     }

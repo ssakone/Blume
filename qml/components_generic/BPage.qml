@@ -2,5 +2,8 @@ import QtQuick
 import QtQuick.Controls
 
 Page {
-	background: Rectangle { }
+    property color backgroundColor: $Colors.gray50
+    background: Rectangle {
+        color: backgroundColor
+    }
 }

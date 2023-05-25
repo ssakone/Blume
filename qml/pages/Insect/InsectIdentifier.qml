@@ -15,6 +15,7 @@ import ThemeEngine 1.0
 
 import MaterialIcons
 import "../../components_js/Http.js" as Http
+import "../../components_generic"
 import "../../components"
 import "../../"
 
@@ -43,7 +44,7 @@ Page {
         preferredPositioningMethods: PositionSource.SatellitePositioningMethods
     }
     header: AppBar {
-        title: identifierLayoutView.currentIndex === 0 ? "Identification d'insecte" : "Resultat"
+        title: identifierLayoutView.currentIndex === 0 ? "Identify insects" : "Results"
         noAutoPop: true
         leading.onClicked: {
             if (identifierLayoutView.currentIndex === 0) {
@@ -55,23 +56,6 @@ Page {
                 identifierLayoutView.currentIndex--
             }
         }
-        actions: [
-            AppBarButton {
-                icon: Icons.camera
-                visible: (Qt.platform.os == 'ios'
-                          || Qt.platform.os == 'android')
-                         && identifierLayoutView.currentIndex === 0
-                onClicked: {
-                    if (Qt.platform.os === 'ios') {
-                        imgPicker.openCamera()
-                    } else {
-                        androidToolsLoader.item.openCamera()
-                    }
-                }
-                width: 64
-                height: 64
-            }
-        ]
     }
 
     ColumnLayout {
@@ -84,10 +68,17 @@ Page {
             active: Qt.platform.os === "android"
             sourceComponent: Component {
                 Item {
+                    property bool fromCamera: false
+                    property bool fromGalery: false
+
                     function openCamera() {
+                        fromCamera = true
+                        fromGalery = false
                         QtAndroidAppPermissions.openCamera()
                     }
                     function openGallery() {
+                        fromGalery = true
+                        fromCamera = false
                         QtAndroidAppPermissions.openGallery()
                     }
 
@@ -96,6 +87,9 @@ Page {
                         function onImageSelected(path) {
                             image.source = "file://?" + Math.random()
                             image.source = "file://" + path
+                            if(fromCamera) analyserButton.clicked()
+                            fromGalery  = false
+                            fromCamera = false
                         }
                     }
                 }
@@ -122,7 +116,7 @@ Page {
                     TabBar {
                         id: tabBar
                         topPadding: 0
-                        Material.background: "#00c395"
+                        Material.background: Theme.colorPrimary
                         Material.foreground: Material.color(Material.Grey,
                                                             Material.Shade50)
                         Material.accent: Material.color(Material.Grey,
@@ -131,10 +125,10 @@ Page {
                         visible: Qt.platform.os !== 'ios'
                                  && Qt.platform.os !== 'android'
                         TabButton {
-                            text: "Fichier"
+                            text: qsTr("File image")
                         }
                         TabButton {
-                            text: "Camera"
+                            text: qsTr("Camera")
                             visible: Qt.platform.os !== 'ios'
                         }
                         onCurrentIndexChanged: {
@@ -160,6 +154,14 @@ Page {
                                     tm.start()
                             }
 
+                            function chooseFile() {
+                                if (Qt.platform.os === 'ios') {
+                                    imgPicker.openPicker()
+                                } else if (Qt.platform.os === 'android') {
+                                    androidToolsLoader.item.openGallery()
+                                } else
+                                    fileDialog.open()
+                            }
                             Timer {
                                 id: tm
                                 interval: 1000
@@ -177,42 +179,76 @@ Page {
                                 Image {
                                     id: image
                                     anchors.fill: parent
-                                    fillMode: Image.PreserveAspectFit
+                                    fillMode: (Qt.platform.os == 'ios'
+                                               || Qt.platform.os == 'android') ? Image.PreserveAspectCrop : Image.PreserveAspectFit
+                                }
+                                ItemNoImage {
+                                    visible: image.source.toString() === ""
+                                    anchors.fill: parent
+                                    spacing: 10
+                                    padding: 25
+
+                                    title: qsTr("Identify insect")
+                                    subtitle: qsTr("Be sure to take a clear, bright picture that includes only the pest you want to identify.")
+                                    onClicked: tabView.chooseFile
                                 }
                                 Column {
-                                    visible: image.source.toString() === ""
-                                    anchors.centerIn: parent
-                                    spacing: 10
-                                    IconSvg {
-                                        width: 64
-                                        height: 64
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        source: Icons.fileDocument
-                                        opacity: .5
-                                        color: 'black'
+                                    width: 70
+                                    anchors {
+                                        bottom: parent.bottom
+                                        bottomMargin: 10
+
+                                        right: parent.right
+                                        rightMargin: 10
                                     }
-                                    Label {
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        width: 140
-                                        wrapMode: Label.Wrap
-                                        font.pixelSize: 16
-                                        horizontalAlignment: Label.AlignHCenter
-                                        text: 'Clickez pour importer une image'
-                                        opacity: .6
+                                    spacing: 7
+
+                                    ClipRRect {
+                                        visible: image.source.toString() !== ""
+                                        width: 60
+                                        height: width
+                                        radius: height / 2
+
+                                        ButtonWireframe {
+                                            fullColor: true
+                                            primaryColor: Theme.colorPrimary
+                                            anchors.fill: parent
+                                            onClicked: tabView.chooseFile()
+                                            IconSvg {
+                                                anchors.centerIn: parent
+                                                source: Icons.image
+                                                color: "white"
+                                            }
+                                        }
                                     }
+
+                                    ClipRRect {
+                                        visible: Qt.platform.os == 'ios' || Qt.platform.os == 'android'
+                                        width: 60
+                                        height: width
+                                        radius: height / 2
+
+                                        ButtonWireframe {
+                                            fullColor: true
+                                            primaryColor: Theme.colorPrimary
+                                            anchors.fill: parent
+                                            onClicked: {
+                                                if (Qt.platform.os === 'ios') {
+                                                    imgPicker.openCamera()
+                                                } else {
+                                                    androidToolsLoader.item.openCamera()
+                                                }
+                                            }
+                                            IconSvg {
+                                                anchors.centerIn: parent
+                                                source: Icons.camera
+                                                color: "white"
+                                            }
+                                        }
+                                    }
+
                                 }
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        if (Qt.platform.os === 'ios') {
-                                            imgPicker.openPicker()
-                                        } else if (Qt.platform.os === 'android') {
-                                            androidToolsLoader.item.openGallery(
-                                                        )
-                                        } else
-                                            fileDialog.open()
-                                    }
-                                }
+
                             }
 
                             Loader {
@@ -331,7 +367,7 @@ Page {
                         }
 
                         NiceButton {
-                            text: "Nouveau"
+                            text: qsTr("New")
                             Layout.preferredHeight: 60
                             Layout.preferredWidth: 120
                             visible: tabBar.currentIndex === 1
@@ -349,7 +385,7 @@ Page {
                         NiceButton {
                             id: analyserButton
                             Layout.alignment: Qt.AlignHCenter
-                            text: "Analyser"
+                            text: qsTr("Analyse")
                             icon.source: Icons.magnify
                             Layout.preferredWidth: Qt.platform.os === 'ios' ? 120 : 180
                             Layout.preferredHeight: 60
@@ -364,25 +400,22 @@ Page {
                                                     Qt.platform.os
                                                     === "windows" ? "file:///" : "file://",
                                                     ""))],
+                                        "similar_images": true,
                                         "longitude": gps.position.coordinate.longitude,
                                         "latitude": gps.position.coordinate.latitude
                                     }
                                     Http.request(
                                                 "POST",
-                                                "https://insect.mlapi.ai/api/v1/identification",
+                                                "https://insect.mlapi.ai/api/v1/identification?language=en&details=common_names,url,description,taxonomy,image,images",
                                                 data,
                                                 "0GqFkaJYbGLGG4tKMTjZ5FymjSbhlGfUriiZ7FkGIyX2Tm0qK4").then(
                                                 function (r) {
                                                     let datas = JSON.parse(r)
-                                                    console.log(JSON.stringify(
-                                                                    datas))
                                                     imgAnalysisSurface.loading = false
                                                     pageControl.insects = datas.result.classification.suggestions
                                                     identifedPlantListView.model
                                                             = pageControl.insects
                                                     identifierLayoutView.currentIndex = 1
-                                                    console.log(JSON.stringify(
-                                                                    datas))
                                                 }).catch(function (e) {
                                                     imgAnalysisSurface.loading = false
                                                     console.log('Erreur',
@@ -405,9 +438,7 @@ Page {
                                 }
                             }
                         }
-                        Item {
-                            Layout.fillWidth: true
-                        }
+
                     }
 
                     Image2Base64 {
@@ -419,7 +450,7 @@ Page {
                         Layout.alignment: Qt.AlignHCenter
                         spacing: 10
                         ButtonWireframe {
-                            text: "Fichier"
+                            text: qsTr("File image")
                             Layout.fillWidth: true
                             Layout.preferredHeight: 45
                             height: 45
@@ -427,10 +458,10 @@ Page {
                         }
                     }
 
-                    Item {
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                    }
+//                    Item {
+//                        Layout.fillHeight: true
+//                        Layout.fillWidth: true
+//                    }
                 }
             }
             Item {
@@ -452,7 +483,7 @@ Page {
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
                             visible: pageControl.insects.length > 0 ?? false
-                            text: "Un de ces résultats devrait correspondre à votre recherche"
+                            text: qsTr("One of these results should match your search")
                         }
                         Label {
                             font.pixelSize: 28
@@ -462,13 +493,16 @@ Page {
                             anchors.horizontalCenter: parent.horizontalCenter
                             verticalAlignment: Qt.AlignVCenter
                             visible: pageControl.insects.length === 0
-                            text: "Ceci n'est pas un insecte"
+                            text: qsTr("No insects detected")
                         }
                     }
 
                     delegate: ItemDelegate {
                         required property int index
                         required property variant modelData
+
+                        height: 100
+                        width: identifedPlantListView.width
 
                         Column {
                             anchors.verticalCenter: parent.verticalCenter
@@ -477,27 +511,32 @@ Page {
                             spacing: 10
                             Label {
                                 text: modelData["name"]
-                                font.pixelSize: 21
+                                font.pixelSize: 16
+                            }
+                            Label {
+                                text: modelData["details"]["common_names"]?.length > 0 ? modelData["details"]["common_names"][0] : ""
                             }
                         }
 
-                        height: 60
-                        width: identifedPlantListView.width
-                        Rectangle {
+                        ClipRRect {
                             anchors.right: parent.right
                             anchors.rightMargin: 10
                             anchors.verticalCenter: parent.verticalCenter
-                            width: 55
-                            height: 55
-                            radius: width / 2
-                            color: "teal"
-                            Label {
-                                anchors.centerIn: parent
-                                color: "white"
-                                text: parseInt(
-                                          modelData["probability"] * 100) + "%"
+                            width: 80
+                            height: width
+                            radius: height / 2
+
+                            Rectangle {
+                                anchors.fill: parent
+                                color: "#e5e5e5"
+                                Image {
+                                    source: modelData["details"]["image"]['value']
+                                    anchors.fill: parent
+                                }
                             }
                         }
+
+                        onClicked: page_view.push(navigator.insectDetailPage, {insect_data: modelData})
                     }
                 }
             }

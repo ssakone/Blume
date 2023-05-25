@@ -116,7 +116,7 @@ Item {
                 id: btn2
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                text: qsTr("Launch detection")
+                text: qsTr("Launch detection") // qsTr("Launch detection")
                 fullColor: true
                 primaryColor: Theme.colorPrimary
 

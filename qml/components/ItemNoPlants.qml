@@ -7,12 +7,13 @@ Rectangle {
     anchors.centerIn: parent
     anchors.verticalCenterOffset: -40
 
+
     width: singleColumn ? (parent.width*0.5) : (parent.height*0.4)
     height: width
     radius: width
     color: Theme.colorForeground
 
-    property string text: "No plants found..."
+    property alias textItem: textItem
     signal clicked()
 
     IconSvg {
@@ -28,13 +29,17 @@ Rectangle {
     }
 
     Text {
+        id: textItem
         anchors.top: parent.bottom
         anchors.topMargin: 20
         anchors.horizontalCenter: parent.horizontalCenter
 
-        text: qsTr(text)
+        text: qsTr("No plants found...")
         textFormat: Text.PlainText
         font.pixelSize: Theme.fontSizeContentBig
-        color: Theme.colorText
+
+        width: parent.width
+        wrapMode: Text.Wrap
+        horizontalAlignment: Text.AlignHCenter
     }
 }

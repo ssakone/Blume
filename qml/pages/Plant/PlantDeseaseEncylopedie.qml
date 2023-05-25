@@ -2,217 +2,304 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
-import SortFilterProxyModel
-import QtMultimedia
-import QtQuick.Dialogs
-import ImageTools
-import ImagePicker
-import Qt.labs.platform
-import QtAndroidTools
-import QtPositioning
-import Qt5Compat.GraphicalEffects
-
 import ThemeEngine 1.0
 
-import MaterialIcons
+import SortFilterProxyModel
 
-import "../"
-import "../Insect/"
-import "../../"
 import "../../components"
 import "../../components_generic"
 import "../../components_js/Http.js" as Http
 
+import "../.."
+
 BPage {
+    id: diseaseListView
+
+    property int currentPage: 0
+    property int pageLimit: 20
+
+    property bool isLoading: true
+    property string previousDisplayText: ""
+
     header: AppBar {
-        title: "Encyclopedie des plantes"
+        title: "Liste des maladies"
+        noAutoPop: true
+        leading.onClicked: page_view.pop()
     }
 
-    Item {
-        id: itemListAllDeseases
+    Component.onCompleted: {
+        fetchMore()
+        diseaseSearchBox.forceActiveFocus()
+    }
+
+    function fetchMore() {
+        console.log("Gonna fetch_more...")
+        isLoading = true
+        let query = `https://blume.mahoudev.com/items/Maladies?fields[]=*.*&limit=${diseaseSearchBox.displayText !== "" ? 70 : pageLimit}&offset=${currentPage
+            * pageLimit}${diseaseSearchBox.displayText
+            === "" ? '' : "&filter[nom_scientifique][_contains]=" + diseaseSearchBox.displayText}`
+
+        Http.fetch({
+                       "method": 'GET',
+                       "url": query
+                   }).then(response => {
+                               let data = JSON.parse(response).data
+
+                               // Remove null value
+                               if (diseaseSearchBox.displayText !== "") {
+                                   diseasesModel.clear()
+                                }
+                               for (var i = 0; i < data.length; i++) {
+                                   let item = data[i]
+                                   let itemKeys = Object.keys(item)
+                                   for(let j=0; j < itemKeys.length; j++){
+                                       let key = itemKeys[j]
+                                       let value = item[key]
+                                       if ( value === null) {
+                                           if('noms_communs' === key) item[key] = []
+                                           else item[key] = ""
+                                       } else if('noms_communs' === key) item[key] = value?.map(_ => ({name: _}))
+                                   }
+                                   diseasesModel.append(item)
+                               }
+
+                               isLoading = false
+                           })
+    }
+
+
+    ListModel {
+        id: diseasesModel
+    }
+
+    Timer {
+        id: searchTimer
+        interval: 1500
+        repeat: true
+        running: diseaseSearchBox.displayText !== "" && diseaseListView.previousDisplayText !== diseaseSearchBox.text
+        onTriggered: {
+            fetchMore()
+            diseaseListView.previousDisplayText = diseaseSearchBox.text
+        }
+    }
+
+    ColumnLayout {
         anchors.fill: parent
-        property variant fetched_deseases: []
+        spacing: 5
 
-        Component.onCompleted: {
-            Http.fetch({
-                           "method": 'GET',
-                           "url": "https://blume.mahoudev.com/items/Maladies?fields[]=*.*"
-                       }).then(response => {
-                                   let data = JSON.parse(response).data
-                                   fetched_deseases = data
-                               })
-        }
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 5
+            Layout.margins: 15
 
-        ListModel {
-            id: maladiesModel
+            TextFieldThemed {
+                id: diseaseSearchBox
+                Layout.fillWidth: true
+                Layout.preferredHeight: 40
 
-            ListElement {
-                nom: "Oïdium"
-                sousDescription: "Champignon blanc sur les feuilles"
-                dangerosite: 0.5
-            }
-            ListElement {
-                nom: "Mildiou"
-                sousDescription: "Taches jaunes ou brunes sur les feuilles"
-                dangerosite: 0.6
-            }
-            ListElement {
-                nom: "Tavelure"
-                sousDescription: "Taches brunes sur les fruits et les feuilles"
-                dangerosite: 0.5
-            }
-            ListElement {
-                nom: "Rouille"
-                sousDescription: "Pustules orangées sur les feuilles"
-                dangerosite: 0.6
-            }
-            ListElement {
-                nom: "Pourriture grise"
-                sousDescription: "Moisissure grise sur les fruits"
-                dangerosite: 0.7
-            }
-            ListElement {
-                nom: "Anthracnose"
-                sousDescription: "Lésions noires sur les feuilles"
-                dangerosite: 0.4
-            }
-            ListElement {
-                nom: "Chancre"
-                sousDescription: "Lésions sur les branches et troncs"
-                dangerosite: 0.7
-            }
-            ListElement {
-                nom: "Fusariose"
-                sousDescription: "Pourriture des racines et du collet"
-                dangerosite: 0.8
-            }
-            ListElement {
-                nom: "Nécrose"
-                sousDescription: "Mort des tissus végétaux"
-                dangerosite: 0.6
-            }
-            ListElement {
-                nom: "Verticilliose"
-                sousDescription: "Flétrissement et décoloration des feuilles"
-                dangerosite: 0.7
-            }
-            ListElement {
-                nom: "Bactériose"
-                sousDescription: "Pourriture bactérienne des tissus"
-                dangerosite: 0.8
-            }
-            ListElement {
-                nom: "Virose"
-                sousDescription: "Infection virale des plantes"
-                dangerosite: 0.7
-            }
-            ListElement {
-                nom: "Jaunisse"
-                sousDescription: "Décoloration jaune des feuilles"
-                dangerosite: 0.5
-            }
-            ListElement {
-                nom: "Sclérotiniose"
-                sousDescription: "Pourriture des tiges et des racines"
-                dangerosite: 0.6
-            }
-            ListElement {
-                nom: "Phytophthora"
-                sousDescription: "Pourriture des racines"
-                dangerosite: 0.8
-            }
-            ListElement {
-                nom: "Rhizoctone"
-                sousDescription: "Pourriture des racines et du collet"
-                dangerosite: 0.7
-            }
-        }
+                selectByMouse: true
+                colorSelectedText: "white"
 
-        ListView {
-            id: listView
-            anchors.fill: parent
-            anchors.margins: 10
-            model: itemListAllDeseases.fetched_deseases
-            clip: true
-            delegate: ItemDelegate {
-                required property variant modelData
-                required property int index
+                onAccepted: {
+                    diseaseListView.currentPage = 0
+                    diseaseListView.fetchMore()
+                }
+                onTextChanged: {
 
-                height: 70
-                width: listView.width
-                onClicked: {
-                    let formated = {}
-                    let desease_details = {
-                        "common_names": modelData.noms_communs,
-                        "treatment": {
-                            "prevention": modelData.traitement_preventif || "",
-                            "chemical": modelData.traitement_chimique || "",
-                            "biological": modelData.traitement_biologique || ""
-                        },
-                        "description": modelData.description,
-                        "cause": modelData.cause
+                    diseaseListView.isLoading = true
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    anchors.rightMargin: 70
+                    onClicked: {
+                        parent.forceActiveFocus()
+                    }
+                }
+
+                Row {
+                    anchors.right: parent.right
+                    anchors.rightMargin: 12
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 12
+
+                    RoundButtonIcon {
+                        width: 24
+                        height: 24
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        visible: diseaseSearchBox.text.length
+                        highlightMode: "color"
+                        source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
+
+                        onClicked: diseaseSearchBox.text = ""
                     }
 
-                    formated['name'] = modelData.nom_scientifique
-                    formated['similar_images'] = modelData.images.map(item => ({
-                                                                                   "url": "https://blume.mahoudev.com/assets/" + item.directus_files_id
-                                                                               }))
-                    formated['disease_details'] = desease_details
+                    RoundButtonIcon {
+                        width: 30
+                        height: 30
+                        anchors.verticalCenter: parent.verticalCenter
 
-                    page_view.push(resultDeseaseDetailPage, {
-                                       "desease_data": formated
-                                   })
+                        visible: diseaseSearchBox.text.length
+                        highlightMode: "color"
+                        source: "qrc:/assets/icons_material/baseline-search-24px.svg"
+
+                        onClicked: {
+                            diseaseListView.currentPage = 0
+                            diseaseListView.fetchMore()
+                        }
+                    }
                 }
+            }
 
-                Rectangle {
-                    anchors.bottom: parent.bottom
-                    height: 1
-                    color: "#ccc"
-                    width: parent.width - 20
-                    opacity: .4
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    visible: index !== maladiesModel.count - 1
+        }
+
+
+        ListView {
+            id: diseaseList
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            spacing: 0
+            clip: true
+            model: diseasesModel
+
+            ScrollBar.vertical: ScrollBar {
+                property bool isLoading: false
+                id: searchScrollBar
+                onPositionChanged: {
+                    if (diseaseListView.isLoading === false
+                            && (searchScrollBar.size + searchScrollBar.position > 0.99)
+                            && diseaseSearchBox.displayText === "") {
+                        currentPage++
+                        fetchMore()
+                    }
                 }
+            }
 
-                Label {
-                    id: titleLabel
-                    anchors.top: parent.top
-                    anchors.topMargin: 15
-                    anchors.left: parent.left
-                    anchors.leftMargin: 10
-                    font.pixelSize: 21
-                    font.weight: Font.Medium
-                    width: parent.width - 20
-                    wrapMode: Label.Wrap
-                    text: modelData['nom_scientifique']
-                }
+            delegate: ItemDelegate {
+                required property variant model
+                required property int index
 
-                Label {
-                    anchors.top: titleLabel.bottom
-                    anchors.left: parent.left
-                    anchors.leftMargin: 10
-                    font.pixelSize: 12
-                    color: "gray"
-                    width: parent.width - 20
-                    wrapMode: Label.Wrap
-                    text: modelData['noms_communs'] ? modelData['noms_communs'][0] : ""
+                property variant modelData: model
+
+                width: ListView.view.width
+                height: 100
+
+                background: Rectangle {
+                    color: (index % 2) ? "white" : "#f0f0f0"
                 }
 
                 ClipRRect {
-                    id: dangerositeCercle
+                    id: leftImg
+                    height: 80
+                    width: height
+                    radius: width / 2
+                    anchors.left: parent.left
+                    anchors.leftMargin: 10
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    anchors.rightMargin: 10
-                    height: 50
-                    width: 50
-                    radius: 25
-                    Image {
-                        source: modelData['images'].length
-                                === 0 ? "" : ("https://blume.mahoudev.com/assets/"
-                                              + modelData['images'][0].directus_files_id)
+
+                    SwipeView {
+                        anchors.fill: parent
+
+                        Repeater {
+                            model: modelData.images
+                            delegate: Image {
+                                required property variant model
+                                source: "https://blume.mahoudev.com/assets/"
+                                        + model['directus_files_id']
+                            }
+                        }
+                    }
+                    Rectangle {
+                        color: "#e5e5e5"
+                        anchors.fill: parent
+                        visible: modelData['images'].count === 0
+                    }
+                }
+
+                Column {
+                    anchors.verticalCenter: parent.verticalCenter
+                    leftPadding: leftImg.width + 20
+                    width: parent.width - leftPadding - 20
+
+                    Text {
+                        text: modelData.nom_scientifique
+                        color: $Colors.black
+                        fontSizeMode: Text.Fit
+                        font.pixelSize: 18
+                        width: parent.width - 10
+                        elide: Text.ElideRight
+                    }
+
+                    Row {
+                        spacing: 10
+                        width: parent.width - 20
+                        clip: true
+
+                        Repeater {
+                            model: modelData.noms_communs.get(
+                                       0) ?? []
+                            delegate: Text {
+                                required property variant modelData
+                                text: modelData.name
+                                color: $Colors.black
+                                opacity: 0.6
+                                fontSizeMode: Text.Fit
+                                font.pixelSize: 14
+                                width: parent.width
+                                elide: Text.ElideRight
+                            }
+                        }
+                    }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: "PointingHandCursor"
+
+                    onClicked: {
+                        let formated = {}
+
+                        let desease_details = {
+                            "common_names": [],
+                            "treatment": {
+                                "prevention": modelData.traitement_preventif || "",
+                                "chemical": modelData.traitement_chimique || "",
+                                "biological": modelData.traitement_biologique || ""
+                            },
+                            "description": modelData.description,
+                            "cause": modelData.cause
+                        }
+
+                        formated['name'] = modelData.nom_scientifique
+                        formated['similar_images'] = []
+
+                        for(let i=0; i<modelData.noms_communs.count; i++ ) {
+                            desease_details["common_names"].push(modelData.noms_communs.get(i))
+                        }
+
+                        for(let j=0; j<modelData.images.count; j++ ) {
+                            formated['similar_images'].push({"url": "https://blume.mahoudev.com/assets/" + modelData.images.get(j).directus_files_id})
+                        }
+
+                        formated['disease_details'] = desease_details
+
+                        page_view.push(navigator.deseaseDetailsPage, {
+                                           "desease_data": formated
+                                       })
                     }
                 }
             }
+
+            ItemNoPlants {
+                visible: diseaseList.count === 0 && !isLoading
+                textItem.text: qsTr("No plants found. Please, try using camera !")
+            }
         }
+    }
+
+    BusyIndicator {
+        running: isLoading
+        anchors.centerIn: parent
     }
 }

@@ -10,7 +10,11 @@ import QtAndroidTools
 import "../components_generic"
 
 ClipRRect {
+    id: root
+    objectName: Math.random() * 1000
     property alias image_source: image.source
+
+    property var onImgChanged: function () {}
 
     Rectangle {
         id: area
@@ -29,6 +33,7 @@ ClipRRect {
                 } else {
                     image_source = currentFile
                 }
+                root.onImgChanged()
             }
         }
 
@@ -60,15 +65,19 @@ ClipRRect {
                 Item {
                     function openCamera() {
                         QtAndroidAppPermissions.openCamera()
+                        askPage.currentObj = root.objectName
                     }
                     function openGallery() {
                         QtAndroidAppPermissions.openGallery()
+                        askPage.currentObj = root.objectName
                     }
 
                     Connections {
                         target: QtAndroidAppPermissions
                         function onImageSelected(path) {
-                            image_source = "file://" + path
+                            if (askPage.currentObj === root.objectName) {
+                                image_source = "file://" + path
+                            }
                         }
                     }
                 }

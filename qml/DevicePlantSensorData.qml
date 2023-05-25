@@ -1,9 +1,12 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 import ThemeEngine 1.0
 import DeviceUtils 1.0
 import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
+import "components"
+import "./pages/Plant"
 
 Item {
     id: devicePlantSensorData
@@ -46,7 +49,7 @@ Item {
     function loadIndicators() {
         if (indicatorsLoader.status !== Loader.Ready) {
             if (settingsManager.bigIndicator)
-                indicatorsLoader.source = "IndicatorsSolid.qml"
+                indicatorsLoader.source = "IndicatorsCompact.qml"
             else
                 indicatorsLoader.source = "IndicatorsCompact.qml"
         } else {
@@ -55,7 +58,7 @@ Item {
     }
     function reloadIndicators() {
         if (settingsManager.bigIndicator)
-            indicatorsLoader.source = "IndicatorsSolid.qml"
+            indicatorsLoader.source = "IndicatorsCompact.qml"
         else
             indicatorsLoader.source = "IndicatorsCompact.qml"
 
@@ -131,7 +134,7 @@ Item {
             return
         }
 
-        appContent.state = "DeviceList"
+        appContent.state = "Navigator"
     }
 
     function isHistoryMode() {
@@ -198,101 +201,89 @@ Item {
                     anchors.verticalCenterOffset: 2
                     spacing: 2
 
-                    Text {
-                        id: textDeviceName
-                        height: 32
-                        anchors.left: parent.left
-
-                        visible: isDesktop
-
-                        text: currentDevice ? currentDevice.deviceName : ""
-                        color: Theme.colorText
-                        font.pixelSize: Theme.fontSizeTitle
-                        font.capitalization: Font.AllUppercase
-                        verticalAlignment: Text.AlignVCenter
-
-                        IconSvg {
-                            id: imageBattery
-                            width: 32
-                            height: 32
-                            rotation: 90
-                            anchors.verticalCenter: textDeviceName.verticalCenter
-                            anchors.left: textDeviceName.right
-                            anchors.leftMargin: 16
-
-                            visible: (currentDevice.hasBattery && currentDevice.deviceBattery >= 0)
-                            source: UtilsDeviceSensors.getDeviceBatteryIcon(currentDevice.deviceBattery)
-                            color: UtilsDeviceSensors.getDeviceBatteryColor(currentDevice.deviceBattery)
-                        }
-                    }
-
-                    Item {
-                        id: itemPlant
-                        height: 28
+                    Rectangle {
+                        id: itemPlantPreview
+                        height: 80
                         width: parent.width
+                        radius: height / 2
+                        color: $Colors.gray200
 
-                        Text {
-                            id: labelPlant
-                            width: (dataIndicators) ? dataIndicators.legendWidth : 80
-                            anchors.left: parent.left
+                        visible: !(linkedPlant === undefined || linkedPlant === null)
+
+                        RowLayout {
+                            anchors.fill: parent
                             anchors.verticalCenter: parent.verticalCenter
+                            anchors.leftMargin: 15
+                            anchors.rightMargin: 15
+                            spacing: 10
 
-                            text: qsTr("Plant")
-                            font.bold: true
-                            font.pixelSize: Theme.fontSizeContentVerySmall
-                            font.capitalization: Font.AllUppercase
-                            color: Theme.colorSubText
-                            horizontalAlignment: Text.AlignRight
-                        }
+                            ClipRRect {
+                                height: itemPlantPreview.height - 10
+                                width: height
+                                radius: width / 2
 
-                        TextInput {
-                            id: textInputPlant
-                            anchors.left: labelPlant.right
-                            anchors.leftMargin: 8
-                            anchors.baseline: labelPlant.baseline
-                            padding: 4
+                                Rectangle {
+                                    anchors.fill: parent
+                                    color: Theme.colorPrimary
 
-                            font.pixelSize: Theme.fontSizeContentBig
-                            font.bold: false
-                            color: Theme.colorHighContrast
-
-                            text: currentDevice ? currentDevice.devicePlantName : ""
-                            onEditingFinished: {
-                                currentDevice.devicePlantName = text
-                                focus = false
+                                    Image {
+                                        anchors.fill: parent
+                                        source: !linkedPlant.images_plantes[0] ? "" : "https://blume.mahoudev.com/assets/" + linkedPlant.images_plantes[0].directus_files_id
+                                    }
+                                }
                             }
 
-                            MouseArea {
-                                id: textInputPlantArea
-                                anchors.fill: parent
-                                anchors.topMargin: -4
-                                anchors.leftMargin: -4
-                                anchors.rightMargin: -24
-                                anchors.bottomMargin: -4
 
-                                hoverEnabled: true
-                                propagateComposedEvents: true
+                            Column {
+                                Layout.fillWidth: true
+                                spacing: 5
+                                Label {
+                                    text: linkedPlant?.name_scientific  || ""
+                                    font.pixelSize: 16
+                                }
+                                Label {
+                                    text: linkedPlant?.noms_communs?.length > 0 ? linkedPlant?.noms_communs[0].name : ""
+                                    font.pixelSize: 13
+                                }
+                            }
 
-                                onPressed: (mouse) => {
-                                    textInputPlant.forceActiveFocus()
-                                    mouse.accepted = false
+                            IconSvg {
+                                Layout.preferredHeight: 30
+                                Layout.preferredWidth: 30
+                                source: Icons.chevronRight
+                            }
+                        }
+
+                        PlantScreenDetails {
+                            id: plantScreenDetails
+
+                            RowLayout {
+                                width: parent.width
+                                anchors.bottom: parent.bottom
+
+                                ButtonWireframe {
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 60
+                                    text: "Remove"
+                                    fullColor: true
+                                    primaryColor: $Colors.red400
+                                    fulltextColor: $Colors.white
+                                    componentRadius: 0
+                                    onClicked: {
+                                        $Model.device.sqlDeleteByDeviceAddress(currentDevice.deviceAddress)
+                                        .then(function (rs) {
+                                            plantScreenDetails.close()
+                                        })
+                                    }
                                 }
                             }
                         }
-
-                        IconSvg {
-                            id: imageEditPlant
-                            width: 20
-                            height: 20
-                            anchors.left: textInputPlant.right
-                            anchors.leftMargin: 8
-                            anchors.verticalCenter: textInputPlant.verticalCenter
-
-                            source: "qrc:/assets/icons_material/duotone-edit-24px.svg"
-                            color: Theme.colorSubText
-
-                            opacity: (isMobile || !textInputPlant.text || textInputPlant.focus || textInputPlantArea.containsMouse) ? 0.9 : 0
-                            Behavior on opacity { OpacityAnimator { duration: 133 } }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                plantScreenDetails.plant = linkedPlant
+                                plantScreenDetails.open()
+                            }
                         }
                     }
 
@@ -300,6 +291,7 @@ Item {
                         id: itemLocation
                         height: 28
                         width: parent.width
+                        visible: linkedPlant !== undefined
 
                         Text {
                             id: labelLocation
@@ -326,28 +318,7 @@ Item {
                             font.bold: false
                             color: Theme.colorHighContrast
 
-                            text: currentDevice ? currentDevice.deviceLocationName : ""
-                            onEditingFinished: {
-                                currentDevice.deviceLocationName = text
-                                focus = false
-                            }
-
-                            MouseArea {
-                                id: textInputLocationArea
-                                anchors.fill: parent
-                                anchors.topMargin: -4
-                                anchors.leftMargin: -4
-                                anchors.rightMargin: -24
-                                anchors.bottomMargin: -4
-
-                                hoverEnabled: true
-                                propagateComposedEvents: true
-
-                                onPressed: (mouse) => {
-                                    textInputLocation.forceActiveFocus()
-                                    mouse.accepted = false
-                                }
-                            }
+                            text: (linkedSpaceName && linkedSpaceName.slice(1, -1))  || ""
                         }
 
                         IconSvg {
@@ -361,7 +332,7 @@ Item {
                             source: "qrc:/assets/icons_material/duotone-edit-24px.svg"
                             color: Theme.colorSubText
 
-                            opacity: (isMobile || !textInputLocation.text || textInputLocation.focus || textInputLocationArea.containsMouse) ? 0.9 : 0
+                            opacity: (isMobile || !textInputLocation.text || textInputLocation.focus) ? 0.9 : 0
                             Behavior on opacity { OpacityAnimator { duration: 133 } }
                         }
                     }
@@ -401,6 +372,256 @@ Item {
                             elide: Text.ElideRight
                         }
                     }
+
+                    Connections {
+                        target: $Model.device
+                        function onUpdated() {
+                            $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
+                                linkedPlant = JSON.parse(rs.plant_json)
+                                linkedSpaceName = rs?.space_name
+                                currentDevice.devicePlantName = linkedPlant?.name_scientific
+                                currentDevice.deviceLocationName = linkedSpaceName
+                                console.log("\n\n\n Catch onUpdated()")
+                            })
+                        }
+                    }
+                    Connections {
+                        target: $Model.device
+                        function onCreated() {
+                            $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
+                                linkedPlant = JSON.parse(rs.plant_json)
+                                linkedSpaceName = rs?.space_name
+                                currentDevice.devicePlantName = linkedPlant?.name_scientific
+                                currentDevice.deviceLocationName = linkedSpaceName
+                                console.log("\n\n\n Catch onCreated() ")
+                            })
+                        }
+                    }
+
+                    Connections {
+                        target: $Model.device
+                        function onDeleted() {
+                            $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
+                                linkedPlant = undefined
+                                linkedSpaceName = ""
+                                currentDevice.devicePlantName = ""
+                                currentDevice.deviceLocationName = linkedSpaceName
+                                console.log("\n\n\n Catch onDeleted() ")
+                            })
+                        }
+                    }
+
+                    Item {
+                        width: parent.width
+                        height: 70
+                        visible: !itemPlantPreview.visible
+
+                        Drawer {
+                            id: plantBrowserPop
+                            parent: appWindow.contentItem
+                            width: appWindow.width
+                            height: appWindow.height
+                            padding: 0
+
+                            AppBar {
+                                id: plantBrowserAppBar
+                                title: qsTr("Back")
+                                onBackButtonClicked: plantBrowserPop.close()
+                            }
+
+                            TabBar {
+                                id: tabBar
+                                padding: 0
+                                anchors.top: plantBrowserAppBar.bottom
+                                width: parent.width
+                                contentHeight: plantBrowserAppBar.height
+
+                                TabButton {
+                                    text: qsTr("Plants of my garden")
+                                    background: Rectangle {
+                                        color: tabBar.currentIndex === 0 ? Theme.colorPrimary : $Colors.white
+                                    }
+                                }
+                                TabButton {
+                                    text: qsTr("All plants")
+                                    background: Rectangle {
+                                        color: tabBar.currentIndex === 1 ? Theme.colorPrimary : $Colors.white
+                                    }
+                                }
+                            }
+
+                            StackLayout {
+                                id: tabView
+                                anchors {
+                                    fill: parent
+                                    topMargin: tabBar.height
+                                }
+
+                                currentIndex: tabBar.currentIndex
+
+                                Item {
+                                    ListView {
+                                        anchors.fill: parent
+                                        anchors.margins: 5
+                                        anchors.topMargin: plantBrowserAppBar.height + 10
+                                        spacing: 10
+                                        model: $Model.space.plantInSpace
+                                        delegate: GardenPlantLine {
+                                            property var plant: JSON.parse(plant_json)
+                                            width: parent.width
+                                            height: 100
+                                            title: plant.name_scientific
+                                            subtitle: plant.noms_communs[0]?.name ?? ""
+                                            roomName: {
+                                                $Model.space.sqlGet(space_id).then(res => {
+                                                                                          roomName = res.libelle
+                                                                                      }).catch(
+                                                            console.warn)
+                                                return ""
+                                            }
+                                            imageSource: plant.images_plantes.length
+                                                         > 0 ? "https://blume.mahoudev.com/assets/"
+                                                               + plant.images_plantes[0].directus_files_id : ""
+                                            onClicked: {
+                                                plantScreenDetailsLoader.active = true
+                                                plantScreenDetailsLoader.item.loadPlantDetails(plant)
+                                             }
+                                        }
+                                    }
+                                }
+
+                                Item {
+                                    SearchPlants {
+                                        anchors.fill: parent
+                                        anchors.topMargin: plantBrowserAppBar.height
+                                        preventDefaultOnClick: true
+                                        hideCameraSearch: true
+                                        onItemClicked: plantData => {
+                                                           plantScreenDetailsLoader.active = true
+                                                           plantScreenDetailsLoader.item.loadPlantDetails(plantData)
+                                            console.log(currentDevice.deviceAddress)
+                                        }
+                                    }
+                                }
+
+                            }
+
+                            Loader {
+                                id: plantScreenDetailsLoader
+                                active: false
+                                sourceComponent: PlantScreenDetails {
+                                            id: plantScreenDetailsPopup
+
+                                            function loadPlantDetails(data) {
+                                                plantScreenDetailsPopup.plant = data
+                                                plantScreenDetailsPopup.open()
+                                            }
+
+                                            RowLayout {
+                                                id: bottomSelector
+                                                width: parent.width
+                                                height: 60
+                                                anchors.bottom: parent.bottom
+                                                spacing: 0
+
+                                                ButtonWireframe {
+                                                    Layout.fillWidth: true
+                                                    Layout.preferredHeight: parent.height
+                                                    text:  qsTr("Cancel")
+                                                    componentRadius: 0
+                                                    onClicked:{
+                                                         plantScreenDetailsPopup.close()
+                                                         plantScreenDetailsPopup.plant = null
+                                                    }
+                                                }
+
+                                                ButtonWireframe {
+                                                    Layout.fillWidth: true
+                                                    Layout.preferredHeight: parent.height
+                                                    fullColor: true
+                                                    primaryColor: Theme.colorPrimary
+                                                    fulltextColor: "white"
+                                                    componentRadius: 0
+                                                    text:  qsTr("Choose this plant")
+
+                                                    function save(plant, space) {
+                                                        console.log("\n\n\n function save ", plant, space)
+                                                        $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
+                                                            if(rs) {
+                                                                console.log("\n\n IN update -------------------- ", plant.id, space.id)
+                                                                $Model.device.sqlUpdateByDeviceAddress(currentDevice.deviceAddress, {
+                                                                                        plant_id: plant.id,
+                                                                                        space_id: space.id,
+                                                                                        space_name: space.libelle,
+                                                                                        plant_name: plantScreenDetailsPopup.plant.name_scientific,
+                                                                                        plant_json: JSON.stringify(plantScreenDetailsPopup.plant)
+                                                                                        }).then(function (res) {
+                                                                                            plantScreenDetailsPopup.close()
+                                                                                            plantBrowserPop.close()
+                                                                                        }).catch(err => console.warn(JSON.stringify(err)))
+                                                            } else {
+                                                                console.log("\n\n IN create -------------------- ", plant.id, space.id)
+                                                                $Model.device.sqlCreate({
+                                                                                        device_address: currentDevice.deviceAddress,
+                                                                                        plant_id: plant.id,
+                                                                                        space_id: space.id,
+                                                                                        space_name: space.libelle,
+                                                                                        plant_name: plantScreenDetailsPopup.plant.name_scientific,
+                                                                                        plant_json: JSON.stringify(plantScreenDetailsPopup.plant)
+                                                                                        }).then(function (res) {
+                                                                                            plantScreenDetailsPopup.close()
+                                                                                            plantBrowserPop.close()
+                                                                                        }).catch(err => console.warn(JSON.stringify(err)))
+
+                                                            }
+
+                                                        })
+                                                    }
+
+                                                    onClicked: {
+                                                        $Model.plant.sqlGetWhere({remote_id: `${plantScreenDetailsPopup.plant.id}`}).then(function (res){
+                                                            console.log("\n My RES ", res)
+                                                            if(res?.length > 1) {
+                                                                console.log("\n\n // This plant already has one Room")
+                                                                plantScreenDetailsPopup.selectGardenSpace(save)
+                                                                console.log("\n end")
+                                                            } else {
+                                                                console.log("\n gonna add to garden")
+                                                                plantScreenDetailsPopup.addToGarden(save)
+
+                                                            }
+                                                                                              }).catch(function (err){
+                                                                                              console.warn(JSON.stringify(err))
+                                                                                              })
+
+                                                    }
+                                                }
+                                            }
+                                        }
+
+
+                            }
+
+                        }
+
+                        ButtonWireframe {
+                            text: "Attach a plant"
+                            anchors.centerIn: parent
+                            fullColor: true
+                            primaryColor: Theme.colorPrimary
+                            fulltextColor: "white"
+                            height: 45
+                            componentRadius: height / 2
+
+                            onClicked: {
+                                plantBrowserPop.open()
+                            }
+                        }
+                    }
+
+                    Item {
+                        height: 50
+                    }
                 }
             }
 
@@ -410,6 +631,7 @@ Item {
                 id: itemIndicators
                 height: Math.max(itemHeader.height, indicatorsLoader.height)
                 width: (parent.columns === 1) ? parent.width : (parent.width * 0.64)
+                visible: linkedPlant !== undefined
 
                 Loader {
                     id: indicatorsLoader
@@ -433,6 +655,7 @@ Item {
                 else return contentGrid_lvl1.height
             }
             clip: true
+            visible: false
 
             ItemNoData {
                 id: noDataIndicator

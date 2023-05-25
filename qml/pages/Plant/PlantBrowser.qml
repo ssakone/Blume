@@ -3,7 +3,6 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
 import QtSensors
-import SortFilterProxyModel
 import QtMultimedia
 import QtQuick.Dialogs
 import ImageTools
@@ -21,10 +20,11 @@ import ThemeEngine 1.0
 
 BPage {
     id: plantBrowser
-
+    objectName: "Plants"
     header: Components.AppBar {
-        title: "Plant browser"
+        title: "Plants menu"
         noAutoPop: true
+        isHomeScreen: true
         leading.onClicked: plantBrowser.StackView.view.pop()
     }
 
@@ -70,18 +70,17 @@ BPage {
             id: itemPlantBrowser
             anchors.fill: parent
 
-            Rectangle {
-                anchors.fill: plantSearchBox
-                anchors.margins: -12
-                z: 4
-                color: Theme.colorBackground
-            }
-
+            //            Rectangle {
+            //                anchors.fill: plantSearchBox
+            //                anchors.margins: -12
+            //                z: 4
+            //                color: Theme.colorBackground
+            //            }
             Image {
                 y: 20
                 x: 16
                 source: Components.Icons.close
-                visible: plantListView.visible
+                //                visible: plantListView.visible
                 MouseArea {
                     anchors.fill: parent
                     onClicked: plantListView.close()
@@ -93,7 +92,7 @@ BPage {
                 anchors.top: parent.top
                 anchors.topMargin: 14
                 anchors.left: parent.left
-                anchors.leftMargin: plantListView.visible ? 52 : 12
+                anchors.leftMargin: 12
                 anchors.right: parent.right
                 anchors.rightMargin: 12
 
@@ -102,19 +101,21 @@ BPage {
                 placeholderText: qsTr("Search for plants")
                 selectByMouse: true
                 colorSelectedText: "white"
-                onDisplayTextChanged: {
-                    if (displayText !== '') {
-                        plantListView.open()
+
+                onFocusChanged: {
+                    if (focus) {
+                        plantSearchBoxMS.clicked()
+                        focus = false
                     }
                 }
 
                 //onDisplayTextChanged: plantDatabase.filter(displayText)
                 MouseArea {
+                    id: plantSearchBoxMS
                     anchors.fill: parent
                     anchors.rightMargin: 70
                     onClicked: {
-                        plantListView.open()
-                        plantSearchBox.forceActiveFocus()
+                        page_view.push(navigator.plantSearchPage)
                     }
                 }
 
@@ -123,15 +124,6 @@ BPage {
                     anchors.rightMargin: 12
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: 12
-
-                    Text {
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        text: qsTr("%1 plants").arg(
-                                  ((plantSearchBox.displayText) ? plantDatabase.plantCountFiltered : plantDatabase.plantCount))
-                        font.pixelSize: Theme.fontSizeContentSmall
-                        color: Theme.colorSubText
-                    }
 
                     RoundButtonIcon {
                         width: 24
@@ -167,55 +159,55 @@ BPage {
 
                     Component.onCompleted: {
                         let data = [{
-                                        "name": qsTr("Plantes recommandees"),
+                                        "name": qsTr("Suggested plants"),
                                         "icon": "qrc:/assets/icons_custom/thumbs.png",
                                         "image": "",
                                         "action": "",
                                         "style": "darkblue"
                                     }, {
-                                        "name": qsTr("Identifier la plante"),
+                                        "name": qsTr("Identify plant"),
                                         "icon": "qrc:/assets/icons_custom/plant_scan.png",
                                         "image": "",
                                         "action": "identify",
                                         "style": "lightenYellow"
                                     }, {
-                                        "name": qsTr("Posemetre"),
+                                        "name": qsTr("Light sensor"),
                                         "icon": "qrc:/assets/icons_custom/posometre.svg",
                                         "image": "",
                                         "action": "posometre",
                                         "style": "sunrise"
                                     }, {
-                                        "name": qsTr("Plante fleuries"),
+                                        "name": qsTr("Floral plants"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/fleure.jpg",
                                         "action": "categorie_plantes_fleuries",
                                         "style": ""
                                     }, {
-                                        "name": qsTr("Orchidees"),
+                                        "name": qsTr("Orchids"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/orchidee.jpg",
                                         "action": "categorie_plantes_orchidee",
                                         "style": ""
                                     }, {
-                                        "name": qsTr("Cactus et succulentes"),
+                                        "name": qsTr("Cactus and succulents"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/cactus.jpg",
                                         "action": "categorie_plantes_cactus_succulentes",
                                         "style": ""
                                     }, {
-                                        "name": qsTr("Legumes"),
+                                        "name": qsTr("Vegetables"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/legume.jpg",
                                         "action": "categorie_plantes_legumes",
                                         "style": ""
                                     }, {
-                                        "name": qsTr("Herbes"),
+                                        "name": qsTr("Herbal"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/herbe.jpeg",
                                         "action": "categorie_plantes_herbes",
                                         "style": ""
                                     }, {
-                                        "name": qsTr("Plantes a feuillage"),
+                                        "name": qsTr("Foliage plants"),
                                         "icon": "",
                                         "image": "qrc:/assets/img/feuillage.jpg",
                                         "action": "categorie_plantes_feuillage",
@@ -223,22 +215,6 @@ BPage {
                                     }]
                         data.forEach((plant => append(plant)))
                     }
-                }
-
-                SortFilterProxyModel {
-                    id: plantFilter
-                    sourceModel: independant
-                    delayed: true
-                    filters: [
-                        RegExpFilter {
-                            roleName: "name"
-                            pattern: plantSearchBox.displayText
-                        }
-                    ]
-                }
-
-                ListModel {
-                    id: independant
                 }
 
                 Flickable {
@@ -257,11 +233,11 @@ BPage {
                                 interactive: false
                                 width: parent.width
                                 height: parent.height - 20
-                                cellWidth: (parent.width - (10)) / 3
+                                cellWidth: gr.width > 800 ? gr.width / 5 : (gr.width > 500 ? gr.width / 4 : gr.width / 3)
                                 cellHeight: cellWidth
                                 model: plantOptionModel
                                 delegate: Item {
-                                    width: (gr.width - (20)) / 3
+                                    width: gr.cellWidth
                                     height: width
                                     Rectangle {
                                         anchors.fill: parent
@@ -312,27 +288,16 @@ BPage {
                                             source: icon
                                             color: 'white'
                                         }
-                                        Image {
-                                            id: img
-                                            visible: image.toString() !== ""
-                                            source: image
+                                        Components.ClipRRect {
                                             anchors.fill: parent
-                                            layer.enabled: true
-                                            layer.effect: OpacityMask {
-                                                maskSource: Item {
-                                                    width: img.width
-                                                    height: img.height
-                                                    Rectangle {
-                                                        anchors.centerIn: parent
-                                                        width: img.adapt ? img.width : Math.min(
-                                                                               img.width,
-                                                                               img.height)
-                                                        height: img.adapt ? img.height : width
-                                                        radius: 10
-                                                    }
-                                                }
+                                            visible: image.toString() !== ""
+                                            Image {
+                                                id: img
+                                                source: image
+                                                anchors.fill: parent
                                             }
                                         }
+
                                         MouseArea {
                                             id: mArea
                                             anchors.fill: parent
@@ -372,7 +337,6 @@ BPage {
                                                         pk = 6
                                                     }
 
-                                                    plantListByCategory.title = title
                                                     plantListByCategory.category_id = pk
                                                     plantListByCategory.open()
                                                 }
@@ -396,77 +360,6 @@ BPage {
                             }
                         }
                     }
-                }
-            }
-        }
-
-        Popup {
-            id: plantListView
-            width: parent.width
-            height: parent.height - 40
-            y: 70
-
-            onOpened: {
-                plantDatabase.filter('')
-                plantDatabase.plants.forEach(i => independant.append(i))
-            }
-
-            background: Rectangle {
-                radius: 18
-                opacity: .95
-            }
-
-            closePolicy: Popup.NoAutoClose
-            ListView {
-                id: plantList
-                topMargin: 0
-                bottomMargin: 32
-                spacing: 0
-                clip: true
-                anchors.fill: parent
-                model: plantFilter
-                delegate: Rectangle {
-                    width: ListView.view.width
-                    height: 40
-
-                    color: (index % 2) ? Theme.colorForeground : Theme.colorBackground
-
-                    Row {
-                        anchors.left: parent.left
-                        anchors.leftMargin: 16
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 16
-
-                        Text {
-                            text: model.name
-                            color: Theme.colorText
-                            fontSizeMode: Text.Fit
-                            font.pixelSize: Theme.fontSizeContent
-                            minimumPixelSize: Theme.fontSizeContentSmall
-                        }
-                        Text {
-                            visible: model.nameCommon
-                            text: "« " + model.nameCommon + " »"
-                            color: Theme.colorSubText
-                            fontSizeMode: Text.Fit
-                            font.pixelSize: Theme.fontSizeContent
-                            minimumPixelSize: Theme.fontSizeContentSmall
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            plantListView.close()
-                            page_view.push(plantScreen, {
-                                               "currentPlant": model
-                                           })
-                        }
-                    }
-                }
-
-                ItemNoPlants {
-                    visible: (plantList.count <= 0)
                 }
             }
         }

@@ -60,3 +60,62 @@ function request(method, url, params, api = "") {
     }
     return fetch(query)
 }
+
+function send_mail({to, recv_name, subject = "Blume: contacter un expert", content_html = "", content_txt ="Aide", attachements = [] }) {
+
+    let auth = Qt.btoa("af7ef02f89cd85f6aa5fa5db1dd313e1:b4085a8615eff4b65de0f1ac8c58910c")
+    let query = {
+        "method": "POST",
+        "url": "https://api.mailjet.com/v3.1/send",
+        "headers": {
+            "Accept": 'application/json',
+            "Authorization": `Basic ${auth}`,
+            "Content-Type": 'application/json'
+        },
+        "params": {
+            "Messages": [
+                {
+                    "From": {
+                        "Email": "marcleord.zomadi@mahoudev.com",
+                        "Name": "Blume support"
+                    },
+                    "To": [
+                        {
+                            "Email": to,
+                            "Name": recv_name
+                        }
+                    ],
+                    "Subject": subject,
+                    "TextPart": content_txt,
+                    "HTMLPart": content_html,
+                    "Attachments": attachements
+                }
+            ]
+        }
+    }
+    return fetch(query)
+}
+
+function login({email, password}) {
+    return fetch({
+      "method": "POST",
+      "url": "https://blume.mahoudev.com/auth/login",
+      "headers": {
+          "Accept": 'application/json',
+          "Content-Type": 'application/json'
+      },
+      "params": {email, password}
+    })
+}
+
+function register({email, password}) {
+    return fetch({
+      "method": "POST",
+      "url": "https://blume.mahoudev.com/auth/login",
+      "headers": {
+          "Accept": 'application/json',
+          "Content-Type": 'application/json'
+      },
+      "params": {email, password}
+    })
+}

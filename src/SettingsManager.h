@@ -41,12 +41,13 @@ class SettingsManager: public QObject
     Q_PROPERTY(QSize initialSize READ getInitialSize NOTIFY initialSizeChanged)
     Q_PROPERTY(QSize initialPosition READ getInitialPosition NOTIFY initialSizeChanged)
     Q_PROPERTY(uint initialVisibility READ getInitialVisibility NOTIFY initialSizeChanged)
-
+    
     Q_PROPERTY(QString appTheme READ getAppTheme WRITE setAppTheme NOTIFY appThemeChanged)
     Q_PROPERTY(bool appThemeAuto READ getAppThemeAuto WRITE setAppThemeAuto NOTIFY appThemeAutoChanged)
     Q_PROPERTY(bool appThemeCSD READ getAppThemeCSD WRITE setAppThemeCSD NOTIFY appThemeCSDChanged)
     Q_PROPERTY(uint appUnits READ getAppUnits WRITE setAppUnits NOTIFY appUnitsChanged)
     Q_PROPERTY(QString appLanguage READ getAppLanguage WRITE setAppLanguage NOTIFY appLanguageChanged)
+    Q_PROPERTY(QString authAccessToken READ getAuthAccessToken WRITE setAuthAccessToken NOTIFY authAccessTokenChanged)
 
     Q_PROPERTY(bool startMinimized READ getMinimized WRITE setMinimized NOTIFY minimizedChanged)
     Q_PROPERTY(bool systray READ getSysTray WRITE setSysTray NOTIFY systrayChanged)
@@ -99,6 +100,7 @@ class SettingsManager: public QObject
     bool m_appThemeCSD = false;
     unsigned m_appUnits = 0;                    //!< QLocale::MeasurementSystem
     QString m_appLanguage = "auto";
+    QString m_authAccessToken = "";
 
     // Application specific
     bool m_startMinimized = false;
@@ -162,6 +164,7 @@ Q_SIGNALS:
     void appThemeCSDChanged();
     void appUnitsChanged();
     void appLanguageChanged();
+    void authAccessTokenChanged();
     void minimizedChanged();
     void systrayChanged();
     void notifsChanged();
@@ -214,6 +217,9 @@ public:
 
     QString getAppLanguage() const { return m_appLanguage; }
     void setAppLanguage(const QString &value);
+
+    QString getAuthAccessToken() const { return m_authAccessToken; }
+    void setAuthAccessToken(const QString &value);
 
     bool getMinimized() const { return m_startMinimized; }
     void setMinimized(const bool value);

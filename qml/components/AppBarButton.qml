@@ -17,13 +17,15 @@ import MaterialIcons
 
 Rectangle {
     id: buttonBackBg
+    property color foregroundColor: Theme.colorHeaderContent
     width: 65
     height: 65
     radius: height
     color: "transparent" //Theme.colorHeaderHighlight
     opacity: 1
     property string icon
-    signal clicked()
+    property int iconSize: buttonBack.width
+    signal clicked
     IconImage {
         id: buttonBack
         width: 24
@@ -31,7 +33,7 @@ Rectangle {
         anchors.centerIn: parent
 
         source: buttonBackBg.icon
-        color: Theme.colorHeaderContent
+        color: parent.foregroundColor
     }
     MouseArea {
         anchors.fill: parent

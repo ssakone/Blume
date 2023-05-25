@@ -23,11 +23,22 @@ BPage {
     property variant desease_data
     property variant details: desease_data["disease_details"] ?? {}
     property bool header_hidden: false
+    property bool fullScreen: false
+
+    onFullScreenChanged: {
+        if(fullScreen) fullScreenPop.close()
+        else fullScreenPop.open()
+    }
 
     padding: 0
 
     header: AppBar {
         title: desease_data.name ?? ""
+    }
+
+    FullScreenPopup {
+        id: fullScreenPop
+        onSwithMode: fullScreen = !fullScreen
     }
 
     Flickable {
@@ -40,7 +51,7 @@ BPage {
             spacing: 10
 
             Rectangle {
-                height: 300
+                height: singleColumn ? 300 : pageControl.height / 3
                 width: parent.width
                 clip: true
                 color: "#f0f0f0"
@@ -51,7 +62,14 @@ BPage {
                     Repeater {
                         model: desease_data['similar_images']
                         delegate: Image {
-                            source: modelData.url
+                            source: modelData.url || modelData || ""
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    fullScreenPop.source = source
+                                    fullScreen = !fullScreen
+                                }
+                            }
                         }
                     }
                 }
@@ -61,7 +79,7 @@ BPage {
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 10
                     currentIndex: imageSwipeView.currentIndex
-                    count: 3
+                    count: desease_data['similar_images'].length || desease_data['similar_images'].count
                 }
             }
 
@@ -78,6 +96,8 @@ BPage {
                         text: desease_data['name']
                         font.pixelSize: 32
                         font.weight: Font.Bold
+                        width: parent.width
+                        wrapMode: Text.Wrap
                     }
 
                     RowLayout {
@@ -88,7 +108,7 @@ BPage {
                                 required property int index
                                 required property variant modelData
 
-                                text: modelData
+                                text: (modelData?.name ?? modelData)
                                       + (index < details['common_names'].length ? ", " : "")
                             }
                         }
@@ -97,8 +117,10 @@ BPage {
 
                 Text {
                     text: details['description']
+                    font.pixelSize: 14
+                    font.weight: Font.Light
                     wrapMode: Text.Wrap
-                    Layout.maximumWidth: pageControl.width - 40
+                    width: parent.width - 10
                 }
 
                 Label {

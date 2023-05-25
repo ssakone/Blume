@@ -20,10 +20,6 @@ Drawer {
         }
     }
 
-    PlantDesease {
-        id: deseasePopup
-    }
-
     contentItem: Item {
 
         Column {
@@ -133,7 +129,8 @@ Drawer {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            appContent.state = "DeviceList"
+//                            appContent.state = "DeviceList"
+                            page_view.push(navigator.deviceList)
                             appDrawer.close()
                         }
                     }

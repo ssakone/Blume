@@ -58,6 +58,7 @@
 #include <QQmlContext>
 #include <QQuickWindow>
 #include <QSurfaceFormat>
+#include <QQuickStyle>
 
 #if defined(Q_OS_ANDROID)
 #include "AndroidService.h"
@@ -98,8 +99,6 @@ int main(int argc, char *argv[])
         app.setOrganizationName("Blume");
         app.setOrganizationDomain("Blume");
 
-
-
         SettingsManager *sm = SettingsManager::getInstance();
         DatabaseManager *db = DatabaseManager::getInstance();
         NotificationManager *nm = NotificationManager::getInstance();
@@ -113,6 +112,9 @@ int main(int argc, char *argv[])
 
         return app.exec();
     }
+#if defined(Q_OS_MACOS) || defined (Q_OS_IOS)
+     QQuickStyle::setStyle("Material");
+#endif
 
     // Android daemon
     if (background_service)
