@@ -191,3 +191,24 @@ function humanizeDayPeriod(freq) {
     }
     return data
 }
+
+function getNextDate(from, daysAfter) {
+    // returns the day after 'daysAfter' from date 'from'
+
+    const tms1 = from.getTime()
+    const tms2 = (daysAfter) * 24 * 60 * 60 * 1000
+    const tms = tms1 + tms2
+    const nextDate = new Date(tms)
+    return nextDate
+}
+
+function getDateBefore(from, daysBefore) {
+    // returns the day before 'daysAfter' from date 'from'
+
+    const tms1 = from.getTime()
+    const tms2 = (daysBefore) * 24 * 60 * 60 * 1000
+
+    const tms = tms1 - tms2
+    const dateBefore = new Date(tms)
+    return dateBefore
+}

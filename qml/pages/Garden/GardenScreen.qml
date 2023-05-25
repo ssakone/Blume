@@ -20,19 +20,49 @@ BPage {
         isHomeScreen: true
     }
 
-    function getDay() {
-        const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
-        let today = new Date()
-        let day_index = today.getDay()
-        return days[day_index]
+    property var getNextDate: Utils.getNextDate
+
+    SortFilterProxyModel {
+        id: alarmsTodoToday
+        sourceModel: $Model.alarm
+        filters: ExpressionFilter {
+            expression:  {
+                let today = new Date()
+                let frequency = alarmsTodoToday.sourceModel.get(index).frequence
+                let lastDone = alarmsTodoToday.sourceModel.get(index).last_done
+
+                if (lastDone) {
+                    lastDone = new Date(lastDone)
+                    let diff = today - lastDone
+                    let diffDays = Math.floor(diff/(1000*60*60*24))
+
+                    return diffDays === 0 || (diffDays-frequency) === 0
+                }
+                return true
+            }
+        }
     }
 
     SortFilterProxyModel {
-        id: alarmsToday
+        id: alarmsLate
         sourceModel: $Model.alarm
-        filters: ValueFilter {
-            value: 1
-            roleName: getDay()
+        filters: ExpressionFilter {
+            expression:  {
+                let today = new Date()
+                let modelData = alarmsLate.sourceModel.get(index)
+                let frequency = modelData.frequence
+                let lastDone = alarmsTodoToday.sourceModel.get(index).last_done
+
+                if (lastDone) {
+                    lastDone = new Date(lastDone)
+                    let diff = today - lastDone
+                    let diffDays = Math.floor(diff/(1000*60*60*24))
+
+                    return (diffDays-frequency) > 0
+                }
+                return false
+
+            }
         }
     }
 
@@ -173,7 +203,7 @@ BPage {
 
         Label {
             Layout.fillWidth: true
-            text: qsTr("Today tasks")
+            text: qsTr("Tasks")
             padding: 15
             opacity: .7
             font {
@@ -188,7 +218,7 @@ BPage {
             Layout.alignment: Qt.AlignHCenter
             radius: Layout.preferredHeight / 2
             color: Theme.colorSecondary
-            visible: $Model.alarm.count === 0
+            visible: alarmsTodoToday.count === 0 && alarmsLate.count === 0
 
             Label {
                 text: "No pending task"
@@ -211,64 +241,144 @@ BPage {
                 width: parent.width
                 leftPadding: 10
                 rightPadding: 10
-                Repeater {
-                    model: $Model.alarm
-                    GardenActivityLine {
-                        property var plantObj: JSON.parse(model.plant_json)
-                        title: model.libelle || "NULL"
-                        plant_name: plantObj.name_scientific
 
-                        subtitle: {
-                            if(model.done === 0 && model.last_done) {
+                Column {
+                    visible: alarmsLate.count > 0
+                    width: parent.width
+                    spacing: 10
+
+                    Label {
+                        text: qsTr("Lates")
+                        width: parent.width
+                        horizontalAlignment: Text.AlignHCenter
+                        font {
+                            weight: Font.Light
+                            pixelSize: 16
+                        }
+                    }
+                    Repeater {
+                        model: alarmsLate
+                        GardenActivityLine {
+                            property var plantObj: JSON.parse(model.plant_json)
+                            property var lateDetails: ({})
+                            property bool isInitiallyDone: model.done === 1
+
+                            title: model.libelle || "NULL"
+                            plant_name: plantObj.name_scientific
+
+                            subtitle: {
                                 const today = new Date()
                                 const last_done = new Date(model.last_done)
-                                const diffDays = (new Date(today - last_done)).getDate()
+                                let diff = today - last_done
+                                let diffDays = Math.floor(diff/(1000*60*60*24))
 
                                 if(diffDays > model.frequence) {
                                     const delay = diffDays - model.frequence
                                     const formated = Utils.humanizeDayPeriod(delay)
-                                    return `<font color='${$Colors.red500}'> ${formated.freq < 10 ? '0'+formated.freq : formated.freq} ${formated.period_label} ${qsTr("late")} </font>`
-                                } else {
-                                    $Model.space.sqlGet(model.space).then(res => {
-                                                                              subtitle = "Space - "
-                                                                              + res.libelle
-                                                                          }).catch(
-                                                console.warn)
+                                    lateDetails = formated
+                                    return `<font color='${$Colors.red500}'> ${lateDetails.freq < 10 ? '0'+lateDetails.freq : lateDetails.freq} ${lateDetails.period_label} ${qsTr("late")} </font>`
                                 }
-                            } else {
-                                $Model.space.sqlGet(model.space).then(res => {
+
+                                return qsTr("late")
+                            }
+                            isDone: isInitiallyDone ? false : model.done === 1
+
+                            onDeleteClicked: {
+                                removeAlarmPopup.show(model)
+                            }
+
+                            onChecked: newStatus => {
+                                           if(isInitiallyDone) {
+                                               isInitiallyDone = false
+                                               newStatus = 1
+                                           }
+
+                                           $Model.alarm.sqlUpdateTaskStatus(
+                                               model.id, newStatus).then(res => {
+                                                                             model.done =  model.done === 0 ? 1 : 0
+                                                                         }).catch(
+                                               console.warn)
+                                       }
+
+                            icon.source: model.type === 0 ? Icons.shovel : model.type === 1 ? Icons.waterOutline : model.type === 2 ? Icons.potMixOutline : Icons.flowerOutline
+                            image.source: {
+                                let value = plantObj.images_plantes[0] ? "https://blume.mahoudev.com/assets/" + plantObj.images_plantes[0].directus_files_id : ""
+                                return value
+                            }
+
+                            width: parent.width - 20
+                            height: 80
+                        }
+                    }
+
+                    Rectangle {
+                        width: parent.width - 20
+                        height: 5
+                        color: $Colors.gray200
+                    }
+
+                }
+
+                Column {
+                    visible: alarmsTodoToday.count > 0
+                    width: parent.width
+                    spacing: 10
+
+                    Label {
+                        text: qsTr("Today")
+                        width: parent.width
+                        horizontalAlignment: Text.AlignHCenter
+                        font {
+                            weight: Font.Light
+                            pixelSize: 16
+                        }
+                    }
+
+                    Repeater {
+                        model: alarmsTodoToday
+                        GardenActivityLine {
+                            property var plantObj: JSON.parse(model.plant_json)
+
+                            title: model.libelle || "NULL"
+                            plant_name: plantObj.name_scientific
+
+                            subtitle: {
+                                $Model.space.sqlGet(model.space).then(function(res) {
                                                                           subtitle = "Space - "
                                                                           + res.libelle
                                                                       }).catch(
                                             console.warn)
+
+                                return ""
                             }
 
-                            return ""
+                            isDone: model.done === 1
+
+                            onDeleteClicked: {
+                                removeAlarmPopup.show(model)
+                            }
+
+                            onChecked: newStatus => {
+                                           $Model.alarm.sqlUpdateTaskStatus(
+                                               model.id, newStatus).then(res => {
+                                                                             model.done = model.done === 0 ? 1 : 0
+                                                                         }).catch(
+                                               console.warn)
+                                       }
+
+                            icon.source: model.type === 0 ? Icons.shovel : model.type === 1 ? Icons.waterOutline : model.type === 2 ? Icons.potMixOutline : Icons.flowerOutline
+                            image.source: {
+                                let value = plantObj.images_plantes[0] ? "https://blume.mahoudev.com/assets/" + plantObj.images_plantes[0].directus_files_id : ""
+                                return value
+                            }
+
+                            width: parent.width - 20
+                            height: 80
                         }
-                        isDone: model.done === 1
-
-                        onDeleteClicked: {
-                            removeAlarmPopup.show(model)
-                        }
-
-                        onChecked: newStatus => {
-                                       $Model.alarm.sqlUpdateTaskStatus(
-                                           model.id, newStatus).then(res => {
-                                                                         model.done = model.done === 0 ? 1 : 0
-                                                                     }).catch(
-                                           console.warn)
-                                   }
-
-                        icon.source: model.type === 0 ? Icons.shovel : model.type === 1 ? Icons.waterOutline : model.type === 2 ? Icons.potMixOutline : Icons.flowerOutline
-                        image.source: {
-                            let value = plantObj.images_plantes[0] ? "https://blume.mahoudev.com/assets/" + plantObj.images_plantes[0].directus_files_id : ""
-                            return value
-                        }
-
-                        width: parent.width - 20
-                        height: 80
                     }
                 }
+
+
             }
         }
 
