@@ -282,6 +282,7 @@ BPage {
                                 }
 
                                 isDone: model.done === 1
+                                hideCheckbox: true
 
                                 onDeleteClicked: {
                                     removeAlarmPopup.show(model)
