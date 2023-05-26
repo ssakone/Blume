@@ -21,7 +21,7 @@ BPage {
     required property int space_id
 
     header: AppBar {
-        title: qsTr("Room") + " - " + control.space_name
+        title: qsTr("Room") + " - " + (control.space_name[0] === "'" ? control.space_name.slice(1, -1) : control.space_name)
     }
 
     SortFilterProxyModel {
@@ -272,7 +272,7 @@ BPage {
                             GardenActivityLine {
                                 property var plantObj: JSON.parse(
                                                            model.plant_json)
-                                title: model.libelle || "NULL"
+                                title: (model.libelle[0]==="'" ? model.libelle.slice(1, -1): model.libelle) || "NULL"
                                 plant_name: plantObj.name_scientific
                                 subtitle: {
                                     $Model.alarm.sqlFormatFrequence(model.id).then(data => {

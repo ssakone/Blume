@@ -365,13 +365,13 @@ BPage {
                         GardenActivityLine {
                             property var plantObj: JSON.parse(model.plant_json)
 
-                            title: model.libelle || "NULL"
+                            title: (model.libelle[0]==="'" ? model.libelle.slice(1, -1): model.libelle) || "NULL"
                             plant_name: plantObj.name_scientific
 
                             subtitle: {
                                 $Model.space.sqlGet(model.space).then(function(res) {
                                                                           subtitle = "Space - "
-                                                                          + res.libelle
+                                                                          + (res.libelle[0] === "'" ? res.libelle.slice(1, -1) : res.libelle)
                                                                       }).catch(
                                             console.warn)
 

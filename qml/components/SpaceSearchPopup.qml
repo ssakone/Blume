@@ -55,8 +55,8 @@ Drawer {
 
                     GardenSpaceLine {
                         anchors.fill: parent
-                        title: model.libelle
-                        subtitle: model.description
+                        title: model.libelle[0]==="'" ? model.libelle.slice(1, -1): model.libelle
+                        subtitle: model.description[0]==="'" ? model.description.slice(1, -1): model.description
                         iconSource: model.type === 1 ? Icons.homeOutline : Icons.landFields
 
                         onClicked: {
