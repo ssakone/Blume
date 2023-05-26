@@ -42,28 +42,6 @@ BPage {
         onTriggered: console.log("end")
     }
 
-
-    function getNextDate(from, daysAfter) {
-        // returns the day after 'daysAfter' from date 'from'
-
-        const tms1 = from.getTime()
-        const tms2 = (daysAfter) * 24 * 60 * 60 * 1000
-        const tms = tms1 + tms2
-        const nextDate = new Date(tms)
-        return nextDate
-    }
-
-    function getDateBefore(from, daysBefore) {
-        // returns the day before 'daysAfter' from date 'from'
-
-        const tms1 = from.getTime()
-        const tms2 = (daysBefore) * 24 * 60 * 60 * 1000
-
-        const tms = tms1 - tms2
-        const dateBefore = new Date(tms)
-        return dateBefore
-    }
-
     function fetchMore() {
         console.log("Fetching more...")
         control.isLoading = true
@@ -92,7 +70,7 @@ BPage {
 
                 let lastDone = null
                 if(dayIndex===0) {
-                    let realLastestDoneDate = control.getDateBefore(new Date(), currentAlarm.frequence+i)
+                    let realLastestDoneDate = Utils.getDateBefore(new Date(), currentAlarm.frequence+i)
                     realLastestDoneDate = Utils.humanizeToISOString(realLastestDoneDate)
                     lastDone = new Date(realLastestDoneDate)
                 } else {
@@ -100,14 +78,14 @@ BPage {
                     lastDone = new Date(lastDoneHistory[i])
                 }
 
-                const nextDate = control.getNextDate(lastDone, currentAlarm.frequence+i)
+                const nextDate = Utils.getNextDate(lastDone, currentAlarm.frequence+i)
                 if(dayIndex === 0) {
                     lastDoneHistory[i] = nextDate
                 }
 
 
                 if((nextDate.toDateString() === today.toDateString()) && startDay <= nextDate && nextDate <= endDay) {
-                    lastDoneHistory[i] = today  //control.getNextDate(nextDate, currentAlarm.frequence+i)
+                    lastDoneHistory[i] = today  //Utils.getNextDate(nextDate, currentAlarm.frequence+i)
                     todayModelItem.alarms.push(currentAlarm)
                 }
             }
@@ -134,7 +112,7 @@ BPage {
                 onPositionChanged: {
                     if (control.isLoading === false && timer.running === false
                             && (scrollBar.size + scrollBar.position > 0.99)) {
-                        control.startDay = control.getNextDate(control.startDay, control.forXDays)
+                        control.startDay = Utils.getNextDate(control.startDay, control.forXDays)
                         console.log("control.startDay ", control.startDay, ' ---> ', control.endDay )
                         timer.start()
                         control.fetchMore()

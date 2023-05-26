@@ -81,11 +81,11 @@ Item {
         onDatabaseOpened: {
             const shoulReset = false
             if (shoulReset) {
-                __sqliClient.execute("DROP TABLE Alarm01")
-                __sqliClient.execute("DROP TABLE Plant01")
-                __sqliClient.execute("DROP TABLE PlantInSpace01")
-                __sqliClient.execute("DROP TABLE Space01")
-                __sqliClient.execute("DROP TABLE Device01")
+                __sqliClient.execute("DROP TABLE "+alarm.tableName)
+                __sqliClient.execute("DROP TABLE "+plant.tableName)
+                __sqliClient.execute("DROP TABLE "+space.plantInSpace.tableName)
+                __sqliClient.execute("DROP TABLE "+space.tableName)
+                __sqliClient.execute("DROP TABLE "+device.tableName)
             }
 
             Promise.all([alarmModel.init(), plantModel.init(), spaceModel.init(

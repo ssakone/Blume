@@ -282,6 +282,7 @@ BPage {
                                 }
 
                                 isDone: model.done === 1
+                                hideCheckbox: true
 
                                 onDeleteClicked: {
                                     removeAlarmPopup.show(model)
@@ -768,14 +769,26 @@ BPage {
                                             }).catch(err => console.error(
                                                          JSON.stringify(err)))
                             } else {
+                                data['last_done'] = Utils.humanizeToISOString(new Date())
                                 $Model.alarm.sqlCreate(data).then(
                                             function (res) {
                                                 console.info(
-                                                            "New alarm created")
+                                                            "New alarm created ", data['last_done'], res['last_done'], ' id=', typeof res['id'], res['id'])
+                                                $Model.alarm.sqlGet(res['id'])?.then(function(r){
+                                                    console.log("Mamamilla ")
+                                                    console.log( r['libelle'], typeof r['last_done'], r['last_done'])
+                                                })?.catch(function(e){
+                                                    console.log("ERR (()) ")
+                                                    console.log(JSON.stringify(e))
+                                                })
                                                 gardenLine.plant = undefined
                                                 addAlarmPopup.close()
-                                            }).catch(err => console.error(
-                                                         JSON.stringify(err)))
+                                            }).catch(function (err) {
+                                                console.error("COOL **",
+                                                                                                         JSON.stringify(err))
+                                                console.log("Raw ", err)
+                                                console.log("Raw msg ", err?.message)
+                                            })
                             }
 
                         }
