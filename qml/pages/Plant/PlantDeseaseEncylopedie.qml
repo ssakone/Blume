@@ -262,6 +262,7 @@ BPage {
                     cursorShape: "PointingHandCursor"
 
                     onClicked: {
+                        diseaseSearchBox.focus = false
                         let formated = {}
 
                         let desease_details = {

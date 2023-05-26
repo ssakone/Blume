@@ -79,6 +79,7 @@ Item {
     }
 
     onItemClicked: data => {
+                       plantSearchBox.focus = false
                        if (preventDefaultOnClick === false) {
                            plantScreenDetailsPopup.plant = data
                            plantScreenDetailsPopup.open()
