@@ -20,12 +20,16 @@ Item {
     property string previousDisplayText: ""
     property bool preventDefaultOnClick: false
     property bool hideCameraSearch: false
+    property bool autoFocusSearchbar: false
 
     signal itemClicked(var data)
 
     Component.onCompleted: {
         fetchMore()
-        plantSearchBox.forceActiveFocus()
+        if(autoFocusSearchbar) {
+            plantSearchBox.forceActiveFocus()
+        }
+
     }
 
     function fetchMore() {
