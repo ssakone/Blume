@@ -553,33 +553,29 @@ BPage {
                     Label {
                         text: "Task"
                     }
-                    Flickable {
+
+                    Flow {
+                        id: typeAlarm
                         width: parent.width
-                        height: typeAlarm.height
-                        contentWidth: typeAlarm.width
 
-                        Row {
-                            id: typeAlarm
+                        property int currentIndex: 0
+                        property variant model: [ qsTr("Watering"), qsTr("Fertilisation"), qsTr("Paddling"), qsTr("Cleaning"), qsTr("Spraying"), qsTr("Other")]
+                        property variant fields_frequences: ['frequence_arrosage', 'frequence_fertilisation', 'frequence_rampotage', 'frequence_nettoyage', 'frequence_vaporisation']
+                        spacing: 20
 
-                            property int currentIndex: 0
-                            property variant model: ["Rampotage", "Arrosage", "Fertilisation", "Autre"]
-                            property variant fields_frequences: ['frequence_rampotage', 'frequence_arrosage', 'fertilisation_frequency']
-                            spacing: 20
-
-                            Repeater {
-                                model: typeAlarm.model
-                                delegate: ButtonWireframe {
-                                    text: modelData
-                                    fullColor: true
-                                    primaryColor: index === typeAlarm.currentIndex ? Theme.colorPrimary : $Colors.gray300
-                                    fulltextColor: index === typeAlarm.currentIndex ? "white" : Theme.colorPrimary
-                                    font.pixelSize: 14
-                                    componentRadius: implicitHeight / 2
-                                    onClicked: {
-                                        typeAlarm.currentIndex = index
-                                        if (typeAlarm.currentIndex === typeAlarm.model.length - 1)
-                                            anotherAlarmType.forceActiveFocus()
-                                    }
+                        Repeater {
+                            model: typeAlarm.model
+                            delegate: ButtonWireframe {
+                                text: modelData
+                                fullColor: true
+                                primaryColor: index === typeAlarm.currentIndex ? Theme.colorPrimary : $Colors.gray300
+                                fulltextColor: index === typeAlarm.currentIndex ? "white" : Theme.colorPrimary
+                                font.pixelSize: 14
+                                componentRadius: implicitHeight / 2
+                                onClicked: {
+                                    typeAlarm.currentIndex = index
+                                    if (typeAlarm.currentIndex === typeAlarm.model.length - 1)
+                                        anotherAlarmType.forceActiveFocus()
                                 }
                             }
                         }
