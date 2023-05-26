@@ -21,6 +21,9 @@ BPage {
     }
 
     property var getNextDate: Utils.getNextDate
+    property bool isTodoFilterEnd: false
+    property bool isLateFilterEnd: false
+    property var alarmsIdsToDownStatus: []
 
     SortFilterProxyModel {
         id: alarmsTodoToday
@@ -28,17 +31,29 @@ BPage {
         filters: ExpressionFilter {
             expression:  {
                 let today = new Date()
-                let frequency = alarmsTodoToday.sourceModel.get(index).frequence
-                let lastDone = alarmsTodoToday.sourceModel.get(index).last_done
+                let modelData = alarmsTodoToday.sourceModel.get(index)
+                let frequency = modelData.frequence
+                let lastDone = modelData.last_done
 
                 if (lastDone) {
+                    if(lastDone[0] === "'") {
+                        lastDone = lastDone.slice(1, -1)
+                    }
                     lastDone = new Date(lastDone)
                     let diff = today - lastDone
                     let diffDays = Math.floor(diff/(1000*60*60*24))
 
-                    return diffDays === 0 || (diffDays-frequency) === 0
+                    if((diffDays-frequency) === 0 && modelData.done === 1) {
+                        alarmsIdsToDownStatus.push(modelData.id)
+                        return true
+                    }
+                    if (diffDays === 0) {
+                        return true
+                    }
+
+                    return false
                 }
-                return true
+                else return true
             }
         }
     }
@@ -54,11 +69,23 @@ BPage {
                 let lastDone = alarmsTodoToday.sourceModel.get(index).last_done
 
                 if (lastDone) {
+                    if(lastDone[0] === "'") {
+                        lastDone = lastDone.slice(1, -1)
+                    }
+
                     lastDone = new Date(lastDone)
                     let diff = today - lastDone
                     let diffDays = Math.floor(diff/(1000*60*60*24))
+                    if(index === $Model.alarm.count -1) isLateFilterEnd = true
+                    if((diffDays-frequency) > 0) {
+                        alarmsIdsToDownStatus.push(modelData.id)
+                        return true
+                    } else if((diffDays-frequency) === 0 && modelData.done === 0) {
+                        return true
+                    }
 
-                    return (diffDays-frequency) > 0
+                    return false
+
                 }
                 return false
 
@@ -261,14 +288,13 @@ BPage {
                         GardenActivityLine {
                             property var plantObj: JSON.parse(model.plant_json)
                             property var lateDetails: ({})
-                            property bool isInitiallyDone: model.done === 1
 
                             title: model.libelle || "NULL"
                             plant_name: plantObj.name_scientific
 
                             subtitle: {
                                 const today = new Date()
-                                const last_done = new Date(model.last_done)
+                                const last_done = new Date(model.last_done.slice(1, -1))
                                 let diff = today - last_done
                                 let diffDays = Math.floor(diff/(1000*60*60*24))
 
@@ -279,20 +305,20 @@ BPage {
                                     return `<font color='${$Colors.red500}'> ${lateDetails.freq < 10 ? '0'+lateDetails.freq : lateDetails.freq} ${lateDetails.period_label} ${qsTr("late")} </font>`
                                 }
 
-                                return qsTr("late")
+                                return `<font color='${$Colors.red500}'>${qsTr("Task late")} </font>`
                             }
-                            isDone: isInitiallyDone ? false : model.done === 1
+                            isDone: {
+                                if(alarmsIdsToDownStatus.filter(x => x.id === modelData.id).length > 0 ) {
+                                    return false
+                                }
+                                return model.done === 1
+                            }
 
                             onDeleteClicked: {
                                 removeAlarmPopup.show(model)
                             }
 
                             onChecked: newStatus => {
-                                           if(isInitiallyDone) {
-                                               isInitiallyDone = false
-                                               newStatus = 1
-                                           }
-
                                            $Model.alarm.sqlUpdateTaskStatus(
                                                model.id, newStatus).then(res => {
                                                                              model.done =  model.done === 0 ? 1 : 0
@@ -352,7 +378,12 @@ BPage {
                                 return ""
                             }
 
-                            isDone: model.done === 1
+                            isDone: {
+                                if(alarmsIdsToDownStatus.filter(id => id === modelData.id).length > 0 ) {
+                                    return false
+                                }
+                                return model.done === 1
+                            }
 
                             onDeleteClicked: {
                                 removeAlarmPopup.show(model)

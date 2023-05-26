@@ -62,7 +62,7 @@ Model {
         }, {
             // toISOString() format
             "name": "last_done",
-            "type": "REAL"
+            "type": "TEXT"
         }, {
             "name": "space",
             "type": "INTEGER"
@@ -84,14 +84,17 @@ Model {
             "type": "REAL"
         }]
 
-    function sqlUpdateTaskStatus(id, newStatus) {
+    function sqlUpdateTaskStatus(id, newStatus, preventDateUpdate = false) {
         console.log("Start update status as = ", newStatus)
         if (beforeUpdate !== undefined) {
             data = control.beforeUpdate(data)
         }
         return new Promise(function (resolve, reject) {
             const today = Utils.humanizeToISOString(new Date())
-            let completer = "SET done = %1, last_done='%2'".arg(newStatus).arg(today)
+            let completer = "SET done = %1".arg(newStatus)
+            if(preventDateUpdate===false) {
+                completer += ", last_done=quote('%2')".arg(today)
+            }
 
             const query = logQuery(__query__update__.arg(
                                                            completer).arg(
@@ -110,7 +113,7 @@ Model {
     function sqlFormatFrequence(id) {
         return new Promise(function (resolve, reject){
             sqlGet(id).then(function (res) {
-                console.log("Formating ", res.frequence, JSON.stringify(res))
+                // console.log("Formating ", res.frequence, JSON.stringify(res))
                 let freq = res.frequence
                 let period = "NULL"
                 let periodIndex = 3
