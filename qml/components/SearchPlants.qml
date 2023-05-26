@@ -20,12 +20,16 @@ Item {
     property string previousDisplayText: ""
     property bool preventDefaultOnClick: false
     property bool hideCameraSearch: false
+    property bool autoFocusSearchbar: false
 
     signal itemClicked(var data)
 
     Component.onCompleted: {
         fetchMore()
-        plantSearchBox.forceActiveFocus()
+        if(autoFocusSearchbar) {
+            plantSearchBox.forceActiveFocus()
+        }
+
     }
 
     function fetchMore() {
@@ -75,6 +79,7 @@ Item {
     }
 
     onItemClicked: data => {
+                       plantSearchBox.focus = false
                        if (preventDefaultOnClick === false) {
                            plantScreenDetailsPopup.plant = data
                            plantScreenDetailsPopup.open()
@@ -330,9 +335,6 @@ Item {
                             "care_level": {
                                 "type": "string"
                             },
-                            "fertilisation_frequency": {
-                                "type": "string"
-                            },
                             "temp_min": {
                                 "type": "string"
                             },
@@ -444,13 +446,22 @@ Item {
                             "categorie": {
                                 "type": "object"
                             },
-                            "frequence_arrosage": {
-                                "type": "string"
-                            },
                             "nom_botanique": {
                                 "type": "string"
                             },
+                            "frequence_arrosage": {
+                                "type": "string"
+                            },
                             "frequence_rampotage": {
+                                "type": "string"
+                            },
+                            "frequence_fertilisation": {
+                                "type": "string"
+                            },
+                            "frequence_nettoyage": {
+                                "type": "string"
+                            },
+                            "frequence_vaporisation": {
                                 "type": "string"
                             },
                             "images_plantes": {

@@ -20,6 +20,7 @@ BPage {
 
     property bool isLoading: true
     property string previousDisplayText: ""
+    property bool autoFocusSearchbar: false
 
     header: AppBar {
         title: "Liste des maladies"
@@ -29,7 +30,10 @@ BPage {
 
     Component.onCompleted: {
         fetchMore()
-        diseaseSearchBox.forceActiveFocus()
+        if(autoFocusSearchbar) {
+            diseaseSearchBox.forceActiveFocus()
+        }
+
     }
 
     function fetchMore() {
@@ -258,6 +262,7 @@ BPage {
                     cursorShape: "PointingHandCursor"
 
                     onClicked: {
+                        diseaseSearchBox.focus = false
                         let formated = {}
 
                         let desease_details = {
