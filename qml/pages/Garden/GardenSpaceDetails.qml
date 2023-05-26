@@ -21,7 +21,7 @@ BPage {
     required property int space_id
 
     header: AppBar {
-        title: qsTr("Room") + " - " + control.space_name
+        title: qsTr("Room") + " - " + (control.space_name[0] === "'" ? control.space_name.slice(1, -1) : control.space_name)
     }
 
     SortFilterProxyModel {
@@ -272,7 +272,7 @@ BPage {
                             GardenActivityLine {
                                 property var plantObj: JSON.parse(
                                                            model.plant_json)
-                                title: model.libelle || "NULL"
+                                title: (model.libelle[0]==="'" ? model.libelle.slice(1, -1): model.libelle) || "NULL"
                                 plant_name: plantObj.name_scientific
                                 subtitle: {
                                     $Model.alarm.sqlFormatFrequence(model.id).then(data => {
@@ -553,33 +553,29 @@ BPage {
                     Label {
                         text: "Task"
                     }
-                    Flickable {
+
+                    Flow {
+                        id: typeAlarm
                         width: parent.width
-                        height: typeAlarm.height
-                        contentWidth: typeAlarm.width
 
-                        Row {
-                            id: typeAlarm
+                        property int currentIndex: 0
+                        property variant model: [ qsTr("Watering"), qsTr("Fertilisation"), qsTr("Paddling"), qsTr("Cleaning"), qsTr("Spraying"), qsTr("Other")]
+                        property variant fields_frequences: ['frequence_arrosage', 'frequence_fertilisation', 'frequence_rampotage', 'frequence_nettoyage', 'frequence_vaporisation']
+                        spacing: 20
 
-                            property int currentIndex: 0
-                            property variant model: ["Rampotage", "Arrosage", "Fertilisation", "Autre"]
-                            property variant fields_frequences: ['frequence_rampotage', 'frequence_arrosage', 'fertilisation_frequency']
-                            spacing: 20
-
-                            Repeater {
-                                model: typeAlarm.model
-                                delegate: ButtonWireframe {
-                                    text: modelData
-                                    fullColor: true
-                                    primaryColor: index === typeAlarm.currentIndex ? Theme.colorPrimary : $Colors.gray300
-                                    fulltextColor: index === typeAlarm.currentIndex ? "white" : Theme.colorPrimary
-                                    font.pixelSize: 14
-                                    componentRadius: implicitHeight / 2
-                                    onClicked: {
-                                        typeAlarm.currentIndex = index
-                                        if (typeAlarm.currentIndex === typeAlarm.model.length - 1)
-                                            anotherAlarmType.forceActiveFocus()
-                                    }
+                        Repeater {
+                            model: typeAlarm.model
+                            delegate: ButtonWireframe {
+                                text: modelData
+                                fullColor: true
+                                primaryColor: index === typeAlarm.currentIndex ? Theme.colorPrimary : $Colors.gray300
+                                fulltextColor: index === typeAlarm.currentIndex ? "white" : Theme.colorPrimary
+                                font.pixelSize: 14
+                                componentRadius: implicitHeight / 2
+                                onClicked: {
+                                    typeAlarm.currentIndex = index
+                                    if (typeAlarm.currentIndex === typeAlarm.model.length - 1)
+                                        anotherAlarmType.forceActiveFocus()
                                 }
                             }
                         }

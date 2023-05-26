@@ -21,8 +21,8 @@ BPage {
         delegate: GardenSpaceLine {
             width: parent.width
             height: 85
-            title: libelle
-            subtitle: description
+            title: (libelle[0] === "'" ? libelle.slice(1, -1) : libelle)
+            subtitle: description[0] === "'" ? description.slice(1, -1) : description
             iconSource: type === 1 ? Icons.homeOutline : Icons.landFields
             onClicked: {
                 let data = {
