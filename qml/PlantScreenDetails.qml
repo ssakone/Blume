@@ -405,7 +405,7 @@ Popup {
 
                         RowLayout {
                             Layout.fillWidth: true
-                            spacing: 15
+                            spacing: 10
 
                             Rectangle {
                                 Layout.minimumHeight: 120
@@ -563,7 +563,7 @@ Popup {
                             spacing: 2
 
                             TableLine {
-                                title: qsTr("Type of plante")
+                                title: qsTr("Dimensions")
                                 description: plant['taill_adulte'] || ""
                             }
 
@@ -631,6 +631,11 @@ Popup {
                                 color: "#e4f0ea"
                                 title: qsTr("Toxicity")
                                 description: plant['toxicity'] ? 'Toxic' : 'Non-toxic'
+                            }
+
+                            TableLine {
+                                title: qsTr("Lifecycle")
+                                description: plant['cycle_de_vie'] || ""
                             }
                         }
 
