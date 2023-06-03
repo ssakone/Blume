@@ -308,7 +308,7 @@ BPage {
                                 return `<font color='${$Colors.red500}'>${qsTr("Task late")} </font>`
                             }
                             isDone: {
-                                if(alarmsIdsToDownStatus.filter(x => x.id === modelData.id).length > 0 ) {
+                                if(alarmsIdsToDownStatus.filter(x => x.id === model.id).length > 0 ) {
                                     return false
                                 }
                                 return model.done === 1
