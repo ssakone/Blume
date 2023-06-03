@@ -563,6 +563,12 @@ Popup {
                             spacing: 2
 
                             TableLine {
+                                color: "#e4f0ea"
+                                title: qsTr("Type of plant")
+                                description: plant['type_of_plant'] || ""
+                            }
+
+                            TableLine {
                                 title: qsTr("Dimensions")
                                 description: plant['taill_adulte'] || ""
                             }
