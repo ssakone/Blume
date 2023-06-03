@@ -747,7 +747,7 @@ Popup {
                                         text: plant['description'] || ""
                                         wrapMode: Text.Wrap
 
-                                        font.pixelSize: 14
+                                        font.pixelSize: 18
                                         font.weight: Font.Light
 
                                         Layout.fillHeight: true
@@ -765,7 +765,7 @@ Popup {
                                         text: plant['comment_cultiver'] || ""
                                         wrapMode: Text.Wrap
 
-                                        font.pixelSize: 14
+                                        font.pixelSize: 18
                                         font.weight: Font.Light
 
                                         Layout.fillHeight: true
@@ -784,7 +784,7 @@ Popup {
                                               || ""
                                         wrapMode: Text.Wrap
 
-                                        font.pixelSize: 14
+                                        font.pixelSize: 18
                                         font.weight: Font.Light
 
                                         Layout.fillHeight: true
@@ -802,7 +802,7 @@ Popup {
                                         text: plant['description_sol'] || ""
                                         wrapMode: Text.Wrap
 
-                                        font.pixelSize: 14
+                                        font.pixelSize: 18
                                         font.weight: Font.Light
 
                                         Layout.fillHeight: true
@@ -821,7 +821,7 @@ Popup {
                                               || ""
                                         wrapMode: Text.Wrap
 
-                                        font.pixelSize: 14
+                                        font.pixelSize: 18
                                         font.weight: Font.Light
 
                                         Layout.fillHeight: true
@@ -840,7 +840,7 @@ Popup {
                                               || ""
                                         wrapMode: Text.Wrap
 
-                                        font.pixelSize: 14
+                                        font.pixelSize: 18
                                         font.weight: Font.Light
 
                                         Layout.fillHeight: true
@@ -859,7 +859,7 @@ Popup {
                                               || ""
                                         wrapMode: Text.Wrap
 
-                                        font.pixelSize: 14
+                                        font.pixelSize: 18
                                         font.weight: Font.Light
 
                                         Layout.fillHeight: true
@@ -877,7 +877,7 @@ Popup {
                                         text: plant['description'] || ""
                                         wrapMode: Text.Wrap
 
-                                        font.pixelSize: 14
+                                        font.pixelSize: 18
                                         font.weight: Font.Light
 
                                         Layout.fillHeight: true
