@@ -732,7 +732,7 @@ Popup {
 
                             Accordion {
                                 header: qsTr("Plant description")
-                                contentItems: [
+                                contentItemsLayouted: [
                                     Label {
                                         text: plant['description'] || ""
                                         wrapMode: Text.Wrap
@@ -750,7 +750,7 @@ Popup {
 
                             Accordion {
                                 header: qsTr("How to farm")
-                                contentItems: [
+                                contentItemsLayouted: [
                                     Label {
                                         text: plant['comment_cultiver'] || ""
                                         wrapMode: Text.Wrap
@@ -768,7 +768,7 @@ Popup {
 
                             Accordion {
                                 header: qsTr("Brightness")
-                                contentItems: [
+                                contentItemsLayouted: [
                                     Label {
                                         text: plant['description_luminosite']
                                               || ""
@@ -787,7 +787,7 @@ Popup {
 
                             Accordion {
                                 header: qsTr("Ground")
-                                contentItems: [
+                                contentItemsLayouted: [
                                     Label {
                                         text: plant['description_sol'] || ""
                                         wrapMode: Text.Wrap
@@ -805,7 +805,7 @@ Popup {
 
                             Accordion {
                                 header: qsTr("Temperature & humidity")
-                                contentItems: [
+                                contentItemsLayouted: [
                                     Label {
                                         text: plant['description_temperature_humidite']
                                               || ""
@@ -824,7 +824,7 @@ Popup {
 
                             Accordion {
                                 header: qsTr("Potting and crawling")
-                                contentItems: [
+                                contentItemsLayouted: [
                                     Label {
                                         text: plant['description_mise_en_pot_et_rampotage']
                                               || ""
@@ -843,7 +843,7 @@ Popup {
 
                             Accordion {
                                 header: qsTr("Multiplication")
-                                contentItems: [
+                                contentItemsLayouted: [
                                     Label {
                                         text: plant['description_multiplication']
                                               || ""
@@ -862,7 +862,7 @@ Popup {
 
                             Accordion {
                                 header: qsTr("Parasites and diseases")
-                                contentItems: [
+                                contentItemsLayouted: [
                                     Label {
                                         text: plant['description'] || ""
                                         wrapMode: Text.Wrap

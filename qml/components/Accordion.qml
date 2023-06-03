@@ -24,6 +24,7 @@ Rectangle {
 
     property int header_radius: 10
     property alias contentItems: trueContent.children
+    property alias contentItemsLayouted: trueContentLayouted.children
 
     property string header_icon_src: "qrc:/assets/icons_material/baseline-info-24px.svg"
     property string closed_icon_src: "qrc:/assets/icons_material/baseline-chevron_right-24px.svg"
@@ -82,6 +83,14 @@ Rectangle {
                     Layout.alignment: Qt.AlignVCenter
                 }
             }
+        }
+
+        ColumnLayout {
+            id: trueContentLayouted
+            visible: is_opened == true
+            enabled: is_opened == true
+            height: visible ? undefined : 0
+            width: main.width
         }
 
         Column {
