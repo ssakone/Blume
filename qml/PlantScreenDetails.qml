@@ -403,160 +403,170 @@ Popup {
                             onClicked: addToGarden()
                         }
 
-                        RowLayout {
+                        Flickable {
                             Layout.fillWidth: true
-                            spacing: 10
+//                            Layout.preferredWidth: _insideRow.width
+                            Layout.preferredHeight: 120
+                            contentWidth: _insideRow.width
 
-                            Rectangle {
-                                Layout.minimumHeight: 120
-                                Layout.fillWidth: true
-                                color: "#f0f0f0"
-                                radius: 20
-                                ColumnLayout {
-                                    anchors.fill: parent
-                                    anchors.topMargin: 10
-                                    spacing: 7
+                            Row {
+                                id: _insideRow
+                                spacing: 10
 
-                                    IconSvg {
-                                        source: "qrc:/assets/icons/svg/shovel.svg"
-                                        color: Theme.colorPrimary
+                                Rectangle {
+                                    height: 120
+                                    width: height + 30
+                                    color: "#f0f0f0"
+                                    radius: 20
+                                    ColumnLayout {
+                                        anchors.fill: parent
+                                        anchors.topMargin: 10
+                                        spacing: 7
 
-                                        Layout.preferredWidth: 30
-                                        Layout.preferredHeight: 30
-                                        Layout.alignment: Qt.AlignHCenter
-                                    }
+                                        IconSvg {
+                                            source: "qrc:/assets/icons/svg/shovel.svg"
+                                            color: Theme.colorPrimary
 
-                                    Label {
-                                        text: qsTr("Care")
-                                        font.pixelSize: 18
-                                        font.weight: Font.ExtraBold
-                                        Layout.alignment: Qt.AlignHCenter
-                                    }
-
-                                    Label {
-                                        text: {
-                                            if (!plant['care_level'])
-                                                return "Non renseigné"
-                                            else if (plant['care_level'] === "hard")
-                                                return "Difficile"
-                                            else if (plant['care_level'] === "medium")
-                                                return "Moyen"
-                                            else if (plant['care_level'] === "easy")
-                                                return "Facile"
+                                            Layout.preferredWidth: 30
+                                            Layout.preferredHeight: 30
+                                            Layout.alignment: Qt.AlignHCenter
                                         }
 
-                                        font.pixelSize: 14
-
-                                        wrapMode: Text.Wrap
-                                        horizontalAlignment: Text.AlignHCenter
-
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: 10
-                                        Layout.rightMargin: 10
-                                    }
-
-                                    Item {
-                                        Layout.fillHeight: true
-                                    }
-                                }
-                            }
-
-                            Rectangle {
-                                Layout.minimumHeight: 120
-                                Layout.fillWidth: true
-                                color: "#f0f0f0"
-                                radius: 20
-                                ColumnLayout {
-                                    anchors.fill: parent
-                                    anchors.topMargin: 10
-                                    spacing: 7
-
-                                    IconSvg {
-                                        source: "qrc:/assets/icons/svg/water-plus-outline.svg"
-                                        color: Theme.colorPrimary
-
-                                        Layout.preferredWidth: 30
-                                        Layout.preferredHeight: 30
-                                        Layout.alignment: Qt.AlignHCenter
-                                    }
-
-                                    Label {
-                                        text: qsTr("Watering")
-                                        font.pixelSize: 18
-                                        font.weight: Font.ExtraBold
-                                        Layout.alignment: Qt.AlignHCenter
-                                    }
-
-                                    Label {
-                                        text: {
-                                            if (!plant['frequence_arrosage'])
-                                                return "Not set"
-                                            else
-                                                return plant['frequence_arrosage']
+                                        Label {
+                                            text: qsTr("Care")
+                                            font.pixelSize: 18
+                                            font.weight: Font.ExtraBold
+                                            Layout.alignment: Qt.AlignHCenter
                                         }
-                                        font.pixelSize: 14
 
-                                        wrapMode: Text.Wrap
-                                        horizontalAlignment: Text.AlignHCenter
+                                        Label {
+                                            text: {
+                                                if (!plant['care_level'])
+                                                    return "Non renseigné"
+                                                else if (plant['care_level'] === "hard")
+                                                    return "Difficile"
+                                                else if (plant['care_level'] === "medium")
+                                                    return "Moyen"
+                                                else if (plant['care_level'] === "easy")
+                                                    return "Facile"
+                                            }
 
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: 10
-                                        Layout.rightMargin: 10
-                                        Layout.bottomMargin: 10
-                                    }
+                                            font.pixelSize: 14
 
-                                    Item {
-                                        Layout.fillHeight: true
-                                    }
-                                }
-                            }
+                                            wrapMode: Text.Wrap
+                                            horizontalAlignment: Text.AlignHCenter
 
-                            Rectangle {
-                                Layout.minimumHeight: 120
-                                Layout.fillWidth: true
-                                color: "#f0f0f0"
-                                radius: 20
-                                ColumnLayout {
-                                    anchors.fill: parent
-                                    anchors.topMargin: 10
-                                    spacing: 7
+                                            Layout.fillWidth: true
+                                            Layout.leftMargin: 10
+                                            Layout.rightMargin: 10
+                                        }
 
-                                    IconSvg {
-                                        source: "qrc:/assets/icons_material/duotone-brightness_4-24px.svg"
-                                        color: Theme.colorPrimary
-
-                                        Layout.preferredWidth: 30
-                                        Layout.preferredHeight: 30
-                                        Layout.alignment: Qt.AlignHCenter
-                                    }
-
-                                    Label {
-                                        text: qsTr("Sun")
-                                        font.pixelSize: 18
-                                        font.weight: Font.ExtraBold
-                                        Layout.alignment: Qt.AlignHCenter
-                                    }
-
-                                    Label {
-                                        text: plant['exposition_au_soleil']
-                                              || ""
-
-                                        font.pixelSize: 14
-
-                                        wrapMode: Text.Wrap
-                                        horizontalAlignment: Text.AlignHCenter
-
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: 10
-                                        Layout.rightMargin: 10
-                                    }
-
-                                    Item {
-                                        Layout.fillHeight: true
+                                        Item {
+                                            Layout.fillHeight: true
+                                        }
                                     }
                                 }
+
+                                Rectangle {
+                                    height: 120
+                                    width: height + 30
+                                    color: "#f0f0f0"
+                                    radius: 20
+                                    ColumnLayout {
+                                        anchors.fill: parent
+                                        anchors.topMargin: 10
+                                        spacing: 7
+
+                                        IconSvg {
+                                            source: "qrc:/assets/icons/svg/water-plus-outline.svg"
+                                            color: Theme.colorPrimary
+
+                                            Layout.preferredWidth: 30
+                                            Layout.preferredHeight: 30
+                                            Layout.alignment: Qt.AlignHCenter
+                                        }
+
+                                        Label {
+                                            text: qsTr("Watering")
+                                            font.pixelSize: 18
+                                            font.weight: Font.ExtraBold
+                                            Layout.alignment: Qt.AlignHCenter
+                                        }
+
+                                        Label {
+                                            text: {
+                                                if (!plant['frequence_arrosage'])
+                                                    return "Not set"
+                                                else
+                                                    return plant['frequence_arrosage']
+                                            }
+                                            font.pixelSize: 14
+
+                                            wrapMode: Text.Wrap
+                                            horizontalAlignment: Text.AlignHCenter
+
+                                            Layout.fillWidth: true
+                                            Layout.leftMargin: 10
+                                            Layout.rightMargin: 10
+                                            Layout.bottomMargin: 10
+                                        }
+
+                                        Item {
+                                            Layout.fillHeight: true
+                                        }
+                                    }
+                                }
+
+                                Container {
+                                    height: 120
+
+                                    background: Rectangle {
+                                        color: "#f0f0f0"
+                                        radius: 20
+                                    }
+                                    contentItem: Row {}
+
+                                    Column {
+                                        padding: 10
+                                        spacing: 7
+
+                                        IconSvg {
+                                            source: "qrc:/assets/icons_material/duotone-brightness_4-24px.svg"
+                                            color: Theme.colorPrimary
+
+                                            height: 30
+                                            width: height
+                                            anchors.horizontalCenter: parent.horizontalCenter
+                                        }
+
+                                        Label {
+                                            text: qsTr("Sun")
+                                            font.pixelSize: 18
+                                            font.weight: Font.ExtraBold
+                                            anchors.horizontalCenter: parent.horizontalCenter
+                                        }
+
+                                        Label {
+                                            text: plant['exposition_au_soleil']
+                                                  || ""
+
+                                            font.pixelSize: 14
+
+                                            wrapMode: Text.Wrap
+                                            horizontalAlignment: Text.AlignHCenter
+
+//                                            width: parent.width
+                                            anchors.leftMargin: 10
+                                            anchors.rightMargin: 10
+                                        }
+                                    }
+
+                                }
+
+
                             }
                         }
+
 
                         ColumnLayout {
                             Layout.fillWidth: true
