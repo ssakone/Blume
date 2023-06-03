@@ -376,6 +376,12 @@ Item {
                             "exposition_au_soleil": {
                                 "type": "string"
                             },
+                            "type_de_plante": {
+                                "type": "string"
+                            },
+                            "cycle_de_vie": {
+                                "type": "string"
+                            },
                             "type_de_sol": {
                                 "type": "string"
                             },

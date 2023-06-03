@@ -575,7 +575,7 @@ Popup {
                             TableLine {
                                 color: "#e4f0ea"
                                 title: qsTr("Type of plant")
-                                description: plant['type_of_plant'] || ""
+                                description: plant['type_de_plante'] || ""
                             }
 
                             TableLine {
@@ -836,7 +836,7 @@ Popup {
                                 header: qsTr("Potting and crawling")
                                 contentItemsLayouted: [
                                     Label {
-                                        text: plant['description_mise_en_pot_et_rampotage']
+                                        text: plant['mise_en_pot_et_rampotage']
                                               || ""
                                         wrapMode: Text.Wrap
 
