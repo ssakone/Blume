@@ -692,8 +692,10 @@ Popup {
                                     Repeater {
                                         model: plant['images_plantes']
                                         delegate: Image {
-                                            source: model['directus_files_id'] ? "https://blume.mahoudev.com/assets/"
-                                                    + model['directus_files_id'] : ""
+                                            source: {
+                                                return modelData['directus_files_id'] ? "https://blume.mahoudev.com/assets/"
+                                                                                    + modelData['directus_files_id'] : ""
+                                            }
                                         }
                                     }
                                 }
