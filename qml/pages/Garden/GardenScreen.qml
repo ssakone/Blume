@@ -379,7 +379,7 @@ BPage {
                             }
 
                             isDone: {
-                                if(alarmsIdsToDownStatus.filter(id => id === modelData.id).length > 0 ) {
+                                if(alarmsIdsToDownStatus.filter(id => id === model.id).length > 0 ) {
                                     return false
                                 }
                                 return model.done === 1
