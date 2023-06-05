@@ -154,4 +154,15 @@ function weightPoundToKilog(weight_lb) {
     return (weight_lb / 2.20462262185);
 }
 
+/*!
+ * Get an array in range of [start:end]
+ */
+function range(start, end) {
+    var ans = [];
+    for (let i = start; i <= end; i++) {
+        ans.push(i);
+    }
+    return ans;
+}
+
 /* ************************************************************************** */

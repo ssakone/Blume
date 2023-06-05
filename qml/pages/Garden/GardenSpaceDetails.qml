@@ -10,6 +10,8 @@ import Qt5Compat.GraphicalEffects as QGE
 import "../../components"
 import "../../components_generic"
 import "../../components_js/Utils.js" as Utils
+import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "../.."
 
 BPage {
     id: control
@@ -503,7 +505,7 @@ BPage {
                 anotherAlarmType.text = addAlarmPopup.initialAlarm.libelle
 
             $Model.alarm.sqlFormatFrequence(addAlarmPopup.initialAlarm.id).then(data => {
-                                                               frequencyInput.text = data.freq
+                                                               frequencyInput.currentIndex = data.freq-1
                                                                periodComboBox.currentIndex = data.period_index
 //                                                               periodComboBox.currentIndex = periodComboBox.model.findIndex(it => it === data.period_label)
 //                                                           subtitle = data.freq + " " + data.period_label
@@ -517,7 +519,7 @@ BPage {
             addAlarmPopup.initialAlarm = {}
             gardenLine.plant = undefined
             anotherAlarmType.text = ""
-            frequencyInput.text = "3"
+            frequencyInput.currentIndex = 0
             periodComboBox.currentIndex = 0
         }
 
@@ -643,22 +645,30 @@ BPage {
                             text: qsTr("Every")
                         }
 
-                        TextField {
+//                        TextField {
+//                            id: frequencyInput
+//                            Layout.preferredWidth: 40
+//                            Layout.preferredHeight: 40
+//                            horizontalAlignment: Text.AlignHCenter
+//                            verticalAlignment: Text.AlignVCenter
+//                            text: "3"
+//                            font.pixelSize: 18
+//                            validator: IntValidator {
+//                                bottom: 1
+//                                top: 367
+//                            }
+//                            background: Rectangle {
+//                                radius: 10
+//                                color: $Colors.gray200
+//                            }
+//                        }
+
+                        TumblerThemed {
                             id: frequencyInput
                             Layout.preferredWidth: 40
-                            Layout.preferredHeight: 40
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                            text: "3"
-                            font.pixelSize: 18
-                            validator: IntValidator {
-                                bottom: 1
-                                top: 367
-                            }
-                            background: Rectangle {
-                                radius: 10
-                                color: $Colors.gray200
-                            }
+                            Layout.preferredHeight: 96
+
+                            model: UtilsNumber.range(1, 31)
                         }
 
                         ComboBox {
@@ -730,7 +740,7 @@ BPage {
                                 return
                             }
 
-                            let freq = parseInt(frequencyInput.text)
+                            let freq = parseInt(frequencyInput.currentIndex+1)
                             if(periodComboBox.currentIndex === 1) {
                                 // Weekly
                                 freq *= 7

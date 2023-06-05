@@ -29,6 +29,7 @@
         <file alias="SwitchThemedMobile.qml">components_themed/SwitchThemed_mobile.qml</file>
         <file alias="TextAreaThemed.qml">components_themed/TextAreaThemed.qml</file>
         <file alias="TextFieldThemed.qml">components_themed/TextFieldThemed.qml</file>
+        <file alias="TumblerThemed.qml">components_themed/TumblerThemed.qml</file>
         <file>components/Icons.qml</file>
         <file>components/NiceButton.qml</file>
         <file>components/ClipRRect.qml</file>
