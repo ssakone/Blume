@@ -89,10 +89,6 @@ Item {
         id: plantsModel
     }
 
-    PlantScreenDetails {
-        id: plantScreenDetailsPopup
-    }
-
     Timer {
         id: searchTimer
         interval: 1500
