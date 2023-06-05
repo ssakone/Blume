@@ -622,6 +622,7 @@ Popup {
                                     }
 
                                     Container {
+                                        Layout.fillWidth: singleColumn
                                         Layout.alignment: Qt.AlignHCenter
                                         background: Rectangle {
                                             color: Theme.colorPrimary
@@ -635,7 +636,7 @@ Popup {
 
                                         contentItem: Flow {
                                             padding: 10
-                                            width: _insideColumn3.width - 20
+                                            width: singleColumn ? _insideColumn3.width - 20 : parent.width
                                             spacing: 10
                                         }
 
