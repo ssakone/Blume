@@ -337,8 +337,10 @@ BPage {
                                                         pk = 6
                                                     }
 
-                                                    plantListByCategory.category_id = pk
-                                                    plantListByCategory.open()
+//                                                    plantListByCategory.category_id = pk
+//                                                    plantListByCategory.open()
+                                                    page_view.push(
+                                                                navigator.plantCategoriesBrowserPage, {category_id: pk, title})
                                                 }
                                             }
                                         }
@@ -362,10 +364,6 @@ BPage {
                     }
                 }
             }
-        }
-
-        PlantBrowseCategory {
-            id: plantListByCategory
         }
 
         ////////////////////////////////////////////////////////////////////

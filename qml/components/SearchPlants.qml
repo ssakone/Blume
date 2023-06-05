@@ -81,8 +81,7 @@ Item {
     onItemClicked: data => {
                        plantSearchBox.focus = false
                        if (preventDefaultOnClick === false) {
-                           plantScreenDetailsPopup.plant = data
-                           plantScreenDetailsPopup.open()
+                           page_view.push(navigator.plantPage, {plant: data})
                        }
                    }
 

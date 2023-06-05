@@ -111,6 +111,9 @@
         <file>pages/Garden/AlarmsCalendar.qml</file>
         <file>StackPage.qml</file>
         <file>models/DeviceModel.qml</file>
+        <file>pages/Plant/PlantShortDescriptions.qml</file>
+        <file>pages/Plant/Plant.qml</file>
+        <file>pages/Plant/PlantFrequencies.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>

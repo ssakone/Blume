@@ -17,8 +17,6 @@ BPage {
 
     header: AppBar {
         title: "Chercher une plante"
-        noAutoPop: true
-        leading.onClicked: page_view.pop()
     }
 
     SearchPlants {

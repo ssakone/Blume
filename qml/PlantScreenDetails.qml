@@ -22,6 +22,7 @@ Popup {
 
     property variant plant: ({})
     property bool fullScreen: false
+    property bool hideBaseHeader: false
 
     function generateUUID() {
         // Public Domain/MIT
@@ -158,6 +159,7 @@ Popup {
 
         Rectangle {
             id: header
+            visible: !hideBaseHeader
             color: Theme.colorPrimary
             Layout.preferredHeight: 65
             Layout.preferredWidth: plantScreenDetailsPopup.width
@@ -249,14 +251,13 @@ Popup {
                         Layout.preferredHeight: singleColumn ? 300 : plantScreenDetailsPopup.height / 3
 
                         clip: true
-                        color: "#f0f0f0"
+                        color: $Colors.green50
 
 
                         Label {
                             text: "No image"
                             font.pixelSize: 18
                             anchors.centerIn: parent
-//                            visible: (plant['images_plantes']?.length ?? ( plant['images_plantes']?.count ?? 0) ) > 0
                         }
 
                         Image {
@@ -588,41 +589,8 @@ Popup {
                                         }
 
                                         TableLine {
-                                            title: qsTr("Dimensions")
-                                            description: plant['taill_adulte'] || ""
-                                        }
-
-                                        TableLine {
-                                            color: "#e4f0ea"
-                                            title: qsTr("Sun exposure")
-                                            description: plant['exposition_au_soleil'] || ""
-                                        }
-
-                                        TableLine {
-                                            title: qsTr("Ground type")
-                                            description: plant['type_de_sol'] || ""
-                                        }
-
-                                        TableLine {
-                                            color: "#e4f0ea"
                                             title: qsTr("Color")
                                             description: plant['couleur'] || ""
-                                        }
-
-                                        TableLine {
-                                            title: qsTr("Flowering period")
-                                            description: plant['periode_de_floraison'] || ""
-                                        }
-
-                                        TableLine {
-                                            color: "#e4f0ea"
-                                            title: qsTr("Hardiness area")
-                                            description: plant['zone_de_rusticite'] || ""
-                                        }
-
-                                        TableLine {
-                                            title: "PH"
-                                            description: plant['ph'] || ""
                                         }
 
                                         TableLine {
@@ -635,15 +603,34 @@ Popup {
                                             title: qsTr("Lifecycle")
                                             description: plant['cycle_de_vie'] || ""
                                         }
+
+                                        RowLayout {
+                                            Layout.fillWidth: true
+                                            Item {
+                                                Layout.fillWidth: true
+                                            }
+
+                                            Label {
+                                                text: qsTr("See more...")
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    onClicked: page_view.push(navigator.plantShortDescriptionsPage, {plant})
+                                                }
+                                            }
+                                        }
+
                                     }
 
                                     Container {
-//                                        Layout.fillWidth: true
                                         Layout.alignment: Qt.AlignHCenter
                                         background: Rectangle {
                                             color: Theme.colorPrimary
                                             opacity: 0.1
                                             radius: 10
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                onClicked: page_view.push(navigator.plantFrequenciesPage, {plant})
+                                            }
                                         }
 
                                         contentItem: Flow {
@@ -997,7 +984,7 @@ Popup {
                                     }
 
                                     Item {
-                                        Layout.preferredHeight: 20
+                                        Layout.preferredHeight: 50
                                     }
                                 }
                             }
