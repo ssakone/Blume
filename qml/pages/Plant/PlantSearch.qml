@@ -16,7 +16,7 @@ BPage {
     id: plantListView
 
     header: AppBar {
-        title: "Chercher une plante"
+        title: qsTr("Search for plants")
     }
 
     SearchPlants {

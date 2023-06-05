@@ -23,7 +23,7 @@ BPage {
     property bool autoFocusSearchbar: false
 
     header: AppBar {
-        title: "Liste des maladies"
+        title: qsTr("Search for diseases")
         noAutoPop: true
         leading.onClicked: page_view.pop()
     }
