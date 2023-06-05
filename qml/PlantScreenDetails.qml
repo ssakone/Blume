@@ -302,6 +302,7 @@ Popup {
                                 rightPadding: 10
 
                                 ColumnLayout {
+                                    id: _insideColumn3
                                     width: parent.width - 20
                                     spacing: 20
 
@@ -624,33 +625,6 @@ Popup {
                                             description: plant['ph'] || ""
                                         }
 
-            //                            TableLine {
-            //                                title: qsTr("Watering frequency")
-            //                                description: plant['frequence_arrosage'] || ""
-            //                            }
-
-            //                            TableLine {
-            //                                color: "#e4f0ea"
-            //                                title: qsTr("Fertilization frequency")
-            //                                description: plant['frequence_fertilisation'] || ""
-            //                            }
-
-            //                            TableLine {
-            //                                title: qsTr("Paddling frequency")
-            //                                description: plant['frequence_rampotage'] || ""
-            //                            }
-
-            //                            TableLine {
-            //                                color: "#e4f0ea"
-            //                                title: qsTr("Cleaning frequency")
-            //                                description: plant['frequence_nettoyage'] || ""
-            //                            }
-
-            //                            TableLine {
-            //                                title: qsTr("Spray frequency")
-            //                                description: plant['frequence_vaporisation'] || ""
-            //                            }
-
                                         TableLine {
                                             color: "#e4f0ea"
                                             title: qsTr("Toxicity")
@@ -660,6 +634,81 @@ Popup {
                                         TableLine {
                                             title: qsTr("Lifecycle")
                                             description: plant['cycle_de_vie'] || ""
+                                        }
+                                    }
+
+                                    Container {
+//                                        Layout.fillWidth: true
+                                        Layout.alignment: Qt.AlignHCenter
+                                        background: Rectangle {
+                                            color: Theme.colorPrimary
+                                            opacity: 0.1
+                                            radius: 10
+                                        }
+
+                                        contentItem: Flow {
+                                            padding: 10
+                                            width: _insideColumn3.width - 20
+                                            spacing: 10
+                                        }
+
+                                        Repeater {
+                                            model: ListModel {
+                                                ListElement {
+                                                    title: qsTr("Watering frequency")
+                                                    field: 'frequence_arrosage'
+                                                    icon: 'wateringCan'
+                                                }
+                                                ListElement {
+                                                    title: qsTr("Fertilization frequency")
+                                                    field: 'frequence_fertilisation'
+                                                    icon: 'floorPlan'
+                                                }
+                                                ListElement {
+                                                    title: qsTr("Paddling frequency")
+                                                    field: 'frequence_rampotage'
+                                                    icon: 'beeFlower'
+                                                }
+                                                ListElement {
+                                                    title: qsTr("Cleaning frequency")
+                                                    field: 'frequence_nettoyage'
+                                                    icon: 'brush'
+                                                }
+                                                ListElement {
+                                                    title: qsTr("Spray frequency")
+                                                    field: 'frequence_vaporisation'
+                                                    icon: 'filterVariantPlus'
+                                                }
+                                            }
+
+                                            Row {
+                                                spacing: 5
+
+                                                IconSvg {
+                                                    source: Icons[model.icon]
+                                                    color: Theme.colorPrimary
+                                                    anchors.verticalCenter: parent.verticalCenter
+                                                    width: 20
+                                                    height: width
+                                                }
+                                                Column {
+                                                    width: 130
+                                                    anchors.verticalCenter: parent.verticalCenter
+                                                    Label {
+                                                        text: model.title
+                                                        color: Theme.colorPrimary
+                                                    }
+                                                    Label {
+                                                        text: plant[model.field] ?? ""
+                                                        color: $Colors.gray600
+                                                        width: parent.width
+                                                        elide: Text.ElideMiddle
+                                                        visible: text !== ""
+                                                    }
+                                                }
+                                            }
+
+
                                         }
                                     }
 
