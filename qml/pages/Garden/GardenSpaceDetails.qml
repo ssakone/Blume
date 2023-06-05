@@ -478,8 +478,9 @@ BPage {
         width: parent.width
         height: parent.height - 90
         edge: Qt.BottomEdge
-        dim: true
+        dim: false
         modal: true
+        interactive: false
         z: 1000
         background: Item {
             Rectangle {
@@ -489,6 +490,7 @@ BPage {
             }
         }
         onOpened: {
+            console.log("\n ON OPENED")
             const _days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
             let recur = [0, 0, 0, 0, 0, 0, 0]
             for (var i = 0; i < _days.length; i++) {
