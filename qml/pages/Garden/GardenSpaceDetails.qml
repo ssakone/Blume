@@ -542,266 +542,258 @@ BPage {
 
                     noAutoPop: true
                 }
-                Column {
-                    width: parent.width - 40
-                    padding: 20
-                    spacing: 20
+                ScrollView {
+                    anchors.fill: parent
+                    contentHeight: _insideColumn2.height
 
-                    Label {
-                        id: errorView
-                        color: $Colors.red
-                        visible: text.length > 0
-                        text: ""
-                    }
-
-                    Label {
-                        text: "Task"
-                    }
-
-                    Flow {
-                        id: typeAlarm
-                        width: parent.width
-
-                        property int currentIndex: 0
-                        property variant model: [ qsTr("Watering"), qsTr("Fertilisation"), qsTr("Paddling"), qsTr("Cleaning"), qsTr("Spraying"), qsTr("Other")]
-                        property variant fields_frequences: ['frequence_arrosage', 'frequence_fertilisation', 'frequence_rampotage', 'frequence_nettoyage', 'frequence_vaporisation']
+                    Column {
+                        id: _insideColumn2
+                        width: parent.parent.width - 40
+                        padding: 20
                         spacing: 20
 
-                        Repeater {
-                            model: typeAlarm.model
-                            delegate: ButtonWireframe {
-                                text: modelData
-                                fullColor: true
-                                primaryColor: index === typeAlarm.currentIndex ? Theme.colorPrimary : $Colors.gray300
-                                fulltextColor: index === typeAlarm.currentIndex ? "white" : Theme.colorPrimary
-                                font.pixelSize: 14
-                                componentRadius: implicitHeight / 2
-                                onClicked: {
-                                    typeAlarm.currentIndex = index
-                                    if (typeAlarm.currentIndex === typeAlarm.model.length - 1)
-                                        anotherAlarmType.forceActiveFocus()
+                        Label {
+                            id: errorView
+                            color: $Colors.red
+                            visible: text.length > 0
+                            text: ""
+                        }
+
+                        Label {
+                            text: "Task"
+                        }
+
+                        Flow {
+                            id: typeAlarm
+                            width: parent.width
+
+                            property int currentIndex: 0
+                            property variant model: [ qsTr("Watering"), qsTr("Fertilisation"), qsTr("Paddling"), qsTr("Cleaning"), qsTr("Spraying"), qsTr("Other")]
+                            property variant fields_frequences: ['frequence_arrosage', 'frequence_fertilisation', 'frequence_rampotage', 'frequence_nettoyage', 'frequence_vaporisation']
+                            spacing: 20
+
+                            Repeater {
+                                model: typeAlarm.model
+                                delegate: ButtonWireframe {
+                                    text: modelData
+                                    fullColor: true
+                                    primaryColor: index === typeAlarm.currentIndex ? Theme.colorPrimary : $Colors.gray300
+                                    fulltextColor: index === typeAlarm.currentIndex ? "white" : Theme.colorPrimary
+                                    font.pixelSize: 14
+                                    componentRadius: implicitHeight / 2
+                                    onClicked: {
+                                        typeAlarm.currentIndex = index
+                                        if (typeAlarm.currentIndex === typeAlarm.model.length - 1)
+                                            anotherAlarmType.forceActiveFocus()
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    TextField {
-                        id: anotherAlarmType
-                        visible: typeAlarm.currentIndex === typeAlarm.model.length - 1
-                        width: parent.width
-                        height: 60
-                        text: ""
-                        font.pixelSize: 16
-                        font.weight: Font.Bold
-                        verticalAlignment: Label.AlignVCenter
-                        background: Rectangle {
-                            radius: 10
-                            color: $Colors.gray200
-                        }
-                    }
-
-
-                    Rectangle {
-                        width: parent.width
-                        height: 80
-                        radius: 8
-                        Label {
-                            text: "+ " + qsTr("Choose plant")
-                            anchors.centerIn: parent
-                            opacity: .5
+                        TextField {
+                            id: anotherAlarmType
+                            visible: typeAlarm.currentIndex === typeAlarm.model.length - 1
+                            width: parent.width
+                            height: 60
+                            text: ""
                             font.pixelSize: 16
-                            visible: gardenLine.plant === undefined
-                        }
-
-                        GardenPlantLine {
-                            id: gardenLine
-                            property var plant
-
-                            anchors.fill: parent
-                            title: {
-                                return plant?.name_scientific ?? ""
-                            }
-
-                            subtitle: plant?.noms_communs[0]?.name ?? ""
-                            roomName: ""
-                            visible: plant !== undefined
-                            imageSource: plant?.images_plantes?.length
-                                         > 0 ? "https://blume.mahoudev.com/assets/"
-                                               + plant.images_plantes[0].directus_files_id : ""
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: choosePlantPopup.show(function (item) {
-                                gardenLine.plant = item
-                            })
-                        }
-                    }
-
-                    RowLayout {
-                        id: _control
-                        width: parent.width
-                        spacing: 10
-
-                        Label {
-                            text: qsTr("Every")
-                        }
-
-//                        TextField {
-//                            id: frequencyInput
-//                            Layout.preferredWidth: 40
-//                            Layout.preferredHeight: 40
-//                            horizontalAlignment: Text.AlignHCenter
-//                            verticalAlignment: Text.AlignVCenter
-//                            text: "3"
-//                            font.pixelSize: 18
-//                            validator: IntValidator {
-//                                bottom: 1
-//                                top: 367
-//                            }
-//                            background: Rectangle {
-//                                radius: 10
-//                                color: $Colors.gray200
-//                            }
-//                        }
-
-                        TumblerThemed {
-                            id: frequencyInput
-                            Layout.preferredWidth: 40
-                            Layout.preferredHeight: 96
-
-                            model: UtilsNumber.range(1, 31)
-                        }
-
-                        ComboBox {
-                            id: periodComboBox
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 40
-                            model: ["Days", "Weeks", "Months", "Years"]
-                            popup {
-                                z: 10000
-                            }
-
+                            font.weight: Font.Bold
+                            verticalAlignment: Label.AlignVCenter
                             background: Rectangle {
-                                color: $Colors.gray200
                                 radius: 10
+                                color: $Colors.gray200
                             }
+                            onAccepted: focus = false
+                            onEditingFinished: focus = false
                         }
 
-                    }
 
-                    RowLayout {
-                        visible: gardenLine.plant !== undefined && typeAlarm.currentIndex < typeAlarm.model.length -1
-                        width: parent.width
-                        Label {
-                            visible: recommandation_value.text !== ""
-                            text: qsTr("Recommandations: ")
-                            font {
-                                weight: Font.Light
-                                pixelSize: 16
+                        Rectangle {
+                            width: parent.width
+                            height: 80
+                            radius: 8
+                            Label {
+                                text: "+ " + qsTr("Choose plant")
+                                anchors.centerIn: parent
+                                opacity: .5
+                                font.pixelSize: 16
+                                visible: gardenLine.plant === undefined
                             }
-                        }
-                        Label {
-                            id: recommandation_value
-                            Layout.fillWidth: true
-                            wrapMode: Text.Wrap
-                            text: {
-                                if(typeAlarm.currentIndex < typeAlarm.model.length -1) {
-                                    const freq_field = typeAlarm.fields_frequences[typeAlarm.currentIndex]
-                                    let plant_json = gardenLine.plant?.plant_json
-                                    if(!plant_json) plant_json = gardenLine.plant // So it comes from local DB with fields 'libelle', 'done', 'frequence', ...
-                                    return plant_json ? (plant_json[freq_field] ?? "") : ""
+
+                            GardenPlantLine {
+                                id: gardenLine
+                                property var plant
+
+                                anchors.fill: parent
+                                title: {
+                                    return plant?.name_scientific ?? ""
                                 }
-                                return ""
+
+                                subtitle: plant?.noms_communs[0]?.name ?? ""
+                                roomName: ""
+                                visible: plant !== undefined
+                                imageSource: plant?.images_plantes?.length
+                                             > 0 ? "https://blume.mahoudev.com/assets/"
+                                                   + plant.images_plantes[0].directus_files_id : ""
                             }
-                            font {
-                                weight: Font.Light
-                                pixelSize: 16
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: choosePlantPopup.show(function (item) {
+                                    gardenLine.plant = item
+                                })
                             }
                         }
-                    }
 
+                        RowLayout {
+                            id: _control
+                            width: parent.width
+                            spacing: 10
 
-                    Item {
-                        height: 5
-                        width: 1
-                    }
-
-                    NiceButton {
-                        text: addAlarmPopup.shouldUpdate ? qsTr("Update task") : qsTr(
-                                                               "Save task")
-                        width: 160
-                        height: 60
-                        radius: height / 2
-                        font.pixelSize: 16
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.horizontalCenterOffset: 25
-                        onClicked: {
-                            if (gardenLine.plant === undefined) {
-                                errorView.text = "No plant choosed"
-                                return
+                            Label {
+                                text: qsTr("Every")
                             }
 
-                            let freq = parseInt(frequencyInput.currentIndex+1)
-                            if(periodComboBox.currentIndex === 1) {
-                                // Weekly
-                                freq *= 7
-                            } else if(periodComboBox.currentIndex === 2) {
-                                // Monthly
-                                freq *= 30
-                            } else if(periodComboBox.currentIndex === 3) {
-                                // Yearly
-                                freq *= 365
+                            TumblerThemed {
+                                id: frequencyInput
+                                Layout.preferredWidth: 40
+                                Layout.preferredHeight: 150
+
+                                model: UtilsNumber.range(1, 31)
                             }
 
-                            let data = {
-                                "frequence": freq,
-                                "libelle": typeAlarm.currentIndex === typeAlarm.model.length
-                                           - 1 ? anotherAlarmType.text : typeAlarm.model[typeAlarm.currentIndex],
-                                "type": typeAlarm.currentIndex,
-                                "space": control.space_id,
-                                "plant": gardenLine.plant.id,
-                                "plant_json": JSON.stringify(gardenLine.plant)
+                            ComboBox {
+                                id: periodComboBox
+                                Layout.fillWidth: true
+                                Layout.preferredHeight: 40
+                                model: ["Days", "Weeks", "Months", "Years"]
+                                popup {
+                                    z: 10000
+                                }
+
+                                background: Rectangle {
+                                    color: $Colors.gray200
+                                    radius: 10
+                                }
                             }
 
-                            console.log("Data ", JSON.stringify(data))
+                        }
 
-                            if (addAlarmPopup.shouldUpdate) {
-                                $Model.alarm.sqlUpdate(
-                                            addAlarmPopup.initialAlarm.id,
-                                            data).then(function (res) {
-                                                gardenLine.plant = undefined
-                                                $Model.alarm.clear()
-                                                $Model.alarm.fetchAll()
-                                                addAlarmPopup.close()
-                                            }).catch(err => console.error(
-                                                         JSON.stringify(err)))
-                            } else {
-                                data['last_done'] = Utils.humanizeToISOString(new Date())
-                                $Model.alarm.sqlCreate(data).then(
-                                            function (res) {
-                                                console.info(
-                                                            "New alarm created ", data['last_done'], res['last_done'], ' id=', typeof res['id'], res['id'])
-                                                $Model.alarm.sqlGet(res['id'])?.then(function(r){
-                                                    console.log("Mamamilla ")
-                                                    console.log( r['libelle'], typeof r['last_done'], r['last_done'])
-                                                })?.catch(function(e){
-                                                    console.log("ERR (()) ")
-                                                    console.log(JSON.stringify(e))
+                        RowLayout {
+                            visible: gardenLine.plant !== undefined && typeAlarm.currentIndex < typeAlarm.model.length -1
+                            width: parent.width
+                            Label {
+                                visible: recommandation_value.text !== ""
+                                text: qsTr("Recommandations: ")
+                                font {
+                                    weight: Font.Light
+                                    pixelSize: 16
+                                }
+                            }
+                            Label {
+                                id: recommandation_value
+                                Layout.fillWidth: true
+                                wrapMode: Text.Wrap
+                                text: {
+                                    if(typeAlarm.currentIndex < typeAlarm.model.length -1) {
+                                        const freq_field = typeAlarm.fields_frequences[typeAlarm.currentIndex]
+                                        let plant_json = gardenLine.plant?.plant_json
+                                        if(!plant_json) plant_json = gardenLine.plant // So it comes from local DB with fields 'libelle', 'done', 'frequence', ...
+                                        return plant_json ? (plant_json[freq_field] ?? "") : ""
+                                    }
+                                    return ""
+                                }
+                                font {
+                                    weight: Font.Light
+                                    pixelSize: 16
+                                }
+                            }
+                        }
+
+
+                        Item {
+                            height: 5
+                            width: 1
+                        }
+
+                        NiceButton {
+                            text: addAlarmPopup.shouldUpdate ? qsTr("Update task") : qsTr(
+                                                                   "Save task")
+                            width: 160
+                            height: 60
+                            radius: height / 2
+                            font.pixelSize: 16
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.horizontalCenterOffset: 25
+                            onClicked: {
+                                if (gardenLine.plant === undefined) {
+                                    errorView.text = "No plant choosed"
+                                    return
+                                }
+
+                                let freq = parseInt(frequencyInput.currentIndex+1)
+                                if(periodComboBox.currentIndex === 1) {
+                                    // Weekly
+                                    freq *= 7
+                                } else if(periodComboBox.currentIndex === 2) {
+                                    // Monthly
+                                    freq *= 30
+                                } else if(periodComboBox.currentIndex === 3) {
+                                    // Yearly
+                                    freq *= 365
+                                }
+
+                                let data = {
+                                    "frequence": freq,
+                                    "libelle": typeAlarm.currentIndex === typeAlarm.model.length
+                                               - 1 ? anotherAlarmType.text : typeAlarm.model[typeAlarm.currentIndex],
+                                    "type": typeAlarm.currentIndex,
+                                    "space": control.space_id,
+                                    "plant": gardenLine.plant.id,
+                                    "plant_json": JSON.stringify(gardenLine.plant)
+                                }
+
+                                console.log("Data ", JSON.stringify(data))
+
+                                if (addAlarmPopup.shouldUpdate) {
+                                    $Model.alarm.sqlUpdate(
+                                                addAlarmPopup.initialAlarm.id,
+                                                data).then(function (res) {
+                                                    gardenLine.plant = undefined
+                                                    $Model.alarm.clear()
+                                                    $Model.alarm.fetchAll()
+                                                    addAlarmPopup.close()
+                                                }).catch(err => console.error(
+                                                             JSON.stringify(err)))
+                                } else {
+                                    data['last_done'] = Utils.humanizeToISOString(new Date())
+                                    $Model.alarm.sqlCreate(data).then(
+                                                function (res) {
+                                                    console.info(
+                                                                "New alarm created ", data['last_done'], res['last_done'], ' id=', typeof res['id'], res['id'])
+                                                    $Model.alarm.sqlGet(res['id'])?.then(function(r){
+                                                        console.log("Mamamilla ")
+                                                        console.log( r['libelle'], typeof r['last_done'], r['last_done'])
+                                                    })?.catch(function(e){
+                                                        console.log("ERR (()) ")
+                                                        console.log(JSON.stringify(e))
+                                                    })
+                                                    gardenLine.plant = undefined
+                                                    addAlarmPopup.close()
+                                                }).catch(function (err) {
+                                                    console.error("COOL **",
+                                                                                                             JSON.stringify(err))
+                                                    console.log("Raw ", err)
+                                                    console.log("Raw msg ", err?.message)
                                                 })
-                                                gardenLine.plant = undefined
-                                                addAlarmPopup.close()
-                                            }).catch(function (err) {
-                                                console.error("COOL **",
-                                                                                                         JSON.stringify(err))
-                                                console.log("Raw ", err)
-                                                console.log("Raw msg ", err?.message)
-                                            })
-                            }
+                                }
 
+                            }
                         }
                     }
+
                 }
+
             }
         }
     }
