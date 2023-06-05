@@ -523,7 +523,7 @@ ApplicationWindow {
         // Start on the tutorial?
         Component.onCompleted: {
             if (!deviceManager.areDevicesAvailable()) {
-                screenTutorial.loadScreen()
+//                screenTutorial.loadScreen()
             }
         }
 

@@ -22,6 +22,7 @@ Popup {
 
     property variant plant: ({})
     property bool fullScreen: false
+    property bool hideBaseHeader: false
 
     function generateUUID() {
         // Public Domain/MIT
@@ -158,6 +159,7 @@ Popup {
 
         Rectangle {
             id: header
+            visible: !hideBaseHeader
             color: Theme.colorPrimary
             Layout.preferredHeight: 65
             Layout.preferredWidth: plantScreenDetailsPopup.width
@@ -242,10 +244,6 @@ Popup {
                 ColumnLayout {
                     id: mainContent
                     width: parent.width
-                    spacing: 10
-
-                    anchors.leftMargin: 10
-                    anchors.rightMargin: 10
 
                     Rectangle {
                         property bool isFullScreen: false
@@ -253,14 +251,13 @@ Popup {
                         Layout.preferredHeight: singleColumn ? 300 : plantScreenDetailsPopup.height / 3
 
                         clip: true
-                        color: "#f0f0f0"
+                        color: $Colors.green50
 
 
                         Label {
                             text: "No image"
                             font.pixelSize: 18
                             anchors.centerIn: parent
-//                            visible: (plant['images_plantes']?.length ?? ( plant['images_plantes']?.count ?? 0) ) > 0
                         }
 
                         Image {
@@ -289,596 +286,474 @@ Popup {
                         }
                     }
 
-                    ColumnLayout {
+                    Column {
                         Layout.fillWidth: true
-                        Layout.fillHeight: true
-
-                        Layout.leftMargin: 10
-                        Layout.rightMargin: 10
-
-                        spacing: 20
-
-                        Label {
-                            text: plant?.name_scientific ?? ""
-                            wrapMode: Text.Wrap
-                            font.pixelSize: 24
-                            font.weight: Font.DemiBold
-                            Layout.alignment: Qt.AlignHCenter
-                            Layout.fillWidth: true
-                        }
+                        topPadding: -50
 
                         Rectangle {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: col_header.height
+                            width: parent.width
+                            height: _insideColumn2.height
+                            radius: 40
 
-                            Layout.leftMargin: 10
-                            Layout.rightMargin: 10
-
-                            color: "#f0f0f0"
-                            radius: 15
-                            ColumnLayout {
-                                id: col_header
+                            Column {
+                                id: _insideColumn2
                                 width: parent.width
-                                anchors.topMargin: 10
-                                anchors.bottomMargin: 10
+                                topPadding: 20
+                                leftPadding: 10
+                                rightPadding: 10
 
-                                RowLayout {
-                                    Layout.fillWidth: true
-                                    Layout.fillHeight: true
-                                    Layout.leftMargin: 10
-
-                                    Label {
-                                        text: qsTr("Botanical name")
-                                        font.pixelSize: 14
-                                        font.weight: Font.Light
-                                        Layout.minimumWidth: 120
-                                    }
-                                    Label {
-                                        text: plant["nom_botanique"] || ""
-                                        font.pixelSize: 20
-                                        font.weight: Font.DemiBold
-                                        horizontalAlignment: Text.AlignLeft
-                                        color: Theme.colorPrimary
-                                        wrapMode: Text.Wrap
-                                        Layout.fillWidth: true
-                                    }
-                                    Item {
-                                        Layout.fillWidth: true
-                                    }
-                                }
-
-                                Rectangle {
-                                    Layout.fillWidth: true
-                                    Layout.preferredHeight: 1
-
-                                    color: "black"
-                                    opacity: 0.3
-                                }
-
-                                RowLayout {
-                                    Layout.fillWidth: true
-                                    Layout.fillHeight: true
-                                    Layout.leftMargin: 10
-                                    Layout.rightMargin: 10
-
-                                    Label {
-                                        text: qsTr("Common names")
-                                        font.pixelSize: 14
-                                        font.weight: Font.Light
-                                        Layout.minimumWidth: 120
-                                    }
-                                    Label {
-                                        text: {
-                                            let res = ""
-                                            if (plant['noms_communs']) {
-                                                let common_names = plant['noms_communs']
-                                                let len = common_names?.length
-                                                console.log("noms_communs ", len, " -- ")
-                                                common_names?.forEach(
-                                                            (item, index) => res += (item.name ?? item + (len === index + 1 ? "" : ", ")))
-                                            }
-                                            return res
-                                        }
-                                        font.pixelSize: 14
-                                        font.weight: Font.DemiBold
-                                        wrapMode: Text.Wrap
-                                        horizontalAlignment: Text.AlignLeft
-                                        color: Theme.colorPrimary
-                                        Layout.fillWidth: true
-                                    }
-                                    Item {
-                                        Layout.fillWidth: true
-                                    }
-                                }
-                            }
-                        }
-
-                        ButtonWireframe {
-                            text: qsTr("Add to garden")
-                            fullColor: Theme.colorPrimary
-                            fulltextColor: "white"
-                            componentRadius: 20
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 50
-                            onClicked: addToGarden()
-                        }
-
-                        RowLayout {
-                            Layout.fillWidth: true
-                            spacing: 10
-
-                            Rectangle {
-                                Layout.minimumHeight: 120
-                                Layout.fillWidth: true
-                                color: "#f0f0f0"
-                                radius: 20
                                 ColumnLayout {
-                                    anchors.fill: parent
-                                    anchors.topMargin: 10
-                                    spacing: 7
+                                    id: _insideColumn3
+                                    width: parent.width - 20
+                                    spacing: 20
 
-                                    IconSvg {
-                                        source: "qrc:/assets/icons/svg/shovel.svg"
-                                        color: Theme.colorPrimary
-
-                                        Layout.preferredWidth: 30
-                                        Layout.preferredHeight: 30
-                                        Layout.alignment: Qt.AlignHCenter
-                                    }
 
                                     Label {
-                                        text: qsTr("Care")
-                                        font.pixelSize: 18
-                                        font.weight: Font.ExtraBold
-                                        Layout.alignment: Qt.AlignHCenter
-                                    }
-
-                                    Label {
-                                        text: {
-                                            if (!plant['care_level'])
-                                                return "Non renseigné"
-                                            else if (plant['care_level'] === "hard")
-                                                return "Difficile"
-                                            else if (plant['care_level'] === "medium")
-                                                return "Moyen"
-                                            else if (plant['care_level'] === "easy")
-                                                return "Facile"
-                                        }
-
-                                        font.pixelSize: 14
-
+                                        text: plant?.name_scientific ?? ""
                                         wrapMode: Text.Wrap
-                                        horizontalAlignment: Text.AlignHCenter
-
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: 10
-                                        Layout.rightMargin: 10
-                                    }
-
-                                    Item {
-                                        Layout.fillHeight: true
-                                    }
-                                }
-                            }
-
-                            Rectangle {
-                                Layout.minimumHeight: 120
-                                Layout.fillWidth: true
-                                color: "#f0f0f0"
-                                radius: 20
-                                ColumnLayout {
-                                    anchors.fill: parent
-                                    anchors.topMargin: 10
-                                    spacing: 7
-
-                                    IconSvg {
-                                        source: "qrc:/assets/icons/svg/water-plus-outline.svg"
-                                        color: Theme.colorPrimary
-
-                                        Layout.preferredWidth: 30
-                                        Layout.preferredHeight: 30
-                                        Layout.alignment: Qt.AlignHCenter
-                                    }
-
-                                    Label {
-                                        text: qsTr("Watering")
-                                        font.pixelSize: 18
-                                        font.weight: Font.ExtraBold
-                                        Layout.alignment: Qt.AlignHCenter
-                                    }
-
-                                    Label {
-                                        text: {
-                                            if (!plant['frequence_arrosage'])
-                                                return "Not set"
-                                            else
-                                                return plant['frequence_arrosage']
-                                        }
-                                        font.pixelSize: 14
-
-                                        wrapMode: Text.Wrap
-                                        horizontalAlignment: Text.AlignHCenter
-
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: 10
-                                        Layout.rightMargin: 10
-                                        Layout.bottomMargin: 10
-                                    }
-
-                                    Item {
-                                        Layout.fillHeight: true
-                                    }
-                                }
-                            }
-
-                            Rectangle {
-                                Layout.minimumHeight: 120
-                                Layout.fillWidth: true
-                                color: "#f0f0f0"
-                                radius: 20
-                                ColumnLayout {
-                                    anchors.fill: parent
-                                    anchors.topMargin: 10
-                                    spacing: 7
-
-                                    IconSvg {
-                                        source: "qrc:/assets/icons_material/duotone-brightness_4-24px.svg"
-                                        color: Theme.colorPrimary
-
-                                        Layout.preferredWidth: 30
-                                        Layout.preferredHeight: 30
-                                        Layout.alignment: Qt.AlignHCenter
-                                    }
-
-                                    Label {
-                                        text: qsTr("Sun")
-                                        font.pixelSize: 18
-                                        font.weight: Font.ExtraBold
-                                        Layout.alignment: Qt.AlignHCenter
-                                    }
-
-                                    Label {
-                                        text: plant['exposition_au_soleil']
-                                              || ""
-
-                                        font.pixelSize: 14
-
-                                        wrapMode: Text.Wrap
-                                        horizontalAlignment: Text.AlignHCenter
-
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: 10
-                                        Layout.rightMargin: 10
-                                    }
-
-                                    Item {
-                                        Layout.fillHeight: true
-                                    }
-                                }
-                            }
-                        }
-
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 2
-
-                            TableLine {
-                                title: qsTr("Dimensions")
-                                description: plant['taill_adulte'] || ""
-                            }
-
-                            TableLine {
-                                color: "#e4f0ea"
-                                title: qsTr("Sun exposure")
-                                description: plant['exposition_au_soleil'] || ""
-                            }
-
-                            TableLine {
-                                title: qsTr("Ground type")
-                                description: plant['type_de_sol'] || ""
-                            }
-
-                            TableLine {
-                                color: "#e4f0ea"
-                                title: qsTr("Color")
-                                description: plant['couleur'] || ""
-                            }
-
-                            TableLine {
-                                title: qsTr("Flowering period")
-                                description: plant['periode_de_floraison'] || ""
-                            }
-
-                            TableLine {
-                                color: "#e4f0ea"
-                                title: qsTr("Hardiness area")
-                                description: plant['zone_de_rusticite'] || ""
-                            }
-
-                            TableLine {
-                                title: "PH"
-                                description: plant['ph'] || ""
-                            }
-
-                            TableLine {
-                                title: qsTr("Watering frequency")
-                                description: plant['frequence_arrosage'] || ""
-                            }
-
-                            TableLine {
-                                color: "#e4f0ea"
-                                title: qsTr("Fertilization frequency")
-                                description: plant['frequence_fertilisation'] || ""
-                            }
-
-                            TableLine {
-                                title: qsTr("Paddling frequency")
-                                description: plant['frequence_rampotage'] || ""
-                            }
-
-                            TableLine {
-                                color: "#e4f0ea"
-                                title: qsTr("Cleaning frequency")
-                                description: plant['frequence_nettoyage'] || ""
-                            }
-
-                            TableLine {
-                                title: qsTr("Spray frequency")
-                                description: plant['frequence_vaporisation'] || ""
-                            }
-
-                            TableLine {
-                                color: "#e4f0ea"
-                                title: qsTr("Toxicity")
-                                description: plant['toxicity'] ? 'Toxic' : 'Non-toxic'
-                            }
-
-                            TableLine {
-                                title: qsTr("Lifecycle")
-                                description: plant['cycle_de_vie'] || ""
-                            }
-                        }
-
-                        Rectangle {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: plantScreenDetailsPopup.height / 2
-
-                            color: "#f0f0f0"
-                            radius: 10
-                            clip: true
-
-                            Label {
-                                text: qsTr("No image available")
-                                font.pixelSize: 22
-                                anchors.centerIn: parent
-                                visible: plant['images_plantes'] ?? true
-                            }
-
-                            ColumnLayout {
-                                anchors.fill: parent
-                                spacing: 5
-
-                                Row {
-                                    Layout.fillWidth: true
-                                    Layout.leftMargin: 10
-                                    spacing: 10
-
-                                    IconSvg {
-                                        source: "qrc:/assets/icons_material/camera.svg"
-                                        width: 30
-                                        height: 30
-                                        color: Theme.colorPrimary
-                                        anchors.verticalCenter: parent.verticalCenter
-                                    }
-
-                                    Label {
-                                        text: qsTr("Photos galery")
-                                        color: Theme.colorPrimary
                                         font.pixelSize: 24
-                                        anchors.verticalCenter: parent.verticalCenter
-                                    }
-                                }
-
-                                SwipeView {
-                                    Layout.fillWidth: true
-                                    Layout.fillHeight: true
-
-                                    Repeater {
-                                        model: plant['images_plantes']
-                                        delegate: Image {
-                                            source: model['directus_files_id'] ? "https://blume.mahoudev.com/assets/"
-                                                    + model['directus_files_id'] : ""
-                                        }
-                                    }
-                                }
-
-                                RowLayout {
-                                    Layout.preferredHeight: 30
-                                    Layout.fillWidth: true
-
-                                    Item {
+                                        font.weight: Font.DemiBold
+                                        Layout.alignment: Qt.AlignHCenter
                                         Layout.fillWidth: true
                                     }
-
-                                    Repeater {
-                                        model: plant['images_plantes']
-                                        delegate: Rectangle {
-                                            width: 10
-                                            height: 10
-                                            radius: 10
-                                            color: "black"
-                                        }
-                                    }
-
-                                    Item {
-                                        Layout.fillWidth: true
-                                    }
-                                }
-                            }
-                        }
-
-                        Column {
-                            Layout.fillWidth: true
-
-                            spacing: 3
-
-                            Accordion {
-                                header: qsTr("Plant description")
-                                contentItems: [
-                                    Label {
-                                        text: plant['description'] || ""
-                                        wrapMode: Text.Wrap
-
-                                        font.pixelSize: 14
-                                        font.weight: Font.Light
-
-                                        Layout.fillHeight: true
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: 10
-                                        Layout.rightMargin: 10
-                                    }
-                                ]
-                            }
-
-                            Accordion {
-                                header: qsTr("How to farm")
-                                contentItems: [
-                                    Label {
-                                        text: plant['comment_cultiver'] || ""
-                                        wrapMode: Text.Wrap
-
-                                        font.pixelSize: 14
-                                        font.weight: Font.Light
-
-                                        Layout.fillHeight: true
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: 10
-                                        Layout.rightMargin: 10
-                                    }
-                                ]
-                            }
-
-                            Accordion {
-                                header: qsTr("Brightness")
-                                contentItems: [
-                                    Label {
-                                        text: plant['description_luminosite']
-                                              || ""
-                                        wrapMode: Text.Wrap
-
-                                        font.pixelSize: 14
-                                        font.weight: Font.Light
-
-                                        Layout.fillHeight: true
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: 10
-                                        Layout.rightMargin: 10
-                                    }
-                                ]
-                            }
-
-                            Accordion {
-                                header: qsTr("Ground")
-                                contentItems: [
-                                    Label {
-                                        text: plant['description_sol'] || ""
-                                        wrapMode: Text.Wrap
-
-                                        font.pixelSize: 14
-                                        font.weight: Font.Light
-
-                                        Layout.fillHeight: true
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: 10
-                                        Layout.rightMargin: 10
-                                    }
-                                ]
-                            }
-
-                            Accordion {
-                                header: qsTr("Temperature & humidity")
-                                contentItems: [
-                                    Label {
-                                        text: plant['description_temperature_humidite']
-                                              || ""
-                                        wrapMode: Text.Wrap
-
-                                        font.pixelSize: 14
-                                        font.weight: Font.Light
-
-                                        Layout.fillHeight: true
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: 10
-                                        Layout.rightMargin: 10
-                                    }
-                                ]
-                            }
-
-                            Accordion {
-                                header: qsTr("Potting and crawling")
-                                contentItems: [
-                                    Label {
-                                        text: plant['description_mise_en_pot_et_rampotage']
-                                              || ""
-                                        wrapMode: Text.Wrap
-
-                                        font.pixelSize: 14
-                                        font.weight: Font.Light
-
-                                        Layout.fillHeight: true
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: 10
-                                        Layout.rightMargin: 10
-                                    }
-                                ]
-                            }
-
-                            Accordion {
-                                header: qsTr("Multiplication")
-                                contentItems: [
-                                    Label {
-                                        text: plant['description_multiplication']
-                                              || ""
-                                        wrapMode: Text.Wrap
-
-                                        font.pixelSize: 14
-                                        font.weight: Font.Light
-
-                                        Layout.fillHeight: true
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: 10
-                                        Layout.rightMargin: 10
-                                    }
-                                ]
-                            }
-
-                            Accordion {
-                                header: qsTr("Parasites and diseases")
-                                contentItems: [
-                                    Label {
-                                        text: plant['description'] || ""
-                                        wrapMode: Text.Wrap
-
-                                        font.pixelSize: 14
-                                        font.weight: Font.Light
-
-                                        Layout.fillHeight: true
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: 10
-                                        Layout.rightMargin: 10
-                                    },
 
                                     Rectangle {
                                         Layout.fillWidth: true
-                                        Layout.preferredHeight: plantScreenDetailsPopup.height / 3
+                                        Layout.preferredHeight: col_header.height
+
+                                        Layout.leftMargin: 10
+                                        Layout.rightMargin: 10
+
+                                        color: "#f0f0f0"
+                                        radius: 15
+                                        ColumnLayout {
+                                            id: col_header
+                                            width: parent.width
+                                            anchors.topMargin: 10
+                                            anchors.bottomMargin: 10
+
+                                            RowLayout {
+                                                Layout.fillWidth: true
+                                                Layout.fillHeight: true
+                                                Layout.leftMargin: 10
+
+                                                Label {
+                                                    text: qsTr("Botanical name")
+                                                    font.pixelSize: 14
+                                                    font.weight: Font.Light
+                                                    Layout.minimumWidth: 120
+                                                }
+                                                Label {
+                                                    text: plant["nom_botanique"] || ""
+                                                    font.pixelSize: 20
+                                                    font.weight: Font.DemiBold
+                                                    horizontalAlignment: Text.AlignLeft
+                                                    color: Theme.colorPrimary
+                                                    wrapMode: Text.Wrap
+                                                    Layout.fillWidth: true
+                                                }
+                                                Item {
+                                                    Layout.fillWidth: true
+                                                }
+                                            }
+
+                                            Rectangle {
+                                                Layout.fillWidth: true
+                                                Layout.preferredHeight: 1
+
+                                                color: "black"
+                                                opacity: 0.3
+                                            }
+
+                                            RowLayout {
+                                                Layout.fillWidth: true
+                                                Layout.fillHeight: true
+                                                Layout.leftMargin: 10
+                                                Layout.rightMargin: 10
+
+                                                Label {
+                                                    text: qsTr("Common names")
+                                                    font.pixelSize: 14
+                                                    font.weight: Font.Light
+                                                    Layout.minimumWidth: 120
+                                                }
+                                                Label {
+                                                    text: {
+                                                        let res = ""
+                                                        if (plant['noms_communs']) {
+                                                            let common_names = plant['noms_communs']
+                                                            let len = common_names?.length
+                                                            console.log("noms_communs ", len, " -- ")
+                                                            common_names?.forEach(
+                                                                        (item, index) => res += (item.name ?? item + (len === index + 1 ? "" : ", ")))
+                                                        }
+                                                        return res
+                                                    }
+                                                    font.pixelSize: 14
+                                                    font.weight: Font.DemiBold
+                                                    wrapMode: Text.Wrap
+                                                    horizontalAlignment: Text.AlignLeft
+                                                    color: Theme.colorPrimary
+                                                    Layout.fillWidth: true
+                                                }
+                                                Item {
+                                                    Layout.fillWidth: true
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    ButtonWireframe {
+                                        text: qsTr("Add to garden")
+                                        fullColor: Theme.colorPrimary
+                                        fulltextColor: "white"
+                                        componentRadius: 20
+                                        Layout.fillWidth: true
+                                        Layout.preferredHeight: 50
+                                        onClicked: addToGarden()
+                                    }
+
+                                    Flickable {
+                                        Layout.fillWidth: true
+            //                            Layout.preferredWidth: _insideRow.width
+                                        Layout.preferredHeight: 120
+                                        contentWidth: _insideRow.width
+
+                                        Row {
+                                            id: _insideRow
+                                            spacing: 10
+
+                                            Rectangle {
+                                                height: 120
+                                                width: height + 30
+                                                color: "#f0f0f0"
+                                                radius: 20
+                                                ColumnLayout {
+                                                    anchors.fill: parent
+                                                    anchors.topMargin: 10
+                                                    spacing: 7
+
+                                                    IconSvg {
+                                                        source: "qrc:/assets/icons/svg/shovel.svg"
+                                                        color: Theme.colorPrimary
+
+                                                        Layout.preferredWidth: 30
+                                                        Layout.preferredHeight: 30
+                                                        Layout.alignment: Qt.AlignHCenter
+                                                    }
+
+                                                    Label {
+                                                        text: qsTr("Care")
+                                                        font.pixelSize: 18
+                                                        font.weight: Font.ExtraBold
+                                                        Layout.alignment: Qt.AlignHCenter
+                                                    }
+
+                                                    Label {
+                                                        text: {
+                                                            if (!plant['care_level'])
+                                                                return "Non renseigné"
+                                                            else if (plant['care_level'] === "hard")
+                                                                return "Difficile"
+                                                            else if (plant['care_level'] === "medium")
+                                                                return "Moyen"
+                                                            else if (plant['care_level'] === "easy")
+                                                                return "Facile"
+                                                        }
+
+                                                        font.pixelSize: 14
+
+                                                        wrapMode: Text.Wrap
+                                                        horizontalAlignment: Text.AlignHCenter
+
+                                                        Layout.fillWidth: true
+                                                        Layout.leftMargin: 10
+                                                        Layout.rightMargin: 10
+                                                    }
+
+                                                    Item {
+                                                        Layout.fillHeight: true
+                                                    }
+                                                }
+                                            }
+
+                                            Rectangle {
+                                                height: 120
+                                                width: height + 30
+                                                color: "#f0f0f0"
+                                                radius: 20
+                                                ColumnLayout {
+                                                    anchors.fill: parent
+                                                    anchors.topMargin: 10
+                                                    spacing: 7
+
+                                                    IconSvg {
+                                                        source: "qrc:/assets/icons/svg/water-plus-outline.svg"
+                                                        color: Theme.colorPrimary
+
+                                                        Layout.preferredWidth: 30
+                                                        Layout.preferredHeight: 30
+                                                        Layout.alignment: Qt.AlignHCenter
+                                                    }
+
+                                                    Label {
+                                                        text: qsTr("Watering")
+                                                        font.pixelSize: 18
+                                                        font.weight: Font.ExtraBold
+                                                        Layout.alignment: Qt.AlignHCenter
+                                                    }
+
+                                                    Label {
+                                                        text: {
+                                                            if (!plant['frequence_arrosage'])
+                                                                return "Not set"
+                                                            else
+                                                                return plant['frequence_arrosage']
+                                                        }
+                                                        font.pixelSize: 14
+
+                                                        wrapMode: Text.Wrap
+                                                        horizontalAlignment: Text.AlignHCenter
+
+                                                        Layout.fillWidth: true
+                                                        Layout.leftMargin: 10
+                                                        Layout.rightMargin: 10
+                                                        Layout.bottomMargin: 10
+                                                    }
+
+                                                    Item {
+                                                        Layout.fillHeight: true
+                                                    }
+                                                }
+                                            }
+
+                                            Container {
+                                                height: 120
+
+                                                background: Rectangle {
+                                                    color: "#f0f0f0"
+                                                    radius: 20
+                                                }
+                                                contentItem: Row {}
+
+                                                Column {
+                                                    padding: 10
+                                                    spacing: 7
+
+                                                    IconSvg {
+                                                        source: "qrc:/assets/icons_material/duotone-brightness_4-24px.svg"
+                                                        color: Theme.colorPrimary
+
+                                                        height: 30
+                                                        width: height
+                                                        anchors.horizontalCenter: parent.horizontalCenter
+                                                    }
+
+                                                    Label {
+                                                        text: qsTr("Sun")
+                                                        font.pixelSize: 18
+                                                        font.weight: Font.ExtraBold
+                                                        anchors.horizontalCenter: parent.horizontalCenter
+                                                    }
+
+                                                    Label {
+                                                        text: plant['exposition_au_soleil']
+                                                              || ""
+
+                                                        font.pixelSize: 14
+
+                                                        wrapMode: Text.Wrap
+                                                        horizontalAlignment: Text.AlignHCenter
+
+            //                                            width: parent.width
+                                                        anchors.leftMargin: 10
+                                                        anchors.rightMargin: 10
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        }
+                                    }
+
+
+                                    ColumnLayout {
+                                        Layout.fillWidth: true
+                                        spacing: 2
+
+                                        TableLine {
+                                            color: "#e4f0ea"
+                                            title: qsTr("Type of plant")
+                                            description: plant['type_de_plante'] || ""
+                                        }
+
+                                        TableLine {
+                                            title: qsTr("Color")
+                                            description: plant['couleur'] || ""
+                                        }
+
+                                        TableLine {
+                                            color: "#e4f0ea"
+                                            title: qsTr("Toxicity")
+                                            description: plant['toxicity'] ? 'Toxic' : 'Non-toxic'
+                                        }
+
+                                        TableLine {
+                                            title: qsTr("Lifecycle")
+                                            description: plant['cycle_de_vie'] || ""
+                                        }
+
+                                        RowLayout {
+                                            Layout.fillWidth: true
+                                            Item {
+                                                Layout.fillWidth: true
+                                            }
+
+                                            Label {
+                                                text: qsTr("See more...")
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    onClicked: page_view.push(navigator.plantShortDescriptionsPage, {plant})
+                                                }
+                                            }
+                                        }
+
+                                    }
+
+                                    Container {
+                                        Layout.fillWidth: singleColumn
+                                        Layout.alignment: Qt.AlignHCenter
+                                        background: Rectangle {
+                                            color: Theme.colorPrimary
+                                            opacity: 0.1
+                                            radius: 10
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                onClicked: page_view.push(navigator.plantFrequenciesPage, {plant})
+                                            }
+                                        }
+
+                                        contentItem: Flow {
+                                            padding: 10
+                                            width: singleColumn ? _insideColumn3.width - 20 : parent.width
+                                            spacing: 10
+                                        }
+
+                                        Repeater {
+                                            model: ListModel {
+                                                ListElement {
+                                                    title: qsTr("Watering frequency")
+                                                    field: 'frequence_arrosage'
+                                                    icon: 'wateringCan'
+                                                }
+                                                ListElement {
+                                                    title: qsTr("Fertilization frequency")
+                                                    field: 'frequence_fertilisation'
+                                                    icon: 'floorPlan'
+                                                }
+                                                ListElement {
+                                                    title: qsTr("Paddling frequency")
+                                                    field: 'frequence_rampotage'
+                                                    icon: 'beeFlower'
+                                                }
+                                                ListElement {
+                                                    title: qsTr("Cleaning frequency")
+                                                    field: 'frequence_nettoyage'
+                                                    icon: 'brush'
+                                                }
+                                                ListElement {
+                                                    title: qsTr("Spray frequency")
+                                                    field: 'frequence_vaporisation'
+                                                    icon: 'filterVariantPlus'
+                                                }
+                                            }
+
+                                            Row {
+                                                spacing: 5
+
+                                                IconSvg {
+                                                    source: Icons[model.icon]
+                                                    color: Theme.colorPrimary
+                                                    anchors.verticalCenter: parent.verticalCenter
+                                                    width: 20
+                                                    height: width
+                                                }
+                                                Column {
+                                                    width: 130
+                                                    anchors.verticalCenter: parent.verticalCenter
+                                                    Label {
+                                                        text: model.title
+                                                        color: Theme.colorPrimary
+                                                    }
+                                                    Label {
+                                                        text: plant[model.field] ?? ""
+                                                        color: $Colors.gray600
+                                                        width: parent.width
+                                                        elide: Text.ElideMiddle
+                                                        visible: text !== ""
+                                                    }
+                                                }
+                                            }
+
+
+                                        }
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillWidth: true
+                                        Layout.preferredHeight: plantScreenDetailsPopup.height / 2
 
                                         color: "#f0f0f0"
                                         radius: 10
                                         clip: true
 
+                                        Label {
+                                            text: qsTr("No image available")
+                                            font.pixelSize: 22
+                                            anchors.centerIn: parent
+                                            visible: plant['images_plantes'] ?? true
+                                        }
+
                                         ColumnLayout {
                                             anchors.fill: parent
-                                            spacing: 2
+                                            spacing: 5
+
+                                            Row {
+                                                Layout.fillWidth: true
+                                                Layout.leftMargin: 10
+                                                spacing: 10
+
+                                                IconSvg {
+                                                    source: "qrc:/assets/icons_material/camera.svg"
+                                                    width: 30
+                                                    height: 30
+                                                    color: Theme.colorPrimary
+                                                    anchors.verticalCenter: parent.verticalCenter
+                                                }
+
+                                                Label {
+                                                    text: qsTr("Photos galery")
+                                                    color: Theme.colorPrimary
+                                                    font.pixelSize: 24
+                                                    anchors.verticalCenter: parent.verticalCenter
+                                                }
+                                            }
+
+                                            SwipeView {
+                                                Layout.fillWidth: true
+                                                Layout.fillHeight: true
+
+                                                Repeater {
+                                                    model: plant['images_plantes']
+                                                    delegate: Image {
+                                                        source: {
+                                                            return modelData['directus_files_id'] ? "https://blume.mahoudev.com/assets/"
+                                                                                                + modelData['directus_files_id'] : ""
+                                                        }
+                                                    }
+                                                }
+                                            }
 
                                             RowLayout {
                                                 Layout.preferredHeight: 30
@@ -889,7 +764,7 @@ Popup {
                                                 }
 
                                                 Repeater {
-                                                    model: plant['images_maladies']
+                                                    model: plant['images_plantes']
                                                     delegate: Rectangle {
                                                         width: 10
                                                         height: 10
@@ -902,29 +777,222 @@ Popup {
                                                     Layout.fillWidth: true
                                                 }
                                             }
-
-                                            SwipeView {
-                                                Layout.fillWidth: true
-                                                Layout.fillHeight: true
-
-                                                Repeater {
-                                                    model: plant['images_maladies']
-                                                    delegate: Image {
-                                                        source: "https://blume.mahoudev.com/assets/"
-                                                                + model.modelData.directus_files_id
-                                                    }
-                                                }
-                                            }
                                         }
                                     }
-                                ]
-                            }
-                        }
 
-                        Item {
-                            Layout.preferredHeight: 20
+                                    Column {
+                                        Layout.fillWidth: true
+
+                                        spacing: 3
+
+                                        Accordion {
+                                            header: qsTr("Plant description")
+                                            contentItemsLayouted: [
+                                                Label {
+                                                    text: plant['description'] || ""
+                                                    wrapMode: Text.Wrap
+
+                                                    font.pixelSize: 18
+                                                    font.weight: Font.Light
+
+                                                    Layout.fillHeight: true
+                                                    Layout.fillWidth: true
+                                                    Layout.leftMargin: 10
+                                                    Layout.rightMargin: 10
+                                                }
+                                            ]
+                                        }
+
+                                        Accordion {
+                                            header: qsTr("How to farm")
+                                            contentItemsLayouted: [
+                                                Label {
+                                                    text: plant['comment_cultiver'] || ""
+                                                    wrapMode: Text.Wrap
+
+                                                    font.pixelSize: 18
+                                                    font.weight: Font.Light
+
+                                                    Layout.fillHeight: true
+                                                    Layout.fillWidth: true
+                                                    Layout.leftMargin: 10
+                                                    Layout.rightMargin: 10
+                                                }
+                                            ]
+                                        }
+
+                                        Accordion {
+                                            header: qsTr("Brightness")
+                                            contentItemsLayouted: [
+                                                Label {
+                                                    text: plant['description_luminosite']
+                                                          || ""
+                                                    wrapMode: Text.Wrap
+
+                                                    font.pixelSize: 18
+                                                    font.weight: Font.Light
+
+                                                    Layout.fillHeight: true
+                                                    Layout.fillWidth: true
+                                                    Layout.leftMargin: 10
+                                                    Layout.rightMargin: 10
+                                                }
+                                            ]
+                                        }
+
+                                        Accordion {
+                                            header: qsTr("Ground")
+                                            contentItemsLayouted: [
+                                                Label {
+                                                    text: plant['description_sol'] || ""
+                                                    wrapMode: Text.Wrap
+
+                                                    font.pixelSize: 18
+                                                    font.weight: Font.Light
+
+                                                    Layout.fillHeight: true
+                                                    Layout.fillWidth: true
+                                                    Layout.leftMargin: 10
+                                                    Layout.rightMargin: 10
+                                                }
+                                            ]
+                                        }
+
+                                        Accordion {
+                                            header: qsTr("Temperature & humidity")
+                                            contentItemsLayouted: [
+                                                Label {
+                                                    text: plant['description_temperature_humidite']
+                                                          || ""
+                                                    wrapMode: Text.Wrap
+
+                                                    font.pixelSize: 18
+                                                    font.weight: Font.Light
+
+                                                    Layout.fillHeight: true
+                                                    Layout.fillWidth: true
+                                                    Layout.leftMargin: 10
+                                                    Layout.rightMargin: 10
+                                                }
+                                            ]
+                                        }
+
+                                        Accordion {
+                                            header: qsTr("Potting and crawling")
+                                            contentItemsLayouted: [
+                                                Label {
+                                                    text: plant['mise_en_pot_et_rampotage']
+                                                          || ""
+                                                    wrapMode: Text.Wrap
+
+                                                    font.pixelSize: 18
+                                                    font.weight: Font.Light
+
+                                                    Layout.fillHeight: true
+                                                    Layout.fillWidth: true
+                                                    Layout.leftMargin: 10
+                                                    Layout.rightMargin: 10
+                                                }
+                                            ]
+                                        }
+
+                                        Accordion {
+                                            header: qsTr("Multiplication")
+                                            contentItemsLayouted: [
+                                                Label {
+                                                    text: plant['description_multiplication']
+                                                          || ""
+                                                    wrapMode: Text.Wrap
+
+                                                    font.pixelSize: 18
+                                                    font.weight: Font.Light
+
+                                                    Layout.fillHeight: true
+                                                    Layout.fillWidth: true
+                                                    Layout.leftMargin: 10
+                                                    Layout.rightMargin: 10
+                                                }
+                                            ]
+                                        }
+
+                                        Accordion {
+                                            header: qsTr("Parasites and diseases")
+                                            contentItemsLayouted: [
+                                                Label {
+                                                    text: plant['description'] || ""
+                                                    wrapMode: Text.Wrap
+
+                                                    font.pixelSize: 18
+                                                    font.weight: Font.Light
+
+                                                    Layout.fillHeight: true
+                                                    Layout.fillWidth: true
+                                                    Layout.leftMargin: 10
+                                                    Layout.rightMargin: 10
+                                                },
+
+                                                Rectangle {
+                                                    Layout.fillWidth: true
+                                                    Layout.preferredHeight: plantScreenDetailsPopup.height / 3
+
+                                                    color: "#f0f0f0"
+                                                    radius: 10
+                                                    clip: true
+
+                                                    ColumnLayout {
+                                                        anchors.fill: parent
+                                                        spacing: 2
+
+                                                        RowLayout {
+                                                            Layout.preferredHeight: 30
+                                                            Layout.fillWidth: true
+
+                                                            Item {
+                                                                Layout.fillWidth: true
+                                                            }
+
+                                                            Repeater {
+                                                                model: plant['images_maladies']
+                                                                delegate: Rectangle {
+                                                                    width: 10
+                                                                    height: 10
+                                                                    radius: 10
+                                                                    color: "black"
+                                                                }
+                                                            }
+
+                                                            Item {
+                                                                Layout.fillWidth: true
+                                                            }
+                                                        }
+
+                                                        SwipeView {
+                                                            Layout.fillWidth: true
+                                                            Layout.fillHeight: true
+
+                                                            Repeater {
+                                                                model: plant['images_maladies']
+                                                                delegate: Image {
+                                                                    source: "https://blume.mahoudev.com/assets/"
+                                                                            + model.modelData.directus_files_id
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+
+                                    Item {
+                                        Layout.preferredHeight: 50
+                                    }
+                                }
+                            }
+
                         }
                     }
+
                 }
             }
         }

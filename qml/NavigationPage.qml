@@ -27,11 +27,23 @@ QtObject {
     property var plantBrowserPage: Component {
         PlantBrowser {}
     }
+    property var plantCategoriesBrowserPage: Component {
+        PlantBrowseCategory {}
+    }
     property var plantDetailPage: Component {
         PlantScreenDetails {}
     }
+    property var plantPage: Component {
+        Plant {}
+    }
     property var plantSearchPage: Component {
         PlantSearch {}
+    }
+    property var plantShortDescriptionsPage: Component {
+        PlantShortDescriptions {}
+    }
+    property var plantFrequenciesPage: Component {
+        PlantFrequencies {}
     }
     property var insectDetailPage: Component {
         InsectDetailsScreen {}

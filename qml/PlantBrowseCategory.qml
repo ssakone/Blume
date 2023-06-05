@@ -7,24 +7,26 @@ import SortFilterProxyModel
 import QtQuick.Dialogs
 import Qt.labs.platform
 import "components" as Components
+import "components_generic"
 import "components_js/Http.js" as Http
 import Qt5Compat.GraphicalEffects
 
 import ThemeEngine 1.0
 
-Popup {
+BPage {
     id: listCategoryPlants
 
-    parent: appWindow.contentItem
-    width: appWindow.width
-    height: appWindow.height
-    padding: 0
-
-    property int category_id
+    required property int category_id
     property variant plants_list: []
     property bool isLoaded: false
 
-    onOpened: {
+    signal itemClicked(var data)
+
+    header: Components.AppBar {
+        title: listCategoryPlants.title
+    }
+
+    Component.onCompleted: {
         loadingIndicator.running = true
         if (listCategoryPlants.category_id) {
             Http.fetch({
@@ -36,132 +38,108 @@ Popup {
                                    loadingIndicator.running = false
                                })
         }
+
+
     }
 
-    onClosed: {
-        listCategoryPlants.category_id = 0
-        plants_list = []
-    }
+    onItemClicked: data => {
+                       page_view.push(navigator.plantPage, {plant: data})
 
-    background: Rectangle {}
+                   }
 
-    closePolicy: Popup.NoAutoClose
-
-    Rectangle {
-        id: header
-        color: Theme.colorPrimary
-        height: 65
-        width: listCategoryPlants.width
-        RowLayout {
-            anchors.verticalCenter: parent.verticalCenter
-            Rectangle {
-                id: buttonBackBg
-                Layout.alignment: Qt.AlignVCenter
-                width: 65
-                height: 65
-                radius: height
-                color: "transparent" //Theme.colorHeaderHighlight
-                opacity: 1
-                IconSvg {
-                    id: buttonBack
-                    width: 24
-                    height: width
-                    anchors.centerIn: parent
-
-                    source: "qrc:/assets/menus/menu_back.svg"
-                    color: Theme.colorHeaderContent
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        listCategoryPlants.close()
-                    }
-                }
-
-                Behavior on opacity {
-                    OpacityAnimator {
-                        duration: 333
-                    }
-                }
-            }
-            Label {
-                text: qsTr("Back")
-                font.pixelSize: 21
-                font.bold: true
-                font.weight: Font.Medium
-                color: "white"
-                Layout.alignment: Qt.AlignVCenter
-            }
-        }
-    }
-
-    ListView {
+    GridView {
         id: plantList
-        spacing: 0
         clip: true
         anchors.fill: parent
-        anchors.topMargin: header.height
         model: plants_list
 
-        delegate: ItemDelegate {
+        cellWidth: plantList.width > 800 ? plantList.width / 5 : (plantList.width > 500 ? plantList.width / 3 : plantList.width / 2)
+        cellHeight: cellWidth + 60
+
+        delegate: Item {
+            id: itemDelegate
             required property variant modelData
             required property int index
 
-            width: ListView.view.width
-            height: 100
 
-            background: Rectangle {
-                color: (index % 2) ? "white" : "#f0f0f0"
-            }
+            width: plantList.cellWidth
+            height: plantList.cellHeight
 
-            Components.ClipRRect {
-                id: leftImg
-                height: 80
-                width: height
-                radius: width / 2
-                anchors.left: parent.left
-                anchors.leftMargin: 10
-                anchors.verticalCenter: parent.verticalCenter
-
-                Rectangle {
-                    color: "#e5e5e5"
-                    anchors.fill: parent
-                    Image {
-                        anchors.fill: parent
-                        source: modelData.images_plantes.length
-                                === 0 ? "" : "https://blume.mahoudev.com/assets/"
-                                        + modelData.images_plantes[0].directus_files_id
-                    }
-                }
-
-            }
 
             Column {
-                anchors.left: leftImg.right
-                anchors.leftMargin: 20
-                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width - 10
+                leftPadding: 10
 
-                Text {
-                    text: modelData.name_scientific
-                    color: $Colors.black
-                    fontSizeMode: Text.Fit
-                    font.pixelSize: 18
-                    minimumPixelSize: Theme.fontSizeContentSmall
-                }
-                Text {
-                    text: {
-                        if (modelData.noms_communs) {
-                            return modelData.noms_communs ? (modelData.noms_communs[0] + (modelData.noms_communs[1] ? `, ${modelData.noms_communs[1]}` : "")) : ""
-                        }
-                        return ""
+                Components.ClipRRect {
+                    width: parent.width - 10
+                    height: width
+                    radius: 20
+
+                    Rectangle {
+                        anchors.fill: parent
+                        color: $Colors.gray100
                     }
 
-                    color: $Colors.black
-                    opacity: 0.6
-                    fontSizeMode: Text.Fit
-                    font.pixelSize: 14
-                    minimumPixelSize: Theme.fontSizeContentSmall
+                    SwipeView {
+                        anchors.fill: parent
+
+                        Repeater {
+                            model: modelData.images_plantes
+                            delegate: Image {
+                                required property variant modelData
+                                source: "https://blume.mahoudev.com/assets/"
+                                        + modelData['directus_files_id']
+                            }
+                        }
+                    }
+                    Rectangle {
+                        color: "#e5e5e5"
+                        anchors.fill: parent
+                        visible: modelData['images_plantes']?.count === 0
+                                 || modelData['images_plantes'].length === 0
+                    }
+
+                    function stringify(schema) {
+                        let objectData = {}
+                        for (let field in schema) {
+                            const fieldType = schema[field].type
+    //                            console.log(field, " -> ", typeof modelData[field],
+    //                                        modelData[field])
+                            if(fieldType === 'string') {
+                                objectData[field] = modelData[field]
+                            } else if(fieldType === 'array') {
+                                objectData[field] = stringify()
+                            }
+
+                        }
+
+                    }
                 }
+
+                Column {
+                    width: parent.width
+                    Label {
+                        text: modelData.name_scientific
+                        color: $Colors.black
+                        font.pixelSize: 16
+                        font.weight: Font.DemiBold
+                        width: parent.width - 10
+                        elide: Text.ElideRight
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+                    Label {
+                        text: modelData.noms_communs ? modelData.noms_communs[0] : ""
+                        color: $Colors.black
+                        fontSizeMode: Text.Fit
+                        font.pixelSize: 13
+                        font.weight: Font.Light
+                        width: parent.width - 10
+                        elide: Text.ElideRight
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+
+                }
+
             }
 
             MouseArea {
@@ -169,21 +147,17 @@ Popup {
                 cursorShape: "PointingHandCursor"
 
                 onClicked: {
-                    console.log(JSON.stringify(modelData))
-                    plantScreenDetailsPopup.plant = modelData
-                    plantScreenDetailsPopup.open()
+
+                    itemClicked(modelData)
                 }
             }
+
         }
 
         ItemNoPlants {
             visible: (plants_list.length === 0
                       && loadingIndicator.running === false)
         }
-    }
-
-    PlantScreenDetails {
-        id: plantScreenDetailsPopup
     }
 
     BusyIndicator {

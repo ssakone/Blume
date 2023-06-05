@@ -23,7 +23,7 @@ BPage {
     property bool autoFocusSearchbar: false
 
     header: AppBar {
-        title: "Liste des maladies"
+        title: qsTr("Search for diseases")
         noAutoPop: true
         leading.onClicked: page_view.pop()
     }
@@ -159,13 +159,16 @@ BPage {
         }
 
 
-        ListView {
+        GridView  {
             id: diseaseList
             Layout.fillWidth: true
             Layout.fillHeight: true
-            spacing: 0
+
             clip: true
             model: diseasesModel
+
+            cellWidth: diseaseList.width > 800 ? diseaseList.width / 5 : (diseaseList.width > 500 ? diseaseList.width / 3 : diseaseList.width / 2)
+            cellHeight: cellWidth + 60
 
             ScrollBar.vertical: ScrollBar {
                 property bool isLoading: false
@@ -186,75 +189,68 @@ BPage {
 
                 property variant modelData: model
 
-                width: ListView.view.width
-                height: 100
+                width: diseaseList.cellWidth
+                height: diseaseList.cellHeight
 
-                background: Rectangle {
-                    color: (index % 2) ? "white" : "#f0f0f0"
-                }
-
-                ClipRRect {
-                    id: leftImg
-                    height: 80
-                    width: height
-                    radius: width / 2
-                    anchors.left: parent.left
-                    anchors.leftMargin: 10
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    SwipeView {
-                        anchors.fill: parent
-
-                        Repeater {
-                            model: modelData.images
-                            delegate: Image {
-                                required property variant model
-                                source: "https://blume.mahoudev.com/assets/"
-                                        + model['directus_files_id']
-                            }
-                        }
-                    }
-                    Rectangle {
-                        color: "#e5e5e5"
-                        anchors.fill: parent
-                        visible: modelData['images'].count === 0
-                    }
-                }
 
                 Column {
-                    anchors.verticalCenter: parent.verticalCenter
-                    leftPadding: leftImg.width + 20
-                    width: parent.width - leftPadding - 20
+                    width: parent.width - 10
+                    leftPadding: 10
 
-                    Text {
-                        text: modelData.nom_scientifique
-                        color: $Colors.black
-                        fontSizeMode: Text.Fit
-                        font.pixelSize: 18
+                    ClipRRect {
                         width: parent.width - 10
-                        elide: Text.ElideRight
-                    }
+                        height: width
+                        radius: 20
 
-                    Row {
-                        spacing: 10
-                        width: parent.width - 20
-                        clip: true
+                        Rectangle {
+                            anchors.fill: parent
+                            color: $Colors.gray100
+                        }
 
-                        Repeater {
-                            model: modelData.noms_communs.get(
-                                       0) ?? []
-                            delegate: Text {
-                                required property variant modelData
-                                text: modelData.name
-                                color: $Colors.black
-                                opacity: 0.6
-                                fontSizeMode: Text.Fit
-                                font.pixelSize: 14
-                                width: parent.width
-                                elide: Text.ElideRight
+                        SwipeView {
+                            anchors.fill: parent
+
+                            Repeater {
+                                model: modelData.images
+                                delegate: Image {
+                                    required property variant model
+                                    source: "https://blume.mahoudev.com/assets/"
+                                            + model['directus_files_id']
+                                }
                             }
                         }
+                        Rectangle {
+                            color: "#e5e5e5"
+                            anchors.fill: parent
+                            visible: modelData['images']?.count === 0
+                                     || modelData['images'].length === 0
+                        }
                     }
+
+                    Column {
+                        width: parent.width
+                        Label {
+                            text: modelData.nom_scientifique
+                            color: $Colors.black
+                            font.pixelSize: 16
+                            font.weight: Font.DemiBold
+                            width: parent.width - 10
+                            elide: Text.ElideRight
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                        Label {
+                            text: modelData.noms_communs?.get(0)?.name ?? modelData.noms_communs[0]?.name ?? ""
+                            color: $Colors.black
+                            fontSizeMode: Text.Fit
+                            font.pixelSize: 13
+                            font.weight: Font.Light
+                            width: parent.width - 10
+                            elide: Text.ElideRight
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+
+                    }
+
                 }
 
                 MouseArea {

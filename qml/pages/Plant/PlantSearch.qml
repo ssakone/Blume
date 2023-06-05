@@ -16,9 +16,7 @@ BPage {
     id: plantListView
 
     header: AppBar {
-        title: "Chercher une plante"
-        noAutoPop: true
-        leading.onClicked: page_view.pop()
+        title: qsTr("Search for plants")
     }
 
     SearchPlants {
