@@ -190,7 +190,6 @@ Item {
             Layout.leftMargin: 10
             Layout.rightMargin: 10
 
-//            spacing: 0
             clip: true
             model: plantsModel
 

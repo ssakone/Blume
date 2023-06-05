@@ -314,31 +314,29 @@ BPage {
                                                     let title = ""
                                                     let pk = 0
                                                     if (action === "categorie_plantes_herbes") {
-                                                        title = "Les herbes"
+                                                        title = qsTr("Herbal")
                                                         pk = 1
                                                     } else if (action
                                                                === "categorie_plantes_legumes") {
-                                                        title = "Les légumes"
+                                                        title = qsTr("Vegetables")
                                                         pk = 2
                                                     } else if (action
                                                                === "categorie_plantes_orchidee") {
-                                                        title = "Les orchidées"
+                                                        title = qsTr("Orchids")
                                                         pk = 3
                                                     } else if (action
                                                                === "categorie_plantes_fleuries") {
-                                                        title = "Les plantes fleuries"
+                                                        title = qsTr("Floral plants")
                                                         pk = 4
                                                     } else if (action === "categorie_plantes_cactus_succulentes") {
-                                                        title = "Les cactus et succculentes"
+                                                        title = qsTr("Les cactus & succculents")
                                                         pk = 5
                                                     } else if (action
                                                                === "categorie_plantes_feuillage") {
-                                                        title = "Les plantes à feuillage"
+                                                        title = qsTr("Foiliage plantes")
                                                         pk = 6
                                                     }
 
-//                                                    plantListByCategory.category_id = pk
-//                                                    plantListByCategory.open()
                                                     page_view.push(
                                                                 navigator.plantCategoriesBrowserPage, {category_id: pk, title})
                                                 }
