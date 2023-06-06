@@ -31,6 +31,11 @@ BPage {
             TableLine {
                 title: qsTr("Dimensions")
                 description: plant['taill_adulte'] || ""
+            } 
+
+            TableLine {
+                title: qsTr("Lifecycle")
+                description: plant['cycle_de_vie'] || ""
             }
 
             TableLine {
