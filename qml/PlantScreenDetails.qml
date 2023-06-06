@@ -7,6 +7,7 @@ import ThemeEngine 1.0
 import "qrc:/js/UtilsPlantDatabase.js" as UtilsPlantDatabase
 import "components"
 import "components_generic"
+import "components_js/Http.js" as Http
 import SortFilterProxyModel
 
 Popup {
@@ -20,7 +21,32 @@ Popup {
 
     padding: 0
 
-    property variant plant: ({})
+    property var plant: {
+        ""
+    }
+
+    QtObject {
+        id: _plant
+        property string frequence_arrosage: ""
+        property string exposition_au_soleil: ""
+        property string taill_adulte: ""
+        property string type_de_sol: ""
+        property string couleur: ""
+        property string periode_de_floraison: ""
+        property string zone_de_rusticite: ""
+        property string frequence_fertilisation: ""
+        property string frequence_rampotage: ""
+        property string frequence_nettoyage: ""
+        property string frequence_vaporisation: ""
+        property string description: ""
+        property string comment_cultiver: ""
+        property string description_luminosite: ""
+        property string description_sol: ""
+        property string description_temperature_humidite: ""
+        property string description_mise_en_pot_et_rampotage: ""
+        property string description_multiplication: ""
+    }
+
     property bool fullScreen: false
     property bool hideBaseHeader: false
 
@@ -28,79 +54,71 @@ Popup {
         // Public Domain/MIT
         var d = new Date().getTime()
         //Timestamp
-        var d2 = ((typeof performance !== 'undefined')
-                  && performance.now
-                  && (performance.now(
-                          ) * 1000)) || 0
+        var d2 = ((typeof performance !== 'undefined') && performance.now
+                  && (performance.now() * 1000)) || 0
         //Time in microseconds since page-load or 0 if unsupported
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-                    /[xy]/g, function (c) {
-                        var r = Math.random(
-                                    ) * 16
-                        //random number between 0 and 16
-                        if (d > 0) {
-                            //Use timestamp until depleted
-                            r = (d + r) % 16 | 0
-                            d = Math.floor(
-                                        d / 16)
-                        } else {
-                            //Use microseconds since page-load if supported
-                            r = (d2 + r) % 16 | 0
-                            d2 = Math.floor(
-                                        d2 / 16)
-                        }
-                        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(
-                                    16)
-                    })
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
+                                                              function (c) {
+                                                                  var r = Math.random() * 16
+                                                                  //random number between 0 and 16
+                                                                  if (d > 0) {
+                                                                      //Use timestamp until depleted
+                                                                      r = (d + r) % 16 | 0
+                                                                      d = Math.floor(d / 16)
+                                                                  } else {
+                                                                      //Use microseconds since page-load if supported
+                                                                      r = (d2 + r) % 16 | 0
+                                                                      d2 = Math.floor(d2 / 16)
+                                                                  }
+                                                                  return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16)
+                                                              })
     }
 
     function addToGarden(onSuccess) {
 
-        spaceSearchPop.show(function (space){
+        spaceSearchPop.show(function (space) {
             let data = {
                 "libelle": plant?.name_scientific,
                 "image_url": "-1",
                 "remote_id": plant.id,
                 "uuid": generateUUID()
             }
-            data["plant_json"] = JSON.stringify(
-                        plant)
+            data["plant_json"] = JSON.stringify(plant)
 
-            $Model.plant.sqlCreate(data).then(
-                        function (new_plant) {
-                            console.log('\n\n NEW PLANT ', typeof new_plant, JSON.stringify(new_plant))
-                            let inData = {
-                                "space_id": space.id,
-                                "space_name": space.libelle,
-                                "plant_json": new_plant["plant_json"],
-                                "plant_id": new_plant.id
-                            }
-                            console.log("Continue...", )
-                            $Model.space.plantInSpace.sqlCreate(
-                                        inData).then(
-                                        function () {
-                                            console.log("Created AGAIN...")
-                                            console.info("Done")
-                                            if(onSuccess) onSuccess(new_plant, space)
-                                        })
-                            plantScreenDetailsPopup.alertMsg = qsTr("Plant added to garden")
-                        }).catch(console.warn)
+            $Model.plant.sqlCreate(data).then(function (new_plant) {
+                console.log('\n\n NEW PLANT ', typeof new_plant,
+                            JSON.stringify(new_plant))
+                let inData = {
+                    "space_id": space.id,
+                    "space_name": space.libelle,
+                    "plant_json": new_plant["plant_json"],
+                    "plant_id": new_plant.id
+                }
+                console.log("Continue...")
+                $Model.space.plantInSpace.sqlCreate(inData).then(function () {
+                    console.log("Created AGAIN...")
+                    console.info("Done")
+                    if (onSuccess)
+                        onSuccess(new_plant, space)
+                })
+                plantScreenDetailsPopup.alertMsg = qsTr("Plant added to garden")
+            }).catch(console.warn)
         })
     }
 
     function selectGardenSpace(onSuccess) {
 
-        spaceSearchPop.show(function (space){
+        spaceSearchPop.show(function (space) {
             let data = {
                 "libelle": plant?.name_scientific,
                 "image_url": "-1",
                 "remote_id": plant.id,
                 "uuid": generateUUID()
             }
-            data["plant_json"] = JSON.stringify(
-                        plant)
+            data["plant_json"] = JSON.stringify(plant)
 
-            if(onSuccess) onSuccess(plantScreenDetailsPopup.plant, space)
+            if (onSuccess)
+                onSuccess(plantScreenDetailsPopup.plant, space)
         }, currentPlantSpaces)
     }
 
@@ -108,20 +126,126 @@ Popup {
         id: currentPlantSpaces
     }
 
-    onPlantChanged: {
-        if(plantScreenDetailsPopup.plant.id) {
-            $Model.space.listSpacesOfPlantRemoteID(plantScreenDetailsPopup.plant.id).then(function (res){
-                currentPlantSpaces.clear()
-                for(let i=0; i<res?.length; i++) {
-                    currentPlantSpaces.append(res[i])
-                }
-            })
+    function translate(from, to) {
+        console.log("\n CALL TRANSLATE ", from, to)
+        let data = ["00" + ": " + plant["care_level"] ?? "", "01" + ": " + plant["frequence_arrosage"] ?? "", "02" + ": " + plant["exposition_au_soleil"]
+                    ?? "", "03" + ": " + plant["taill_adulte"] ?? "", "05" + ": " + plant["type_de_sol"] ?? "", "06" + ": "
+                    + plant["couleur"] ?? "", "07" + ": " + plant["periode_de_floraison"] ?? "", "08" + ": " + plant["zone_de_rusticite"] ?? "", "09"
+                    + ": " + plant["frequence_arrosage"] ?? "", "10" + ": " + plant["frequence_fertilisation"] ?? "", "11" + ": " + plant["frequence_rampotage"]
+                    ?? "", "12" + ": " + plant["frequence_nettoyage"] ?? "", "13" + ": " + plant["frequence_vaporisation"] ?? "", "14" + ": "
+                    + plant["description"] ?? "", "15" + ": " + plant["comment_cultiver"] ?? "", "16" + ": " + plant["description_luminosite"] ?? "", "17"
+                    + ": " + plant["description_sol"] ?? "", "18" + ": " + plant["description_temperature_humidite"] ?? "", "19" + ": " + plant["mise_en_pot_et_rampotage"]
+                    ?? "", "20" + ": " + plant["description_multiplication"] ?? ""]
+        let query = {
+            "method": "POST",
+            "url": "https://api.deepl.com/v2/translate",
+            "headers": {
+                "Accept": 'application/json',
+                "Authorization": "DeepL-Auth-Key 66fcbbd7-a786-d323-d0f2-4c032091000e",
+                "Content-Type": 'application/json'
+            },
+            "params": {
+                "text": data,
+                "target_lang": to,
+                "preserve_formatting": true,
+                "source_lang": from
+            }
         }
 
+        Http.fetch(query).then(function (res) {
+            console.log("\n GOT TRANSLATES")
+            res = res.replace("\r\n", " ")
+            let new_data = JSON.parse(res).translations
+
+            let datas = {}
+            for (var i = 0; i < new_data.length; i++) {
+                let item = new_data[i]
+                let sp = item.text.split(": ")
+                datas[sp[0]] = sp[1] === "undefined" ? "" : sp[1]
+            }
+
+            new_data = datas
+            console.log(JSON.stringify(new_data))
+            _plant.frequence_arrosage = new_data['01']
+            _plant.exposition_au_soleil = new_data['02']
+            _plant.taill_adulte = new_data['03']
+            _plant.type_de_sol = new_data['05']
+            _plant.couleur = new_data['06']
+            _plant.periode_de_floraison = new_data['07']
+            _plant.zone_de_rusticite = new_data['08']
+            _plant.frequence_arrosage = new_data['09']
+            _plant.frequence_fertilisation = new_data['10']
+            _plant.frequence_rampotage = new_data['11']
+            _plant.frequence_nettoyage = new_data['12']
+            _plant.frequence_vaporisation = new_data['13']
+            _plant.description = new_data['14']
+            _plant.comment_cultiver = new_data['15']
+            _plant.description_luminosite = new_data['16']
+            _plant.description_sol = new_data['17']
+            _plant.description_temperature_humidite = new_data['18']
+            _plant.description_mise_en_pot_et_rampotage = new_data['19']
+            _plant.description_multiplication = new_data['20']
+
+            console.log(plant.type_de_sol)
+        }).catch(function (err) {
+            console.log("Erreur: ", JSON.stringify(err), err)
+        })
+    }
+
+    onPlantChanged: {
+        _plant.frequence_arrosage = plant.frequence_arrosage || ""
+        _plant.exposition_au_soleil = plant.exposition_au_soleil || ""
+        _plant.taill_adulte = plant.taill_adulte || ""
+        _plant.type_de_sol = plant.type_de_sol || ""
+        _plant.couleur = plant.couleur || ""
+        _plant.periode_de_floraison = plant.periode_de_floraison || ""
+        _plant.zone_de_rusticite = plant.zone_de_rusticite || ""
+        _plant.frequence_arrosage = plant.frequence_arrosage || ""
+        _plant.frequence_fertilisation = plant.frequence_fertilisation || ""
+        _plant.frequence_rampotage = plant.frequence_rampotage || ""
+        _plant.frequence_nettoyage = plant.frequence_nettoyage || ""
+        _plant.frequence_vaporisation = plant.frequence_vaporisation || ""
+        _plant.description = plant.description || ""
+        _plant.comment_cultiver = plant.comment_cultiver || ""
+        _plant.description_luminosite = plant.description_luminosite || ""
+        _plant.description_sol = plant.description_sol || ""
+        _plant.description_temperature_humidite = plant.description_temperature_humidite
+                || ""
+        _plant.description_mise_en_pot_et_rampotage = plant.description_mise_en_pot_et_rampotage
+                || ""
+        _plant.description_multiplication = plant.description_multiplication
+                || ""
+
+        console.log(settingsManager.appLanguage)
+        if ("name_scientific" in plant) {
+            switch (settingsManager.appLanguage) {
+            case "Español":
+                translate("FR", "ES")
+                break
+            case "Deutsch":
+                translate("FR", "DE")
+                break
+            default:
+                translate("FR", "EN")
+                break
+            }
+        }
+
+        if (plantScreenDetailsPopup.plant.id) {
+            $Model.space.listSpacesOfPlantRemoteID(
+                        plantScreenDetailsPopup.plant.id).then(function (res) {
+                            currentPlantSpaces.clear()
+                            for (var i = 0; i < res?.length; i++) {
+                                currentPlantSpaces.append(res[i])
+                            }
+                        })
+        }
     }
     onFullScreenChanged: {
-        if(fullScreen) fullScreenPop.close()
-        else fullScreenPop.open()
+        if (fullScreen)
+            fullScreenPop.close()
+        else
+            fullScreenPop.open()
     }
 
     ListModel {
@@ -138,18 +262,19 @@ Popup {
         id: fullScreenPop
         onSwithMode: fullScreen = !fullScreen
         source: {
-            if(plant['images_plantes']?.count !== undefined) {
+            if (plant['images_plantes']?.count !== undefined) {
                 console.log("First agent")
                 return plant['images_plantes']?.count
-                                                   ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/" + plant['images_plantes']?.get(0).directus_files_id) : ""
-            }
-            else if(plant['images_plantes']?.length !== undefined) {
+                        ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/"
+                                    + plant['images_plantes']?.get(
+                                        0).directus_files_id) : ""
+            } else if (plant['images_plantes']?.length !== undefined) {
                 console.log("Second agent")
                 return plant['images_plantes']?.length
-                                                   ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/" + plant['images_plantes'][0].directus_files_id) : ""
+                        ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/"
+                                    + plant['images_plantes'][0].directus_files_id) : ""
             }
             return ""
-
         }
     }
 
@@ -161,7 +286,7 @@ Popup {
             id: header
             visible: !hideBaseHeader
             color: Theme.colorPrimary
-            Layout.preferredHeight: 65
+            Layout.preferredHeight: screenPaddingStatusbar + screenPaddingNotch + 52
             Layout.preferredWidth: plantScreenDetailsPopup.width
             RowLayout {
                 anchors.verticalCenter: parent.verticalCenter
@@ -225,8 +350,8 @@ Popup {
                 }
             }
 
-            callback: function() {
-                plantScreenDetailsPopup.alertMsg = "";
+            callback: function () {
+                plantScreenDetailsPopup.alertMsg = ""
             }
         }
         Flickable {
@@ -253,7 +378,6 @@ Popup {
                         clip: true
                         color: $Colors.green50
 
-
                         Label {
                             text: "No image"
                             font.pixelSize: 18
@@ -263,18 +387,18 @@ Popup {
                         Image {
                             anchors.fill: parent
                             source: {
-                                if(plant['images_plantes']?.count !== undefined) {
+                                if (plant['images_plantes']?.count !== undefined) {
                                     console.log("First agent")
                                     return plant['images_plantes']?.count
-                                                                       ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/" + plant['images_plantes']?.get(0).directus_files_id) : ""
-                                }
-                                else if(plant['images_plantes']?.length !== undefined) {
+                                            ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/"
+                                                        + plant['images_plantes']?.get(
+                                                            0).directus_files_id) : ""
+                                } else if (plant['images_plantes']?.length !== undefined) {
                                     console.log("Second agent")
                                     return plant['images_plantes']?.length
-                                                                       ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/" + plant['images_plantes'][0].directus_files_id) : ""
+                                            ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/" + plant['images_plantes'][0].directus_files_id) : ""
                                 }
                                 return ""
-
                             }
 
                             clip: true
@@ -306,7 +430,6 @@ Popup {
                                     id: _insideColumn3
                                     width: parent.width - 20
                                     spacing: 20
-
 
                                     Label {
                                         text: plant?.name_scientific ?? ""
@@ -344,7 +467,8 @@ Popup {
                                                     Layout.minimumWidth: 120
                                                 }
                                                 Label {
-                                                    text: plant["nom_botanique"] || ""
+                                                    text: plant["nom_botanique"]
+                                                          || ""
                                                     font.pixelSize: 20
                                                     font.weight: Font.DemiBold
                                                     horizontalAlignment: Text.AlignLeft
@@ -383,7 +507,9 @@ Popup {
                                                         if (plant['noms_communs']) {
                                                             let common_names = plant['noms_communs']
                                                             let len = common_names?.length
-                                                            console.log("noms_communs ", len, " -- ")
+                                                            console.log("noms_communs ",
+                                                                        len,
+                                                                        " -- ")
                                                             common_names?.forEach(
                                                                         (item, index) => res += (item.name ?? item + (len === index + 1 ? "" : ", ")))
                                                         }
@@ -415,7 +541,7 @@ Popup {
 
                                     Flickable {
                                         Layout.fillWidth: true
-            //                            Layout.preferredWidth: _insideRow.width
+                                        //                            Layout.preferredWidth: _insideRow.width
                                         Layout.preferredHeight: 120
                                         contentWidth: _insideRow.width
 
@@ -452,13 +578,14 @@ Popup {
                                                     Label {
                                                         text: {
                                                             if (!plant['care_level'])
-                                                                return "Non renseigné"
+                                                                return qsTr("Not set")
                                                             else if (plant['care_level'] === "hard")
-                                                                return "Difficile"
-                                                            else if (plant['care_level'] === "medium")
-                                                                return "Moyen"
+                                                                return qsTr("Hard")
+                                                            else if (plant['care_level']
+                                                                     === "medium")
+                                                                return qsTr("Medium")
                                                             else if (plant['care_level'] === "easy")
-                                                                return "Facile"
+                                                                return qsTr("Easy")
                                                         }
 
                                                         font.pixelSize: 14
@@ -508,7 +635,7 @@ Popup {
                                                             if (!plant['frequence_arrosage'])
                                                                 return "Not set"
                                                             else
-                                                                return plant['frequence_arrosage']
+                                                                return _plant.frequence_arrosage
                                                         }
                                                         font.pixelSize: 14
 
@@ -557,7 +684,7 @@ Popup {
                                                     }
 
                                                     Label {
-                                                        text: plant['exposition_au_soleil']
+                                                        text: _plant.exposition_au_soleil
                                                               || ""
 
                                                         font.pixelSize: 14
@@ -565,18 +692,14 @@ Popup {
                                                         wrapMode: Text.Wrap
                                                         horizontalAlignment: Text.AlignHCenter
 
-            //                                            width: parent.width
+                                                        //                                            width: parent.width
                                                         anchors.leftMargin: 10
                                                         anchors.rightMargin: 10
                                                     }
                                                 }
-
                                             }
-
-
                                         }
                                     }
-
 
                                     ColumnLayout {
                                         Layout.fillWidth: true
@@ -585,23 +708,19 @@ Popup {
                                         TableLine {
                                             color: "#e4f0ea"
                                             title: qsTr("Type of plant")
-                                            description: plant['type_de_plante'] || ""
+                                            description: _plant.type_de_sol
+                                                         || ""
                                         }
 
                                         TableLine {
                                             title: qsTr("Color")
-                                            description: plant['couleur'] || ""
+                                            description: _plant.couleur || ""
                                         }
 
                                         TableLine {
                                             color: "#e4f0ea"
                                             title: qsTr("Toxicity")
                                             description: plant['toxicity'] ? 'Toxic' : 'Non-toxic'
-                                        }
-
-                                        TableLine {
-                                            title: qsTr("Lifecycle")
-                                            description: plant['cycle_de_vie'] || ""
                                         }
 
                                         RowLayout {
@@ -614,11 +733,14 @@ Popup {
                                                 text: qsTr("See more...")
                                                 MouseArea {
                                                     anchors.fill: parent
-                                                    onClicked: page_view.push(navigator.plantShortDescriptionsPage, {plant})
+                                                    onClicked: page_view.push(
+                                                                   navigator.plantShortDescriptionsPage,
+                                                                   {
+                                                                       "plant": _plant
+                                                                   })
                                                 }
                                             }
                                         }
-
                                     }
 
                                     Container {
@@ -630,13 +752,18 @@ Popup {
                                             radius: 10
                                             MouseArea {
                                                 anchors.fill: parent
-                                                onClicked: page_view.push(navigator.plantFrequenciesPage, {plant})
+                                                onClicked: page_view.push(
+                                                               navigator.plantFrequenciesPage,
+                                                               {
+                                                                   "plant": _plant
+                                                               })
                                             }
                                         }
 
                                         contentItem: Flow {
                                             padding: 10
-                                            width: singleColumn ? _insideColumn3.width - 20 : parent.width
+                                            width: singleColumn ? _insideColumn3.width
+                                                                  - 20 : parent.width
                                             spacing: 10
                                         }
 
@@ -687,7 +814,8 @@ Popup {
                                                         color: Theme.colorPrimary
                                                     }
                                                     Label {
-                                                        text: plant[model.field] ?? ""
+                                                        text: _plant[model.field]
+                                                              ?? ""
                                                         color: $Colors.gray600
                                                         width: parent.width
                                                         elide: Text.ElideMiddle
@@ -695,8 +823,6 @@ Popup {
                                                     }
                                                 }
                                             }
-
-
                                         }
                                     }
 
@@ -712,7 +838,8 @@ Popup {
                                             text: qsTr("No image available")
                                             font.pixelSize: 22
                                             anchors.centerIn: parent
-                                            visible: plant['images_plantes'] ?? true
+                                            visible: plant['images_plantes']
+                                                     ?? true
                                         }
 
                                         ColumnLayout {
@@ -748,8 +875,7 @@ Popup {
                                                     model: plant['images_plantes']
                                                     delegate: Image {
                                                         source: {
-                                                            return modelData['directus_files_id'] ? "https://blume.mahoudev.com/assets/"
-                                                                                                + modelData['directus_files_id'] : ""
+                                                            return modelData['directus_files_id'] ? "https://blume.mahoudev.com/assets/" + modelData['directus_files_id'] : ""
                                                         }
                                                     }
                                                 }
@@ -789,7 +915,8 @@ Popup {
                                             header: qsTr("Plant description")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: plant['description'] || ""
+                                                    text: _plant['description']
+                                                          || ""
                                                     wrapMode: Text.Wrap
 
                                                     font.pixelSize: 18
@@ -807,7 +934,8 @@ Popup {
                                             header: qsTr("How to farm")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: plant['comment_cultiver'] || ""
+                                                    text: _plant['comment_cultiver']
+                                                          || ""
                                                     wrapMode: Text.Wrap
 
                                                     font.pixelSize: 18
@@ -825,7 +953,7 @@ Popup {
                                             header: qsTr("Brightness")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: plant['description_luminosite']
+                                                    text: _plant['description_luminosite']
                                                           || ""
                                                     wrapMode: Text.Wrap
 
@@ -844,7 +972,8 @@ Popup {
                                             header: qsTr("Ground")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: plant['description_sol'] || ""
+                                                    text: _plant['description_sol']
+                                                          || ""
                                                     wrapMode: Text.Wrap
 
                                                     font.pixelSize: 18
@@ -862,7 +991,7 @@ Popup {
                                             header: qsTr("Temperature & humidity")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: plant['description_temperature_humidite']
+                                                    text: _plant['description_temperature_humidite']
                                                           || ""
                                                     wrapMode: Text.Wrap
 
@@ -881,7 +1010,7 @@ Popup {
                                             header: qsTr("Potting and crawling")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: plant['mise_en_pot_et_rampotage']
+                                                    text: _plant['description_mise_en_pot_et_rampotage']
                                                           || ""
                                                     wrapMode: Text.Wrap
 
@@ -900,7 +1029,7 @@ Popup {
                                             header: qsTr("Multiplication")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: plant['description_multiplication']
+                                                    text: _plant['description_multiplication']
                                                           || ""
                                                     wrapMode: Text.Wrap
 
@@ -919,7 +1048,8 @@ Popup {
                                             header: qsTr("Parasites and diseases")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: plant['description'] || ""
+                                                    text: _plant['description']
+                                                          || ""
                                                     wrapMode: Text.Wrap
 
                                                     font.pixelSize: 18
@@ -973,8 +1103,7 @@ Popup {
                                                             Repeater {
                                                                 model: plant['images_maladies']
                                                                 delegate: Image {
-                                                                    source: "https://blume.mahoudev.com/assets/"
-                                                                            + model.modelData.directus_files_id
+                                                                    source: "https://blume.mahoudev.com/assets/" + model.modelData.directus_files_id
                                                                 }
                                                             }
                                                         }
@@ -989,10 +1118,8 @@ Popup {
                                     }
                                 }
                             }
-
                         }
                     }
-
                 }
             }
         }
