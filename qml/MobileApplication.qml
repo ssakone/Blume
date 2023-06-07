@@ -294,6 +294,10 @@ ApplicationWindow {
                     appContent.state = screenTutorial.entryPoint
                 else if (appContent.state === "PlantBrowser")
                     appContent.state = screenPlantBrowser.entryPoint
+                else if (appContent.state === "About" || appContent.state === "Settings") {
+                    appContent.state = "Navigator"
+                    appDrawer.open()
+                }
                 else {
                     appContent.state = "Navigator"
                 }
@@ -425,6 +429,7 @@ ApplicationWindow {
 
         focus: true
         Keys.onBackPressed: {
+            console.log("CAPTURE BACK PRESS ", appContent.state)
             if (appContent.state === "Tutorial"
                     && screenTutorial.entryPoint === "DeviceList") {
                 // do nothing
@@ -458,9 +463,14 @@ ApplicationWindow {
                 appContent.state = screenTutorial.entryPoint
             } else if (appContent.state === "PlantBrowser") {
                 screenPlantBrowser.backAction()
-            } else {
-                appContent.state = "Navigator"
-            }
+            } else if (appContent.state === "Navigator"){
+                if(page_view.depth === 1) {
+                    if (exitTimer.running)
+                        Qt.quit()
+                    else
+                        exitTimer.start()
+                } else page_view.pop()
+            } else appHeader.leftMenuClicked()
         }
 
         function openStackView(page) {
