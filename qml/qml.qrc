@@ -79,6 +79,7 @@
         <file alias="ItemNoJournal.qml">components/ItemNoJournal.qml</file>
         <file alias="SectionTitle.qml">components/SectionTitle.qml</file>
         <file alias="TableLine.qml">components/TableLine.qml</file>
+        <file>components/ActionMenuFixedDevices.qml</file>
         <file>popups/PopupLocationNotification.qml</file>
         <file>PlantBrowseCategory.qml</file>
         <file>PlantScreenDetails.qml</file>
