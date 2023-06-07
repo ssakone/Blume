@@ -66,4 +66,7 @@ QtObject {
     property var gardenAlarmsCalendar: Component {
         AlarmsCalendar {}
     }
+    property var gardenEditSpace: Component {
+        GardenEditSpace {}
+    }
 }

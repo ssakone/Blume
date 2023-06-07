@@ -23,7 +23,40 @@ BPage {
     required property int space_id
 
     header: AppBar {
-        title: qsTr("Room") + " - " + (control.space_name[0] === "'" ? control.space_name.slice(1, -1) : control.space_name)
+        id: header
+        title: {
+            let text = qsTr("Room") + " - "
+                + (control.space_name[0] === "'" ? control.space_name.slice(
+                                                       1,
+                                                       -1) : control.space_name)
+            if (text.length > 20)
+                text = text.slice(0, 20) + '...'
+            console.log("MITSU ", status)
+            return text
+        }
+
+        actions: [
+            IconSvg {
+                source: Icons.pen
+                color: $Colors.white
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: page_view.push(navigator.gardenEditSpace, {
+                                                  spaceID: space_id,
+                                                  spaceName: control.space_name[0] === "'" ? control.space_name.slice(
+                                                                                                 1,
+                                                                                                 -1) : control.space_name,
+                                                  spaceDescription: control.description[0] === "'" ? control.description.slice(
+                                                                                                        1,
+                                                                                                        -1) : control.description,
+                                                  isOutDoor: type === 1,
+                                                  callback: function(updated) {
+                                                      if(updated.libelle) header.title = updated.libelle
+                                                  }
+                                              })
+                }
+            }
+        ]
     }
 
     SortFilterProxyModel {
@@ -135,9 +168,9 @@ BPage {
                         id: _colLayout
                         Layout.fillWidth: true
                         spacing: 10
-//                        leftPadding: 10
-//                        rightPadding: 10
 
+                        //                        leftPadding: 10
+                        //                        rightPadding: 10
                         RowLayout {
                             width: parent.width - 10
                             Label {
@@ -274,12 +307,17 @@ BPage {
                             GardenActivityLine {
                                 property var plantObj: JSON.parse(
                                                            model.plant_json)
-                                title: (model.libelle[0]==="'" ? model.libelle.slice(1, -1): model.libelle) || "NULL"
+                                title: (model.libelle[0] === "'" ? model.libelle.slice(
+                                                                       1,
+                                                                       -1) : model.libelle)
+                                       || "NULL"
                                 plant_name: plantObj.name_scientific
                                 subtitle: {
-                                    $Model.alarm.sqlFormatFrequence(model.id).then(data => {
-                                                                                   subtitle = data.freq + " " + data.period_label
-                                                                                   })
+                                    $Model.alarm.sqlFormatFrequence(
+                                                model.id).then(data => {
+                                                                   subtitle = data.freq + " "
+                                                                   + data.period_label
+                                                               })
                                     return ""
                                 }
 
@@ -298,7 +336,8 @@ BPage {
                                                $Model.alarm.sqlUpdateTaskStatus(
                                                    model.id,
                                                    newStatus).then(res => {
-                                                                       model.done = model.done === 0 ? 1 : 0
+                                                                       model.done = model.done
+                                                                       === 0 ? 1 : 0
                                                                    }).catch(
                                                    console.warn)
                                            }
@@ -439,22 +478,26 @@ BPage {
                                                                         for (var i = 0; i < alarmsForPlantInSpace.count; i++) {
                                                                             const deleteAlarmID = alarmsForPlantInSpace.get(i).id
                                                                             $Model.alarm.sqlDelete(
-                                                                                deleteAlarmID).then(() => {
-                                                                                                        $Model.alarm.clear()
-                                                                                                        $Model.alarm.fetchAll()
-                                                                                                    })
+                                                                                deleteAlarmID).then(
+                                                                                () => {
+                                                                                    $Model.alarm.clear()
+                                                                                    $Model.alarm.fetchAll()
+                                                                                })
                                                                         }
 
                                                                         // Delete devices linked to that plant
-                                                                        $Model.device.sqlDeleteAllByPlantID(plant_id).then(function (result) {
-                                                                            console.log("\n\nRESULT ", JSON.stringify(result))
-                                                                            $Model.device.sqlGetAll().then(function (rs) {
-                                                                                console.log("ALLOA ", rs)
-                                                                                console.log(JSON.stringify(rs))
+                                                                        $Model.device.sqlDeleteAllByPlantID(
+                                                                            plant_id).then(
+                                                                            function (result) {
+                                                                                console.log("\n\nRESULT ", JSON.stringify(result))
+                                                                                $Model.device.sqlGetAll().then(function (rs) {
+                                                                                    console.log("ALLOA ", rs)
+                                                                                    console.log(JSON.stringify(rs))
+                                                                                })
+                                                                            }).catch(
+                                                                            function (err) {
+                                                                                console.log("\n\nRESULT err", JSON.stringify(err))
                                                                             })
-                                                                        }).catch(function (err){
-                                                                            console.log("\n\nRESULT err", JSON.stringify(err))
-                                                                        })
                                                                     })
 
                         removePlantPopup.close()
@@ -497,21 +540,24 @@ BPage {
                 const _day = _days[i]
                 recur[i] = addAlarmPopup.initialAlarm[_day] === 1 ? 1 : 0
             }
-//            _control.recurrence = recur
-//            frequencyInput.text = addAlarmPopup.initialAlarm.frequence ?? "3"
 
+            //            _control.recurrence = recur
+            //            frequencyInput.text = addAlarmPopup.initialAlarm.frequence ?? "3"
             gardenLine.plant = JSON.parse(addAlarmPopup.initialAlarm?.plant_json
                                           || 'null') || undefined
             typeAlarm.currentIndex = addAlarmPopup.initialAlarm.type || 0
             if (typeAlarm.currentIndex === 3)
                 anotherAlarmType.text = addAlarmPopup.initialAlarm.libelle
 
-            $Model.alarm.sqlFormatFrequence(addAlarmPopup.initialAlarm.id).then(data => {
-                                                               frequencyInput.currentIndex = data.freq-1
-                                                               periodComboBox.currentIndex = data.period_index
-//                                                               periodComboBox.currentIndex = periodComboBox.model.findIndex(it => it === data.period_label)
-//                                                           subtitle = data.freq + " " + data.period_label
-                                                           })
+            $Model.alarm.sqlFormatFrequence(
+                        addAlarmPopup.initialAlarm.id).then(data => {
+                                                                frequencyInput.currentIndex
+                                                                = data.freq - 1
+                                                                periodComboBox.currentIndex
+                                                                = data.period_index
+                                                                //                                                               periodComboBox.currentIndex = periodComboBox.model.findIndex(it => it === data.period_label)
+                                                                //                                                           subtitle = data.freq + " " + data.period_label
+                                                            })
 
             //            console.log("typeAlarm.currentIndex = ", typeAlarm.currentIndex )
             //            console.log("addAlarmPopup.initialAlarm.libelle = ", addAlarmPopup.initialAlarm.libelle)
@@ -568,7 +614,10 @@ BPage {
                             width: parent.width
 
                             property int currentIndex: 0
-                            property variant model: [ qsTr("Watering"), qsTr("Fertilisation"), qsTr("Paddling"), qsTr("Cleaning"), qsTr("Spraying"), qsTr("Other")]
+                            property variant model: [qsTr("Watering"), qsTr(
+                                    "Fertilisation"), qsTr("Paddling"), qsTr(
+                                    "Cleaning"), qsTr(
+                                    "Spraying"), qsTr("Other")]
                             property variant fields_frequences: ['frequence_arrosage', 'frequence_fertilisation', 'frequence_rampotage', 'frequence_nettoyage', 'frequence_vaporisation']
                             spacing: 20
 
@@ -607,7 +656,6 @@ BPage {
                             onEditingFinished: focus = false
                         }
 
-
                         Rectangle {
                             width: parent.width
                             height: 80
@@ -639,9 +687,10 @@ BPage {
 
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: choosePlantPopup.show(function (item) {
-                                    gardenLine.plant = item
-                                })
+                                onClicked: choosePlantPopup.show(
+                                               function (item) {
+                                                   gardenLine.plant = item
+                                               })
                             }
                         }
 
@@ -676,11 +725,11 @@ BPage {
                                     radius: 10
                                 }
                             }
-
                         }
 
                         RowLayout {
-                            visible: gardenLine.plant !== undefined && typeAlarm.currentIndex < typeAlarm.model.length -1
+                            visible: gardenLine.plant !== undefined
+                                     && typeAlarm.currentIndex < typeAlarm.model.length - 1
                             width: parent.width
                             Label {
                                 visible: recommandation_value.text !== ""
@@ -695,11 +744,13 @@ BPage {
                                 Layout.fillWidth: true
                                 wrapMode: Text.Wrap
                                 text: {
-                                    if(typeAlarm.currentIndex < typeAlarm.model.length -1) {
+                                    if (typeAlarm.currentIndex < typeAlarm.model.length - 1) {
                                         const freq_field = typeAlarm.fields_frequences[typeAlarm.currentIndex]
                                         let plant_json = gardenLine.plant?.plant_json
-                                        if(!plant_json) plant_json = gardenLine.plant // So it comes from local DB with fields 'libelle', 'done', 'frequence', ...
-                                        return plant_json ? (plant_json[freq_field] ?? "") : ""
+                                        if (!plant_json)
+                                            plant_json = gardenLine.plant // So it comes from local DB with fields 'libelle', 'done', 'frequence', ...
+                                        return plant_json ? (plant_json[freq_field]
+                                                             ?? "") : ""
                                     }
                                     return ""
                                 }
@@ -709,7 +760,6 @@ BPage {
                                 }
                             }
                         }
-
 
                         Item {
                             height: 5
@@ -731,14 +781,15 @@ BPage {
                                     return
                                 }
 
-                                let freq = parseInt(frequencyInput.currentIndex+1)
-                                if(periodComboBox.currentIndex === 1) {
+                                let freq = parseInt(
+                                        frequencyInput.currentIndex + 1)
+                                if (periodComboBox.currentIndex === 1) {
                                     // Weekly
                                     freq *= 7
-                                } else if(periodComboBox.currentIndex === 2) {
+                                } else if (periodComboBox.currentIndex === 2) {
                                     // Monthly
                                     freq *= 30
-                                } else if(periodComboBox.currentIndex === 3) {
+                                } else if (periodComboBox.currentIndex === 3) {
                                     // Yearly
                                     freq *= 365
                                 }
@@ -750,7 +801,8 @@ BPage {
                                     "type": typeAlarm.currentIndex,
                                     "space": control.space_id,
                                     "plant": gardenLine.plant.id,
-                                    "plant_json": JSON.stringify(gardenLine.plant)
+                                    "plant_json": JSON.stringify(
+                                                      gardenLine.plant)
                                 }
 
                                 console.log("Data ", JSON.stringify(data))
@@ -764,36 +816,46 @@ BPage {
                                                     $Model.alarm.fetchAll()
                                                     addAlarmPopup.close()
                                                 }).catch(err => console.error(
-                                                             JSON.stringify(err)))
+                                                             JSON.stringify(
+                                                                 err)))
                                 } else {
-                                    data['last_done'] = Utils.humanizeToISOString(new Date())
+                                    data['last_done'] = Utils.humanizeToISOString(
+                                                new Date())
                                     $Model.alarm.sqlCreate(data).then(
                                                 function (res) {
                                                     console.info(
-                                                                "New alarm created ", data['last_done'], res['last_done'], ' id=', typeof res['id'], res['id'])
-                                                    $Model.alarm.sqlGet(res['id'])?.then(function(r){
-                                                        console.log("Mamamilla ")
-                                                        console.log( r['libelle'], typeof r['last_done'], r['last_done'])
-                                                    })?.catch(function(e){
-                                                        console.log("ERR (()) ")
-                                                        console.log(JSON.stringify(e))
-                                                    })
+                                                                "New alarm created ",
+                                                                data['last_done'],
+                                                                res['last_done'],
+                                                                ' id=',
+                                                                typeof res['id'],
+                                                                res['id'])
+                                                    $Model.alarm.sqlGet(
+                                                                res['id'])?.then(
+                                                                function (r) {
+                                                                    console.log("Mamamilla ")
+                                                                    console.log(r['libelle'], typeof r['last_done'], r['last_done'])
+                                                                })?.catch(
+                                                                function (e) {
+                                                                    console.log("ERR (()) ")
+                                                                    console.log(JSON.stringify(e))
+                                                                })
                                                     gardenLine.plant = undefined
                                                     addAlarmPopup.close()
                                                 }).catch(function (err) {
-                                                    console.error("COOL **",
-                                                                                                             JSON.stringify(err))
+                                                    console.error(
+                                                                "COOL **",
+                                                                JSON.stringify(
+                                                                    err))
                                                     console.log("Raw ", err)
-                                                    console.log("Raw msg ", err?.message)
+                                                    console.log("Raw msg ",
+                                                                err?.message)
                                                 })
                                 }
-
                             }
                         }
                     }
-
                 }
-
             }
         }
     }
@@ -851,7 +913,8 @@ BPage {
                             width: plantListView.width - 10
                             height: 100
                             title: insideControl.plant.name_scientific
-                            subtitle: insideControl.plant.noms_communs[0]?.name ?? ""
+                            subtitle: insideControl.plant.noms_communs[0]?.name
+                                      ?? ""
                             roomName: ""
                             imageSource: insideControl.plant.images_plantes.length
                                          > 0 ? "https://blume.mahoudev.com/assets/"

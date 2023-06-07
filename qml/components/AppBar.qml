@@ -59,7 +59,7 @@ Rectangle {
         }
         Flow {
             id: flowActions
-            Layout.preferredHeight: 64
+//            Layout.preferredHeight: 64
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter
         }
