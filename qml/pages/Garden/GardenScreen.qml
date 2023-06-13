@@ -259,9 +259,11 @@ BPage {
         }
 
         Flickable {
+            Layout.minimumHeight: 400
             Layout.fillHeight: true
             Layout.fillWidth: true
             contentHeight: alarmsCol.height
+            clip: true
 
             Column {
                 id: alarmsCol
@@ -409,7 +411,10 @@ BPage {
                     }
                 }
 
-
+                Item {
+                    width: parent.width
+                    height: 200
+                }
             }
         }
 
