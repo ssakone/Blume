@@ -38,14 +38,22 @@ BPage {
 
     function fetchMore() {
         console.log("Gonna fetch_more...")
+        let appLang = "en"
+        for (var i = 0; i < $Constants.cbAppLanguage.count; i++) {
+            if ($Constants.cbAppLanguage.get(i).code === settingsManager.appLanguage)
+                appLang = $Constants.cbAppLanguage.get(i).code
+        }
         isLoading = true
-        let query = `https://blume.mahoudev.com/items/Maladies?fields[]=*.*&limit=${diseaseSearchBox.displayText !== "" ? 70 : pageLimit}&offset=${currentPage
+        let query = `https://public.blume.mahoudev.com/diseases?fields[]=*.*&limit=${diseaseSearchBox.displayText !== "" ? 70 : pageLimit}&offset=${currentPage
             * pageLimit}${diseaseSearchBox.displayText
             === "" ? '' : "&filter[nom_scientifique][_contains]=" + diseaseSearchBox.displayText}`
 
         Http.fetch({
                        "method": 'GET',
-                       "url": query
+                       "url": query,
+                       "headers": {
+                           "Content-Lang": appLang
+                       }
                    }).then(response => {
                                let data = JSON.parse(response).data
 
@@ -207,18 +215,17 @@ BPage {
                             color: $Colors.gray100
                         }
 
-                        SwipeView {
+                        Image {
                             anchors.fill: parent
-
-                            Repeater {
-                                model: modelData.images
-                                delegate: Image {
-                                    required property variant model
-                                    source: "https://blume.mahoudev.com/assets/"
-                                            + model['directus_files_id']
+                            source: {
+                                let fileID = modelData.images?.get(0)?.directus_files_id ?? modelData.images[0]?.directus_files_id
+                                if(fileID) {
+                                    return "https://blume.mahoudev.com/assets/" + fileID
                                 }
+                                return ""
                             }
                         }
+
                         Rectangle {
                             color: "#e5e5e5"
                             anchors.fill: parent
@@ -259,34 +266,11 @@ BPage {
 
                     onClicked: {
                         diseaseSearchBox.focus = false
-                        let formated = {}
-
-                        let desease_details = {
-                            "common_names": [],
-                            "treatment": {
-                                "prevention": modelData.traitement_preventif || "",
-                                "chemical": modelData.traitement_chimique || "",
-                                "biological": modelData.traitement_biologique || ""
-                            },
-                            "description": modelData.description,
-                            "cause": modelData.cause
-                        }
-
-                        formated['name'] = modelData.nom_scientifique
-                        formated['similar_images'] = []
-
-                        for(let i=0; i<modelData.noms_communs.count; i++ ) {
-                            desease_details["common_names"].push(modelData.noms_communs.get(i))
-                        }
-
-                        for(let j=0; j<modelData.images.count; j++ ) {
-                            formated['similar_images'].push({"url": "https://blume.mahoudev.com/assets/" + modelData.images.get(j).directus_files_id})
-                        }
-
-                        formated['disease_details'] = desease_details
 
                         page_view.push(navigator.deseaseDetailsPage, {
-                                           "desease_data": formated
+                                           "desease_data": {
+                                               id: modelData.id
+                                           }
                                        })
                     }
                 }
