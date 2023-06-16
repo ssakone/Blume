@@ -332,7 +332,7 @@ void SettingsManager::resetSettings()
     Q_EMIT appThemeCSDChanged();
     m_appUnits = 0;
     Q_EMIT appUnitsChanged();
-    m_appLanguage = "auto";
+    m_appLanguage = "en";
     Q_EMIT appLanguageChanged();
 
     m_authAccessToken = "";

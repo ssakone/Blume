@@ -25,28 +25,6 @@ Popup {
         ""
     }
 
-    QtObject {
-        id: _plant
-        property string frequence_arrosage: ""
-        property string exposition_au_soleil: ""
-        property string taill_adulte: ""
-        property string type_de_sol: ""
-        property string couleur: ""
-        property string periode_de_floraison: ""
-        property string zone_de_rusticite: ""
-        property string frequence_fertilisation: ""
-        property string frequence_rampotage: ""
-        property string frequence_nettoyage: ""
-        property string frequence_vaporisation: ""
-        property string description: ""
-        property string comment_cultiver: ""
-        property string description_luminosite: ""
-        property string description_sol: ""
-        property string description_temperature_humidite: ""
-        property string description_mise_en_pot_et_rampotage: ""
-        property string description_multiplication: ""
-    }
-
     property bool fullScreen: false
     property bool hideBaseHeader: false
 
@@ -126,111 +104,7 @@ Popup {
         id: currentPlantSpaces
     }
 
-    function translate(from, to) {
-        console.log("\n CALL TRANSLATE ", from, to)
-        let data = ["00" + ": " + plant["care_level"] ?? "", "01" + ": " + plant["frequence_arrosage"] ?? "", "02" + ": " + plant["exposition_au_soleil"]
-                    ?? "", "03" + ": " + plant["taill_adulte"] ?? "", "05" + ": " + plant["type_de_sol"] ?? "", "06" + ": "
-                    + plant["couleur"] ?? "", "07" + ": " + plant["periode_de_floraison"] ?? "", "08" + ": " + plant["zone_de_rusticite"] ?? "", "09"
-                    + ": " + plant["frequence_arrosage"] ?? "", "10" + ": " + plant["frequence_fertilisation"] ?? "", "11" + ": " + plant["frequence_rampotage"]
-                    ?? "", "12" + ": " + plant["frequence_nettoyage"] ?? "", "13" + ": " + plant["frequence_vaporisation"] ?? "", "14" + ": "
-                    + plant["description"] ?? "", "15" + ": " + plant["comment_cultiver"] ?? "", "16" + ": " + plant["description_luminosite"] ?? "", "17"
-                    + ": " + plant["description_sol"] ?? "", "18" + ": " + plant["description_temperature_humidite"] ?? "", "19" + ": " + plant["mise_en_pot_et_rampotage"]
-                    ?? "", "20" + ": " + plant["description_multiplication"] ?? ""]
-        let query = {
-            "method": "POST",
-            "url": "https://api.deepl.com/v2/translate",
-            "headers": {
-                "Accept": 'application/json',
-                "Authorization": "DeepL-Auth-Key 66fcbbd7-a786-d323-d0f2-4c032091000e",
-                "Content-Type": 'application/json'
-            },
-            "params": {
-                "text": data,
-                "target_lang": to,
-                "preserve_formatting": true,
-                "source_lang": from
-            }
-        }
-
-        Http.fetch(query).then(function (res) {
-            console.log("\n GOT TRANSLATES")
-            res = res.replace("\r\n", " ")
-            let new_data = JSON.parse(res).translations
-
-            let datas = {}
-            for (var i = 0; i < new_data.length; i++) {
-                let item = new_data[i]
-                let sp = item.text.split(": ")
-                datas[sp[0]] = sp[1] === "undefined" ? "" : sp[1]
-            }
-
-            new_data = datas
-            console.log(JSON.stringify(new_data))
-            _plant.frequence_arrosage = new_data['01']
-            _plant.exposition_au_soleil = new_data['02']
-            _plant.taill_adulte = new_data['03']
-            _plant.type_de_sol = new_data['05']
-            _plant.couleur = new_data['06']
-            _plant.periode_de_floraison = new_data['07']
-            _plant.zone_de_rusticite = new_data['08']
-            _plant.frequence_arrosage = new_data['09']
-            _plant.frequence_fertilisation = new_data['10']
-            _plant.frequence_rampotage = new_data['11']
-            _plant.frequence_nettoyage = new_data['12']
-            _plant.frequence_vaporisation = new_data['13']
-            _plant.description = new_data['14']
-            _plant.comment_cultiver = new_data['15']
-            _plant.description_luminosite = new_data['16']
-            _plant.description_sol = new_data['17']
-            _plant.description_temperature_humidite = new_data['18']
-            _plant.description_mise_en_pot_et_rampotage = new_data['19']
-            _plant.description_multiplication = new_data['20']
-
-            console.log(plant.type_de_sol)
-        }).catch(function (err) {
-            console.log("Erreur: ", JSON.stringify(err), err)
-        })
-    }
-
     onPlantChanged: {
-        _plant.frequence_arrosage = plant.frequence_arrosage || ""
-        _plant.exposition_au_soleil = plant.exposition_au_soleil || ""
-        _plant.taill_adulte = plant.taill_adulte || ""
-        _plant.type_de_sol = plant.type_de_sol || ""
-        _plant.couleur = plant.couleur || ""
-        _plant.periode_de_floraison = plant.periode_de_floraison || ""
-        _plant.zone_de_rusticite = plant.zone_de_rusticite || ""
-        _plant.frequence_arrosage = plant.frequence_arrosage || ""
-        _plant.frequence_fertilisation = plant.frequence_fertilisation || ""
-        _plant.frequence_rampotage = plant.frequence_rampotage || ""
-        _plant.frequence_nettoyage = plant.frequence_nettoyage || ""
-        _plant.frequence_vaporisation = plant.frequence_vaporisation || ""
-        _plant.description = plant.description || ""
-        _plant.comment_cultiver = plant.comment_cultiver || ""
-        _plant.description_luminosite = plant.description_luminosite || ""
-        _plant.description_sol = plant.description_sol || ""
-        _plant.description_temperature_humidite = plant.description_temperature_humidite
-                || ""
-        _plant.description_mise_en_pot_et_rampotage = plant.description_mise_en_pot_et_rampotage
-                || ""
-        _plant.description_multiplication = plant.description_multiplication
-                || ""
-
-        console.log(settingsManager.appLanguage)
-        if ("name_scientific" in plant) {
-            switch (settingsManager.appLanguage) {
-            case "Español":
-                translate("FR", "ES")
-                break
-            case "Deutsch":
-                translate("FR", "DE")
-                break
-            default:
-                translate("FR", "EN")
-                break
-            }
-        }
-
         if (plantScreenDetailsPopup.plant.id) {
             $Model.space.listSpacesOfPlantRemoteID(
                         plantScreenDetailsPopup.plant.id).then(function (res) {
@@ -394,7 +268,7 @@ Popup {
                                                         + plant['images_plantes']?.get(
                                                             0).directus_files_id) : ""
                                 } else if (plant['images_plantes']?.length !== undefined) {
-                                    console.log("Second agent")
+                                    console.log("Second agent ", plant['images_plantes'][0])
                                     return plant['images_plantes']?.length
                                             ?? 0 > 0 ? ("https://blume.mahoudev.com/assets/" + plant['images_plantes'][0].directus_files_id) : ""
                                 }
@@ -635,7 +509,7 @@ Popup {
                                                             if (!plant['frequence_arrosage'])
                                                                 return "Not set"
                                                             else
-                                                                return _plant.frequence_arrosage
+                                                                return plant.frequence_arrosage
                                                         }
                                                         font.pixelSize: 14
 
@@ -684,7 +558,7 @@ Popup {
                                                     }
 
                                                     Label {
-                                                        text: _plant.exposition_au_soleil
+                                                        text: plant.exposition_au_soleil
                                                               || ""
 
                                                         font.pixelSize: 14
@@ -708,13 +582,13 @@ Popup {
                                         TableLine {
                                             color: "#e4f0ea"
                                             title: qsTr("Type of plant")
-                                            description: _plant.type_de_sol
+                                            description: plant.type_de_sol
                                                          || ""
                                         }
 
                                         TableLine {
                                             title: qsTr("Color")
-                                            description: _plant.couleur || ""
+                                            description: plant.couleur || ""
                                         }
 
                                         TableLine {
@@ -736,7 +610,7 @@ Popup {
                                                     onClicked: page_view.push(
                                                                    navigator.plantShortDescriptionsPage,
                                                                    {
-                                                                       "plant": _plant
+                                                                       "plant": plant
                                                                    })
                                                 }
                                             }
@@ -755,7 +629,7 @@ Popup {
                                                 onClicked: page_view.push(
                                                                navigator.plantFrequenciesPage,
                                                                {
-                                                                   "plant": _plant
+                                                                   "plant": plant
                                                                })
                                             }
                                         }
@@ -814,7 +688,7 @@ Popup {
                                                         color: Theme.colorPrimary
                                                     }
                                                     Label {
-                                                        text: _plant[model.field]
+                                                        text: plant[model.field]
                                                               ?? ""
                                                         color: $Colors.gray600
                                                         width: parent.width
@@ -915,7 +789,7 @@ Popup {
                                             header: qsTr("Plant description")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: _plant['description']
+                                                    text: plant['description']
                                                           || ""
                                                     wrapMode: Text.Wrap
 
@@ -934,7 +808,7 @@ Popup {
                                             header: qsTr("How to farm")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: _plant['comment_cultiver']
+                                                    text: plant['comment_cultiver']
                                                           || ""
                                                     wrapMode: Text.Wrap
 
@@ -953,7 +827,7 @@ Popup {
                                             header: qsTr("Brightness")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: _plant['description_luminosite']
+                                                    text: plant['description_luminosite']
                                                           || ""
                                                     wrapMode: Text.Wrap
 
@@ -972,7 +846,7 @@ Popup {
                                             header: qsTr("Ground")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: _plant['description_sol']
+                                                    text: plant['description_sol']
                                                           || ""
                                                     wrapMode: Text.Wrap
 
@@ -991,7 +865,7 @@ Popup {
                                             header: qsTr("Temperature & humidity")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: _plant['description_temperature_humidite']
+                                                    text: plant['description_temperature_humidite']
                                                           || ""
                                                     wrapMode: Text.Wrap
 
@@ -1010,7 +884,7 @@ Popup {
                                             header: qsTr("Potting and crawling")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: _plant['description_mise_en_pot_et_rampotage']
+                                                    text: plant['description_mise_en_pot_et_rampotage']
                                                           || ""
                                                     wrapMode: Text.Wrap
 
@@ -1029,7 +903,7 @@ Popup {
                                             header: qsTr("Multiplication")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: _plant['description_multiplication']
+                                                    text: plant['description_multiplication']
                                                           || ""
                                                     wrapMode: Text.Wrap
 
@@ -1048,7 +922,7 @@ Popup {
                                             header: qsTr("Parasites and diseases")
                                             contentItemsLayouted: [
                                                 Label {
-                                                    text: _plant['description']
+                                                    text: plant['description']
                                                           || ""
                                                     wrapMode: Text.Wrap
 

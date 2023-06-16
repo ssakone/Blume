@@ -33,6 +33,7 @@ ApplicationWindow {
     property alias $Model: _relay
     property alias $Colors: _relay._colors
     property var $Http: HTTP
+    property alias $Constants: __constants__
 
     // Desktop stuff ///////////////////////////////////////////////////////////
     minimumWidth: isHdpi ? 400 : 480
@@ -90,6 +91,10 @@ ApplicationWindow {
                                  console.error("Something happen => ", rs)
                              })
         }
+    }
+
+    Constants {
+        id: __constants__
     }
 
     // Mobile stuff ////////////////////////////////////////////////////////////
