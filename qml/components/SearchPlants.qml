@@ -236,18 +236,20 @@ Item {
                             color: $Colors.gray100
                         }
 
-                        SwipeView {
+                        Image {
                             anchors.fill: parent
-
-                            Repeater {
-                                model: modelData.images_plantes
-                                delegate: Image {
-                                    required property variant model
-                                    source: "https://blume.mahoudev.com/assets/"
-                                            + model['directus_files_id']
+                            source: {
+                                let fileID = modelData.images_plantes?.get(0)?.directus_files_id ?? modelData.images_plantes[0]?.directus_files_id
+                                console.log("FileID ", fileID)
+                                console.log("As model ", JSON.stringify(modelData.images_plantes?.get(0)))
+                                console.log("As modelData ", modelData.images_plantes[0])
+                                if(fileID) {
+                                    return "https://blume.mahoudev.com/assets/" + fileID
                                 }
+                                return ""
                             }
                         }
+
                         Rectangle {
                             color: "#e5e5e5"
                             anchors.fill: parent
@@ -481,7 +483,8 @@ Item {
                                 objectData[field] = modelData[field]
                             } else if(fieldType === 'array') {
                                 objectData[field] = []
-                                for(let i=0; i< modelData[field].count; i++) {
+                                const size = modelData[field].count?? modelData[field].length
+                                for(let i=0; i< size; i++) {
                                     objectData[field].push(modelData[field].get(i))
                                 }
                             }
