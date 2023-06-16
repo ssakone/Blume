@@ -39,7 +39,8 @@ BPage {
                     },
                 }).then(function(response) {
                 console.log(response)
-                control.plant = JSON.parse(response).data
+                const parsedResponse = JSON.parse(response)
+                control.plant = parsedResponse.data ?? parsedResponse
                 control.isLoaded = true
             }).catch(function (err) {
                 console.log(Object.keys(err))
