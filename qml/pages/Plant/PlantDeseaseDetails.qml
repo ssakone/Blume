@@ -21,6 +21,7 @@ import "../../components_js/Http.js" as Http
 BPage {
     id: control
     property variant desease_data
+    property bool isBlumeDisease: false
     property variant details: desease_data["disease_details"] ?? {}
     property bool header_hidden: false
     property bool fullScreen: false
@@ -33,6 +34,11 @@ BPage {
     }
 
     Component.onCompleted: {
+        if(!control.isBlumeDisease) {
+            control.isLoaded = true
+            return
+        }
+
         const url = `https://public.blume.mahoudev.com/diseases/${control.desease_data.id}?fields=*.*`
 
         let appLang = "en"

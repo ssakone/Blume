@@ -269,7 +269,8 @@ BPage {
 
                         page_view.push(navigator.deseaseDetailsPage, {
                                            "desease_data": {
-                                               id: modelData.id
+                                               id: modelData.id,
+                                               isBlumeDisease: true
                                            }
                                        })
                     }
