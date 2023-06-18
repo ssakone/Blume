@@ -30,6 +30,8 @@ ApplicationWindow {
     property alias $Signaler: _signaler
     property alias $Colors: _relay._colors
     property var $Http: HTTP
+    property alias $Constants: __constants__
+
     readonly property var permissionsNameList: ["android.permission.READ_MEDIA_IMAGES", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.CAMERA", "android.permission.INTERNET", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.BLUETOOTH_ADMIN", "android.permission.BLUETOOTH"]
     Loader {
         active: Qt.platform.os === "android"
@@ -90,6 +92,10 @@ ApplicationWindow {
 
     Signaler {
         id: _signaler
+    }
+    
+    Constants {
+        id: __constants__
     }
 
     Timer {

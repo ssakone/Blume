@@ -240,9 +240,6 @@ Item {
                             anchors.fill: parent
                             source: {
                                 let fileID = modelData.images_plantes?.get(0)?.directus_files_id ?? modelData.images_plantes[0]?.directus_files_id
-                                console.log("FileID ", fileID)
-                                console.log("As model ", JSON.stringify(modelData.images_plantes?.get(0)))
-                                console.log("As modelData ", modelData.images_plantes[0])
                                 if(fileID) {
                                     return "https://blume.mahoudev.com/assets/" + fileID
                                 }

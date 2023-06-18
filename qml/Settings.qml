@@ -444,36 +444,20 @@ Loader {
                         z: 1
                         wheelEnabled: false
 
-                        model: ListModel {
-                            id: cbAppLanguage
-                            ListElement {
-                                text: qsTr("auto", "short for automatic");
-                            }
-                            ListElement { text: "Chinese (traditional)"; }
-                            ListElement { text: "Chinese (simplified)"; }
-                            ListElement { text: "Dansk"; }
-                            ListElement { text: "Deutsch"; }
-                            ListElement { text: "English"; }
-                            ListElement { text: "Español"; }
-                            ListElement { text: "Français"; }
-                            ListElement { text: "Frysk"; }
-                            ListElement { text: "Nederlands"; }
-                            ListElement { text: "Norsk (Bokmål)"; }
-                            ListElement { text: "Norsk (Nynorsk)"; }
-                            ListElement { text: "Pусский"; }
-                        }
+                        model: $Constants.cbAppLanguage
+                        textRole: "text"
 
                         Component.onCompleted: {
-                            for (var i = 0; i < cbAppLanguage.count; i++) {
-                                if (cbAppLanguage.get(i).text === settingsManager.appLanguage)
+                            for (var i = 0; i < $Constants.cbAppLanguage.count; i++) {
+                                if ($Constants.cbAppLanguage.get(i).code === settingsManager.appLanguage)
                                     currentIndex = i
                             }
                         }
                         property bool cbinit: false
                         onCurrentIndexChanged: {
                             if (cbinit) {
-                                utilsLanguage.loadLanguage(cbAppLanguage.get(currentIndex).text)
-                                settingsManager.appLanguage = cbAppLanguage.get(currentIndex).text
+                                utilsLanguage.loadLanguage($Constants.cbAppLanguage.get(currentIndex).code)
+                                settingsManager.appLanguage = $Constants.cbAppLanguage.get(currentIndex).code
                             } else {
                                 cbinit = true
                             }
