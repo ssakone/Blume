@@ -16,7 +16,8 @@ BPage {
 
     property int forXDays: 30
     property var startDay: new Date(Utils.humanizeToISOString(new Date()))
-    property var endDay: new Date(startDay.getTime() + (forXDays * 1000 * 60 * 60 * 24))
+    property var endDay: new Date(startDay.getTime(
+                                      ) + (forXDays * 1000 * 60 * 60 * 24))
 
     property bool isLoading: true
 
@@ -24,10 +25,26 @@ BPage {
         title: qsTr("Calendar")
     }
 
-
     Component.onCompleted: {
-        console.log("INIT [control.startDay] ", control.startDay, ' ---> ', control.endDay )
-        control.fetchMore()
+        //console.log("INIT [control.startDay] ", control.startDay, ' ---> ', control.endDay )
+        const query = "SELECT updated_at FROM %1 WHERE updated_at IS NOT NULL AND updated_at != '' AND updated_at > 0 ORDER BY updated_at ASC LIMIT 1 ".arg(
+                        $Model.alarm.tableName)
+        $Model.alarm.db.executeSql(query).then(function (rs) {
+            if (rs.query === true) {
+                if ("datas" in rs) {
+                    const dateObject = new Date(parseInt(
+                                                    rs.datas[0].updated_at * 1000000))
+                    const day = dateObject.getDate()
+                    const month = dateObject.getMonth()
+                    const year = dateObject.getFullYear()
+
+                    startDay = new Date(year, month, day, 0, 0, 0, 0)
+                }
+            }
+            control.fetchMore()
+        }).catch(function (err) {
+            control.fetchMore()
+        })
     }
 
     ListModel {
@@ -47,52 +64,58 @@ BPage {
         control.isLoading = true
         const nbAlarms = $Model.alarm.count
 
+
         /* should be set among days iterations
             key: alarm index in the '$Model.alarm' model
             value: last date this alarm should have be seen in 'ISOString' format
         */
         const lastDoneHistory = {}
 
-        for(let dayIndex=0; dayIndex < control.forXDays; dayIndex++) {
+        for (var dayIndex = 0; dayIndex < control.forXDays; dayIndex++) {
             // Today is <dayIndex> days after <control.startDay>
-            const todayTimeStamp = control.startDay.getTime() + (dayIndex * 24 * 60 * 60 * 1000)
-            const today  = new Date(todayTimeStamp)
+            const todayTimeStamp = control.startDay.getTime(
+                                     ) + (dayIndex * 24 * 60 * 60 * 1000)
+            const today = new Date(todayTimeStamp)
             console.log(today.toDateString())
 
             // 'calendarAlarmModel' items structure
             const todayModelItem = {
-                date: today,
-                alarms: []
+                "date": today,
+                "alarms": []
             }
 
-            for(let i=0; i < nbAlarms; i++) {
+            for (var i = 0; i < nbAlarms; i++) {
                 const currentAlarm = $Model.alarm.get(i)
 
                 let lastDone = null
-                if(dayIndex===0) {
-                    let realLastestDoneDate = Utils.getDateBefore(new Date(), currentAlarm.frequence+i)
-                    realLastestDoneDate = Utils.humanizeToISOString(realLastestDoneDate)
+                if (dayIndex === 0) {
+                    let realLastestDoneDate = Utils.getDateBefore(
+                            new Date(), currentAlarm.frequence + i)
+                    realLastestDoneDate = Utils.humanizeToISOString(
+                                realLastestDoneDate)
                     lastDone = new Date(realLastestDoneDate)
                 } else {
                     // Already in ISONString format
                     lastDone = new Date(lastDoneHistory[i])
                 }
 
-                const nextDate = Utils.getNextDate(lastDone, currentAlarm.frequence+i)
-                if(dayIndex === 0) {
+                const nextDate = Utils.getNextDate(lastDone,
+                                                   currentAlarm.frequence + i)
+                if (dayIndex === 0) {
                     lastDoneHistory[i] = nextDate
                 }
 
-
-                if((nextDate.toDateString() === today.toDateString()) && startDay <= nextDate && nextDate <= endDay) {
-                    lastDoneHistory[i] = today  //Utils.getNextDate(nextDate, currentAlarm.frequence+i)
+                if ((nextDate.toDateString() === today.toDateString())
+                        && startDay <= nextDate && nextDate <= endDay) {
+                    lastDoneHistory[i]
+                            = today //Utils.getNextDate(nextDate, currentAlarm.frequence+i)
                     todayModelItem.alarms.push(currentAlarm)
                 }
             }
 
-            if(todayModelItem.alarms.length >0) {
+            if (todayModelItem.alarms.length > 0) {
                 calendarAlarmModel.append(todayModelItem)
-//                console.log("found ", calendarAlarmModel.count)
+                //                console.log("found ", calendarAlarmModel.count)
             }
         }
         control.isLoading = false
@@ -112,8 +135,10 @@ BPage {
                 onPositionChanged: {
                     if (control.isLoading === false && timer.running === false
                             && (scrollBar.size + scrollBar.position > 0.99)) {
-                        control.startDay = Utils.getNextDate(control.startDay, control.forXDays)
-                        console.log("control.startDay ", control.startDay, ' ---> ', control.endDay )
+                        control.startDay = Utils.getNextDate(control.startDay,
+                                                             control.forXDays)
+                        console.log("control.startDay ", control.startDay,
+                                    ' ---> ', control.endDay)
                         timer.start()
                         control.fetchMore()
                     }
@@ -153,8 +178,11 @@ BPage {
                                         width: parent.width
                                         Label {
                                             text: {
-//                                                console.log(typeof modelData.date, modelData.date)
-                                                return (modelData.date.toDateString() === (new Date()).toDateString() ? qsTr("Today") : modelData.date.toLocaleDateString()) || "NULL"
+                                                //                                                console.log(typeof modelData.date, modelData.date)
+                                                return (modelData.date.toDateString(
+                                                            ) === (new Date()).toDateString(
+                                                            ) ? qsTr("Today") : modelData.date.toLocaleDateString(
+                                                                    )) || "NULL"
                                             }
 
                                             font.pixelSize: 18
@@ -165,27 +193,25 @@ BPage {
                                         }
                                     }
 
-
                                     Repeater {
                                         model: modelData.alarms
                                         GardenActivityLine {
                                             required property var model
                                             required property int index
 
-
                                             property var plantObj: JSON.parse(
                                                                        model.plant_json)
                                             title: model.libelle || "NULL"
                                             plant_name: plantObj.name_scientific
                                             subtitle: {
-                                                $Model.space.sqlGet(model.space)
-                                                .then(res => {
-                                                          subtitle = "Space - " + res.libelle
-                                                      })
-                                                .catch(console.warn)
+                                                $Model.space.sqlGet(
+                                                            model.space).then(
+                                                            res => {
+                                                                subtitle = "Space - " + res.libelle
+                                                            }).catch(
+                                                            console.warn)
                                                 return ""
                                             }
-
 
                                             hideCheckbox: true
                                             hideDelete: true
@@ -208,12 +234,9 @@ BPage {
                                             height: 80
                                         }
                                     }
-
                                 }
                             }
                         }
-
-
                     }
                 }
             }
@@ -261,5 +284,4 @@ BPage {
             }
         }
     }
-
 }

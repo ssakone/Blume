@@ -1,4 +1,5 @@
 import QtQuick
+import QtQml
 
 import "pages"
 import "pages/Plant"
@@ -6,7 +7,7 @@ import "pages/Insect"
 import "pages/Auth"
 import "pages/Garden"
 
-QtObject {
+Item {
     property var deviceList: Component {
         DeviceList {}
     }property var plantIdentifierPage: Component {
@@ -68,5 +69,12 @@ QtObject {
     }
     property var gardenEditSpace: Component {
         GardenEditSpace {}
+    }
+
+    Connections {
+        target: $Signaler
+        function onShowPlant(plant) {
+            page_view.push(plantPage, {plant: plant})
+        }
     }
 }

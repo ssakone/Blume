@@ -27,6 +27,7 @@ ApplicationWindow {
     visible: true
     property alias $SqlClient: _relay._sqliClient
     property alias $Model: _relay
+    property alias $Signaler: _signaler
     property alias $Colors: _relay._colors
     property var $Http: HTTP
     readonly property var permissionsNameList: ["android.permission.READ_MEDIA_IMAGES", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.CAMERA", "android.permission.INTERNET", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.BLUETOOTH_ADMIN", "android.permission.BLUETOOTH"]
@@ -85,6 +86,10 @@ ApplicationWindow {
 
     ModelManager {
         id: _relay
+    }
+
+    Signaler {
+        id: _signaler
     }
 
     Timer {

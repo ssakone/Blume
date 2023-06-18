@@ -2,7 +2,9 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+
 import "../../components_generic"
+import "../../components_js"
 import "../../components"
 import "qrc:/qml"
 
@@ -26,6 +28,5 @@ BPage {
         hideBaseHeader: true
 
         parent: parent
-
     }
 }

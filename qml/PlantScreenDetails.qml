@@ -86,8 +86,6 @@ Popup {
             data["plant_json"] = JSON.stringify(plant)
 
             $Model.plant.sqlCreate(data).then(function (new_plant) {
-                console.log('\n\n NEW PLANT ', typeof new_plant,
-                            JSON.stringify(new_plant))
                 let inData = {
                     "space_id": space.id,
                     "space_name": space.libelle,

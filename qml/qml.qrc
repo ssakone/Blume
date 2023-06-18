@@ -100,6 +100,7 @@
         <file>components_js/Http.js</file>
         <file>components_js/Utils.js</file>
         <file>components_js/Colors.qml</file>
+        <file>components_js/Signaler.qml</file>
         <file>services/SqlClient.qml</file>
         <file>models/AlarmModel.qml</file>
         <file>models/Model.qml</file>

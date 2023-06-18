@@ -40,58 +40,56 @@ ListModel {
     property string __order__by__field: 'id'
 
     function sqlCreate(data) {
-        if (beforeCreate !== undefined) {
-            data = control.beforeCreate(data)
-        }
         return new Promise(function (resolve, reject) {
-            let column = [], value = [], column_str = '', completer = ''
-            for (let col in data) {
-                column.push(col)
+            if (control.beforeCreate !== undefined) {
+                data = control.beforeCreate(data);
             }
-            column_str = column.join(',')
-            column.map(col => value.push(data[col]))
-            completer = "?,".repeat(column.length).slice(0, -1)
-            for (var i = 0; i < value.length; i++) {
-                let v = column[i]
-                for (var u = 0; u < control.column.length; u++) {
-                    let uu = control.column[u]
-                    if (uu['name'] === v) {
-                        if (uu['type'] === "TEXT") {
-                            let argument = value[i].toString()
 
-                            argument = argument.replace(/'+/g, "")
-                            if(!v.includes('json')) {
-                                completer = completer.replace(
-                                            '?', "quote('%1')".arg(argument))
-                            } else {
-                                console.log("Found a JSON field ", v)
-                                completer = completer.replace(
-                                            '?', "'%1'".arg(argument))
-                            }
+            let columns = [], values = [], placeholders = [];
+            for (let column in data) {
+                if (!data.hasOwnProperty(column)) continue;
+                columns.push(column);
+                values.push(data[column]);
+                placeholders.push("?");
+            }
 
+            var i, j;
+
+            for (i = 0; i < values.length; i++) {
+                let value = values[i];
+                for (j = 0; j < control.column.length; j++) {
+                    let columnDef = control.column[j];
+                    if (columnDef['name'] === columns[i]) {
+                        if (columnDef['type'] === "TEXT") {
+                            value = value.toString().replace(/'+/g, "");
+                            placeholders[i] = columns[i].includes('json') ? `'${value}'` : `quote('${value}')`;
                         } else {
-                            completer = completer.replace(
-                                        '?', "%1".arg(value[i].toString()))
+                            placeholders[i] = value.toString();
                         }
                     }
                 }
             }
-            control.db.executeSql(logQuery(__query__create__.arg(
-                                               control.tableName).arg(
-                                               column_str).arg(
-                                               completer))).then(function (rs) {
-//                                                   console.log('CREATEd', rs)
-                                                   data['id'] = parseInt(
-                                                               rs.insertId)
-                                                   control.append(data)
-                                                   control.created(data)
-                                                   resolve(data)
-                                               }).catch(function (err) {
-                                                   console.log("CREATE ERR", JSON.stringify(err))
-                                                   reject(err)
-                                               })
-        })
+
+            let query = `INSERT INTO ${control.tableName} (${columns.join(', ')}) VALUES (`;
+
+            for (let i = 0; i < placeholders.length; i++) {
+                if (i > 0) query += ', ';
+                query += placeholders[i];
+            }
+            query += ')';
+
+            control.db.executeSql(query).then(function (rs) {
+                data['id'] = parseInt(rs.insertId);
+                control.append(data);
+                control.created(data);
+                resolve(data);
+            }).catch(function (err) {
+                console.log("CREATE ERR", JSON.stringify(err));
+                reject(err);
+            });
+        });
     }
+
 
     function sqlCreates(datas) {
         if (beforeCreates !== undefined) {
