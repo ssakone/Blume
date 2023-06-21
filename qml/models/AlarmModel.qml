@@ -2,10 +2,11 @@ import QtQuick
 
 import "../services/"
 import "../components_js/Utils.js" as Utils
+
 Model {
     id: control
     debug: true
-    tableName: "Alarm01"
+    tableName: "Alarm001"
     column: [{
             "name": "id",
             "type": "INTEGER",
@@ -20,7 +21,7 @@ Model {
             "name": "done",
             "type": "BOOLEAN",
             "def": "false"
-        },{
+        }, {
             "name": "hours",
             "type": "INTEGER"
         }, {
@@ -56,17 +57,18 @@ Model {
             "type": "INTEGER",
             "def": "0"
         }, {
-            "name": "frequence", // Nombre de jours
-            "type": "INTEGER",
+            "name": "frequence",
+            "type"// Nombre de jours
+            : "INTEGER",
             "def": "1"
         }, {
-            // toISOString() format
-            "name": "last_done",
+            "name"// toISOString() format
+            : "last_done",
             "type": "TEXT"
         }, {
             "name": "space",
             "type": "INTEGER"
-        },{
+        }, {
             "name": "plant",
             "type": "INTEGER"
         }, {
@@ -92,26 +94,26 @@ Model {
         return new Promise(function (resolve, reject) {
             const today = Utils.humanizeToISOString(new Date())
             let completer = "SET done = %1".arg(newStatus)
-            if(preventDateUpdate===false) {
+            if (preventDateUpdate === false) {
                 completer += ", last_done=quote('%2')".arg(today)
+                completer += ", updated_at=%2".arg(new Date().getTime(
+                                                       ) / 1000000)
             }
 
-            const query = logQuery(__query__update__.arg(
-                                                           completer).arg(
-                                                           id))
+            const query = logQuery(__query__update__.arg(completer).arg(id))
 
             control.db.executeSql(query).then(function (rs) {
                 console.log("Inserted ", JSON.stringify(rs))
-                                                   control.updated(data)
-                                                   resolve(data)
-                                               }).catch(function (err) {
-                                                   reject(err)
-                                               })
+                control.updated(data)
+                resolve(data)
+            }).catch(function (err) {
+                reject(err)
+            })
         })
     }
 
     function sqlFormatFrequence(id) {
-        return new Promise(function (resolve, reject){
+        return new Promise(function (resolve, reject) {
             sqlGet(id).then(function (res) {
                 // console.log("Formating ", res.frequence, JSON.stringify(res))
                 let freq = res.frequence
@@ -119,36 +121,37 @@ Model {
                 let periodIndex = 3
 
                 // Is it yearly
-                if(freq > 365 ) {
+                if (freq > 365) {
                     period = qsTr("Years")
                     periodIndex = 3
-                    freq = Math.floor(freq/365)
-                } else  {
+                    freq = Math.floor(freq / 365)
+                } else {
                     // is it monthly
-                    if(freq > 30 ) {
+                    if (freq > 30) {
                         period = qsTr("Months")
                         periodIndex = 2
-                        freq = Math.floor(freq/30)
+                        freq = Math.floor(freq / 30)
                     } else {
                         // is it weekly
-                        if(freq > 7 ) {
+                        if (freq > 7) {
                             period = qsTr("Weeks")
                             periodIndex = 1
-                            freq = Math.floor(freq/7)
+                            freq = Math.floor(freq / 7)
                         } else {
                             // else, it is certainly a number of days between [0-7]
-                            if(freq > 0) {
+                            if (freq > 0) {
                                 period = qsTr("Days")
                                 periodIndex = 0
-                            } else period = qsTr("Never")
+                            } else
+                                period = qsTr("Never")
                         }
                     }
                 }
 
                 const data = {
-                    freq: freq,
-                    period_label: period,
-                    period_index: periodIndex
+                    "freq": freq,
+                    "period_label": period,
+                    "period_index": periodIndex
                 }
                 console.log(data)
                 resolve(data)

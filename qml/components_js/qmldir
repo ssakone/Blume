@@ -1,0 +1,3 @@
+module qml.components_js
+
+singleton Signaler 1.0 Signaler.qml

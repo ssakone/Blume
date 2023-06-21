@@ -80,18 +80,17 @@ BPage {
                         color: $Colors.gray100
                     }
 
-                    SwipeView {
+                    Image {
                         anchors.fill: parent
-
-                        Repeater {
-                            model: modelData.images_plantes
-                            delegate: Image {
-                                required property variant modelData
-                                source: "https://blume.mahoudev.com/assets/"
-                                        + modelData['directus_files_id']
+                        source: {
+                            let fileID = modelData?.images_plantes?.get(0)?.directus_files_id ?? modelData.images_plantes[0]?.directus_files_id
+                            if(fileID) {
+                                return "https://blume.mahoudev.com/assets/" + fileID
                             }
+                            return ""
                         }
                     }
+
                     Rectangle {
                         color: "#e5e5e5"
                         anchors.fill: parent

@@ -18,8 +18,11 @@ import "components_js/Http.js" as HTTP
 
 ApplicationWindow {
     id: appWindow
-    flags: Qt.Window
+    flags: Qt.Window || Qt.WindowStaysOnTopHint
     color: Theme.colorBackground
+
+    maximumWidth: 450
+    // place it on global window right
 
     property bool isDesktop: true
     property bool isMobile: false
@@ -31,8 +34,10 @@ ApplicationWindow {
     property var selectedDevice: null
     property alias $SqlClient: _relay._sqliClient
     property alias $Model: _relay
+    property alias $Signaler: _signaler
     property alias $Colors: _relay._colors
     property var $Http: HTTP
+    property alias $Constants: __constants__
 
     // Desktop stuff ///////////////////////////////////////////////////////////
     minimumWidth: isHdpi ? 400 : 480
@@ -50,7 +55,7 @@ ApplicationWindow {
         else
             return isHdpi ? 560 : 720
     }
-    x: settingsManager.initialPosition.width
+    x: Screen.width - width - 10 //settingsManager.initialPosition.width
     y: settingsManager.initialPosition.height
     visibility: settingsManager.initialVisibility
     visible: true
@@ -74,6 +79,10 @@ ApplicationWindow {
         id: _relay
     }
 
+    Signaler {
+        id: _signaler
+    }
+
     Colors {
         id: _colors
     }
@@ -90,6 +99,10 @@ ApplicationWindow {
                                  console.error("Something happen => ", rs)
                              })
         }
+    }
+
+    Constants {
+        id: __constants__
     }
 
     // Mobile stuff ////////////////////////////////////////////////////////////

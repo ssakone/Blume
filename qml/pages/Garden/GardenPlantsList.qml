@@ -7,6 +7,7 @@ import SortFilterProxyModel
 
 import "../../components"
 import "../../components_generic"
+import '../../components_js/'
 
 BPage {
     id: control
@@ -30,6 +31,7 @@ BPage {
             imageSource: plant.images_plantes.length
                          > 0 ? "https://blume.mahoudev.com/assets/"
                                + plant.images_plantes[0].directus_files_id : ""
+            onClicked: $Signaler.showPlant(plant)
         }
     }
 
