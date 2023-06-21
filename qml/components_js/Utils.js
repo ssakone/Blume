@@ -145,7 +145,7 @@ function humanizeToISOString(date) {
     const m = date.getMonth() + 1
     const y = date.getFullYear()
     const formated = `${y}/${m>9 ? m : '0'+m }/${d > 9 ? d : '0'+d}`
-    console.log(formated , " -->> ", new Date(formated))
+//    console.log(formated , " -->> ", new Date(formated))
     return formated
 }
 
