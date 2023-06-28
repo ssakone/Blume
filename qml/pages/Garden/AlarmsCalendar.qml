@@ -87,28 +87,21 @@ BPage {
             for (var i = 0; i < nbAlarms; i++) {
                 const currentAlarm = $Model.alarm.get(i)
 
-                let lastDone = null
+                let lastDone = currentAlarm.last_done
+                if(lastDone[0] === "'") {
+                    lastDone = lastDone.slice(1, -1)
+                }
+                lastDone = new Date(lastDone)
                 if (dayIndex === 0) {
-                    let realLastestDoneDate = Utils.getDateBefore(
-                            new Date(), currentAlarm.frequence + i)
-                    realLastestDoneDate = Utils.humanizeToISOString(
-                                realLastestDoneDate)
-                    lastDone = new Date(realLastestDoneDate)
-                } else {
-                    // Already in ISONString format
-                    lastDone = new Date(lastDoneHistory[i])
+                    lastDoneHistory[i] = lastDone
                 }
 
-                const nextDate = Utils.getNextDate(lastDone,
-                                                   currentAlarm.frequence + i)
-                if (dayIndex === 0) {
-                    lastDoneHistory[i] = nextDate
-                }
+                const nextDate = Utils.getNextDate(lastDoneHistory[i],
+                                                   currentAlarm.frequence)
 
                 if ((nextDate.toDateString() === today.toDateString())
                         && startDay <= nextDate && nextDate <= endDay) {
-                    lastDoneHistory[i]
-                            = today //Utils.getNextDate(nextDate, currentAlarm.frequence+i)
+                    lastDoneHistory[i] = today
                     todayModelItem.alarms.push(currentAlarm)
                 }
             }
@@ -201,13 +194,13 @@ BPage {
 
                                             property var plantObj: JSON.parse(
                                                                        model.plant_json)
-                                            title: model.libelle || "NULL"
+                                            title: model.libelle[0] === "'" ? model.libelle.slice(1, -1) : model.libelle
                                             plant_name: plantObj.name_scientific
                                             subtitle: {
                                                 $Model.space.sqlGet(
                                                             model.space).then(
                                                             res => {
-                                                                subtitle = "Space - " + res.libelle
+                                                                subtitle = "Space - " + (res.libelle[0] === "'" ? res.libelle.slice(1, -1) : res.libelle)
                                                             }).catch(
                                                             console.warn)
                                                 return ""

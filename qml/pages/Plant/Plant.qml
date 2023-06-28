@@ -25,11 +25,7 @@ BPage {
             const url = `https://public.blume.mahoudev.com/plants/${plant.id}?fields=*.*`
 
 
-            let appLang = "en"
-            for (var i = 0; i < $Constants.cbAppLanguage.count; i++) {
-                if ($Constants.cbAppLanguage.get(i).code === settingsManager.appLanguage)
-                    appLang = $Constants.cbAppLanguage.get(i).code
-            }
+            let appLang = Qt.locale().name.slice(0, 2)
 
             Http.fetch({
                     method: "GET",
