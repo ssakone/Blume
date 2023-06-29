@@ -681,7 +681,7 @@ BPage {
                                                     ""))],
                                         "disease_details": ["cause", "treatment", "common_names", "classification", "description", "url"],
                                         "modifiers": ["similar_images"],
-                                        "language": "en",
+                                        "language": Qt.locale().name.slice(0, 2),
                                         "longitude": gps.position.coordinate.longitude,
                                         "latitude": gps.position.coordinate.latitude
                                     }

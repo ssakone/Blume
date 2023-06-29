@@ -403,7 +403,7 @@ BPage {
                                                     === "windows" ? "file:///" : "file://",
                                                     ""))],
                                         "modifiers": ["crops_fast", "similar_images"],
-                                        "language": "en",
+                                        "language": Qt.locale().name.slice(0, 2),
                                         "plant_details": ["common_names", "taxonomy", "url", "wiki_description", "wiki_image", "wiki_images", "edible_parts", "propagation_methods"],
                                         "longitude": gps.position.coordinate.longitude,
                                         "latitude": gps.position.coordinate.latitude
