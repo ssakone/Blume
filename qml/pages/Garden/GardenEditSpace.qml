@@ -17,6 +17,24 @@ BPage {
         title: shouldCreate ? qsTr("New room") : qsTr("Update room")
         statusBarVisible: false
         leading.icon: Icons.close
+
+        ButtonWireframeIcon {
+            visible: spaceID
+            height: 36
+            anchors.right: parent.right
+            anchors.rightMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+
+            primaryColor: $Colors.white
+            secondaryColor: Qt.rgba(0, 0, 0, 0)
+
+            background: Item {}
+
+            source: Icons.trashCan
+            sourceSize: 30
+
+            onClicked: confirmRoomDeletionPopup.open()
+        }
     }
     Column {
         width: parent.width - padding
@@ -83,7 +101,7 @@ BPage {
                             anchors.horizontalCenter: parent.horizontalCenter
                             width: parent.width
                             wrapMode: Text.Wrap
-                            font: {
+                            font {
                                 weight: Font.DemiBold
                             }
                         }
@@ -218,6 +236,52 @@ BPage {
 
             }
 
+        }
+    }
+
+    Popup {
+        id: confirmRoomDeletionPopup
+        anchors.centerIn: parent
+        width: 300
+        height: 160
+        dim: true
+        modal: true
+
+        Column {
+            anchors.centerIn: parent
+            spacing: 20
+            Label {
+                text: qsTr("Remove this room ?")
+                font.pixelSize: 16
+            }
+            Row {
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: 10
+                NiceButton {
+                    text: qsTr("Yes remove")
+                    width: 120
+                    height: 50
+                    onClicked: {
+                        $Model.space.sqlDelete(
+                                    spaceID).then(res => {
+                                                                        if ($Model.space.count === 1) {
+                                                                            $Model.space.clear()
+                                                                            $Model.space.fetchAll()
+                                                                        }
+                                                                    })
+
+                        confirmRoomDeletionPopup.close()
+                        page_view.pop()
+                        page_view.pop()
+                    }
+                }
+                NiceButton {
+                    text: qsTr("No")
+                    width: 100
+                    height: 50
+                    onClicked: confirmRoomDeletionPopup.close()
+                }
+            }
         }
     }
 
