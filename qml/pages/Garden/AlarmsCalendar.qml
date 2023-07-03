@@ -236,6 +236,73 @@ BPage {
         }
     }
 
+    // Wizard
+    ListView {
+        visible: $Model.alarm.count === 0
+        anchors.fill: parent
+        anchors.margins: 20
+        spacing: 10
+
+
+        model: 5
+        layer.enabled: true
+        delegate: GardenActivityLine {
+            required property var model
+            required property int index
+
+            layer.effect: QGE.ColorOverlay {
+                color: Qt.rgba(100, 30, 89, 0.8)
+            }
+
+            title: qsTr("Watering")
+            plant_name: "Abelia chinensis"
+            subtitle: qsTr("Bed room")
+
+            hideCheckbox: true
+            hideDelete: true
+
+            icon.source: Icons.waterOutline
+
+            width: parent.width
+            height: 80
+        }
+
+        Column {
+            width: parent.width
+            anchors.centerIn: parent
+            anchors.verticalCenterOffset: 50
+            spacing: 10
+
+            Label {
+                text: qsTr("No task ! \n\n You should first create a room")
+                visible: alarmsTodoToday.count === 0 && alarmsLate.count === 0
+                color: Theme.colorSecondary
+                opacity: 0.8
+                width: parent.width
+                wrapMode: Text.Wrap
+                horizontalAlignment: Text.AlignHCenter
+                font {
+                    weight: Font.Bold
+                    pixelSize: 18
+                }
+            }
+
+            ButtonWireframe {
+                text: "Go"
+                fullColor: true
+                primaryColor: Theme.colorPrimary
+                fulltextColor: $Colors.white
+                anchors.horizontalCenter: parent.horizontalCenter
+                componentRadius: 10
+                width: parent.width
+                onClicked: page_view.push(navigator.gardenSpacesList)
+            }
+
+
+        }
+
+    }
+
     Popup {
         id: removeAlarmPopup
         property var alarm

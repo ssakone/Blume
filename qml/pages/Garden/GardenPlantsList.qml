@@ -46,7 +46,6 @@ BPage {
 
             Label {
                 text: qsTr("No plant ! \n\n You should first create a room and associate plants")
-                visible: alarmsTodoToday.count === 0 && alarmsLate.count === 0
                 color: Theme.colorSecondary
                 opacity: 0.8
                 width: parent.width
