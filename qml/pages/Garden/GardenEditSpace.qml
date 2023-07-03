@@ -25,6 +25,74 @@ BPage {
         anchors.horizontalCenter: parent.horizontalCenter
 
         Label {
+            visible: shouldCreate
+            text: qsTr("Choose the place")
+            opacity: .5
+        }
+
+        Flickable {
+            visible: shouldCreate
+            width: parent.width - 20
+            height: rowPlaces.height
+            contentWidth: rowPlaces.width
+
+            Row {
+                id: rowPlaces
+                property int currentIndex: -1
+                property variant model: [qsTr("Salon"), qsTr("Jardin"), qsTr("Chambre"), qsTr("Cuisine"), qsTr("Terasse"), qsTr("Dalle") ]
+                spacing: 10
+                Repeater {
+                    model: rowPlaces.model
+                    delegate: Item {
+                        width: 80
+                        height: 80
+                        ButtonWireframe {
+                            width: parent.width
+                            height: parent.height - 20
+                            fullColor: true
+                            primaryColor: index === rowPlaces.currentIndex ? Theme.colorPrimary : $Colors.gray50
+                            fulltextColor: index === rowPlaces.currentIndex ? "white" : Theme.colorPrimary
+                            componentRadius: 10
+
+
+                            onClicked: {
+                                rowPlaces.currentIndex = index
+                                spaceNameItem.text = modelData
+                            }
+
+                            Rectangle {
+                                anchors.fill: parent
+                                radius: parent.componentRadius
+                                color: Qt.rgba(0, 0, 0, 0)
+                                border {
+                                    color: $Colors.gray300
+                                    width: 1
+                                }
+                            }
+
+                            IconSvg {
+                                source: Icons.roomServiceOutline
+                                color: index === rowPlaces.currentIndex ? "white" : Theme.colorSecondary
+                                anchors.centerIn: parent
+                            }
+                        }
+
+                        Label {
+                            text: modelData
+                            anchors.bottom: parent.bottom
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            width: parent.width
+                            wrapMode: Text.Wrap
+                            font: {
+                                weight: Font.DemiBold
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Label {
             text: qsTr("Room name")
             opacity: .5
         }
@@ -120,6 +188,7 @@ BPage {
                 "type": typeSpace.currentIndex
             }
             if(shouldCreate) {
+                if(data.libelle === "") return
                 $Model.space.sqlCreate(data).then(function (rs) {
                     console.log(JSON.stringify(rs))
                     callback(data)
@@ -128,6 +197,7 @@ BPage {
                     console.log("error creare", err)
                 })
             } else if(spaceID) {
+                if(spaceName === "" && spaceNameItem.text === "") return
                 if(spaceDescription === descriptionArea.text) delete data["description"]
                 if(spaceName === spaceNameItem.text) delete data["libelle"]
                 if(isOutDoor === false && typeSpace.currentIndex === 1) delete data["type"]

@@ -4,6 +4,7 @@ import QtQuick.Controls
 import ThemeEngine
 
 import SortFilterProxyModel
+import Qt5Compat.GraphicalEffects as QGE
 
 import "../../components"
 import "../../components_generic"
@@ -15,8 +16,67 @@ BPage {
         title: qsTr("My plants")
     }
 
+    // Wizard
+    ListView {
+        visible: $Model.space.plantInSpace.count === 0
+        anchors.fill: parent
+        anchors.margins: 20
+        spacing: 10
+
+
+        model: 3
+        delegate: GardenPlantLine {
+            layer.enabled: true
+            layer.effect: QGE.ColorOverlay {
+                color: Qt.rgba(100, 30, 89, 0.8)
+            }
+            width: parent.width
+            height: 100
+            title: qsTr("Abelia chinensis")
+            subtitle: qsTr("Chinensis")
+            roomName: ""
+            imageSource: ""
+        }
+
+        Column {
+            width: parent.width
+            anchors.centerIn: parent
+            anchors.verticalCenterOffset: 50
+            spacing: 10
+
+            Label {
+                text: qsTr("No plant ! \n\n You should first create a room and associate plants")
+                color: Theme.colorSecondary
+                opacity: 0.8
+                width: parent.width
+                wrapMode: Text.Wrap
+                horizontalAlignment: Text.AlignHCenter
+                font {
+                    weight: Font.Bold
+                    pixelSize: 18
+                }
+            }
+
+            ButtonWireframe {
+                text: "Go"
+                fullColor: true
+                primaryColor: Theme.colorPrimary
+                fulltextColor: $Colors.white
+                anchors.horizontalCenter: parent.horizontalCenter
+                componentRadius: 10
+                width: parent.width
+                onClicked: page_view.push(navigator.gardenSpacesList)
+            }
+
+
+        }
+
+    }
+
+    // Real listview
     ListView {
         id: plantListView
+        visible: $Model.space.plantInSpace.count !== 0
         anchors.fill: parent
         anchors.margins: 20
         spacing: 10
