@@ -134,7 +134,8 @@ BPage {
                     }, {
                         "icon": Icons.viewDashboardOutline,
                         "title": qsTr("Rooms"),
-                        "action": "spaces"
+                        "action": "spaces",
+                        "animate": alarmsTodoToday.count === 0 && alarmsLate.count === 0
                     }, {
                         "icon": Icons.alarm,
                         "title": qsTr("Calendar"),
@@ -142,35 +143,46 @@ BPage {
                     }]
                 delegate: Rectangle {
                     id: _insideControl
-                    property string foregroundColor: {
-                        switch (modelData.action) {
-                        case "alarm":
-                            return $Colors.brown600
-                        case "spaces":
-                            return $Colors.cyan600
-                        case "plants":
-                            return $Colors.green600
-                        }
-                    }
+                    property string foregroundColor: Theme.colorSecondary
                     Layout.preferredHeight: 100
                     Layout.fillWidth: true
-                    radius: 2
+                    radius: 20
                     layer.enabled: true
                     layer.effect: QGE.DropShadow {
                         radius: 4
                         color: $Colors.gray300
                         verticalOffset: 2
                     }
-                    Rectangle {
-                        height: parent.height
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 6
-                        color: _insideControl.foregroundColor
+
+                    Timer {
+                        id: animationTimer
+                        property double min: 1.0
+                        property double max: 1.15
+                        property bool up: true
+                        interval: 50
+                        repeat: true
+                        running: modelData.animate === true
+                        onTriggered: {
+                            if(up) {
+                                if(parent.scale <= max) {
+                                    parent.scale += 0.01
+                                } else {
+                                    up = false
+                                }
+                            } else {
+                                if(parent.scale >= min) {
+                                    parent.scale -= 0.01
+                                } else {
+                                    up = true
+                                }
+                            }
+
+                        }
                     }
 
                     Behavior on scale {
                         NumberAnimation {
-                            duration: 200
+                            duration: 50
                             easing.type: Easing.InOutCubic
                         }
                     }
@@ -239,25 +251,6 @@ BPage {
             }
         }
 
-        Rectangle {
-            Layout.preferredWidth: 150
-            Layout.preferredHeight: 150
-            Layout.alignment: Qt.AlignHCenter
-            radius: Layout.preferredHeight / 2
-            color: Theme.colorSecondary
-            visible: alarmsTodoToday.count === 0 && alarmsLate.count === 0
-
-            Label {
-                text: "No pending task"
-                color: "white"
-                anchors.centerIn: parent
-                font {
-                    weight: Font.Light
-                    pixelSize: 18
-                }
-            }
-        }
-
         Flickable {
             Layout.minimumHeight: 400
             Layout.fillHeight: true
@@ -270,6 +263,52 @@ BPage {
                 width: parent.width
                 leftPadding: 10
                 rightPadding: 10
+
+                Column {
+                    visible: alarmsTodoToday.count === 0 && alarmsLate.count === 0
+                    width: parent.width
+                    spacing: 10
+
+                    layer.enabled: true
+                    layer.effect: QGE.ColorOverlay {
+                        color: Qt.rgba(100, 30, 89, 0.8)
+                    }
+
+                    Label {
+                        text: qsTr("Today")
+                        width: parent.width
+                        horizontalAlignment: Text.AlignHCenter
+                        font {
+                            weight: Font.Light
+                            pixelSize: 16
+                        }
+                    }
+
+                    Repeater {
+                        model: 3
+                        GardenActivityLine {
+
+                            title: qsTr("Watering")
+                            plant_name: "Abelia Chinensis"
+
+                            subtitle: qsTr("Terasse")
+
+                            isDone: true
+
+                            hideDelete: true
+                            hideCheckbox: true
+                            icon.source: Icons.waterOutline
+//                          icon.source: model.type === 0 ? Icons.shovel : model.type === 1 ? Icons.waterOutline : model.type === 2 ? Icons.potMixOutline : Icons.flowerOutline
+                            //                            image.source: {
+//                                let value = plantObj.images_plantes[0] ? "https://blume.mahoudev.com/assets/" + plantObj.images_plantes[0].directus_files_id : ""
+//                                return value
+//                            }
+
+                            width: parent.width - 20
+                            height: 80
+                        }
+                    }
+                }
 
                 Column {
                     visible: alarmsLate.count > 0
@@ -420,6 +459,19 @@ BPage {
 
         Item {
             Layout.fillHeight: true
+        }
+    }
+
+    Label {
+        text: qsTr("No pending task")
+        visible: alarmsTodoToday.count === 0 && alarmsLate.count === 0
+        color: Theme.colorSecondary
+        opacity: 0.8
+        anchors.centerIn: parent
+        anchors.verticalCenterOffset: 120
+        font {
+            weight: Font.Bold
+            pixelSize: 18
         }
     }
 
