@@ -50,6 +50,8 @@ BPage {
             rightMargin: 20
         }
 
+        onClicked: page_view.push(navigator.gardenEditSpace)
+
         Text {
             text: "+"
             color: "white"
@@ -57,6 +59,40 @@ BPage {
             anchors.centerIn: parent
         }
 
-        onClicked: page_view.push(navigator.gardenEditSpace)
+
+        Behavior on scale {
+            NumberAnimation {
+                duration: 50
+                easing.type: Easing.InOutCubic
+            }
+        }
+
+        Timer {
+            id: animationTimer
+            property double min: 1.0
+            property double max: 1.15
+            property bool up: true
+            interval: 50
+            repeat: true
+            running: $Model.space.count === 0
+            onTriggered: {
+                if(up) {
+                    if(parent.scale <= max) {
+                        parent.scale += 0.01
+                    } else {
+                        up = false
+                    }
+                } else {
+                    if(parent.scale >= min) {
+                        parent.scale -= 0.01
+                    } else {
+                        up = true
+                    }
+                }
+
+            }
+        }
+
     }
+
 }

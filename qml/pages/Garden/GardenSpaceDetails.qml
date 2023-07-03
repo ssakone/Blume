@@ -244,6 +244,39 @@ BPage {
                                                     })
                                     })
                                 }
+
+                                Behavior on scale {
+                                    NumberAnimation {
+                                        duration: 50
+                                        easing.type: Easing.InOutCubic
+                                    }
+                                }
+
+                                Timer {
+                                    property double min: 1.0
+                                    property double max: 1.15
+                                    property bool up: true
+                                    interval: 50
+                                    repeat: true
+                                    running: plantInSpace.count === 0
+                                    onTriggered: {
+                                        if(up) {
+                                            if(parent.scale <= max) {
+                                                parent.scale += 0.01
+                                            } else {
+                                                up = false
+                                            }
+                                        } else {
+                                            if(parent.scale >= min) {
+                                                parent.scale -= 0.01
+                                            } else {
+                                                up = true
+                                            }
+                                        }
+
+                                    }
+                                }
+
                             }
                         }
 
@@ -299,6 +332,39 @@ BPage {
                                 leftPadding: 20
                                 rightPadding: leftPadding
                                 onClicked: addAlarmPopup.open()
+
+                                Behavior on scale {
+                                    NumberAnimation {
+                                        duration: 50
+                                        easing.type: Easing.InOutCubic
+                                    }
+                                }
+
+                                Timer {
+                                    property double min: 1.0
+                                    property double max: 1.15
+                                    property bool up: true
+                                    interval: 50
+                                    repeat: true
+                                    running: plantInSpace.count > 0 && alarmInSpace.count === 0
+                                    onTriggered: {
+                                        if(up) {
+                                            if(parent.scale <= max) {
+                                                parent.scale += 0.01
+                                            } else {
+                                                up = false
+                                            }
+                                        } else {
+                                            if(parent.scale >= min) {
+                                                parent.scale -= 0.01
+                                            } else {
+                                                up = true
+                                            }
+                                        }
+
+                                    }
+                                }
+
                             }
                         }
 
@@ -659,7 +725,8 @@ BPage {
                         Rectangle {
                             width: parent.width
                             height: 80
-                            radius: 8
+                            radius: 10
+                            color: $Colors.gray300
                             Label {
                                 text: "+ " + qsTr("Choose plant")
                                 anchors.centerIn: parent
