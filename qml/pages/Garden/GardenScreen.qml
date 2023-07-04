@@ -143,7 +143,7 @@ BPage {
                     }]
                 delegate: Rectangle {
                     id: _insideControl
-                    property string foregroundColor: Theme.colorSecondary
+                    property string foregroundColor: Theme.colorPrimary
                     Layout.preferredHeight: 100
                     Layout.fillWidth: true
                     radius: 20

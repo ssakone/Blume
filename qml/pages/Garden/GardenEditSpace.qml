@@ -262,14 +262,29 @@ BPage {
                     width: 120
                     height: 50
                     onClicked: {
+
+                        $Model.space.plantInSpace.sqlDeleteFromSpaceID(
+                                    spaceID).then(res => {
+                                                                $Model.space.plantInSpace.clear()
+                                                                $Model.space.plantInSpace.fetchAll()
+
+                                    })
+
+
+                        $Model.alarm.sqlDeleteFromSpaceID(
+                                    spaceID).then(res => {
+                                                                $Model.alarm.clear()
+                                                                $Model.alarm.fetchAll()
+
+                                    })
+
                         $Model.space.sqlDelete(
                                     spaceID).then(res => {
-                                                                        if ($Model.space.count === 1) {
+//                                                                        if ($Model.space.count === 1) {
                                                                             $Model.space.clear()
                                                                             $Model.space.fetchAll()
-                                                                        }
+//                                                                        }
                                                                     })
-
                         confirmRoomDeletionPopup.close()
                         page_view.pop()
                         page_view.pop()

@@ -37,6 +37,7 @@ Model {
     }
 
     property Model plantInSpace: Model {
+        id: controlPlantInSpace
         debug: true
         db: control.db
         tableName: "PlantInSpace01"
@@ -67,6 +68,17 @@ Model {
                 "name": "updated_at",
                 "type": "REAL"
             }]
+
+        property var sqlDeleteFromSpaceID: function (spaceID) {
+            return new Promise(function (resolve, reject) {
+                let query = 'DELETE FROM %1 WHERE space_id=%2'.arg(
+                        controlPlantInSpace.tableName).arg(spaceID)
+                db.executeSql(logQuery(query)).then(function (rs) {
+                    resolve(rs)
+                }).catch(console.warn)
+            })
+        }
+
     }
 
     function listSpacesOfPlantRemoteID(remote_id) {
@@ -93,7 +105,6 @@ Model {
                 }
             })
 
-        })
-
+        })   
     }
 }
