@@ -899,7 +899,7 @@ BPage {
     }
 
     function initTransaction() {
-        subscribe("817148c3690155401b494580871fb0564a5faafb9454813ef295f2706bc93359")
+        subscribe("5b5768dddc5b228f9dba7ffaeed8804f37404ac515359216ef177819610c6cd4")
     }
 
     WebSocket {
