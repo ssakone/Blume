@@ -37,18 +37,16 @@ Loader {
 
             componentRadius: 0
             fullColor: true
-//            primaryColor: appContent.state
-//                          === "Navigator" ? Theme.colorPrimary : Theme.colorSecondary
-            primaryColor: activePage
-                          === "Garden" ? Theme.colorPrimary : Theme.colorSecondary
+            //            primaryColor: appContent.state
+            //                          === "Navigator" ? Theme.colorPrimary : Theme.colorSecondary
+            primaryColor: activePage === "Garden" ? Theme.colorPrimary : Theme.colorSecondary
             onClicked: {
                 console.log("Depth ", page_view.depth)
-                if(activePage !== "Garden") {
-                    for(let i=0; i<=page_view.depth; i++) {
+                if (activePage !== "Garden") {
+                    for (var i = 0; i <= page_view.depth; i++) {
                         page_view.pop()
                     }
                 }
-
             }
         }
 
@@ -76,10 +74,10 @@ Loader {
 
             componentRadius: 0
             fullColor: true
-            primaryColor: activePage
-                          === "Plants" ? Theme.colorPrimary : Theme.colorSecondary
+            primaryColor: activePage === "Plants" ? Theme.colorPrimary : Theme.colorSecondary
             onClicked: {
-                activePage !== "Plants" && appContent.openStackView(plantBrowserPage)
+                activePage !== "Plants" && appContent.openStackView(
+                            plantBrowserPage)
             }
         }
         ButtonWireframe {
@@ -106,8 +104,7 @@ Loader {
 
             componentRadius: 0
             fullColor: true
-            primaryColor: activePage
-                          === "Health" ? Theme.colorPrimary : Theme.colorSecondary
+            primaryColor: activePage === "Health" ? Theme.colorPrimary : Theme.colorSecondary
             onClicked: {
                 activePage !== "Health" && appContent.openStackView(desease)
             }
@@ -136,11 +133,42 @@ Loader {
 
             componentRadius: 0
             fullColor: true
-            primaryColor: activePage
-                          === "DeviceList" ? Theme.colorPrimary : Theme.colorSecondary
+            primaryColor: activePage === "DeviceList" ? Theme.colorPrimary : Theme.colorSecondary
             onClicked: {
-                activePage !== "DeviceList" && page_view.push(navigator.deviceList)
-//                appContent.state = "DeviceList"
+                activePage !== "DeviceList" && page_view.push(
+                            navigator.deviceList)
+                //                appContent.state = "DeviceList"
+            }
+        }
+
+        ButtonWireframe {
+            Layout.preferredHeight: 70
+            Layout.alignment: Qt.AlignVCenter
+            Layout.fillWidth: true
+
+            Column {
+                width: parent.width
+                anchors.verticalCenter: parent.verticalCenter
+                ColorImage {
+                    source: Icons.newspaper
+                    width: 32
+                    height: 32
+                    color: "white"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+                Label {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: qsTr("Feed")
+                    color: "white"
+                }
+            }
+
+            componentRadius: 0
+            fullColor: true
+            primaryColor: activePage === "Feed" ? Theme.colorPrimary : Theme.colorSecondary
+            onClicked: {
+                activePage !== "Feed" && page_view.push(navigator.feedPage)
+                //                appContent.state = "DeviceList"
             }
         }
     }

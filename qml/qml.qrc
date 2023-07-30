@@ -118,6 +118,8 @@
         <file>pages/Plant/PlantFrequencies.qml</file>
         <file>pages/Garden/GardenEditSpace.qml</file>
         <file>Constants.qml</file>
+        <file>pages/Feed.qml</file>
+        <file>components_generic/Avatar.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>

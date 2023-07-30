@@ -10,7 +10,8 @@ import "pages/Garden"
 Item {
     property var deviceList: Component {
         DeviceList {}
-    }property var plantIdentifierPage: Component {
+    }
+    property var plantIdentifierPage: Component {
         PlantIdentifier {}
     }
     property var posometrePage: Component {
@@ -71,10 +72,16 @@ Item {
         GardenEditSpace {}
     }
 
+    property var feedPage: Component {
+        Feed {}
+    }
+
     Connections {
         target: $Signaler
         function onShowPlant(plant) {
-            page_view.push(plantPage, {plant: plant})
+            page_view.push(plantPage, {
+                               "plant": plant
+                           })
         }
     }
 }

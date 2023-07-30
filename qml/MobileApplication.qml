@@ -93,7 +93,7 @@ ApplicationWindow {
     Signaler {
         id: _signaler
     }
-    
+
     Constants {
         id: __constants__
     }
@@ -305,11 +305,11 @@ ApplicationWindow {
                     appContent.state = screenTutorial.entryPoint
                 else if (appContent.state === "PlantBrowser")
                     appContent.state = screenPlantBrowser.entryPoint
-                else if (appContent.state === "About" || appContent.state === "Settings") {
+                else if (appContent.state === "About"
+                         || appContent.state === "Settings") {
                     appContent.state = "Navigator"
                     appDrawer.open()
-                }
-                else {
+                } else {
                     appContent.state = "Navigator"
                 }
             }
@@ -474,14 +474,16 @@ ApplicationWindow {
                 appContent.state = screenTutorial.entryPoint
             } else if (appContent.state === "PlantBrowser") {
                 screenPlantBrowser.backAction()
-            } else if (appContent.state === "Navigator"){
-                if(page_view.depth === 1) {
+            } else if (appContent.state === "Navigator") {
+                if (page_view.depth === 1) {
                     if (exitTimer.running)
                         Qt.quit()
                     else
                         exitTimer.start()
-                } else page_view.pop()
-            } else appHeader.leftMenuClicked()
+                } else
+                    page_view.pop()
+            } else
+                appHeader.leftMenuClicked()
         }
 
         function openStackView(page) {
@@ -543,8 +545,9 @@ ApplicationWindow {
             }
             BottomTabBar {
                 Layout.fillWidth: true
-                visible: appContent.state === "Navigator" && ["Health", "Garden", "DeviceList", "Plants"].indexOf(
-                    activePage) !== -1
+                visible: appContent.state === "Navigator"
+                         && ["Health", "Garden", "DeviceList", "Plants", "Feed"].indexOf(
+                             activePage) !== -1
                 activePage: page_view.currentItem.objectName
             }
         }
@@ -602,7 +605,8 @@ ApplicationWindow {
         // Start on the tutorial?
         Component.onCompleted: {
             if (!deviceManager.areDevicesAvailable()) {
-//                screenTutorial.loadScreen()
+
+                //                screenTutorial.loadScreen()
             }
         }
 
