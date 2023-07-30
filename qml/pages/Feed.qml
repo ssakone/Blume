@@ -577,7 +577,7 @@ BPage {
                                             }
 
                                             Component.onCompleted: {
-                                                $Services.getPubKeyInfo(
+                                                _control.getPubKeyInfo(
                                                             pubkey,
                                                             function (info) {
                                                                 if (info !== undefined) {
@@ -871,7 +871,7 @@ BPage {
         const authorId = Math.random().toString(36).substring(7)
         reqHandler[authorId] = authorHandler
         const authorFetchQuery = authorQuery.arg(authorId).arg(pubkey)
-        messagesRelay.sendTextMessage(authorFetchQuery)
+        messagesRelay?.sendTextMessage(authorFetchQuery)
     }
 
     function subscribe(pubkey) {
@@ -923,7 +923,32 @@ BPage {
                 return
             }
             let el = JSON.parse(message)
-            console.log(message)
+            try {
+                reqHandler[el[1]](el)
+            } catch (e) {
+
+            }
+        }
+    }
+
+    Connections {
+        target: messagesRelay
+        function onStatusChanged() {
+            if (messagesRelay.status === WebSocket.Open) {
+                initTransaction()
+            } else {
+                if (messagesRelay.status === WebSocket.Closed) {
+                    messagesRelay.active = false
+                    messagesRelay.active = true
+                }
+            }
+        }
+
+        function onTextMessageReceived(message) {
+            if (message.length === 0) {
+                return
+            }
+            let el = JSON.parse(message)
             try {
                 reqHandler[el[1]](el)
             } catch (e) {
@@ -1082,7 +1107,12 @@ BPage {
         }
     }
 
+    property WebSocket messagesRelay
+
     Component.onCompleted: {
         relay.active = true
+        messagesRelay = _control.getWebSocket()
+        messagesRelay.url = "wss://relay.damus.io"
+        messagesRelay.active = true
     }
 }
