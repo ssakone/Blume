@@ -158,4 +158,14 @@ Model {
             }).catch(err => reject(err))
         })
     }
+
+    function sqlDeleteFromSpaceID(spaceID) {
+        return new Promise(function (resolve, reject) {
+            let query = 'DELETE FROM %1 WHERE space=%2'.arg(
+                    control.tableName).arg(spaceID)
+            db.executeSql(logQuery(query)).then(function (rs) {
+                resolve(rs)
+            }).catch(console.warn)
+        })
+    }
 }
