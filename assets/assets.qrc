@@ -7393,6 +7393,7 @@
         <file>icons_custom/menubottom_plants.svg</file>
         <file>icons_custom/menubottom_health.svg</file>
         <file>icons_custom/menubottom_devices.svg</file>
+        <file>img/bg_plant.svg</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

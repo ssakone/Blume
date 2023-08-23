@@ -9,7 +9,7 @@ import "../"
 Rectangle {
     id: control
     color: backgroundColor
-    property color backgroundColor: Theme.colorPrimary
+    property color backgroundColor: $Colors.primary
     property color foregroundColor: Theme.colorHeaderContent
     property alias leading: buttonBackBg
     property alias title: _label.text

@@ -30,7 +30,7 @@ Loader {
                     width: 50
                     height: width
                     radius: height/2
-                    color: parent.isActivePage ? Theme.colorPrimary : control.bgColor
+                    color: parent.isActivePage ? $Colors.colorPrimary : control.bgColor
                     anchors.horizontalCenter: parent.horizontalCenter
                     ColorImage {
                         source: "qrc:/assets/icons_custom/menubottom_garden.svg"
@@ -73,7 +73,7 @@ Loader {
                     width: 50
                     height: width
                     radius: height/2
-                    color: parent.isActivePage ? Theme.colorPrimary : control.bgColor
+                    color: parent.isActivePage ? $Colors.colorPrimary : control.bgColor
                     anchors.horizontalCenter: parent.horizontalCenter
                     ColorImage {
                         source: "qrc:/assets/icons_custom/menubottom_plants.svg"
@@ -112,7 +112,7 @@ Loader {
                     width: 50
                     height: width
                     radius: height/2
-                    color: parent.isActivePage ? Theme.colorPrimary : control.bgColor
+                    color: parent.isActivePage ? $Colors.colorPrimary : control.bgColor
                     anchors.horizontalCenter: parent.horizontalCenter
                     ColorImage {
                         source: "qrc:/assets/icons_custom/menubottom_health.svg"
@@ -150,7 +150,7 @@ Loader {
                     width: 50
                     height: width
                     radius: height/2
-                    color: parent.isActivePage ? Theme.colorPrimary : control.bgColor
+                    color: parent.isActivePage ? $Colors.colorPrimary : control.bgColor
                     anchors.horizontalCenter: parent.horizontalCenter
                     ColorImage {
                         source: "qrc:/assets/icons_custom/menubottom_devices.svg"
@@ -191,7 +191,7 @@ Loader {
                     width: 50
                     height: width
                     radius: height/2
-                    color: parent.isActivePage ? Theme.colorPrimary : control.bgColor
+                    color: parent.isActivePage ? $Colors.colorPrimary : control.bgColor
                     anchors.horizontalCenter: parent.horizontalCenter
                     ColorImage {
                         source: Icons.accountGroup

@@ -93,6 +93,25 @@ BPage {
         }
     }
 
+//    Rectangle {
+//        anchors.fill: parent
+//        color: $Colors.secondary
+//    }
+
+    Rectangle {
+        anchors {
+            bottom: parent.top
+            bottomMargin: -150
+            horizontalCenter: parent.horizontalCenter
+        }
+
+        height: 1200
+        width: height / 1.5
+        radius: height
+
+        color: $Colors.primary
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.topMargin: 0
@@ -108,10 +127,12 @@ BPage {
                     family: "Courrier"
                     weight: Font.Bold
                 }
+                color: $Colors.white
             }
             Label {
                 text: qsTr("Manage your personal garden efficiently")
                 opacity: .5
+                color: $Colors.white
                 font {
                     pixelSize: 16
                     family: "Courrier"
@@ -124,6 +145,7 @@ BPage {
             Layout.fillWidth: true
             Layout.leftMargin: 15
             Layout.rightMargin: 20
+            Layout.alignment: Qt.AlignHCenter
             spacing: 20
 
             Repeater {
@@ -143,14 +165,15 @@ BPage {
                     }]
                 delegate: Rectangle {
                     id: _insideControl
-                    property string foregroundColor: Theme.colorPrimary
-                    Layout.preferredHeight: 100
-                    Layout.fillWidth: true
+                    property string foregroundColor: $Colors.colorPrimary
+                    Layout.preferredHeight: 80
+                    Layout.preferredWidth: 100
+//                    Layout.fillWidth: true
                     radius: 20
                     layer.enabled: true
                     layer.effect: QGE.DropShadow {
                         radius: 4
-                        color: $Colors.gray300
+                        color: $Colors.colorSecondary
                         verticalOffset: 2
                     }
 
@@ -411,13 +434,20 @@ BPage {
 
                             subtitle: {
                                 $Model.space.sqlGet(model.space).then(function(res) {
-                                                                          subtitle = "Space - "
+                                                                          subtitle = ""
                                                                           + (res.libelle[0] === "'" ? res.libelle.slice(1, -1) : res.libelle)
                                                                       }).catch(
                                             console.warn)
 
                                 return ""
                             }
+
+                            frequency: {
+                                const period = Utils.humanizeDayPeriod(model.frequence)
+                                qsTr("Each") + " " + period.freq + " " + period.period_label
+                            }
+
+                            hideDelete: true
 
                             isDone: {
                                 if(alarmsIdsToDownStatus.filter(id => id === model.id).length > 0 ) {
@@ -445,7 +475,6 @@ BPage {
                             }
 
                             width: parent.width - 20
-                            height: 80
                         }
                     }
                 }
@@ -474,7 +503,6 @@ BPage {
             pixelSize: 18
         }
     }
-
     Popup {
         id: removeAlarmPopup
         property var alarm

@@ -12,6 +12,11 @@ QtObject
   readonly property string black: "#000000"
   readonly property string white: "#FFFFFF"
 
+
+  property alias colorPrimary: root.primary
+  property alias colorSecondary: root.secondary
+  property alias colorTertiary: root.tertiary
+
   property alias red: root.red500
   property alias pink: root.pink500
   property alias purple: root.purple500
@@ -32,6 +37,9 @@ QtObject
   property alias gray: root.gray500
   property alias blueGray: root.blueGray500
 
+  readonly property string secondary: "#92D8B8"
+  readonly property string primary: "#359276"
+  readonly property string tertiary: "#F3FFF4"
   readonly property string red50: "#FFEBEE"
   readonly property string red100: "#FFCDD2"
   readonly property string red200: "#EF9A9A"

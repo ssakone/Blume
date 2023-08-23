@@ -9,7 +9,7 @@ Rectangle {
     width: parent.width
     height: headerHeight
     z: 10
-    color: Theme.colorHeader
+    color: $Colors.primary
 
     property int headerHeight: isHdpi ? 60 : 64
 
