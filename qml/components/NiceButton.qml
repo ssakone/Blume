@@ -11,7 +11,7 @@ import ThemeEngine
 T.Button {
     id: control
 
-    property color backgroundColor: Theme.colorPrimary
+    property color backgroundColor: $Colors.colorPrimary
     property color foregroundColor: Theme.colorHeaderContent
     property int radius: 18
 

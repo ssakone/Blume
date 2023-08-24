@@ -7394,6 +7394,9 @@
         <file>icons_custom/menubottom_health.svg</file>
         <file>icons_custom/menubottom_devices.svg</file>
         <file>img/bg_plant.svg</file>
+        <file>icons_custom/salon.svg</file>
+        <file>icons_custom/bed.svg</file>
+        <file>icons_custom/garden.svg</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

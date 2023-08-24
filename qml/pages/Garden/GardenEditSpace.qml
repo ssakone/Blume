@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Controls
 import "../../components_generic"
 import "../../components"
-import ThemeEngine
 
 BPage {
     property int spaceID
@@ -12,6 +11,7 @@ BPage {
     property bool shouldCreate: spaceName === "" && spaceDescription === ""
     property var callback: function () {}
 
+    background.opacity: 0.5
     header: AppBar {
         id: header
         title: shouldCreate ? qsTr("New room") : qsTr("Update room")
@@ -39,14 +39,25 @@ BPage {
     Column {
         width: parent.width - padding
         padding: 10
-        spacing: 10
+        spacing: 15
         anchors.horizontalCenter: parent.horizontalCenter
 
-        Label {
-            visible: shouldCreate
-            text: qsTr("Choose the place")
-            opacity: .5
+        Row {
+            spacing: 7
+            IconSvg {
+                source: Icons.mapMarker
+                color: $Colors.colorPrimary
+                width: 20
+                height: 20
+            }
+
+            Label {
+                visible: shouldCreate
+                text: qsTr("Choose the place")
+                opacity: .5
+            }
         }
+
 
         Flickable {
             visible: shouldCreate
@@ -57,7 +68,24 @@ BPage {
             Row {
                 id: rowPlaces
                 property int currentIndex: -1
-                property variant model: [qsTr("Salon"), qsTr("Jardin"), qsTr("Chambre"), qsTr("Cuisine"), qsTr("Terasse"), qsTr("Dalle") ]
+                property variant model: [
+                    {
+                        title: qsTr("Salon"),
+                        iconName: "qrc:/assets/icons_custom/salon.svg"
+                    },
+                    {
+                        title: qsTr("Jardin"),
+                        iconName: "qrc:/assets/icons_custom/garden.svg"
+                    },
+                    {
+                        title: qsTr("Chambre"),
+                        iconName: "qrc:/assets/icons_custom/bed.svg"
+                    },
+                    {
+                        title: qsTr("Cuisine"),
+                        iconName: Icons.scissorsCutting
+                    }
+                ]
                 spacing: 10
                 Repeater {
                     model: rowPlaces.model
@@ -68,8 +96,8 @@ BPage {
                             width: parent.width
                             height: parent.height - 20
                             fullColor: true
-                            primaryColor: index === rowPlaces.currentIndex ? Theme.colorPrimary : $Colors.gray50
-                            fulltextColor: index === rowPlaces.currentIndex ? "white" : Theme.colorPrimary
+                            primaryColor: index === rowPlaces.currentIndex ? $Colors.colorPrimary : $Colors.gray50
+                            fulltextColor: index === rowPlaces.currentIndex ? "white" : $Colors.colorPrimary
                             componentRadius: 10
 
 
@@ -89,14 +117,14 @@ BPage {
                             }
 
                             IconSvg {
-                                source: Icons.roomServiceOutline
-                                color: index === rowPlaces.currentIndex ? "white" : Theme.colorSecondary
+                                source: modelData.iconName
+                                color: index === rowPlaces.currentIndex ? "white" : $Colors.colorPrimary
                                 anchors.centerIn: parent
                             }
                         }
 
                         Label {
-                            text: modelData
+                            text: modelData.title
                             anchors.bottom: parent.bottom
                             anchors.horizontalCenter: parent.horizontalCenter
                             width: parent.width
@@ -123,7 +151,7 @@ BPage {
             padding: 5
             background: Rectangle {
                 radius: 10
-                color: $Colors.gray200
+                color: $Colors.green100
             }
         }
 
@@ -141,7 +169,7 @@ BPage {
                 height: 100
                 background: Rectangle {
                     radius: 10
-                    color: $Colors.gray200
+                    color: $Colors.green100
                 }
             }
         }
@@ -149,9 +177,20 @@ BPage {
         Column {
             width: parent.width - 20
             spacing: 5
-            Label {
-                text: qsTr("Room type")
-                opacity: .5
+
+            Row {
+                spacing: 7
+                IconSvg {
+                    source: Icons.wall
+                    color: $Colors.colorPrimary
+                    width: 20
+                    height: 20
+                }
+
+                Label {
+                    text: qsTr("Room type")
+                    opacity: .5
+                }
             }
 
             Flickable {
@@ -172,8 +211,8 @@ BPage {
                         delegate: ButtonWireframe {
                             text: modelData
                             fullColor: true
-                            primaryColor: index === typeSpace.currentIndex ? Theme.colorPrimary : $Colors.gray300
-                            fulltextColor: index === typeSpace.currentIndex ? "white" : Theme.colorPrimary
+                            primaryColor: index === typeSpace.currentIndex ? $Colors.colorPrimary : $Colors.gray300
+                            fulltextColor: index === typeSpace.currentIndex ? "white" : $Colors.colorPrimary
                             font.pixelSize: 14
                             componentRadius: implicitHeight / 2
                             onClicked: typeSpace.currentIndex = index
