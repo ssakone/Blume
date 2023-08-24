@@ -103,7 +103,7 @@ BPage {
 
                             onClicked: {
                                 rowPlaces.currentIndex = index
-                                spaceNameItem.text = modelData
+                                spaceNameItem.text = modelData.title
                             }
 
                             Rectangle {
