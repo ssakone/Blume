@@ -21,6 +21,7 @@ BPage {
     property bool isLoading: true
     property string previousDisplayText: ""
     property bool autoFocusSearchbar: false
+    property bool hideSearchBar: false
 
     header: AppBar {
         title: qsTr("Search for diseases")
@@ -100,6 +101,7 @@ BPage {
         spacing: 5
 
         RowLayout {
+            visible: !hideSearchBar
             Layout.fillWidth: true
             spacing: 5
             Layout.margins: 15
