@@ -7397,6 +7397,7 @@
         <file>icons_custom/salon.svg</file>
         <file>icons_custom/bed.svg</file>
         <file>icons_custom/garden.svg</file>
+        <file>icons_custom/scan_plant.svg</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

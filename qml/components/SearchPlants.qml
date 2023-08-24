@@ -20,6 +20,7 @@ Item {
     property string previousDisplayText: ""
     property bool preventDefaultOnClick: false
     property bool hideCameraSearch: false
+    property bool hideSearchBar: false
     property bool autoFocusSearchbar: false
 
     signal itemClicked(var data)
@@ -109,6 +110,7 @@ Item {
             Layout.fillWidth: true
             spacing: 5
             Layout.margins: 15
+            visible: !hideSearchBar
 
             TextFieldThemed {
                 id: plantSearchBox
