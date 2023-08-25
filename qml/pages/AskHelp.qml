@@ -255,7 +255,7 @@ Page {
                 ButtonWireframe {
                     id: sendBtn
                     text: qsTr("Submit")
-                    fullColor: Theme.colorPrimary
+                    fullColor: $Colors.colorPrimary
                     fulltextColor: "white"
                     componentRadius: 10
                     padding: 25
@@ -274,14 +274,14 @@ Page {
             spacing: 10
             IconSvg {
                 source: Icons.checkCircleOutline
-                color: Theme.colorPrimary
+                color: $Colors.colorPrimary
                 Layout.preferredHeight: 100
                 Layout.preferredWidth: 100
                 Layout.alignment: Qt.AlignHCenter
             }
             Label {
                 text: qsTr("Your request is received and will be processed as soon as possible")
-                color: Theme.colorPrimary
+                color: $Colors.colorPrimary
                 font {
                     pixelSize: 16
                     weight: Font.Bold
@@ -345,7 +345,7 @@ Page {
             id: head
             Layout.preferredHeight: 120
             Layout.fillWidth: true
-            color: Theme.colorPrimary
+            color: $Colors.colorPrimary
 
             ColumnLayout {
                 anchors.fill: parent
@@ -463,7 +463,7 @@ Page {
                             }
                             ButtonWireframe {
                                 text: qsTr("Next")
-                                fullColor: Theme.colorPrimary
+                                fullColor: $Colors.colorPrimary
                                 fulltextColor: "white"
                                 componentRadius: 10
                                 padding: 25

@@ -116,7 +116,7 @@ BPage {
                     TabBar {
                         id: tabBar
                         topPadding: 0
-                        Material.background: Theme.colorPrimary
+                        Material.background: $Colors.colorPrimary
                         Material.foreground: Material.color(Material.Grey,
                                                             Material.Shade50)
                         Material.accent: Material.color(Material.Grey,
@@ -213,7 +213,7 @@ BPage {
 
                                         ButtonWireframe {
                                             fullColor: true
-                                            primaryColor: Theme.colorPrimary
+                                            primaryColor: $Colors.colorPrimary
                                             anchors.fill: parent
                                             onClicked: tabView.chooseFile()
                                             IconSvg {
@@ -232,7 +232,7 @@ BPage {
 
                                         ButtonWireframe {
                                             fullColor: true
-                                            primaryColor: Theme.colorPrimary
+                                            primaryColor: $Colors.colorPrimary
                                             anchors.fill: parent
                                             onClicked: {
                                                 if (Qt.platform.os === 'ios') {

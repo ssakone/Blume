@@ -41,7 +41,7 @@ BPage {
     ButtonWireframe {
         height: 60
         width: 60
-        fullColor: Theme.colorPrimary
+        fullColor: $Colors.colorPrimary
         componentRadius: 30
         anchors {
             bottom: parent.bottom

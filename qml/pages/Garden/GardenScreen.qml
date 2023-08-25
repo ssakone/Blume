@@ -494,7 +494,7 @@ BPage {
     Label {
         text: qsTr("No pending task")
         visible: alarmsTodoToday.count === 0 && alarmsLate.count === 0
-        color: Theme.colorSecondary
+        color: $Colors.colorSecondary
         opacity: 0.8
         anchors.centerIn: parent
         anchors.verticalCenterOffset: 120

@@ -25,7 +25,7 @@ Page {
 
             Label {
                 text: qsTr("Frequently asked questions")
-                color: Theme.colorPrimary
+                color: $Colors.colorPrimary
                 font.pixelSize: 32
                 wrapMode: Text.Wrap
                 width: parent.width
@@ -65,7 +65,7 @@ Page {
     ButtonWireframe {
         text: qsTr("Contacting an expert")
         componentRadius: 15
-        fullColor: Theme.colorPrimary
+        fullColor: $Colors.colorPrimary
         fulltextColor: "white"
         onClicked: page_view.push(askMore)
         anchors.bottom: parent.bottom

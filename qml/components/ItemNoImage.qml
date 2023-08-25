@@ -49,7 +49,7 @@ Column {
                 anchors.centerIn: parent
                 source: Icons.image
                 opacity: .5
-                color: Theme.colorPrimary
+                color: $Colors.colorPrimary
             }
         }
 
