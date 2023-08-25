@@ -7398,6 +7398,8 @@
         <file>icons_custom/bed.svg</file>
         <file>icons_custom/garden.svg</file>
         <file>icons_custom/scan_plant.svg</file>
+        <file>icons_custom/tips_child.svg</file>
+        <file>icons_custom/tips_child.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
