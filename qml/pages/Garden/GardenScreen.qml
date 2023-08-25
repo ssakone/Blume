@@ -278,7 +278,7 @@ BPage {
                             Column {
                                 Layout.fillWidth: true
                                 IconSvg {
-                                    source: Icons.umbrella
+                                    source: Icons.water
                                     color: $Colors.colorPrimary
                                     width: 20
                                     height: width
@@ -297,7 +297,7 @@ BPage {
                             Column {
                                 Layout.fillWidth: true
                                 IconSvg {
-                                    source: Icons.umbrella
+                                    source: Icons.windPower
                                     color: $Colors.colorPrimary
                                     width: 20
                                     height: width
