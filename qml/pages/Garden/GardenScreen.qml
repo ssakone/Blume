@@ -4,6 +4,7 @@ import QtQuick.Controls
 import ThemeEngine
 
 import QtQuick.Shapes
+import QtPositioning
 
 import Qt5Compat.GraphicalEffects as QGE
 
@@ -19,11 +20,46 @@ BPage {
         title: "Blume"
         isHomeScreen: true
     }
+    backgroundColor: $Colors.colorSecondary
 
     property var getNextDate: Utils.getNextDate
     property bool isTodoFilterEnd: false
     property bool isLateFilterEnd: false
     property var alarmsIdsToDownStatus: []
+
+    property bool isWeatherLoaded: false
+    property variant weatherData: undefined
+
+    Component.onCompleted: {
+        loadWeather()
+    }
+
+    function loadWeather () {
+        control.isWeatherLoaded = false
+        utilsApp.getMobileLocationPermission()
+//        if(!gps.position.coordinate.latitude) {
+//            control.isWeatherLoaded = true
+//            return
+//        }
+
+        const weatherLatLong = `${gps.position.coordinate.latitude},${gps.position.coordinate.longitude}`
+        const weatherKey = "56f4ae294928423cade144712232508"
+        Http.fetch({
+            "url": `http://api.weatherapi.com/v1/forecast.json?key=${weatherKey}&q=${weatherLatLong}`,
+            "method": "GET"
+        }).then(function(res) {
+            try {
+                control.weatherData = JSON.parse(res)
+                control.isWeatherLoaded = true
+            } catch (e) {
+                console.warn(JSON.stringify(e))
+            }
+
+        }).catch(function(err) {
+            console.warn(JSON.stringify(err))
+            control.isWeatherLoaded = true
+        })
+    }
 
     SortFilterProxyModel {
         id: alarmsTodoToday
@@ -93,20 +129,21 @@ BPage {
         }
     }
 
-//    Rectangle {
-//        anchors.fill: parent
-//        color: $Colors.secondary
-//    }
+    PositionSource {
+        id: gps
+        active: true
+        preferredPositioningMethods: PositionSource.SatellitePositioningMethods
+    }
 
     Rectangle {
         anchors {
             bottom: parent.top
-            bottomMargin: -150
+            bottomMargin: -220
             horizontalCenter: parent.horizontalCenter
         }
 
         height: 1200
-        width: height / 1.5
+        width: height / 1.7
         radius: height
 
         color: $Colors.primary
@@ -115,6 +152,7 @@ BPage {
     ColumnLayout {
         anchors.fill: parent
         anchors.topMargin: 0
+        spacing: 10
 
         Column {
             Layout.fillWidth: true
@@ -139,6 +177,162 @@ BPage {
                     weight: Font.Bold
                 }
             }
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 180
+            Layout.leftMargin: 20
+            Layout.rightMargin: 20
+            radius: 20
+
+            color: $Colors.colorTertiary
+
+            ColumnLayout {
+                visible: isWeatherLoaded && weatherData !== undefined
+                anchors.fill: parent
+                anchors.margins: 10
+                Item {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+
+                    Column {
+                        anchors.left: parent.left
+                        anchors.leftMargin: 25
+
+                        Label {
+                            text: weatherData?.location?.name?? ""
+                        }
+
+                        Image {
+                            source: weatherData ? ("http://" + weatherData?.current?.condition?.icon?.slice(2)) : ""
+                            width: 80
+                            height: width
+                        }
+                    }
+
+
+                    Column {
+                        anchors.right: parent.right
+                        anchors.rightMargin: 25
+                        Label {
+                            text: qsTr("Today")
+                            font {
+                                pixelSize: 14
+                            }
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                        Label {
+                            text: weatherData?.current?.temp_c + "° C"
+                            color: $Colors.colorPrimary
+                            font {
+                                pixelSize: 22
+                            }
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                        Label {
+                            text: weatherData?.current?.condition?.text?? ""
+                            color: $Colors.colorPrimary
+                            font {
+                                pixelSize: 14
+                            }
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                    }
+                }
+                RowLayout {
+                    Layout.fillWidth: true
+                    Column {
+                        Layout.fillWidth: true
+                        IconSvg {
+                            source: Icons.umbrella
+                            color: $Colors.colorPrimary
+                            width: 20
+                            height: width
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                        Label {
+                            text: weatherData?.current?.precip_mm?? "" + " mm"
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                        Label {
+                            text: "Precipitation"
+                            color: $Colors.colorPrimary
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                    }
+                    Column {
+                        Layout.fillWidth: true
+                        IconSvg {
+                            source: Icons.umbrella
+                            color: $Colors.colorPrimary
+                            width: 20
+                            height: width
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                        Label {
+                            text: weatherData?.current?.humidity + "%"
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                        Label {
+                            text: "Humidité"
+                            color: $Colors.colorPrimary
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                    }
+                    Column {
+                        Layout.fillWidth: true
+                        IconSvg {
+                            source: Icons.umbrella
+                            color: $Colors.colorPrimary
+                            width: 20
+                            height: width
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                        Label {
+                            text: weatherData?.current?.wind_kph?? "" + "km/h"
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                        Label {
+                            text: "Vitesse du vent"
+                            color: $Colors.colorPrimary
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                    }
+
+                }
+            }
+
+            BusyIndicator {
+                visible: !isWeatherLoaded
+                anchors.centerIn: parent
+            }
+
+            Column {
+                anchors.centerIn: parent
+                visible: isWeatherLoaded && weatherData === undefined
+
+                Label {
+                    text: qsTr("Weather not loaded !")
+                }
+
+                NiceButton {
+                    text: qsTr("Reload")
+                    onClicked: loadWeather()
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+            }
+
+            ColorImage {
+                visible: isWeatherLoaded && weatherData === undefined
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.margins: 15
+                source: Icons.weatherCloudy
+                width: 50
+                height: width
+            }
+
         }
 
         RowLayout {
