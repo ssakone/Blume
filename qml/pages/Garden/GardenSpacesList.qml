@@ -23,6 +23,7 @@ BPage {
             height: 85
             title: (libelle[0] === "'" ? libelle.slice(1, -1) : libelle)
             subtitle: description[0] === "'" ? description.slice(1, -1) : description
+            isOutdoor: type === 1
             iconSource: type === 1 ? Icons.homeOutline : Icons.landFields
             onClicked: {
                 let data = {
@@ -40,7 +41,7 @@ BPage {
     ButtonWireframe {
         height: 60
         width: 60
-        fullColor: Theme.colorPrimary
+        fullColor: $Colors.colorPrimary
         componentRadius: 30
         anchors {
             bottom: parent.bottom

@@ -10,11 +10,13 @@ ClipRRect {
     property string subtitle: ""
     property string roomName: ""
     property string imageSource: ""
+    property alias background: _background
 
     signal clicked
     radius: 15
 
     Rectangle {
+        id: _background
         anchors.fill: parent
         radius: parent.radius
 

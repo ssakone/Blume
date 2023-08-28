@@ -28,6 +28,8 @@ BPage {
     property bool isLoaded: false
     property string error: ""
 
+    background.opacity: 0.5
+
     onFullScreenChanged: {
         if(fullScreen) fullScreenPop.close()
         else fullScreenPop.open()
@@ -199,7 +201,7 @@ BPage {
 
                     Label {
                         text: "Cause"
-                        color: Theme.colorPrimary
+                        color: $Colors.colorPrimary
                         font.pixelSize: 24
                         textFormat: Text.MarkdownText
                     }
@@ -229,7 +231,7 @@ BPage {
                     Label {
                         text: "Traitements"
                         font.pixelSize: 24
-                        color: Theme.colorPrimary
+                        color: $Colors.colorPrimary
                     }
 
                     Column {
@@ -268,7 +270,7 @@ BPage {
                                             source: "qrc:/assets/icons_material/duotone-emoji_objects-24px.svg"
                                             width: 25
                                             height: 25
-                                            color: Theme.colorPrimary
+                                            color: $Colors.colorPrimary
                                             verticalAlignment: Text.AlignVCenter
                                         }
                                         Text {

@@ -156,25 +156,29 @@ BPage {
                 }
             }
             Item {
-                TextFieldThemed {
-                    id: diseaseSearchBox
-                    anchors.top: parent.top
-                    anchors.topMargin: 14
-                    anchors.left: parent.left
-                    anchors.leftMargin: 12
-                    anchors.right: parent.right
-                    anchors.rightMargin: 12
-
-                    placeholderText: qsTr("Search for diseases")
-                    selectByMouse: true
-                    colorSelectedText: "white"
-
-                    onFocusChanged: {
-                        if (focus) {
-                            diseaseSearchBoxMS.clicked()
-                            focus = false
-                        }
+                Rectangle {
+                    anchors {
+                        bottom: parent.top
+                        bottomMargin: -150
+                        horizontalCenter: parent.horizontalCenter
                     }
+
+                    height: 1200
+                    width: height / 1.5
+                    radius: height
+
+                    color: $Colors.primary
+                }
+
+                Item {
+//                    anchors.top: parent.top
+//                    anchors.topMargin: 14
+//                    anchors.left: parent.left
+//                    anchors.leftMargin: 12
+//                    anchors.right: parent.right
+//                    anchors.rightMargin: 75
+                    width: parent.width
+                    height: 60
 
                     MouseArea {
                         id: diseaseSearchBoxMS
@@ -185,205 +189,228 @@ BPage {
                         }
                     }
 
-                    Row {
-                        anchors.right: parent.right
-                        anchors.rightMargin: 12
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 12
 
-                        RoundButtonIcon {
-                            width: 24
-                            height: 24
-                            anchors.verticalCenter: parent.verticalCenter
-
-                            visible: diseaseSearchBox.text.length
-                            highlightMode: "color"
-                            source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
-
-                            onClicked: diseaseSearchBox.text = ""
+                    TextFieldThemed {
+                        id: diseaseSearchBox
+                        anchors {
+                            top: parent.top
+                            left: parent.left
+                            right: cameraIcon.left
+                            margins: 7
+                            verticalCenter: parent.verticalCenter
                         }
+
+                        z: 10
+                        enabled: false
+
+                        placeholderText: qsTr("Search for diseases")
+                        selectByMouse: true
+                        colorSelectedText: "white"
+                    }
+
+                    Rectangle {
+                        id: cameraIcon
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        height: 50
+                        width: 50
+                        color: $Colors.white
+                        enabled: true
+                        radius: 25
 
                         IconSvg {
-                            width: 24
-                            height: 24
-                            anchors.verticalCenter: parent.verticalCenter
-
-                            source: "qrc:/assets/icons_material/baseline-search-24px.svg"
-                            color: Theme.colorText
+                            anchors.centerIn: parent
+                            source: Icons.camera
+                            color: $Colors.colorPrimary
                         }
                     }
+
                 }
 
-                Column {
-                    width: parent.width - 10
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    topPadding: diseaseSearchBox.height + 20
-                    spacing: 20
 
-                    Item {
-                        width: parent.width
-                        height: (3 * ((parent.width - (20)) / 3)) + 30
-                        ListModel {
-                            id: optionModel
+                Item {
+                    anchors.fill: parent
+                    anchors.topMargin: 10
+                    anchors.leftMargin: 0
+                    anchors.rightMargin: 0
 
-                            Component.onCompleted: {
-                                let data = [{
-                                                "name": qsTr("Detect disease"),
-                                                "icon": Icons.magnifyScan,
-                                                "image": "",
-                                                "action": "analyser",
-                                                "style": "darkblue"
-                                            }, {
-                                                "name": qsTr("Identify parasits"),
-                                                "icon": Icons.bug,
-                                                "image": "",
-                                                "action": "insect",
-                                                "style": "lightBlue"
-                                            }, {
-                                                "name": qsTr(
-                                                            "Book of diseases"),
-                                                "icon": Icons.bookOpenOutline,
-                                                "image": "",
-                                                "action": "encyclopedie",
-                                                "style": "lightenYellow"
-                                            }, {
-                                                "name": qsTr("Get help"),
-                                                "icon": Icons.helpCircle,
-                                                "image": "",
-                                                "action": "faq",
-                                                "style": "lightenYellow"
-                                            }]
-                                data.forEach((plant => append(plant)))
-                            }
-                        }
-                        GridView {
-                            id: gr
-                            y: 10
-                            interactive: false
-                            width: parent.width
-                            height: parent.height - 20
-                            cellWidth: gr.width > 800 ? gr.width / 5 : (gr.width > 500 ? gr.width / 4 : gr.width / 3)
-                            cellHeight: cellWidth
-                            model: optionModel
-                            delegate: Item {
-                                width: gr.cellWidth
-                                height: width
-                                Rectangle {
-                                    anchors.fill: parent
-                                    anchors.bottomMargin: 35
-                                    anchors.rightMargin: 15
-                                    anchors.leftMargin: 15
-                                    radius: 10
-                                    opacity: mArea.containsMouse ? .8 : 1
-                                    gradient: Gradient {
-                                        orientation: Qt.Horizontal
-                                        GradientStop {
-                                            position: 0.04
-                                            color: {
-                                                switch (style) {
-                                                case "darkblue":
-                                                    return "#2c718a"
-                                                case "lightenYellow":
-                                                    return "#93d1be"
-                                                case "lightBlue":
-                                                    return "lightblue"
-                                                case "sunrise":
-                                                    return "#ffc6a4"
-                                                default:
-                                                    return "#ccc"
-                                                }
-                                            }
-                                        }
-                                        GradientStop {
-                                            position: 1.00
-                                            color: {
-                                                switch (style) {
-                                                case "darkblue":
-                                                    return "#143e44"
-                                                case "lightenYellow":
-                                                    return "#0ca780"
-                                                case "lightBlue":
-                                                    return "lightblue"
-                                                case "sunrise":
-                                                    return "#fc9185"
-                                                default:
-                                                    return "#ccc"
-                                                }
-                                            }
-                                        }
+                    Flickable {
+                        id: optionsFlickable
+                        anchors.fill: parent
+                        contentHeight: _insideColumn.height
+                        clip: true
+                        Column {
+                            id: _insideColumn
+                            width: parent.width - 10
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            topPadding: diseaseSearchBox.height + 40
+                            spacing: 20
+
+                            Item {
+                                width: parent.width
+                                height: (3 * ((parent.width - (20)) / 3)) + 30
+                                ListModel {
+                                    id: optionModel
+
+                                    Component.onCompleted: {
+                                        let data = [{
+                                                        "name": qsTr("Detect disease"),
+                                                        "icon": Icons.magnifyScan,
+                                                        "image": "",
+                                                        "action": "analyser",
+                                                        "style": "darkblue",
+                                                        "bg": $Colors.colorPrimary
+                                                    }, {
+                                                        "name": qsTr("Identify parasits"),
+                                                        "icon": Icons.bug,
+                                                        "image": "",
+                                                        "action": "insect",
+                                                        "style": "lightBlue",
+                                                        "bg": $Colors.colorPrimary
+                                                    }, {
+                                                        "name": qsTr(
+                                                                    "Book of diseases"),
+                                                        "icon": Icons.bookOpenOutline,
+                                                        "image": "",
+                                                        "action": "encyclopedie",
+                                                        "style": "lightenYellow",
+                                                        "bg": $Colors.colorPrimary
+                                                    }, {
+                                                        "name": qsTr("Get help"),
+                                                        "icon": Icons.helpCircle,
+                                                        "image": "",
+                                                        "action": "faq",
+                                                        "style": "lightenYellow",
+                                                        "bg": $Colors.colorPrimary
+                                                    }]
+                                        data.forEach((plant => append(plant)))
                                     }
-                                    IconSvg {
-                                        width: parent.width / 2
+                                }
+                                GridView {
+                                    id: gr
+                                    y: 10
+                                    interactive: false
+                                    width: parent.width
+                                    height: parent.height - 20
+                                    cellWidth: gr.width > 800 ? gr.width / 4 : (gr.width > 500 ? gr.width / 3 : gr.width / 2)
+                                    cellHeight: cellWidth
+                                    model: optionModel
+                                    delegate: Item {
+                                        width: gr.cellWidth
                                         height: width
-                                        visible: icon !== ""
-                                        anchors.centerIn: parent
+                                        Rectangle {
+                                            anchors.fill: parent
+                                            anchors.bottomMargin: 35
+                                            anchors.rightMargin: 15
+                                            anchors.leftMargin: 15
+                                            radius: 10
+                                            opacity: mArea.containsMouse ? .8 : 1
+                                            color: bg
+                                            border {
+                                                width: 1
+                                                color: $Colors.green200
+                                            }
+                                            IconSvg {
+                                                width: parent.width / 2
+                                                height: width
+                                                visible: icon !== ""
+                                                anchors.centerIn: parent
 
-                                        source: icon
-                                        color: 'white'
-                                    }
-                                    Image {
-                                        id: img
-                                        visible: image.toString() !== ""
-                                        source: image
-                                        anchors.fill: parent
-                                        layer.enabled: true
-                                        layer.effect: OpacityMask {
-                                            maskSource: Item {
-                                                width: img.width
-                                                height: img.height
-                                                Rectangle {
-                                                    anchors.centerIn: parent
-                                                    width: img.adapt ? img.width : Math.min(
-                                                                           img.width,
-                                                                           img.height)
-                                                    height: img.adapt ? img.height : width
-                                                    radius: 10
+                                                source: icon
+                                                color: 'white'
+                                            }
+                                            Image {
+                                                id: img
+                                                visible: image.toString() !== ""
+                                                source: image
+                                                anchors.fill: parent
+                                                layer.enabled: true
+                                                layer.effect: OpacityMask {
+                                                    maskSource: Item {
+                                                        width: img.width
+                                                        height: img.height
+                                                        Rectangle {
+                                                            anchors.centerIn: parent
+                                                            width: img.adapt ? img.width : Math.min(
+                                                                                   img.width,
+                                                                                   img.height)
+                                                            height: img.adapt ? img.height : width
+                                                            radius: 10
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            MouseArea {
+                                                id: mArea
+                                                anchors.fill: parent
+                                                enabled: action !== ""
+                                                hoverEnabled: enabled
+                                                onClicked: {
+                                                    switch (action) {
+                                                    case "analyser":
+                                                        identifierLayoutView.currentIndex++
+                                                        break
+                                                    case "encyclopedie":
+                                                        page_view.push(
+                                                                    plantDeseaseEncyclopedie)
+                                                        break
+                                                    case "faq":
+                                                        page_view.push(faqPage)
+                                                        break
+                                                    case "insect":
+                                                        page_view.push(
+                                                                    insectIndentifier)
+                                                        break
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                    MouseArea {
-                                        id: mArea
-                                        anchors.fill: parent
-                                        enabled: action !== ""
-                                        hoverEnabled: enabled
-                                        onClicked: {
-                                            switch (action) {
-                                            case "analyser":
-                                                identifierLayoutView.currentIndex++
-                                                break
-                                            case "encyclopedie":
-                                                page_view.push(
-                                                            plantDeseaseEncyclopedie)
-                                                break
-                                            case "faq":
-                                                page_view.push(faqPage)
-                                                break
-                                            case "insect":
-                                                page_view.push(
-                                                            insectIndentifier)
-                                                break
-                                            }
+                                        Label {
+                                            width: parent.width - 10
+                                            anchors.horizontalCenter: parent.horizontalCenter
+                                            anchors.bottom: parent.bottom
+                                            anchors.bottomMargin: 3
+                                            height: 28
+                                            wrapMode: Label.Wrap
+                                            font.pixelSize: 12
+                                            font.weight: Font.Medium
+                                            horizontalAlignment: Label.AlignHCenter
+                                            verticalAlignment: Label.AlignVCenter
+                                            text: name
                                         }
                                     }
                                 }
-                                Label {
-                                    width: parent.width - 10
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    anchors.bottom: parent.bottom
-                                    anchors.bottomMargin: 3
-                                    height: 28
-                                    wrapMode: Label.Wrap
-                                    font.pixelSize: 12
-                                    font.weight: Font.Medium
-                                    horizontalAlignment: Label.AlignHCenter
-                                    verticalAlignment: Label.AlignVCenter
-                                    text: name
-                                }
                             }
+
+                            Column {
+                                width: parent.width
+                                spacing: 5
+                                Item {
+                                    height: 70
+                                }
+
+                                Label {
+                                    text: qsTr("Some diseases")
+                                    color: $Colors.colorPrimary
+                                    font {
+                                        pixelSize: 16
+                                        weight: Font.Bold
+                                    }
+                                }
+
+                                PlantDeseaseEncylopedie {
+                                    width: parent.width
+                                    height: planteDeseaseControl.height
+                                    header: Item {}
+                                    hideSearchBar: true
+                                }
+
+                            }
+
                         }
                     }
                 }
+
             }
 
             Item {
@@ -395,7 +422,7 @@ BPage {
                         topPadding: 0
                         visible: Qt.platform.os !== 'ios'
                                  && Qt.platform.os !== 'android'
-                        Material.background: Theme.colorPrimary
+                        Material.background: $Colors.colorPrimary
                         Material.foreground: Material.color(Material.Grey,
                                                             Material.Shade50)
                         Material.accent: Material.color(Material.Grey,
@@ -491,7 +518,7 @@ BPage {
 
                                         ButtonWireframe {
                                             fullColor: true
-                                            primaryColor: Theme.colorPrimary
+                                            primaryColor: $Colors.colorPrimary
                                             anchors.fill: parent
                                             onClicked: tabView.chooseFile()
                                             IconSvg {
@@ -511,7 +538,7 @@ BPage {
 
                                         ButtonWireframe {
                                             fullColor: true
-                                            primaryColor: Theme.colorPrimary
+                                            primaryColor: $Colors.colorPrimary
                                             anchors.fill: parent
                                             onClicked: {
                                                 if (Qt.platform.os === 'ios') {

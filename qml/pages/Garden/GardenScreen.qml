@@ -4,6 +4,7 @@ import QtQuick.Controls
 import ThemeEngine
 
 import QtQuick.Shapes
+import QtPositioning
 
 import Qt5Compat.GraphicalEffects as QGE
 
@@ -19,11 +20,46 @@ BPage {
         title: "Blume"
         isHomeScreen: true
     }
+    backgroundColor: $Colors.colorTertiary
 
     property var getNextDate: Utils.getNextDate
     property bool isTodoFilterEnd: false
     property bool isLateFilterEnd: false
     property var alarmsIdsToDownStatus: []
+
+    property bool isWeatherLoaded: false
+    property variant weatherData: undefined
+
+    Component.onCompleted: {
+        loadWeather()
+    }
+
+    function loadWeather () {
+        control.isWeatherLoaded = false
+        utilsApp.getMobileLocationPermission()
+//        if(!gps.position.coordinate.latitude) {
+//            control.isWeatherLoaded = true
+//            return
+//        }
+
+        const weatherLatLong = `${gps.position.coordinate.latitude},${gps.position.coordinate.longitude}`
+        const weatherKey = "56f4ae294928423cade144712232508"
+        Http.fetch({
+            "url": `http://api.weatherapi.com/v1/forecast.json?key=${weatherKey}&q=${weatherLatLong}`,
+            "method": "GET"
+        }).then(function(res) {
+            try {
+                control.weatherData = JSON.parse(res)
+                control.isWeatherLoaded = true
+            } catch (e) {
+                console.warn(JSON.stringify(e))
+            }
+
+        }).catch(function(err) {
+            console.warn(JSON.stringify(err))
+            control.isWeatherLoaded = true
+        })
+    }
 
     SortFilterProxyModel {
         id: alarmsTodoToday
@@ -93,161 +129,74 @@ BPage {
         }
     }
 
+    PositionSource {
+        id: gps
+        active: true
+        preferredPositioningMethods: PositionSource.SatellitePositioningMethods
+    }
+
+    Rectangle {
+        anchors {
+            bottom: parent.top
+            bottomMargin: -220
+            horizontalCenter: parent.horizontalCenter
+        }
+
+        height: 1200
+        width: height / 1.7
+        radius: height
+
+        color: $Colors.primary
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.topMargin: 0
-
-        Column {
-            Layout.fillWidth: true
-            padding: 25
-            topPadding: 5
-            Label {
-                text: qsTr("My Garden")
-                font {
-                    pixelSize: 36
-                    family: "Courrier"
-                    weight: Font.Bold
-                }
-            }
-            Label {
-                text: qsTr("Manage your personal garden efficiently")
-                opacity: .5
-                font {
-                    pixelSize: 16
-                    family: "Courrier"
-                    weight: Font.Bold
-                }
-            }
-        }
+        spacing: 10
 
         RowLayout {
             Layout.fillWidth: true
-            Layout.leftMargin: 15
-            Layout.rightMargin: 20
-            spacing: 20
+            Layout.margins: 25
+            Layout.topMargin: 5
 
-            Repeater {
-                model: [{
-                        "icon": Icons.flowerTulip,
-                        "title": qsTr("My plants"),
-                        "action": "plants"
-                    }, {
-                        "icon": Icons.viewDashboardOutline,
-                        "title": qsTr("Rooms"),
-                        "action": "spaces",
-                        "animate": alarmsTodoToday.count === 0 && alarmsLate.count === 0
-                    }, {
-                        "icon": Icons.alarm,
-                        "title": qsTr("Calendar"),
-                        "action": "alarm"
-                    }]
-                delegate: Rectangle {
-                    id: _insideControl
-                    property string foregroundColor: Theme.colorPrimary
-                    Layout.preferredHeight: 100
-                    Layout.fillWidth: true
-                    radius: 20
-                    layer.enabled: true
-                    layer.effect: QGE.DropShadow {
-                        radius: 4
-                        color: $Colors.gray300
-                        verticalOffset: 2
+            Column {
+                Layout.fillWidth: true
+                Label {
+                    text: qsTr("My Garden")
+                    font {
+                        pixelSize: 36
+                        family: "Courrier"
+                        weight: Font.Bold
                     }
-
-                    Timer {
-                        id: animationTimer
-                        property double min: 1.0
-                        property double max: 1.15
-                        property bool up: true
-                        interval: 50
-                        repeat: true
-                        running: modelData.animate === true
-                        onTriggered: {
-                            if(up) {
-                                if(parent.scale <= max) {
-                                    parent.scale += 0.01
-                                } else {
-                                    up = false
-                                }
-                            } else {
-                                if(parent.scale >= min) {
-                                    parent.scale -= 0.01
-                                } else {
-                                    up = true
-                                }
-                            }
-
-                        }
-                    }
-
-                    Behavior on scale {
-                        NumberAnimation {
-                            duration: 50
-                            easing.type: Easing.InOutCubic
-                        }
-                    }
-
-                    scale: _insideMouse.containsMouse
-                           || _insideMouse.containsPress ? 1.05 : 1
-
-                    color: _insideMouse.containsMouse
-                           || _insideMouse.containsPress ? "white" : foregroundColor
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: 10
-
-                        Item {
-                            ColorImage {
-                                anchors.centerIn: parent
-                                width: 42
-                                height: 42
-                                source: modelData.icon
-                                color: _insideMouse.containsMouse
-                                       || _insideMouse.containsPress ? _insideControl.foregroundColor : $Colors.white
-                            }
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                        }
-                        Label {
-                            text: modelData.title
-                            font.pixelSize: 15
-                            font.weight: Font.Medium
-                            color: _insideMouse.containsMouse
-                                   || _insideMouse.containsPress ? _insideControl.foregroundColor : $Colors.white
-                            Layout.alignment: Qt.AlignHCenter
-                        }
-                    }
-                    MouseArea {
-                        id: _insideMouse
-                        hoverEnabled: true
-                        anchors.fill: parent
-                        cursorShape: "PointingHandCursor"
-                        onClicked: {
-                            switch (modelData.action) {
-                            case "plants":
-                                page_view.push(navigator.gardenPlantsList)
-                                break
-                            case "spaces":
-                                page_view.push(navigator.gardenSpacesList)
-                                break
-                            case "alarm":
-                                page_view.push(navigator.gardenAlarmsCalendar)
-                                break
-                            }
-                        }
+                    color: $Colors.white
+                }
+                Label {
+                    text: qsTr("Manage your personal garden efficiently")
+                    opacity: .5
+                    color: $Colors.white
+                    font {
+                        pixelSize: 16
+                        family: "Courrier"
+                        weight: Font.Bold
                     }
                 }
             }
-        }
+            Rectangle {
+                Layout.preferredWidth: 40
+                Layout.preferredHeight: Layout.preferredWidth
+                radius: Layout.preferredHeight / 2
+                color: $Colors.white
 
-        Label {
-            Layout.fillWidth: true
-            text: qsTr("Tasks")
-            padding: 15
-            opacity: .7
-            font {
-                pixelSize: 16
-                weight: Font.Medium
+
+                IconSvg {
+                    anchors.centerIn: parent
+                    source: Icons.bell
+                    color: $Colors.colorPrimary
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: page_view.push(navigator.loginPage)
+                    }
+                }
             }
         }
 
@@ -263,49 +212,285 @@ BPage {
                 width: parent.width
                 leftPadding: 10
                 rightPadding: 10
+                spacing: 10
 
-                Column {
-                    visible: alarmsTodoToday.count === 0 && alarmsLate.count === 0
-                    width: parent.width
-                    spacing: 10
+                Rectangle {
+                    width: parent.width - 20
+                    height: 180
+                    anchors.leftMargin: 10
+                    anchors.rightMargin: 20
+                    radius: 20
 
-                    layer.enabled: true
-                    layer.effect: QGE.ColorOverlay {
-                        color: Qt.rgba(100, 30, 89, 0.8)
-                    }
+                    color: $Colors.colorTertiary
 
-                    Label {
-                        text: qsTr("Today")
-                        width: parent.width
-                        horizontalAlignment: Text.AlignHCenter
-                        font {
-                            weight: Font.Light
-                            pixelSize: 16
+                    ColumnLayout {
+                        visible: isWeatherLoaded && weatherData !== undefined
+                        anchors.fill: parent
+                        anchors.margins: 10
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+
+                            Column {
+                                anchors.left: parent.left
+                                anchors.leftMargin: 25
+
+                                Label {
+                                    text: weatherData?.location?.name?? ""
+                                }
+
+                                Image {
+                                    source: weatherData ? ("http://" + weatherData?.current?.condition?.icon?.slice(2)) : ""
+                                    width: 80
+                                    height: width
+                                }
+                            }
+
+
+                            Column {
+                                anchors.right: parent.right
+                                anchors.rightMargin: 25
+                                Label {
+                                    text: qsTr("Today")
+                                    font {
+                                        pixelSize: 14
+                                    }
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                }
+                                Label {
+                                    text: weatherData?.current?.temp_c + "° C"
+                                    color: $Colors.colorPrimary
+                                    font {
+                                        pixelSize: 22
+                                    }
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                }
+                                Label {
+                                    text: weatherData?.current?.condition?.text?? ""
+                                    color: $Colors.colorPrimary
+                                    font {
+                                        pixelSize: 14
+                                    }
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                }
+                            }
+                        }
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Column {
+                                Layout.fillWidth: true
+                                IconSvg {
+                                    source: Icons.umbrella
+                                    color: $Colors.colorPrimary
+                                    width: 20
+                                    height: width
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                }
+                                Label {
+                                    text: weatherData?.current?.precip_mm?? "" + " mm"
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                }
+                                Label {
+                                    text: "Precipitation"
+                                    color: $Colors.colorPrimary
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                }
+                            }
+                            Column {
+                                Layout.fillWidth: true
+                                IconSvg {
+                                    source: Icons.water
+                                    color: $Colors.colorPrimary
+                                    width: 20
+                                    height: width
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                }
+                                Label {
+                                    text: weatherData?.current?.humidity + "%"
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                }
+                                Label {
+                                    text: "Humidité"
+                                    color: $Colors.colorPrimary
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                }
+                            }
+                            Column {
+                                Layout.fillWidth: true
+                                IconSvg {
+                                    source: Icons.windPower
+                                    color: $Colors.colorPrimary
+                                    width: 20
+                                    height: width
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                }
+                                Label {
+                                    text: weatherData?.current?.wind_kph?? "" + "km/h"
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                }
+                                Label {
+                                    text: "Vitesse du vent"
+                                    color: $Colors.colorPrimary
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                }
+                            }
+
                         }
                     }
 
+                    BusyIndicator {
+                        visible: !isWeatherLoaded
+                        anchors.centerIn: parent
+                    }
+
+                    Column {
+                        anchors.centerIn: parent
+                        visible: isWeatherLoaded && weatherData === undefined
+
+                        Label {
+                            text: qsTr("Weather not loaded !")
+                        }
+
+                        NiceButton {
+                            text: qsTr("Reload")
+                            onClicked: loadWeather()
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                    }
+
+                    ColorImage {
+                        visible: isWeatherLoaded && weatherData === undefined
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.margins: 15
+                        source: Icons.weatherCloudy
+                        width: 50
+                        height: width
+                    }
+
+                }
+
+                RowLayout {
+//                    Layout.fillWidth: true
+//                    Layout.leftMargin: 15
+//                    Layout.rightMargin: 20
+//                    Layout.alignment: Qt.AlignHCenter
+                    width: parent.width - 20
+                    anchors.leftMargin: 15
+                    anchors.rightMargin: 20
+                    spacing: 20
+
                     Repeater {
-                        model: 3
-                        GardenActivityLine {
+                        model: [{
+                                "icon": Icons.flowerTulip,
+                                "title": qsTr("My plants"),
+                                "action": "plants"
+                            }, {
+                                "icon": Icons.viewDashboardOutline,
+                                "title": qsTr("Rooms"),
+                                "action": "spaces",
+                                "animate": alarmsTodoToday.count === 0 && alarmsLate.count === 0
+                            }, {
+                                "icon": Icons.alarm,
+                                "title": qsTr("Calendar"),
+                                "action": "alarm"
+                            }]
+                        delegate: Rectangle {
+                            id: _insideControl
+                            property string foregroundColor: $Colors.colorPrimary
+                            Layout.preferredHeight: 80
+                            Layout.preferredWidth: 100
+        //                    Layout.fillWidth: true
+                            radius: 20
+                            layer.enabled: true
+                            layer.effect: QGE.DropShadow {
+                                radius: 4
+                                color: $Colors.colorSecondary
+                                verticalOffset: 2
+                            }
 
-                            title: qsTr("Watering")
-                            plant_name: "Abelia Chinensis"
+                            Timer {
+                                id: animationTimer
+                                property double min: 1.0
+                                property double max: 1.15
+                                property bool up: true
+                                interval: 50
+                                repeat: true
+                                running: modelData.animate === true
+                                onTriggered: {
+                                    if(up) {
+                                        if(parent.scale <= max) {
+                                            parent.scale += 0.01
+                                        } else {
+                                            up = false
+                                        }
+                                    } else {
+                                        if(parent.scale >= min) {
+                                            parent.scale -= 0.01
+                                        } else {
+                                            up = true
+                                        }
+                                    }
 
-                            subtitle: qsTr("Terasse")
+                                }
+                            }
 
-                            isDone: true
+                            Behavior on scale {
+                                NumberAnimation {
+                                    duration: 50
+                                    easing.type: Easing.InOutCubic
+                                }
+                            }
 
-                            hideDelete: true
-                            hideCheckbox: true
-                            icon.source: Icons.waterOutline
-//                          icon.source: model.type === 0 ? Icons.shovel : model.type === 1 ? Icons.waterOutline : model.type === 2 ? Icons.potMixOutline : Icons.flowerOutline
-                            //                            image.source: {
-//                                let value = plantObj.images_plantes[0] ? "https://blume.mahoudev.com/assets/" + plantObj.images_plantes[0].directus_files_id : ""
-//                                return value
-//                            }
+                            scale: _insideMouse.containsMouse
+                                   || _insideMouse.containsPress ? 1.05 : 1
 
-                            width: parent.width - 20
-                            height: 80
+                            color: _insideMouse.containsMouse
+                                   || _insideMouse.containsPress ? "white" : foregroundColor
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 10
+
+                                Item {
+                                    ColorImage {
+                                        anchors.centerIn: parent
+                                        width: 42
+                                        height: 42
+                                        source: modelData.icon
+                                        color: _insideMouse.containsMouse
+                                               || _insideMouse.containsPress ? _insideControl.foregroundColor : $Colors.white
+                                    }
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                }
+                                Label {
+                                    text: modelData.title
+                                    font.pixelSize: 15
+                                    font.weight: Font.Medium
+                                    color: _insideMouse.containsMouse
+                                           || _insideMouse.containsPress ? _insideControl.foregroundColor : $Colors.white
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                            }
+                            MouseArea {
+                                id: _insideMouse
+                                hoverEnabled: true
+                                anchors.fill: parent
+                                cursorShape: "PointingHandCursor"
+                                onClicked: {
+                                    switch (modelData.action) {
+                                    case "plants":
+                                        page_view.push(navigator.gardenPlantsList)
+                                        break
+                                    case "spaces":
+                                        page_view.push(navigator.gardenSpacesList)
+                                        break
+                                    case "alarm":
+                                        page_view.push(navigator.gardenAlarmsCalendar)
+                                        break
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -411,13 +596,20 @@ BPage {
 
                             subtitle: {
                                 $Model.space.sqlGet(model.space).then(function(res) {
-                                                                          subtitle = "Space - "
+                                                                          subtitle = ""
                                                                           + (res.libelle[0] === "'" ? res.libelle.slice(1, -1) : res.libelle)
                                                                       }).catch(
                                             console.warn)
 
                                 return ""
                             }
+
+                            frequency: {
+                                const period = Utils.humanizeDayPeriod(model.frequence)
+                                qsTr("Each") + " " + period.freq + " " + period.period_label
+                            }
+
+                            hideDelete: true
 
                             isDone: {
                                 if(alarmsIdsToDownStatus.filter(id => id === model.id).length > 0 ) {
@@ -445,33 +637,114 @@ BPage {
                             }
 
                             width: parent.width - 20
-                            height: 80
+                        }
+                    }
+                }
+
+                Column {
+                    id: tipsColum
+                    width: parent.width - 20
+                    spacing: 10
+                    Label {
+                        text: qsTr("Tips and advices")
+                        width: parent.width
+                        color: $Colors.colorPrimary
+                        font {
+                            weight: Font.DemiBold
+                            pixelSize: 16
+                        }
+                    }
+
+                    Repeater {
+                        model: 3
+                        delegate: Rectangle {
+                            width: parent.width
+                            height: 120
+                            color: $Colors.colorTertiary
+                            radius: 10
+                            clip: true
+                            border {
+                                width: 1
+                                color: $Colors.gray200
+                            }
+
+                            RowLayout {
+                                anchors.fill: parent
+                                Rectangle {
+                                    Layout.preferredWidth: 90
+                                    Layout.fillHeight: true
+                                    color: $Colors.pink200
+
+                                    Image {
+                                        source: "qrc:/assets/icons_custom/tips_child.png"
+                                        anchors.fill: parent
+                                    }
+                                }
+                                ColumnLayout {
+                                    Layout.fillWidth: true
+                                    Layout.margins: 5
+                                    Label {
+                                        text: qsTr("Tips and advices")
+                                        font {
+                                            pixelSize: 14
+                                            weight: Font.DemiBold
+                                        }
+                                        color: $Colors.white
+                                        padding: 5
+                                        topPadding: 2
+                                        bottomPadding: 2
+                                        background: Rectangle {
+                                            color: $Colors.colorPrimary
+                                            radius: 5
+                                        }
+                                    }
+
+                                    Item {
+                                        Layout.fillHeight: true
+                                    }
+
+                                    Label {
+                                        Layout.fillWidth: true
+                                        text: qsTr("Cultiver son puce vert et suivre son rythme").slice(0, 60)
+                                        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                                        font {
+                                            pixelSize: 16
+                                            weight: Font.DemiBold
+                                        }
+                                    }
+
+                                    Item {
+                                        Layout.fillHeight: true
+                                    }
+
+                                    Label {
+                                        text: qsTr("Publié le 13 Aout")
+                                        font {
+                                            pixelSize: 12
+                                        }
+                                        background: Rectangle {
+                                            color: $Colors.gray200
+                                            radius: 2
+                                        }
+                                        padding: 10
+                                        topPadding: 2
+                                        bottomPadding: 2
+                                    }
+                                }
+                            }
                         }
                     }
                 }
 
                 Item {
                     width: parent.width
-                    height: 200
+                    height: 100
                 }
             }
         }
 
         Item {
             Layout.fillHeight: true
-        }
-    }
-
-    Label {
-        text: qsTr("No pending task")
-        visible: alarmsTodoToday.count === 0 && alarmsLate.count === 0
-        color: Theme.colorSecondary
-        opacity: 0.8
-        anchors.centerIn: parent
-        anchors.verticalCenterOffset: 120
-        font {
-            weight: Font.Bold
-            pixelSize: 18
         }
     }
 

@@ -17,6 +17,11 @@ Model {
             "name": "description",
             "type": "TEXT"
         }, {
+            /*
+            @type
+                1 -> Outdoor
+                0 -> Indoor
+            */
             "name": "type",
             "type": "INTEGER"
         }, {

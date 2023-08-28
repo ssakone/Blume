@@ -15,6 +15,7 @@ Rectangle {
     property string subtitle: ""
     property alias icon: iconSvg
     property alias image: image
+    property string frequency: ""
 
     property bool isDone: false
     property bool hideDelete: false
@@ -24,7 +25,9 @@ Rectangle {
     signal deleteClicked
     signal checked(bool newStatus)
 
-    radius: 4
+    radius: 7
+    height: 120
+    color: $Colors.colorTertiary
 
     layer.enabled: true
     layer.effect: QGE.DropShadow {
@@ -39,33 +42,25 @@ Rectangle {
             leftMargin: 5
             rightMargin: 5
         }
-        spacing: 10
+        spacing: 6
 
-        Item {
-            visible: !control.hideCheckbox
-            Layout.preferredWidth: 30
-            Layout.preferredHeight: 30
+        ClipRRect {
+            Layout.fillHeight: true
+            Layout.preferredWidth: height
+            Layout.margins: 10
+            radius: height / 2
+
             Rectangle {
                 anchors.fill: parent
+                color: '#e5e5e5'
                 radius: height / 2
-                color: control.isDone ? Theme.colorPrimary : $Colors.gray100
-                border.color: control.isDone ?  Theme.colorPrimary : $Colors.gray600
-                border.width: 1
-                IconSvg {
-                    visible: control.isDone
-                    source: Icons.check
-                    anchors.fill: parent
-                    color: 'white'
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked:  {
-                        control.isDone = !control.isDone
-                        control.checked(control.isDone)
-                    }
-                }
             }
+
+            Image {
+                id: image
+                anchors.fill: parent
+            }
+
         }
 
         Item {
@@ -83,7 +78,7 @@ Rectangle {
                     padding: 2
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    spacing: 0
+                    spacing: 3
 
                     Row {
                         width: parent.width
@@ -92,7 +87,10 @@ Rectangle {
 
                         ColorImage {
                             id: iconSvg
-                            color: Theme.colorPrimary
+                            color: $Colors.colorPrimary
+                            width: 20
+                            height: width
+                            anchors.verticalCenter: parent.verticalCenter
                         }
 
                         Label {
@@ -104,49 +102,76 @@ Rectangle {
                             elide: Label.ElideRight
                             wrapMode: Label.Wrap
                             clip: true
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    Row {
+                        width: parent.width
+                        padding: 0
+                        spacing: 5
+
+                        ColorImage {
+                            color: $Colors.colorPrimary
+                            source: "qrc:/assets/icons_custom/menubottom_plants.svg"
+                            width: 20
+                            height: width
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        Label {
+                            text: plant_name
+                            font.pixelSize: 14
+                            opacity: .6
+                            elide: Text.ElideRight
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    Row {
+                        width: parent.width
+                        padding: 0
+                        spacing: 5
+
+                        ColorImage {
+                            color: $Colors.colorPrimary
+                            source: Icons.home
+                            width: 20
+                            height: width
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        Label {
+                            text: subtitle
+                            font.pixelSize: 14
+                            opacity: .6
+                            elide: Text.ElideRight
+                            anchors.verticalCenter: parent.verticalCenter
                         }
                     }
 
                     Label {
-                        text: plant_name
-                        font.pixelSize: 16
-                        opacity: .6
-                        elide: Text.ElideRight
-                        leftPadding: iconSvg.width / 2
-                    }
-
-                    Label {
-                        text: subtitle
+                        visible: frequency != ""
+                        text: frequency
                         font.pixelSize: 14
                         opacity: .6
                         elide: Text.ElideRight
-                        leftPadding: iconSvg.width / 2
+                        padding: 5
+                        leftPadding: 10
+                        rightPadding: 10
+                        background: Rectangle {
+                            color: $Colors.colorSecondary
+                            radius: 5
+                        }
                     }
+
+
                 }
 
                 Item {
                     Layout.fillHeight: true
                 }
             }
-        }
-
-        ClipRRect {
-            Layout.fillHeight: true
-            Layout.preferredWidth: height
-            Layout.margins: 3
-            radius: height / 2
-
-            Rectangle {
-                anchors.fill: parent
-                color: '#e5e5e5'
-                radius: height / 2
-            }
-
-            Image {
-                id: image
-                anchors.fill: parent
-            }
-
         }
 
         Rectangle {
@@ -171,6 +196,33 @@ Rectangle {
                 anchors.fill: parent
                 cursorShape: "PointingHandCursor"
                 onClicked: control.deleteClicked()
+            }
+        }
+
+        Item {
+            visible: !control.hideCheckbox
+            Layout.preferredWidth: 30
+            Layout.preferredHeight: 30
+            Rectangle {
+                anchors.fill: parent
+                radius: 5
+                color: control.isDone ? $Colors.colorPrimary : $Colors.gray50
+                border.color: control.isDone ?  $Colors.colorPrimary : $Colors.gray600
+                border.width: 1
+                IconSvg {
+                    visible: control.isDone
+                    source: Icons.check
+                    anchors.fill: parent
+                    color: 'white'
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked:  {
+                        control.isDone = !control.isDone
+                        control.checked(control.isDone)
+                    }
+                }
             }
         }
 

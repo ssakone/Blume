@@ -40,7 +40,7 @@ BPage {
     }
 
     background: Rectangle {
-        color: Theme.colorPrimary
+        color: $Colors.colorPrimary
     }
 
     header: AppBar {}
@@ -147,7 +147,7 @@ BPage {
                                         width: 25
                                         height: 25
                                         visible: details['edible_parts'] !== null
-                                        color: Theme.colorPrimary
+                                        color: $Colors.colorPrimary
                                     }
                                 }
 
@@ -204,7 +204,7 @@ BPage {
                                         width: 25
                                         height: 25
                                         visible: details['propagation_methods'] !== null
-                                        color: Theme.colorPrimary
+                                        color: $Colors.colorPrimary
                                     }
                                     Text {
                                         text: qsTr("Propagation method")
@@ -240,7 +240,7 @@ BPage {
 
                     ButtonWireframeIcon {
                         text: qsTr("More informations on Wikipédia")
-                        fulltextColor: Theme.colorPrimary
+                        fulltextColor: $Colors.colorPrimary
                         primaryColor: "white"
                         fullColor: true
                         font.pixelSize: 16

@@ -47,7 +47,7 @@ BPage {
     }
 
     background: Rectangle {
-        color: Theme.colorPrimary
+        color: $Colors.colorPrimary
     }
 
 
@@ -135,7 +135,7 @@ BPage {
                 ButtonWireframe {
                     width: parent.width
                     height: 60
-                    primaryColor: Theme.colorPrimary
+                    primaryColor: $Colors.colorPrimary
                     componentRadius: 20
                     text: qsTr("Create my account")
                     onClicked: handleSignIn()
@@ -148,7 +148,7 @@ BPage {
                 ButtonWireframe {
                     width: parent.width
                     height: 60
-                    primaryColor: Theme.colorPrimary
+                    primaryColor: $Colors.colorPrimary
                     fullColor: true
                     componentRadius: 20
                     text: qsTr("Already have an account")

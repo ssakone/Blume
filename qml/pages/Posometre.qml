@@ -25,7 +25,7 @@ BPage {
         title: qsTr("Light sensor")
     }
     background: Rectangle {
-        color: "black"
+        color: $Colors.colorSecondary
     }
 
     AmbientLightSensor {
@@ -96,8 +96,15 @@ BPage {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter
 
-            color: "black"
+            color: $Colors.colorSecondary
             clip: true
+
+            ColorImage {
+                source: "qrc:/assets/img/bg_plant.svg"
+                anchors.fill: parent
+                color: $Colors.colorPrimary
+                opacity: 0.3
+            }
 
             Rectangle {
                 id: gl

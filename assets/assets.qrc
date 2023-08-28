@@ -7389,6 +7389,20 @@
         <file>tutorial/api-identity.svg</file>
         <file>tutorial/api-health-status.svg</file>
         <file>icons_material/camera.svg</file>
+        <file>icons_custom/menubottom_garden.svg</file>
+        <file>icons_custom/menubottom_plants.svg</file>
+        <file>icons_custom/menubottom_health.svg</file>
+        <file>icons_custom/menubottom_devices.svg</file>
+        <file>img/bg_plant.svg</file>
+        <file>icons_custom/salon.svg</file>
+        <file>icons_custom/bed.svg</file>
+        <file>icons_custom/garden.svg</file>
+        <file>icons_custom/scan_plant.svg</file>
+        <file>icons_custom/tips_child.svg</file>
+        <file>icons_custom/tips_child.png</file>
+        <file>img/plant_pot.png</file>
+        <file>icons_custom/tulipe_left.svg</file>
+        <file>icons_custom/tulipe_right.svg</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

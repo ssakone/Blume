@@ -13,6 +13,7 @@ ClipRRect {
     property string title: ""
     property string subtitle: ""
     property string iconSource: ""
+    property bool isOutdoor: false
 
     signal clicked
 
@@ -20,10 +21,13 @@ ClipRRect {
 
     Rectangle {
         anchors.fill: parent
+        anchors.margins: 3
         radius: parent.radius
 
+        color: $Colors.colorTertiary
+
         border {
-            color: "#e5e5e5"
+            color: $Colors.gray50
             width: 1
         }
     }
@@ -38,44 +42,13 @@ ClipRRect {
         }
         spacing: 10
 
-        Rectangle {
-            Layout.preferredHeight: 75
-            Layout.preferredWidth: 75
-            Layout.alignment: Qt.AlignCenter
-            Rectangle {
-                id: gradi
-                visible: false
-                width: 85
-                height: 85
-                anchors.centerIn: parent
-                gradient: Gradient {
-                    GradientStop {
-                        position: 0.00
-                        color: "#00c395"
-                    }
-                    GradientStop {
-                        position: 1.00
-                        color: "#0c765a"
-                    }
-                }
-            }
-            IconSvg {
-                id: mask
-                anchors.fill: parent
-                anchors.margins: 15
-                source: iconSource
-                opacity: 1
-                visible: false
-                color: "black"
-            }
-
-            QGE.OpacityMask {
-                anchors.fill: gradi
-                anchors.margins: 10
-                opacity: .6
-                source: gradi
-                maskSource: mask
-            }
+        IconSvg {
+            id: mask
+            source: iconSource
+            color: $Colors.colorPrimary
+            Layout.margins: 15
+            Layout.preferredHeight: 35
+            Layout.preferredWidth: 35
         }
 
         ColumnLayout {
@@ -91,20 +64,31 @@ ClipRRect {
                 text: subtitle
                 font.pixelSize: 12
                 Layout.fillWidth: true
-                wrapMode: Text.Wrap
+                elide: Text.ElideRight
                 opacity: .7
+                visible: subtitle !== ""
             }
             Label {
-                text: ""
-                color: "white"
-                padding: 5
-                visible: false
-                font.capitalization: Font.AllUppercase
+                text: isOutdoor ? qsTr("Outdoor") : qsTr("Indoor")
+                color: $Colors.white
+                padding: 3
+                font {
+                    capitalization: Font.AllUppercase
+                    pixelSize: 11
+                }
+
                 background: Rectangle {
-                    color: Theme.colorPrimary
+                    color: $Colors.colorPrimary
                     radius: 5
                 }
+                leftPadding: 7
+                rightPadding: 7
             }
+        }
+
+        Item {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 1
         }
     }
 

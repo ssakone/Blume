@@ -11,9 +11,11 @@ import ThemeEngine
 T.Button {
     id: control
 
-    property color backgroundColor: Theme.colorPrimary
+    property color backgroundColor: $Colors.colorPrimary
     property color foregroundColor: Theme.colorHeaderContent
     property int radius: 18
+    property color backgroundBorderColor: "black"
+    property int backgroundBorderWidth: 0
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             implicitContentWidth + leftPadding + rightPadding)
@@ -60,6 +62,9 @@ T.Button {
         layer.effect: ElevationEffect {
             elevation: control.Material.elevation
         }
+
+        border.color: backgroundBorderColor
+        border.width: backgroundBorderWidth
 
         Ripple {
             clipRadius: 2

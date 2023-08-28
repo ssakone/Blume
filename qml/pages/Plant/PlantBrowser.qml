@@ -21,6 +21,8 @@ import ThemeEngine 1.0
 BPage {
     id: plantBrowser
     objectName: "Plants"
+
+    backgroundColor: $Colors.colorTertiary
     header: Components.AppBar {
         title: "Plants menu"
         noAutoPop: true
@@ -46,6 +48,20 @@ BPage {
     Component.onCompleted: loadScreen()
 
     ////////////////////////////////////////////////////////////////////////////
+    Rectangle {
+        anchors {
+            bottom: parent.top
+            bottomMargin: -150
+            horizontalCenter: parent.horizontalCenter
+        }
+
+        height: 1200
+        width: height / 1.5
+        radius: height
+
+        color: $Colors.primary
+    }
+
     Item {
         id: item
         function resetPlantClicked() {
@@ -76,40 +92,17 @@ BPage {
             //                z: 4
             //                color: Theme.colorBackground
             //            }
-            Image {
-                y: 20
-                x: 16
-                source: Components.Icons.close
-                //                visible: plantListView.visible
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: plantListView.close()
-                }
-            }
 
-            TextFieldThemed {
-                id: plantSearchBox
+
+            RowLayout {
                 anchors.top: parent.top
                 anchors.topMargin: 14
                 anchors.left: parent.left
                 anchors.leftMargin: 12
                 anchors.right: parent.right
                 anchors.rightMargin: 12
+                spacing: 15
 
-                z: 5
-                height: 40
-                placeholderText: qsTr("Search for plants")
-                selectByMouse: true
-                colorSelectedText: "white"
-
-                onFocusChanged: {
-                    if (focus) {
-                        plantSearchBoxMS.clicked()
-                        focus = false
-                    }
-                }
-
-                //onDisplayTextChanged: plantDatabase.filter(displayText)
                 MouseArea {
                     id: plantSearchBoxMS
                     anchors.fill: parent
@@ -119,38 +112,42 @@ BPage {
                     }
                 }
 
-                Row {
-                    anchors.right: parent.right
-                    anchors.rightMargin: 12
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: 12
+                TextFieldThemed {
+                    id: plantSearchBox
+                    Layout.fillWidth: true
+                    z: 5
+                    height: 50
+                    placeholderText: qsTr("Search for plants")
+                    selectByMouse: true
+                    colorSelectedText: "white"
+                    enabled: false
+//                    onFocusChanged: {
+//                        if (focus) {
+//                            plantSearchBoxMS.clicked()
+//                            focus = false
+//                        }
+//                    }
+                }
 
-                    RoundButtonIcon {
-                        width: 24
-                        height: 24
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        visible: plantSearchBox.text.length
-                        highlightMode: "color"
-                        source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
-
-                        onClicked: plantSearchBox.text = ""
-                    }
+                Rectangle {
+                    Layout.preferredHeight: 50
+                    Layout.preferredWidth: 50
+                    color: $Colors.white
+                    radius: 25
 
                     IconSvg {
-                        width: 24
-                        height: 24
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        source: "qrc:/assets/icons_material/baseline-search-24px.svg"
-                        color: Theme.colorText
+                        anchors.centerIn: parent
+                        source: Components.Icons.camera
+                        color: $Colors.colorPrimary
                     }
                 }
+
             }
+
 
             Item {
                 anchors.fill: parent
-                anchors.topMargin: 64
+                anchors.topMargin: 80
                 anchors.leftMargin: 0
                 anchors.rightMargin: 0
 
@@ -163,122 +160,58 @@ BPage {
                                         "icon": "qrc:/assets/icons_custom/thumbs.png",
                                         "image": "",
                                         "action": "",
-                                        "style": "darkblue"
+                                        "bg": $Colors.colorPrimary
                                     }, {
                                         "name": qsTr("Identify plant"),
-                                        "icon": "qrc:/assets/icons_custom/plant_scan.png",
+                                        "icon": "qrc:/assets/icons_custom/scan_plant.svg",
                                         "image": "",
                                         "action": "identify",
-                                        "style": "lightenYellow"
+                                        "bg": $Colors.colorSecondary
                                     }, {
                                         "name": qsTr("Light sensor"),
-                                        "icon": "qrc:/assets/icons_custom/posometre.svg",
+                                        "icon": Components.Icons.thermometer,
                                         "image": "",
                                         "action": "posometre",
-                                        "style": "sunrise"
-                                    }, {
-                                        "name": qsTr("Floral plants"),
-                                        "icon": "",
-                                        "image": "qrc:/assets/img/fleure.jpg",
-                                        "action": "categorie_plantes_fleuries",
-                                        "style": ""
-                                    }, {
-                                        "name": qsTr("Orchids"),
-                                        "icon": "",
-                                        "image": "qrc:/assets/img/orchidee.jpg",
-                                        "action": "categorie_plantes_orchidee",
-                                        "style": ""
-                                    }, {
-                                        "name": qsTr("Cactus and succulents"),
-                                        "icon": "",
-                                        "image": "qrc:/assets/img/cactus.jpg",
-                                        "action": "categorie_plantes_cactus_succulentes",
-                                        "style": ""
-                                    }, {
-                                        "name": qsTr("Vegetables"),
-                                        "icon": "",
-                                        "image": "qrc:/assets/img/legume.jpg",
-                                        "action": "categorie_plantes_legumes",
-                                        "style": ""
-                                    }, {
-                                        "name": qsTr("Herbal"),
-                                        "icon": "",
-                                        "image": "qrc:/assets/img/herbe.jpeg",
-                                        "action": "categorie_plantes_herbes",
-                                        "style": ""
-                                    }, {
-                                        "name": qsTr("Foliage plants"),
-                                        "icon": "",
-                                        "image": "qrc:/assets/img/feuillage.jpg",
-                                        "action": "categorie_plantes_feuillage",
-                                        "style": ""
+                                        "bg": $Colors.colorPrimary
                                     }]
                         data.forEach((plant => append(plant)))
                     }
                 }
 
                 Flickable {
+                    id: optionsFlickable
                     anchors.fill: parent
                     contentHeight: _insideColumn.height
                     clip: true
                     Column {
                         id: _insideColumn
                         width: parent.width
-                        Item {
+
+                        RowLayout {
                             width: parent.width
-                            height: (3 * ((parent.width - (20)) / 3)) + 30
-                            GridView {
-                                id: gr
-                                y: 10
-                                interactive: false
-                                width: parent.width
-                                height: parent.height - 20
-                                cellWidth: gr.width > 800 ? gr.width / 5 : (gr.width > 500 ? gr.width / 4 : gr.width / 3)
-                                cellHeight: cellWidth
+                            anchors.topMargin: 30
+                            Item {
+                                Layout.fillWidth: true
+                            }
+
+                            Repeater {
                                 model: plantOptionModel
-                                delegate: Item {
-                                    width: gr.cellWidth
-                                    height: width
+                                Item {
+                                    Layout.preferredWidth: index === 1 ? 150 : 100
+                                    Layout.preferredHeight: Layout.preferredWidth
                                     Rectangle {
                                         anchors.fill: parent
                                         anchors.bottomMargin: 35
                                         anchors.rightMargin: 15
                                         anchors.leftMargin: 15
-                                        radius: 10
+                                        radius: 15
                                         opacity: mArea.containsMouse ? .8 : 1
-                                        gradient: Gradient {
-                                            orientation: Qt.Horizontal
-                                            GradientStop {
-                                                position: 0.04
-                                                color: {
-                                                    switch (style) {
-                                                    case "darkblue":
-                                                        return "#2c718a"
-                                                    case "lightenYellow":
-                                                        return "#93d1be"
-                                                    case "sunrise":
-                                                        return "#ffc6a4"
-                                                    default:
-                                                        return "#ccc"
-                                                    }
-                                                }
-                                            }
-                                            GradientStop {
-                                                position: 1.00
-                                                color: {
-                                                    switch (style) {
-                                                    case "darkblue":
-                                                        return "#143e44"
-                                                    case "lightenYellow":
-                                                        return "#0ca780"
-                                                    case "sunrise":
-                                                        return "#fc9185"
-                                                    default:
-                                                        return "#ccc"
-                                                    }
-                                                }
-                                            }
+                                        color: bg
+                                        border {
+                                            width: 1
+                                            color: $Colors.green200
                                         }
+
                                         IconSvg {
                                             width: 64
                                             height: 64
@@ -287,15 +220,6 @@ BPage {
 
                                             source: icon
                                             color: 'white'
-                                        }
-                                        Components.ClipRRect {
-                                            anchors.fill: parent
-                                            visible: image.toString() !== ""
-                                            Image {
-                                                id: img
-                                                source: image
-                                                anchors.fill: parent
-                                            }
                                         }
 
                                         MouseArea {
@@ -310,35 +234,6 @@ BPage {
                                                 } else if (action === "identify") {
                                                     page_view.push(
                                                                 navigator.plantIdentifierPage)
-                                                } else {
-                                                    let title = ""
-                                                    let pk = 0
-                                                    if (action === "categorie_plantes_herbes") {
-                                                        title = qsTr("Herbal")
-                                                        pk = 1
-                                                    } else if (action
-                                                               === "categorie_plantes_legumes") {
-                                                        title = qsTr("Vegetables")
-                                                        pk = 2
-                                                    } else if (action
-                                                               === "categorie_plantes_orchidee") {
-                                                        title = qsTr("Orchids")
-                                                        pk = 3
-                                                    } else if (action
-                                                               === "categorie_plantes_fleuries") {
-                                                        title = qsTr("Floral plants")
-                                                        pk = 4
-                                                    } else if (action === "categorie_plantes_cactus_succulentes") {
-                                                        title = qsTr("Les cactus & succculents")
-                                                        pk = 5
-                                                    } else if (action
-                                                               === "categorie_plantes_feuillage") {
-                                                        title = qsTr("Foiliage plantes")
-                                                        pk = 6
-                                                    }
-
-                                                    page_view.push(
-                                                                navigator.plantCategoriesBrowserPage, {category_id: pk, title})
                                                 }
                                             }
                                         }
@@ -354,13 +249,94 @@ BPage {
                                         font.weight: Font.Medium
                                         horizontalAlignment: Label.AlignHCenter
                                         verticalAlignment: Label.AlignVCenter
-                                        text: name
+                                        text: qsTr("Suggested plants")
                                     }
                                 }
+
                             }
+
+                            Item {
+                                Layout.fillWidth: true
+                            }
+
                         }
+
+                        Column {
+                            width: parent.width
+                            leftPadding: 10
+                            topPadding: 20
+                            spacing: 7
+                            Label {
+                                text: qsTr("Plants you recorded")
+                                color: $Colors.colorPrimary
+                                font {
+                                    pixelSize: 16
+                                    weight: Font.Bold
+                                }
+                            }
+
+                            Flickable {
+                                height: 120
+                                width: parent.width
+                                contentWidth: _insideRow.width
+                                clip: true
+                                anchors.topMargin: 20
+
+                                Row {
+                                    id: _insideRow
+                                    spacing: 10
+
+                                    Repeater {
+                                        model: $Model.space.plantInSpace
+                                        delegate: Components.GardenPlantLine {
+                                            property var plant: JSON.parse(plant_json)
+                                            width: 300
+                                            height: 100
+                                            title: plant.name_scientific
+                                            subtitle: plant.noms_communs[0]?.name ?? ""
+                                            roomName: ""
+                                            background.color: $Colors.colorSecondary
+                                            imageSource: plant.images_plantes.length
+                                                         > 0 ? "https://blume.mahoudev.com/assets/"
+                                                               + plant.images_plantes[0].directus_files_id : ""
+                                            onClicked: $Signaler.showPlant(plant)
+                                        }
+                                    }
+
+
+                                }
+
+
+                            }
+
+                        }
+
+                        Column {
+                            width: parent.width
+                            leftPadding: 10
+                            rightPadding: 10
+                            topPadding: 20
+                            spacing: 7
+                            Label {
+                                text: qsTr("Some plants")
+                                color: $Colors.colorPrimary
+                                font {
+                                    pixelSize: 16
+                                    weight: Font.Bold
+                                }
+                            }
+
+                            Components.SearchPlants {
+                                width: parent.width - 20
+                                height: plantBrowser.height
+                                hideSearchBar: true
+                            }
+
+                        }
+
                     }
                 }
+
             }
         }
 
