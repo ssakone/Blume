@@ -56,6 +56,9 @@ Item {
     property var registerPage: Component {
         Register {}
     }
+    property var signupPage: Component {
+        SignUp {}
+    }
     property var gardenPlantsList: Component {
         GardenPlantsList {}
     }

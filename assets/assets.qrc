@@ -7400,6 +7400,9 @@
         <file>icons_custom/scan_plant.svg</file>
         <file>icons_custom/tips_child.svg</file>
         <file>icons_custom/tips_child.png</file>
+        <file>img/plant_pot.png</file>
+        <file>icons_custom/tulipe_left.svg</file>
+        <file>icons_custom/tulipe_right.svg</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

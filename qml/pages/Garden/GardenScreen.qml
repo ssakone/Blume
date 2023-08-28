@@ -192,6 +192,10 @@ BPage {
                     anchors.centerIn: parent
                     source: Icons.bell
                     color: $Colors.colorPrimary
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: page_view.push(navigator.loginPage)
+                    }
                 }
             }
         }

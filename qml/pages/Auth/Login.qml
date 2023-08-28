@@ -1,184 +1,127 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Controls.Material
 import QtQuick.Layouts
-import SortFilterProxyModel
-import QtMultimedia
-import QtQuick.Dialogs
 import ImageTools
-import Qt.labs.platform
 
-import Qt5Compat.GraphicalEffects
-
+import QtQuick.Controls.Material
 import ThemeEngine 1.0
-
-import MaterialIcons
 import "../../components"
 import "../../components_generic"
 import "../../components_js/Http.js" as Http
 
 BPage {
-    id: root
-
-    property bool isSubmiting: false
-    property string errorText: ""
-
-    function handleLogin() {
-        isSubmiting = true
-        const payload = {
-            "email": emailField.text,
-            "password": pwdField.text
-        }
-
-        Http.login(payload).then(response => {
-            isSubmiting = false
-            const access_token = JSON.parse(response)?.data?.access_token
-            if(access_token) {
-                 settingsManager.authAccessToken = access_token
-             } else errorText = "Une erreur inattendue s'est produite !"
-
-       })
-        .catch(err => {
-                   isSubmiting = false
-                   if(err.status === 0) errorText = "Veuillez vérifier votre connexion internet et reéssayez !"
-                   else errorText = JSON.parse(err.content).errors[0]?.message
-               })
-    }
-
+    id: askPage
+    property string currentObj: ""
     header: AppBar {
-        title: "Connexion"
+        title: ""
     }
-
-    background: Rectangle {
-        color: Theme.colorPrimary
-    }
-
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 20
 
-        Alert {
+        Rectangle {
+            id: head
+            Layout.preferredHeight: 250
             Layout.fillWidth: true
-            Layout.minimumHeight: 40
-            time: 5000
-            visible: errorText !== ""
-            text: errorText
-            callback: function() {
-                root.errorText = "";
+            color: $Colors.colorPrimary
+
+
+            Image {
+                source: "qrc:/assets/img/plant_pot.png"
+                width: parent.width
+                fillMode: Image.PreserveAspectCrop
             }
         }
 
-        Item {
-            Layout.fillHeight: true
-        }
-
-        ClipRRect {
-            Layout.preferredWidth: 150
-            Layout.preferredHeight: 150
-            Layout.alignment: Qt.AlignHCenter
-            IconSvg {
-                anchors.fill: parent
-                source: "qrc:/assets/logos/blume.svg"
-            }
-        }
 
         Column {
+            id: colHeadFaqForm
             Layout.fillWidth: true
-            padding: 10
-            spacing: 25
+            Layout.fillHeight: true
+            Layout.topMargin: -60
 
-            Column {
-                width: parent.width - 2*parent.padding
+            Rectangle {
+                width: parent.width
+                height: insideCol2.height + 70
+                color: $Colors.colorTertiary
+                radius: 50
+                IconSvg {
+                    source: "qrc:/assets/icons_custom/tulipe_right.svg"
+                    height: 180
+                    anchors {
+                        right: parent.right
+                        bottom: parent.bottom
+                        bottomMargin: 200
+                    }
+                }
 
-                TextField {
-                    id: emailField
+                IconSvg {
+                    source: "qrc:/assets/icons_custom/tulipe_left.svg"
+                    height: 180
+                    width: 70
+                    anchors {
+                        left: parent.left
+                        bottom: parent.bottom
+                        bottomMargin: 40
+                    }
+                }
+
+                Column {
+                    id: insideCol2
                     width: parent.width
-                    height: 60
-                    leftPadding: 40
-                    font.pixelSize: 16
-                    font.weight: Font.Light
-                    placeholderText: qsTr("Email")
+                    padding: width < 500 ? 10 : width / 11
+                    topPadding: 30
+                    bottomPadding: 70
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    spacing: 15
 
                     IconSvg {
-                        source: Icons.account
-                        anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 30
-                        height: width
-                        color: "white"
+                        width: 150
+                        height: 150
+                        source: "qrc:/assets/logos/blume.svg"
+                        anchors.horizontalCenter: parent.horizontalCenter
                     }
-                }
 
-                TextField {
-                    id: pwdField
-                    width: parent.width
-                    height: 60
-                    leftPadding: 40
-                    font.pixelSize: 16
-                    font.weight: Font.Light
-                    placeholderText: qsTr("Password")
-
-                    IconSvg {
-                        source: Icons.security
-                        anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
-                        color: "white"
-                        width: 30
-                        height: width
+                    Label {
+                        text: qsTr("Register or sign up to your Blume account to get access to all features")
+                        width: (parent.width - parent.padding * 2) / 1.4
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        wrapMode: Text.Wrap
+                        font {
+                            weight: Font.Light
+                            pixelSize: 15
+                        }
                     }
-                }
-            }
 
-            Column {
-                width: parent.width - 2*parent.padding
-                spacing: 10
-
-                ButtonWireframe {
-                    width: parent.width
-                    height: 60
-                    primaryColor: Theme.colorPrimary
-                    componentRadius: 20
-                    text: qsTr("Log In")
-                    onClicked: handleLogin()
-                    BusyIndicator {
-                        anchors.fill: parent
-                        running: isSubmiting
+                    NiceButton {
+                        text: qsTr("Log in")
+                        width: 180
+                        height: 50
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        onClicked: {
+                            page_view.pop()
+                            page_view.push(navigator.signupPage)
+                        }
                     }
-                }
+                    NiceButton {
+                        text: qsTr("Sign un")
+                        width: 180
+                        height: 50
+                        anchors.horizontalCenter: parent.horizontalCenter
 
-                ButtonWireframe {
-                    width: parent.width
-                    height: 60
-                    primaryColor: Theme.colorPrimary
-                    fullColor: true
-                    componentRadius: 20
-                    text: qsTr("Sign Un")
-                    onClicked: page_view.push(navigator.registerPage)
-
-                    Rectangle {
-                        anchors.fill: parent
-                        radius: parent.componentRadius
-                        color: Qt.rgba(0, 0, 0, 0)
-                        border {
-                            width: 1
-                            color: "white"
+                        foregroundColor: $Colors.colorPrimary
+                        backgroundColor: $Colors.white
+                        backgroundBorderWidth: 1
+                        backgroundBorderColor: $Colors.colorPrimary
+                        onClicked: {
+                            page_view.pop()
+                            page_view.push(navigator.registerPage)
                         }
                     }
                 }
-
-                Label {
-                    text: qsTr("Forgot password ?")
-                    font.underline: true
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-
             }
-        }
-
-
-        Item {
-            Layout.fillHeight: true
         }
 
     }
