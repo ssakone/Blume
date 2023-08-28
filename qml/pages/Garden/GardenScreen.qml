@@ -154,27 +154,44 @@ BPage {
         anchors.topMargin: 0
         spacing: 10
 
-        Column {
+        RowLayout {
             Layout.fillWidth: true
-            padding: 25
-            topPadding: 5
-            Label {
-                text: qsTr("My Garden")
-                font {
-                    pixelSize: 36
-                    family: "Courrier"
-                    weight: Font.Bold
+            Layout.margins: 25
+            Layout.topMargin: 5
+
+            Column {
+                Layout.fillWidth: true
+                Label {
+                    text: qsTr("My Garden")
+                    font {
+                        pixelSize: 36
+                        family: "Courrier"
+                        weight: Font.Bold
+                    }
+                    color: $Colors.white
                 }
-                color: $Colors.white
+                Label {
+                    text: qsTr("Manage your personal garden efficiently")
+                    opacity: .5
+                    color: $Colors.white
+                    font {
+                        pixelSize: 16
+                        family: "Courrier"
+                        weight: Font.Bold
+                    }
+                }
             }
-            Label {
-                text: qsTr("Manage your personal garden efficiently")
-                opacity: .5
+            Rectangle {
+                Layout.preferredWidth: 40
+                Layout.preferredHeight: Layout.preferredWidth
+                radius: Layout.preferredHeight / 2
                 color: $Colors.white
-                font {
-                    pixelSize: 16
-                    family: "Courrier"
-                    weight: Font.Bold
+
+
+                IconSvg {
+                    anchors.centerIn: parent
+                    source: Icons.bell
+                    color: $Colors.colorPrimary
                 }
             }
         }
@@ -727,18 +744,6 @@ BPage {
         }
     }
 
-    Label {
-        text: qsTr("No pending task")
-        visible: alarmsTodoToday.count === 0 && alarmsLate.count === 0
-        color: $Colors.colorSecondary
-        opacity: 0.8
-        anchors.centerIn: parent
-        anchors.verticalCenterOffset: 120
-        font {
-            weight: Font.Bold
-            pixelSize: 18
-        }
-    }
     Popup {
         id: removeAlarmPopup
         property var alarm
