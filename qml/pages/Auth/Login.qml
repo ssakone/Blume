@@ -102,7 +102,7 @@ BPage {
                         anchors.horizontalCenter: parent.horizontalCenter
                         onClicked: {
                             page_view.pop()
-                            page_view.push(navigator.signupPage)
+                            page_view.push(navigator.signInPage)
                         }
                     }
                     NiceButton {

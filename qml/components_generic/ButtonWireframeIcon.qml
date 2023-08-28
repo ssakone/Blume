@@ -35,7 +35,7 @@ T.Button {
     property string fulltextColor: "white"
     property string primaryColor: Theme.colorPrimary
     property string secondaryColor: Theme.colorComponentBackground
-
+    property int backgroundBorderWidth: Theme.componentBorderWidth
     // animation
     property bool hoverAnimation: isDesktop
 
@@ -83,9 +83,8 @@ T.Button {
         opacity: enabled ? (control.down && !control.hoverAnimation ? 0.8 : 1.0) : 0.4
         color: control.fullColor ? control.primaryColor : control.secondaryColor
 
-        border.width: Theme.componentBorderWidth
+        border.width: control.backgroundBorderWidth
         border.color: control.fullColor ? control.primaryColor : Theme.colorComponentBorder
-
         Rectangle { // mouseBackground
             id: mouseBackground
             width: 0; height: width; radius: width;

@@ -120,7 +120,7 @@
         <file>Constants.qml</file>
         <file>pages/Feed.qml</file>
         <file>components_generic/Avatar.qml</file>
-        <file>pages/Auth/SignUp.qml</file>
+        <file>pages/Auth/SignIn.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>
