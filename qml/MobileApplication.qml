@@ -10,6 +10,7 @@ import QtAndroidTools
 import "pages/Plant/"
 import "pages/Garden"
 import "pages/Auth"
+import "pages"
 import "services/"
 import "models/"
 import "components/"
@@ -534,7 +535,8 @@ ApplicationWindow {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 initialItem: Component {
-                    GardenScreen {}
+//                    GardenScreen {}
+                    TutorialNew {}
                 }
 
                 onDepthChanged: {

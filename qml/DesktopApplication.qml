@@ -480,7 +480,8 @@ ApplicationWindow {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 initialItem: Component {
-                    GardenScreen {}
+//                    GardenScreen {}
+                    TutorialNew {}
                 }
 
                 onDepthChanged: {
