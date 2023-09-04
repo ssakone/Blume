@@ -106,6 +106,50 @@ Loader {
 
             Column {
                 width: parent.width
+                anchors.bottom: parent.top
+                anchors.bottomMargin: -45
+                property bool isActivePage: activePage === "Feed"
+               /* Rectangle {
+                    width: 70
+                    height: width
+                    radius: height/2
+                    color: parent.isActivePage ? $Colors.colorPrimary : control.bgColor
+                    anchors.horizontalCenter: parent.horizontalCenter
+                */
+                    IconSvg {
+                        source: Icons.accountGroup
+                        color: parent.isActivePage ? $Colors.white : $Colors.black
+                        width: 60
+                        height: width
+                    }
+//                }
+
+                Label {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: qsTr("Feed")
+                    color: "white"
+                    visible: control.showTitles
+                }
+            }
+
+
+            componentRadius: 0
+            fullColor: true
+            primaryColor: control.bgColor
+            onClicked: {
+                activePage !== "Feed" && page_view.push(navigator.feedPage)
+                //                appContent.state = "DeviceList"
+            }
+        }
+
+
+        ButtonWireframe {
+            Layout.preferredHeight: 70
+            Layout.alignment: Qt.AlignVCenter
+            Layout.fillWidth: true
+
+            Column {
+                width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
                 property bool isActivePage: activePage === "Health"
                 Rectangle {
@@ -174,46 +218,6 @@ Loader {
             onClicked: {
                 activePage !== "DeviceList" && page_view.push(
                             navigator.deviceList)
-                //                appContent.state = "DeviceList"
-            }
-        }
-
-        ButtonWireframe {
-            Layout.preferredHeight: 70
-            Layout.alignment: Qt.AlignVCenter
-            Layout.fillWidth: true
-
-            Column {
-                width: parent.width
-                anchors.verticalCenter: parent.verticalCenter
-                property bool isActivePage: activePage === "Feed"
-                Rectangle {
-                    width: 50
-                    height: width
-                    radius: height/2
-                    color: parent.isActivePage ? $Colors.colorPrimary : control.bgColor
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    ColorImage {
-                        source: Icons.accountGroup
-                        color: parent.parent.isActivePage ? $Colors.white : $Colors.black
-                        anchors.centerIn: parent
-                    }
-                }
-
-                Label {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr("Feed")
-                    color: "white"
-                    visible: control.showTitles
-                }
-            }
-
-
-            componentRadius: 0
-            fullColor: true
-            primaryColor: control.bgColor
-            onClicked: {
-                activePage !== "Feed" && page_view.push(navigator.feedPage)
                 //                appContent.state = "DeviceList"
             }
         }
