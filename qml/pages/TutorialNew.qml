@@ -20,13 +20,14 @@ BPage {
             Layout.fillWidth: true
 
 
-            Item {
+            Rectangle {
+                color: $Colors.gray50
                 ColumnLayout {
                     anchors.fill: parent
                     anchors.topMargin: 50
                     anchors.bottomMargin: 50
                     Label {
-                        text: "Welcome"
+                        text: "Welcome !"
                         color: $Colors.green700
                         font {
                             pixelSize: 24
@@ -46,21 +47,35 @@ BPage {
                         Layout.fillWidth: true
                         Layout.alignment: Qt.AlignHCenter
 
-                        Label {
-                            text: qsTr("Blume identifies your plants")
-                            color: $Colors.green700
-                            font {
-                                pixelSize: 18
-                                weight: Font.DemiBold
-                            }
-                            horizontalAlignment: Text.AlignHCenter
+                        Row {
                             anchors.horizontalCenter: parent.horizontalCenter
+                            Label {
+                                text: qsTr("Blume")
+                                color: $Colors.green700
+                                font {
+                                    pixelSize: 18
+                                    weight: Font.DemiBold
+                                }
+                                anchors.bottom: parent.bottom
+                            }
+
+                            Label {
+                                text: qsTr(" identifies your plants")
+                                font {
+                                    pixelSize: 16
+                                    weight: Font.Light
+                                }
+                                anchors.bottom: parent.bottom
+                            }
+
                         }
+
+
                         Label {
-                            text: "and detects the health status"
+                            text: "and detects the health status of your plants"
                             font {
-                                pixelSize: 18
-                                weight: Font.DemiBold
+                                pixelSize: 16
+                                weight: Font.Light
                             }
                             horizontalAlignment: Text.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
@@ -72,20 +87,21 @@ BPage {
             }
 
             Rectangle {
-                color: $Colors.green100
+                color: $Colors.green50
+                clip: true
 
                 Rectangle {
                     anchors {
                         bottom: parent.top
-                        bottomMargin: -220
+                        bottomMargin: -370
                         horizontalCenter: parent.horizontalCenter
                     }
 
                     height: 1200
-                    width: height / 1.7
-                    radius: height
+                    width: height / 2.9
+                    radius: height * 0.9
 
-                    color: $Colors.primary
+                    gradient: $Colors.gradientPrimary
                 }
 
                 ColumnLayout {
@@ -134,37 +150,59 @@ BPage {
 
                         background: Rectangle {
                             color: $Colors.colorTertiary
-                            radius: 20
+                            radius: 10
                         }
                         Label {
                             text: qsTr("It also works great with a couple of")
+                            anchors.horizontalCenter: parent.horizontalCenter
                         }
-                        Repeater {
-                            model: 2
 
-                            Row {
-                                leftPadding: 15
-                                spacing: 15
-                                Rectangle {
-                                    width: 25
-                                    height: width
-                                    border {
-                                        width: 1
-                                        color: $Colors.green400
-                                    }
-                                    anchors.verticalCenter: parent.verticalCenter
+                        Row {
+                            width: parent.width
+                            leftPadding: 30
+                            spacing: 15
+                            Rectangle {
+                                width: 25
+                                height: width
+                                anchors.verticalCenter: parent.verticalCenter
 
-                                    IconSvg {
-                                        anchors.centerIn: parent
-                                        source: Icons.checkBoxOutline
-                                        color: $Colors.colorPrimary
-                                    }
+                                IconSvg {
+                                    anchors.centerIn: parent
+                                    source: Icons.checkBoxOutline
+                                    color: $Colors.colorPrimary
                                 }
-                                Label {
-                                    text: qsTr("Thermometer")
-                                    font.pixelSize: 16
-                                    anchors.verticalCenter: parent.verticalCenter
+                            }
+                            Label {
+                                text: qsTr("Thermometers")
+                                font.pixelSize: 16
+                                color: $Colors.colorPrimary
+                                width: parent.width - 2*parent.leftPadding
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                        }
+
+                        Row {
+                            width: parent.width
+                            leftPadding: 30
+                            spacing: 15
+                            Rectangle {
+                                width: 25
+                                height: width
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                IconSvg {
+                                    anchors.centerIn: parent
+                                    source: Icons.checkBoxOutline
+                                    color: $Colors.colorPrimary
                                 }
+                            }
+                            Label {
+                                text: qsTr("Other sensors like air quality monitors and weather")
+                                font.pixelSize: 16
+                                color: $Colors.colorPrimary
+                                width: parent.width - 3*parent.leftPadding
+                                wrapMode: Text.Wrap
+                                anchors.verticalCenter: parent.verticalCenter
                             }
                         }
 
@@ -174,7 +212,7 @@ BPage {
             }
 
             Rectangle {
-                color: $Colors.colorTertiary
+                color: $Colors.gray50
                 ColumnLayout {
                     anchors {
                         fill: parent
@@ -186,6 +224,7 @@ BPage {
                         Layout.fillWidth: true
 
                         Label {
+                            id: _insideText1
                             horizontalAlignment: Text.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             text: qsTr("Recognizing plant")
@@ -196,9 +235,9 @@ BPage {
                             }
                         }
                         Label {
-                            horizontalAlignment: Text.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: qsTr("Disease !")
+                            horizontalAlignment: Text.AlignLeft
+                            anchors.left: _insideText1.left
+                            text: qsTr("DISEASE !")
                             color: $Colors.colorPrimary
                             font {
                                 pixelSize: 28
@@ -207,13 +246,17 @@ BPage {
                         }
                     }
 
-                    Image {
+                    ClipRRect {
                         Layout.fillHeight: true
                         Layout.fillWidth: true
                         Layout.leftMargin: 15
                         Layout.rightMargin: 15
-                        source: "qrc:/assets/img/orchidee.jpg"
-                        fillMode: Image.PreserveAspectCrop
+
+                        Image {
+                            anchors.fill: parent
+                            source: "qrc:/assets/img/orchidee.jpg"
+                            fillMode: Image.PreserveAspectCrop
+                        }
                     }
 
                     Rectangle {
@@ -221,7 +264,8 @@ BPage {
                         Layout.fillWidth: true
                         Layout.leftMargin: 25
                         Layout.rightMargin: 25
-                        color: $Colors.green100
+                        Layout.bottomMargin: 35
+                        color: "#DBFFEE"
                         radius: 10
 
                         Row {
@@ -230,13 +274,114 @@ BPage {
                             leftPadding: 12
                             rightPadding: 12
 
-                            Image {
-                                source: "qrc:/assets/img/orchidee.jpg"
-                                fillMode: Image.PreserveAspectCrop
-                                width: 80
+                            ClipRRect {
+                                width: 60
                                 height: 40
+                                radius: 15
                                 anchors.verticalCenter: parent.verticalCenter
+                                Image {
+                                    source: "qrc:/assets/img/orchidee.jpg"
+                                    fillMode: Image.PreserveAspectCrop
+                                    anchors.fill: parent
+                                }
                             }
+
+
+                            Column {
+                                Label {
+                                    text: qsTr("Abutilon pictum")
+                                    font {
+                                        pixelSize: 18
+                                        weight: Font.DemiBold
+                                    }
+                                    color: $Colors.colorPrimary
+                                }
+                                Label {
+                                    text: qsTr("Erable à fleur lanterne")
+                                    color: $Colors.colorPrimary
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                color: $Colors.gray50
+                ColumnLayout {
+                    anchors {
+                        fill: parent
+                        topMargin: 50
+                        bottomMargin: 50
+                    }
+                    spacing: 25
+                    Column {
+                        Layout.fillWidth: true
+
+                        Label {
+                            id: _insideText2
+                            horizontalAlignment: Text.AlignHCenter
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: qsTr("identify")
+                            color: $Colors.colorPrimary
+                            font {
+                                pixelSize: 28
+                                weight: Font.DemiBold
+                            }
+                        }
+                        Label {
+                            horizontalAlignment: Text.AlignLeft
+                            anchors.left: _insideText2.left
+                            text: qsTr("PLANT !")
+                            color: $Colors.colorPrimary
+                            font {
+                                pixelSize: 28
+                                weight: Font.Bold
+                            }
+                        }
+                    }
+
+                    ClipRRect {
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                        Layout.leftMargin: 15
+                        Layout.rightMargin: 15
+                        radius: 15
+
+                        Image {
+                            anchors.fill: parent
+                            source: "qrc:/assets/tutorial/welcome-plant-green-pot.png"
+                            fillMode: Image.PreserveAspectCrop
+                        }
+                    }
+
+                    Rectangle {
+                        Layout.preferredHeight: 60
+                        Layout.fillWidth: true
+                        Layout.leftMargin: 25
+                        Layout.rightMargin: 25
+                        Layout.bottomMargin: 35
+                        color: "#DBFFEE"
+                        radius: 10
+
+                        Row {
+                            spacing: 35
+                            padding: 7
+                            leftPadding: 12
+                            rightPadding: 12
+
+                            ClipRRect {
+                                width: 60
+                                height: 40
+                                radius: 10
+                                anchors.verticalCenter: parent.verticalCenter
+                                Image {
+                                    source: "qrc:/assets/img/orchidee.jpg"
+                                    fillMode: Image.PreserveAspectCrop
+                                    anchors.fill: parent
+                                }
+                            }
+
 
                             Column {
                                 Label {
@@ -257,331 +402,114 @@ BPage {
                 }
             }
 
-            Rectangle {
-                color: $Colors.colorTertiary
-                ColumnLayout {
-                    anchors {
-                        fill: parent
-                        topMargin: 50
-                        bottomMargin: 50
-                    }
-                    spacing: 25
-                    Column {
-                        Layout.fillWidth: true
-
-                        Label {
-                            horizontalAlignment: Text.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: qsTr("Identify")
-                            color: $Colors.colorPrimary
-                            font {
-                                pixelSize: 28
-                                weight: Font.DemiBold
-                            }
-                        }
-                        Label {
-                            horizontalAlignment: Text.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: qsTr("PLANT !")
-                            color: $Colors.colorPrimary
-                            font {
-                                pixelSize: 28
-                                weight: Font.Bold
-                            }
-                        }
-                    }
-
-                    IconSvg {
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                        Layout.leftMargin: 15
-                        Layout.rightMargin: 15
-                        source: "qrc:/assets/tutorial/welcome-plant-green-pot.png"
-                        fillMode: Image.PreserveAspectCrop
-                    }
-
-                    Container {
-                        Layout.fillWidth: true
-                        Layout.leftMargin: 25
-                        Layout.rightMargin: 25
-
-                        background: Rectangle {
-                            color: $Colors.green100
-                            radius: 10
-                        }
-
-                        contentItem: Row {
-                            spacing: 35
-                            padding: 7
-                            leftPadding: 12
-                            rightPadding: 12
-                        }
-
-                        IconSvg {
-                            source: "qrc:/assets/tutorial/welcome-plant-green-pot.png"
-                            fillMode: Image.PreserveAspectCrop
-                            width: 80
-                            height: 40
-                            anchors.verticalCenter: parent.verticalCenter
-                        }
-
-                        Column {
-                            Label {
-                                text: qsTr("Abutilon pictum")
-                                font {
-                                    pixelSize: 18
-                                    weight: Font.DemiBold
-                                }
-                                color: $Colors.colorPrimary
-                            }
-                            Label {
-                                text: qsTr("Erable à fleur lanterne")
-                                color: $Colors.colorPrimary
-                            }
-                            Label {
-                                text: qsTr("chinoise d'erable à l'intérieur")
-                                color: $Colors.colorPrimary
-                            }
-                        }
-
-                    }
-                }
-            }
-
             Item {
-                id: root
-                property color shade: Qt.rgba(15, 200, 15, 0.7)
-
-                IconSvg {
-                    source: "qrc:/assets/icons_custom/tulipe_left.svg"
-                    height: 180
-                    width: 70
-                    anchors {
-                        left: parent.left
-                        top: parent.top
-                        topMargin: 150
-                    }
-                    transform: Rotation {
-                        angle: 10
-                    }
-                }
-
                 ColumnLayout {
                     anchors.fill: parent
-                    anchors.margins: 25
-                    spacing: 25
 
-                    Item {
-                        Layout.fillHeight: true
-                    }
-
-                    IconSvg {
-                        source: "qrc:/assets/logos/logo.svg"
-                        Layout.preferredHeight: 120
-                        Layout.preferredWidth: Layout.preferredHeight
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    ColumnLayout {
+                    Rectangle {
+                        id: head
+                        Layout.preferredHeight: 250
                         Layout.fillWidth: true
-                        spacing: 20
+                        color: $Colors.colorPrimary
 
-                        Column {
-                            Layout.fillWidth: true
-                            spacing: 7
 
-                            Label {
-                                text: qsTr("Nom")
-                            }
-                            TextField {
-                                id: nameInput
-                                padding: 5
-                                leftPadding: 40
-
-                                width: parent.width
-                                height: 50
-
-                                verticalAlignment: Text.AlignVCenter
-
-                                font {
-                                    pixelSize: 14
-                                    weight: Font.Light
-                                }
-
-                                background: Rectangle {
-                                    radius: 15
-                                    color: root.shade
-                                    border {
-                                        color: $Colors.colorPrimary
-                                        width: 1
-                                    }
-                                }
-
-                                IconSvg {
-                                    anchors.leftMargin: 7
-                                    source: Icons.account
-                                    color: $Colors.colorPrimary
-                                    anchors.verticalCenter: parent.verticalCenter
-                                }
-                            }
-
+                        Image {
+                            source: "qrc:/assets/img/plant_pot.png"
+                            width: parent.width
+                            fillMode: Image.PreserveAspectCrop
                         }
-
-                        Column {
-                            Layout.fillWidth: true
-                            spacing: 7
-
-                            Label {
-                                text: qsTr("Prenom")
-                            }
-                            TextField {
-                                id: pwdInput
-                                padding: 5
-                                leftPadding: 40
-
-                                width: parent.width
-                                height: 50
-
-                                verticalAlignment: Text.AlignVCenter
-
-                                font {
-                                    pixelSize: 14
-                                    weight: Font.Light
-                                }
-
-                                background: Rectangle {
-                                    radius: 15
-                                    color: root.shade
-                                    border {
-                                        color: $Colors.colorPrimary
-                                        width: 1
-                                    }
-                                }
-
-                                IconSvg {
-                                    anchors.leftMargin: 10
-                                    source: Icons.account
-                                    color: $Colors.colorPrimary
-                                    anchors.verticalCenter: parent.verticalCenter
-                                }
-                            }
-
-                        }
-
-                        Column {
-                            Layout.fillWidth: true
-                            spacing: 7
-
-                            Label {
-                                text: qsTr("Email")
-                            }
-                            TextField {
-                                id: emailInput
-                                padding: 5
-                                leftPadding: 40
-
-                                width: parent.width
-                                height: 50
-
-                                verticalAlignment: Text.AlignVCenter
-
-                                font {
-                                    pixelSize: 14
-                                    weight: Font.Light
-                                }
-
-                                background: Rectangle {
-                                    radius: 15
-                                    color: root.shade
-                                    border {
-                                        color: $Colors.colorPrimary
-                                        width: 1
-                                    }
-                                }
-
-                                IconSvg {
-                                    anchors.leftMargin: 10
-                                    source: Icons.email
-                                    color: $Colors.colorPrimary
-                                    anchors.verticalCenter: parent.verticalCenter
-                                }
-                            }
-
-                        }
-
-                        Column {
-                            Layout.fillWidth: true
-                            spacing: 7
-
-                            Label {
-                                text: qsTr("Username")
-                            }
-                            TextField {
-                                id: usernameInput
-                                padding: 5
-                                leftPadding: 40
-
-                                width: parent.width
-                                height: 50
-
-                                verticalAlignment: Text.AlignVCenter
-
-                                font {
-                                    pixelSize: 14
-                                    weight: Font.Light
-                                }
-
-                                background: Rectangle {
-                                    radius: 15
-                                    color: root.shade
-                                    border {
-                                        color: $Colors.colorPrimary
-                                        width: 1
-                                    }
-                                }
-
-                                IconSvg {
-                                    anchors.leftMargin: 50
-                                    source: Icons.tag
-                                    color: $Colors.colorPrimary
-                                    anchors.verticalCenter: parent.verticalCenter
-                                }
-                            }
-
-                        }
-
-                        NiceButton {
-                            text: qsTr("S'inscrire")
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 60
-                            Layout.topMargin: 10
-
-                            foregroundColor: $Colors.white
-                            backgroundColor: $Colors.colorPrimary
-                        }
-
-                        RowLayout {
-                            Layout.fillWidth: true
-                            Layout.margins: 10
-                            Item {
-                                Layout.fillWidth: true
-                            }
-                            Label {
-                                text: qsTr("Passer")
-                                color: $Colors.colorPrimary
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: swipeView.currentIndex++
-                                }
-                            }
-                        }
-
                     }
 
 
-                    Item {
+                    Column {
+                        id: colHeadFaqForm
+                        Layout.fillWidth: true
                         Layout.fillHeight: true
+
+                        Rectangle {
+                            width: parent.width
+                            height: insideCol2.height + 70
+                            color: $Colors.colorTertiary
+                            radius: 50
+                            IconSvg {
+                                source: "qrc:/assets/icons_custom/tulipe_right.svg"
+                                height: 180
+                                anchors {
+                                    right: parent.right
+                                    bottom: parent.bottom
+                                    bottomMargin: 200
+                                }
+                            }
+
+                            IconSvg {
+                                source: "qrc:/assets/icons_custom/tulipe_left.svg"
+                                height: 180
+                                width: 70
+                                anchors {
+                                    left: parent.left
+                                    bottom: parent.bottom
+                                    bottomMargin: 40
+                                }
+                            }
+
+                            Column {
+                                id: insideCol2
+                                width: parent.width
+                                padding: width < 500 ? 10 : width / 11
+                                topPadding: 30
+                                bottomPadding: 70
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                spacing: 15
+
+                                IconSvg {
+                                    width: 150
+                                    height: 150
+                                    source: "qrc:/assets/logos/blume.svg"
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                }
+
+                                Label {
+                                    text: qsTr("Register or sign up to your Blume account to get access to all features")
+                                    width: (parent.width - parent.padding * 2) / 1.4
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    horizontalAlignment: Text.AlignHCenter
+                                    wrapMode: Text.Wrap
+                                    font {
+                                        weight: Font.Light
+                                        pixelSize: 15
+                                    }
+                                }
+
+                                NiceButton {
+                                    text: qsTr("Log in")
+                                    width: 180
+                                    height: 50
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    onClicked: {
+                                        page_view.pop()
+                                        page_view.push(navigator.signInPage)
+                                    }
+                                }
+                                NiceButton {
+                                    text: qsTr("Sign un")
+                                    width: 180
+                                    height: 50
+                                    anchors.horizontalCenter: parent.horizontalCenter
+
+                                    foregroundColor: $Colors.colorPrimary
+                                    backgroundColor: $Colors.white
+                                    backgroundBorderWidth: 1
+                                    backgroundBorderColor: $Colors.colorPrimary
+                                    onClicked: {
+                                        page_view.pop()
+                                        page_view.push(navigator.registerPage)
+                                    }
+                                }
+                            }
+                        }
                     }
+
                 }
 
             }
@@ -597,43 +525,45 @@ BPage {
                 }
             }
         }
-
-//        Container {
-//            Layout.fillWidth: true
-
-//            background: Rectangle {
-//                color: $Colors.colorTertiary
-//            }
-
-//            contentItem: RowLayout {
-//                Layout.fillWidth: true
-//            }
-
-//            Item {
-//                Layout.fillWidth: true
-//            }
-
-//            PageIndicator {
-//                count: swipeView.count
-//                currentIndex: swipeView.currentIndex
-//            }
-
-//            Item {
-//                Layout.fillWidth: true
-//            }
-//        }
-
-
     }
 
-    PageIndicator {
-        count: swipeView.count - 1
-        currentIndex: swipeView.currentIndex
+    RowLayout {
+        width: parent.width
 
         anchors {
             bottom: parent.bottom
-            bottomMargin: 10
-            horizontalCenter: parent.horizontalCenter
+            bottomMargin: 15
+        }
+
+        Item {
+            Layout.fillWidth: true
+        }
+
+        PageIndicator {
+            count: swipeView.count - 1
+            currentIndex: swipeView.currentIndex
+            leftPadding: 25
+            spacing: 15
+            delegate: Rectangle {
+                width: 15
+                height: width
+                radius: height/2
+                color: index === swipeView.currentIndex ? $Colors.colorBlue : $Colors.colorPrimary
+            }
+        }
+
+        Item {
+            Layout.fillWidth: true
+        }
+
+        Label {
+            text: qsTr("Passer")
+            color: $Colors.colorPrimary
+            rightPadding: 20
+            MouseArea {
+                anchors.fill: parent
+                onClicked: swipeView.currentIndex = swipeView.count - 1
+            }
         }
     }
 }

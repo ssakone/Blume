@@ -170,63 +170,77 @@ BPage {
                     color: $Colors.primary
                 }
 
-                Item {
-//                    anchors.top: parent.top
-//                    anchors.topMargin: 14
-//                    anchors.left: parent.left
-//                    anchors.leftMargin: 12
-//                    anchors.right: parent.right
-//                    anchors.rightMargin: 75
+                Column {
+                    topPadding: 50
                     width: parent.width
-                    height: 60
+                    spacing: 7
+                    anchors.horizontalCenter: parent.horizontalCenter
 
-                    MouseArea {
-                        id: diseaseSearchBoxMS
-                        anchors.fill: parent
-                        anchors.rightMargin: 70
-                        onClicked: {
-                            page_view.push(navigator.deseaseEncyclopedie)
-                        }
-                    }
-
-
-                    TextFieldThemed {
-                        id: diseaseSearchBox
-                        anchors {
-                            top: parent.top
-                            left: parent.left
-                            right: cameraIcon.left
-                            margins: 7
-                            verticalCenter: parent.verticalCenter
-                        }
-
-                        z: 10
-                        enabled: false
-
-                        placeholderText: qsTr("Search for diseases")
-                        selectByMouse: true
-                        colorSelectedText: "white"
-                    }
-
-                    Rectangle {
-                        id: cameraIcon
-                        anchors.right: parent.right
-                        anchors.verticalCenter: parent.verticalCenter
-                        height: 50
-                        width: 50
+                    Label {
+                        text: qsTr("Diagnostiquez la santé de votre plante")
                         color: $Colors.white
-                        enabled: true
-                        radius: 25
-
-                        IconSvg {
-                            anchors.centerIn: parent
-                            source: Icons.camera
-                            color: $Colors.colorPrimary
+                        font {
+                            pixelSize: 16
                         }
+                        anchors.horizontalCenter: parent.horizontalCenter
                     }
 
-                }
+                    Item {
+                        width: parent.width - 50
+                        anchors.leftMargin: 25
+                        anchors.rightMargin: 25
+                        height: 60
+                        anchors.horizontalCenter: parent.horizontalCenter
 
+                        MouseArea {
+                            id: diseaseSearchBoxMS
+                            anchors.fill: parent
+                            anchors.rightMargin: 70
+                            onClicked: {
+                                page_view.push(navigator.deseaseEncyclopedie)
+                            }
+                        }
+
+
+                        Rectangle {
+                            id: diseaseSearchBox
+                            anchors {
+                                top: parent.top
+                                left: parent.left
+                                right: cameraIcon.left
+                                margins: 7
+                                verticalCenter: parent.verticalCenter
+                            }
+                            radius: 25
+
+                            z: 10
+
+                            Text {
+                                anchors.centerIn: parent
+                                text: qsTr("Search for diseases")
+                            }
+
+                        }
+
+                        Rectangle {
+                            id: cameraIcon
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+                            height: 40
+                            width: 40
+                            color: $Colors.white
+                            enabled: true
+                            radius: 25
+
+                            IconSvg {
+                                anchors.centerIn: parent
+                                source: Icons.camera
+                                color: $Colors.colorPrimary
+                            }
+                        }
+
+                    }
+                }
 
                 Item {
                     anchors.fill: parent
@@ -246,137 +260,26 @@ BPage {
                             topPadding: diseaseSearchBox.height + 40
                             spacing: 20
 
-                            Item {
-                                width: parent.width
-                                height: (3 * ((parent.width - (20)) / 3)) + 30
-                                ListModel {
-                                    id: optionModel
-
-                                    Component.onCompleted: {
-                                        let data = [{
-                                                        "name": qsTr("Detect disease"),
-                                                        "icon": Icons.magnifyScan,
-                                                        "image": "",
-                                                        "action": "analyser",
-                                                        "style": "darkblue",
-                                                        "bg": $Colors.colorPrimary
-                                                    }, {
-                                                        "name": qsTr("Identify parasits"),
-                                                        "icon": Icons.bug,
-                                                        "image": "",
-                                                        "action": "insect",
-                                                        "style": "lightBlue",
-                                                        "bg": $Colors.colorPrimary
-                                                    }, {
-                                                        "name": qsTr(
-                                                                    "Book of diseases"),
-                                                        "icon": Icons.bookOpenOutline,
-                                                        "image": "",
-                                                        "action": "encyclopedie",
-                                                        "style": "lightenYellow",
-                                                        "bg": $Colors.colorPrimary
-                                                    }, {
-                                                        "name": qsTr("Get help"),
-                                                        "icon": Icons.helpCircle,
-                                                        "image": "",
-                                                        "action": "faq",
-                                                        "style": "lightenYellow",
-                                                        "bg": $Colors.colorPrimary
-                                                    }]
-                                        data.forEach((plant => append(plant)))
-                                    }
+                            RowLayout {
+                                Image {
+                                    Layout.preferredWidth: 80
                                 }
-                                GridView {
-                                    id: gr
-                                    y: 10
-                                    interactive: false
-                                    width: parent.width
-                                    height: parent.height - 20
-                                    cellWidth: gr.width > 800 ? gr.width / 4 : (gr.width > 500 ? gr.width / 3 : gr.width / 2)
-                                    cellHeight: cellWidth
-                                    model: optionModel
-                                    delegate: Item {
-                                        width: gr.cellWidth
-                                        height: width
-                                        Rectangle {
-                                            anchors.fill: parent
-                                            anchors.bottomMargin: 35
-                                            anchors.rightMargin: 15
-                                            anchors.leftMargin: 15
-                                            radius: 10
-                                            opacity: mArea.containsMouse ? .8 : 1
-                                            color: bg
-                                            border {
-                                                width: 1
-                                                color: $Colors.green200
-                                            }
-                                            IconSvg {
-                                                width: parent.width / 2
-                                                height: width
-                                                visible: icon !== ""
-                                                anchors.centerIn: parent
-
-                                                source: icon
-                                                color: 'white'
-                                            }
-                                            Image {
-                                                id: img
-                                                visible: image.toString() !== ""
-                                                source: image
-                                                anchors.fill: parent
-                                                layer.enabled: true
-                                                layer.effect: OpacityMask {
-                                                    maskSource: Item {
-                                                        width: img.width
-                                                        height: img.height
-                                                        Rectangle {
-                                                            anchors.centerIn: parent
-                                                            width: img.adapt ? img.width : Math.min(
-                                                                                   img.width,
-                                                                                   img.height)
-                                                            height: img.adapt ? img.height : width
-                                                            radius: 10
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            MouseArea {
-                                                id: mArea
-                                                anchors.fill: parent
-                                                enabled: action !== ""
-                                                hoverEnabled: enabled
-                                                onClicked: {
-                                                    switch (action) {
-                                                    case "analyser":
-                                                        identifierLayoutView.currentIndex++
-                                                        break
-                                                    case "encyclopedie":
-                                                        page_view.push(
-                                                                    plantDeseaseEncyclopedie)
-                                                        break
-                                                    case "faq":
-                                                        page_view.push(faqPage)
-                                                        break
-                                                    case "insect":
-                                                        page_view.push(
-                                                                    insectIndentifier)
-                                                        break
-                                                    }
-                                                }
-                                            }
+                                Column {
+                                    Layout.fillWidth: true
+                                    Label {
+                                        text: qsTr("Vérifiez votre plante")
+                                        color: $Colors.colorPrimary
+                                        font {
+                                            pixelSize: 16
+                                            weight: Font.DemiBold
                                         }
-                                        Label {
-                                            width: parent.width - 10
-                                            anchors.horizontalCenter: parent.horizontalCenter
-                                            anchors.bottom: parent.bottom
-                                            anchors.bottomMargin: 3
-                                            height: 28
-                                            wrapMode: Label.Wrap
-                                            font.pixelSize: 12
-                                            font.weight: Font.Medium
-                                            horizontalAlignment: Label.AlignHCenter
-                                            verticalAlignment: Label.AlignVCenter
-                                            text: name
+                                    }
+                                    Label {
+                                        Layout.fillWidth: true
+                                        wrapMode: Text.Wrap
+                                        text: qsTr("Prenez des photos des parties malades de votre plante. Diagnostiquez et obtenez des")
+                                        font {
+                                            pixelSize: 16
                                         }
                                     }
                                 }
