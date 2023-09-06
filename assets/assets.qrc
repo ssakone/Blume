@@ -7407,6 +7407,8 @@
         <file>tutorial/sensors.svg</file>
         <file>tutorial/welcome-recognize-disease.svg.png</file>
         <file>tutorial/welcome-plant-green-pot.png</file>
+        <file>icons_custom/library.svg</file>
+        <file>img/jardinier.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
