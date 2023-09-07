@@ -219,6 +219,8 @@ BPage {
                                         foregroundColor: $Colors.white
                                         backgroundColor: $Colors.colorPrimary
                                         radius: 10
+
+                                        onClicked: identifierLayoutView.currentIndex++
                                     }
                                 }
                             }
@@ -256,6 +258,10 @@ BPage {
                                             horizontalAlignment: Text.AlignHCenter
                                         }
                                     }
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: identifierLayoutView.currentIndex++
+                                    }
                                 }
                                 Rectangle {
                                     Layout.fillWidth: true
@@ -277,7 +283,7 @@ BPage {
                                             anchors.horizontalCenter: parent.horizontalCenter
                                         }
                                         Label {
-                                            text: qsTr("Identifier un insecte")
+                                            text: qsTr("Encyclopedie des maladies")
                                             color: $Colors.colorPrimary
                                             width: parent.width
                                             font.pixelSize: 16
@@ -285,6 +291,10 @@ BPage {
                                             wrapMode: Text.Wrap
                                             horizontalAlignment: Text.AlignHCenter
                                         }
+                                    }
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: page_view.push(navigator.deseaseEncyclopedie)
                                     }
                                 }
 
@@ -349,6 +359,10 @@ BPage {
                                                     pixelSize: 16
                                                     weight: Font.DemiBold
                                                 }
+                                            }
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                onClicked: page_view.push(faqPage)
                                             }
                                         }
                                     }
