@@ -16,9 +16,8 @@ import "../../components_js/Utils.js" as Utils
 BPage {
     id: control
     objectName: "Garden"
-    header: AppBar {
-        title: "Blume"
-        isHomeScreen: true
+    header: Item {
+        height: 60
     }
     backgroundColor: $Colors.colorTertiary
 
@@ -146,7 +145,7 @@ BPage {
         width: height / 1.7
         radius: height
 
-        color: $Colors.primary
+        gradient: $Colors.gradientPrimary
     }
 
     ColumnLayout {
@@ -221,7 +220,7 @@ BPage {
                     anchors.rightMargin: 20
                     radius: 20
 
-                    color: $Colors.colorTertiary
+                    color: Qt.rgba(255, 255, 255, 0.9)
 
                     ColumnLayout {
                         visible: isWeatherLoaded && weatherData !== undefined
@@ -241,7 +240,7 @@ BPage {
 
                                 Image {
                                     source: weatherData ? ("http://" + weatherData?.current?.condition?.icon?.slice(2)) : ""
-                                    width: 80
+                                    width: 130
                                     height: width
                                 }
                             }
@@ -261,7 +260,7 @@ BPage {
                                     text: weatherData?.current?.temp_c + "° C"
                                     color: $Colors.colorPrimary
                                     font {
-                                        pixelSize: 22
+                                        pixelSize: 36
                                     }
                                     anchors.horizontalCenter: parent.horizontalCenter
                                 }
@@ -371,43 +370,55 @@ BPage {
                 }
 
                 RowLayout {
-//                    Layout.fillWidth: true
-//                    Layout.leftMargin: 15
-//                    Layout.rightMargin: 20
-//                    Layout.alignment: Qt.AlignHCenter
+                    id: _insideControl
+                    property string foregroundColor: $Colors.colorPrimary
+
                     width: parent.width - 20
                     anchors.leftMargin: 15
                     anchors.rightMargin: 20
                     spacing: 20
 
-                    Repeater {
-                        model: [{
-                                "icon": Icons.flowerTulip,
-                                "title": qsTr("My plants"),
-                                "action": "plants"
-                            }, {
-                                "icon": Icons.viewDashboardOutline,
-                                "title": qsTr("Rooms"),
-                                "action": "spaces",
-                                "animate": alarmsTodoToday.count === 0 && alarmsLate.count === 0
-                            }, {
-                                "icon": Icons.alarm,
-                                "title": qsTr("Calendar"),
-                                "action": "alarm"
-                            }]
-                        delegate: Rectangle {
-                            id: _insideControl
-                            property string foregroundColor: $Colors.colorPrimary
+                    Rectangle {
                             Layout.preferredHeight: 80
-                            Layout.preferredWidth: 100
-        //                    Layout.fillWidth: true
-                            radius: 20
-                            layer.enabled: true
-                            layer.effect: QGE.DropShadow {
-                                radius: 4
-                                color: $Colors.colorSecondary
-                                verticalOffset: 2
+                            Layout.preferredWidth: 80
+                            radius: 15
+                            gradient: $Colors.gradientPrimary
+                            ColumnLayout {
+                                anchors.centerIn: parent
+                                anchors.margins: 5
+                                spacing: 7
+
+                                IconSvg {
+                                    source: "qrc:/assets/icons_custom/tasks.svg"
+                                    Layout.preferredHeight: 30
+                                    Layout.preferredWidth: Layout.preferredHeight
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Label {
+                                    text: qsTr("Tasks")
+                                    font.pixelSize: 16
+                                    font.weight: Font.DemiBold
+                                    color: $Colors.white
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
                             }
+                            MouseArea {
+                                id: _insideMouse
+                                hoverEnabled: true
+                                anchors.fill: parent
+                                cursorShape: "PointingHandCursor"
+                                onClicked: {
+                                    page_view.push(navigator.gardenAlarmsCalendar)
+                                }
+                            }
+                        }
+
+
+                    Rectangle {
+                            Layout.preferredHeight: 100
+                            Layout.preferredWidth: 120
+                            radius: 20
+                            color: $Colors.colorPrimary
 
                             Timer {
                                 id: animationTimer
@@ -416,7 +427,7 @@ BPage {
                                 property bool up: true
                                 interval: 50
                                 repeat: true
-                                running: modelData.animate === true
+                                running: $Model.space.count === 0
                                 onTriggered: {
                                     if(up) {
                                         if(parent.scale <= max) {
@@ -442,56 +453,123 @@ BPage {
                                 }
                             }
 
-                            scale: _insideMouse.containsMouse
-                                   || _insideMouse.containsPress ? 1.05 : 1
-
-                            color: _insideMouse.containsMouse
-                                   || _insideMouse.containsPress ? "white" : foregroundColor
                             ColumnLayout {
                                 anchors.fill: parent
                                 anchors.margins: 10
 
-                                Item {
-                                    ColorImage {
-                                        anchors.centerIn: parent
-                                        width: 42
-                                        height: 42
-                                        source: modelData.icon
-                                        color: _insideMouse.containsMouse
-                                               || _insideMouse.containsPress ? _insideControl.foregroundColor : $Colors.white
-                                    }
-                                    Layout.fillWidth: true
-                                    Layout.fillHeight: true
+                                IconSvg {
+                                    source: Icons.viewDashboardOutline
+                                    color: _insideMouse.containsMouse
+                                           || _insideMouse.containsPress ? _insideControl.foregroundColor : $Colors.white
+                                    Layout.preferredHeight: 30
+                                    Layout.preferredWidth: Layout.preferredHeight
+                                    Layout.alignment: Qt.AlignHCenter
                                 }
                                 Label {
-                                    text: modelData.title
+                                    text: qsTr("Rooms")
                                     font.pixelSize: 15
-                                    font.weight: Font.Medium
+                                    font.weight: Font.DemiBold
                                     color: _insideMouse.containsMouse
                                            || _insideMouse.containsPress ? _insideControl.foregroundColor : $Colors.white
                                     Layout.alignment: Qt.AlignHCenter
                                 }
                             }
                             MouseArea {
-                                id: _insideMouse
                                 hoverEnabled: true
                                 anchors.fill: parent
                                 cursorShape: "PointingHandCursor"
                                 onClicked: {
-                                    switch (modelData.action) {
-                                    case "plants":
-                                        page_view.push(navigator.gardenPlantsList)
-                                        break
-                                    case "spaces":
-                                        page_view.push(navigator.gardenSpacesList)
-                                        break
-                                    case "alarm":
-                                        page_view.push(navigator.gardenAlarmsCalendar)
-                                        break
+                                    page_view.push(navigator.gardenSpacesList)
+                                }
+                            }
+                        }
+
+                    Rectangle {
+                            Layout.preferredHeight: 80
+                            Layout.preferredWidth: 80
+                            radius: 15
+                            gradient: $Colors.gradientPrimary
+                            ColumnLayout {
+                                anchors.centerIn: parent
+                                anchors.margins: 5
+                                spacing: 7
+
+                                IconSvg {
+                                    source: "qrc:/assets/icons_custom/plant-leaves.svg"
+                                    Layout.preferredHeight: 30
+                                    Layout.preferredWidth: Layout.preferredHeight
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Label {
+                                    text: qsTr("Plantes")
+                                    font.pixelSize: 14
+                                    font.weight: Font.DemiBold
+                                    color: $Colors.white
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                            }
+                            MouseArea {
+                                hoverEnabled: true
+                                anchors.fill: parent
+                                cursorShape: "PointingHandCursor"
+                                onClicked: {
+                                    page_view.push(navigator.gardenPlantsList)
+                                }
+                            }
+                        }
+
+                }
+
+                Flickable {
+                    width: parent.width - 20
+                    height: getStartedRow.height
+                    contentWidth: getStartedRow.width
+
+                    RowLayout {
+                        id: getStartedRow
+                        spacing: 10
+
+                        Repeater {
+                            model: 4
+
+                            Rectangle {
+                                Layout.preferredWidth: 180
+                                Layout.preferredHeight: 100
+                                Image {
+                                    anchors.fill: parent
+                                    source: index % 2 === 0 ? "qrc:/assets/img/plant-in-pot-long-leaves.png" : "qrc:/assets/img/plant-with-insect.png"
+                                    opacity: 0.95
+                                }
+                                RowLayout {
+                                    anchors.bottom: parent.bottom
+                                    anchors.bottomMargin: 3
+                                    width: parent.width - 20
+                                    Layout.leftMargin: 10
+                                    Layout.rightMargin: 10
+                                    spacing: 5
+
+                                    IconSvg {
+                                        source: "qrc:/assets/icons_custom/plant-leaves.svg"
+                                        Layout.preferredWidth: 45
+                                        Layout.preferredHeight: Layout.preferredWidth
+                                        color: $Colors.white
+                                    }
+
+                                    Label {
+                                        Layout.fillWidth: true
+                                        Layout.alignment: Qt.AlignBottom
+                                        color: $Colors.white
+                                        text: qsTr("Comment créer une salle ?")
+                                        wrapMode: Text.Wrap
+                                        font {
+                                            weight: Font.Bold
+                                            pixelSize: 14
+                                        }
                                     }
                                 }
                             }
                         }
+
                     }
                 }
 
@@ -746,6 +824,196 @@ BPage {
         Item {
             Layout.fillHeight: true
         }
+    }
+
+    Rectangle {
+        anchors {
+            bottom: parent.bottom
+            bottomMargin: 30
+            right: parent.right
+            rightMargin: 25
+        }
+
+        height: 40
+        width: height
+        radius: height / 2
+
+        gradient: $Colors.gradientPrimary
+
+        Text {
+            text: "+"
+            anchors.centerIn: parent
+            font.pixelSize: 34
+            color: $Colors.white
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: plusOptionsDrawer.open()
+        }
+    }
+
+    Drawer {
+        id: plusOptionsDrawer
+        height: parent.height
+        width: parent.width
+        background: Rectangle {
+            color: $Colors.colorPrimary
+            opacity: 0.9
+        }
+
+        Column {
+            width: parent.width
+            anchors {
+                bottom: parent.bottom
+                bottomMargin: 60
+                right: parent.right
+                rightMargin: 15
+            }
+            spacing: 15
+            Item {
+                width: parent.width
+                height: 40
+                Row {
+                    anchors {
+                        right: parent.right
+                        rightMargin: 25
+                    }
+                    spacing: 10
+                    Label {
+                        text: qsTr("Liste des tâches")
+                        color: $Colors.white
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    Rectangle {
+                        width: 40
+                        height: width
+                        radius: 5
+                        IconSvg {
+                            anchors.centerIn: parent
+                            anchors.margins: 12
+                            source: "qrc:/assets/icons_custom/plant-leaves.svg"
+                            color: $Colors.colorPrimary
+                        }
+                    }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        plusOptionsDrawer.close()
+                        page_view.push(navigator.gardenAlarmsCalendar)
+                    }
+                }
+            }
+
+            Item {
+                width: parent.width
+                height: 40
+                Row {
+                    anchors {
+                        right: parent.right
+                        rightMargin: 25
+                    }
+                    spacing: 10
+                    Column {
+                        anchors.verticalCenter: parent.verticalCenter
+                        Label {
+                            text: qsTr("Ajouter une nouvelle plante")
+                            color: $Colors.white
+                            anchors.right: parent.right
+                        }
+                        Label {
+                            text: qsTr("dans votre jardin")
+                            color: $Colors.white
+                            anchors.right: parent.right
+                        }
+                    }
+
+                    Rectangle {
+                        width: 40
+                        height: width
+                        radius: 5
+                        IconSvg {
+                            anchors.centerIn: parent
+                            anchors.margins: 12
+                            source: "qrc:/assets/icons_custom/plant-leaves.svg"
+                            color: $Colors.colorPrimary
+                        }
+                    }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+//                    onClicked: {
+//                        plusOptionsDrawer.close()
+//                        page_view.push(navigator.gardenEditSpace)
+//                    }
+                }
+            }
+
+            Item {
+                width: parent.width
+                height: 40
+                Row {
+                    anchors {
+                        right: parent.right
+                        rightMargin: 25
+                    }
+                    spacing: 10
+                    Label {
+                        text: qsTr("Ajouter une salle")
+                        color: $Colors.white
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    Rectangle {
+                        width: 40
+                        height: width
+                        radius: 5
+                        IconSvg {
+                            anchors.centerIn: parent
+                            anchors.margins: 12
+                            source: "qrc:/assets/icons_custom/house.svg"
+                            color: $Colors.colorPrimary
+                        }
+                    }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        plusOptionsDrawer.close()
+                        page_view.push(navigator.gardenEditSpace)
+                    }
+                }
+            }
+
+            Rectangle {
+                anchors {
+                    right: parent.right
+                    rightMargin: 25
+                }
+
+                height: 40
+                width: height
+                radius: height / 2
+
+                gradient: $Colors.gradientPrimary
+
+                Text {
+                    text: "x"
+                    anchors.centerIn: parent
+                    font.pixelSize: 34
+                    color: $Colors.white
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: plusOptionsDrawer.close()
+                }
+            }
+        }
+
     }
 
     Popup {

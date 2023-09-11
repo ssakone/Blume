@@ -480,8 +480,7 @@ ApplicationWindow {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 initialItem: Component {
-//                    GardenScreen {}
-                    TutorialNew {}
+                    GardenScreen {}
                 }
 
                 onDepthChanged: {
@@ -498,7 +497,7 @@ ApplicationWindow {
             }
         }
 
-        Tutorial {
+        TutorialNew {
             anchors.fill: parent
             id: screenTutorial
         }
@@ -542,7 +541,7 @@ ApplicationWindow {
         }
 
         // Initial state
-        state: "Navigator"
+        state: "Tutorial"
 
         property var previousStates: []
 
@@ -627,7 +626,7 @@ ApplicationWindow {
                 }
                 PropertyChanges {
                     target: appHeader
-                    visible: true
+                    visible: false
                 }
                 PropertyChanges {
                     target: page_view

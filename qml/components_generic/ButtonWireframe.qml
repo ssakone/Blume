@@ -27,7 +27,7 @@ T.Button {
     // colors
     property bool fullColor: false
     property string fulltextColor: "white"
-    property string primaryColor: Theme.colorPrimary
+    property string primaryColor: $Colors.colorPrimary
     property string secondaryColor: Theme.colorComponentBackground
 
     // animation

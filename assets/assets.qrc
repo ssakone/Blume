@@ -7409,6 +7409,14 @@
         <file>tutorial/welcome-plant-green-pot.png</file>
         <file>icons_custom/library.svg</file>
         <file>img/jardinier.png</file>
+        <file>icons_custom/house.svg</file>
+        <file>icons_custom/plant-leaves.svg</file>
+        <file>icons_custom/tasks.svg</file>
+        <file>img/plant-in-pot-long-leaves.png</file>
+        <file>img/scan-disease.png</file>
+        <file>img/scan-plant.png</file>
+        <file>img/plant-with-insect.png</file>
+        <file>img/alocasia 1.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

@@ -254,7 +254,7 @@ BPage {
 
                         Image {
                             anchors.fill: parent
-                            source: "qrc:/assets/img/orchidee.jpg"
+                            source: "qrc:/assets/img/scan-disease.png"
                             fillMode: Image.PreserveAspectCrop
                         }
                     }
@@ -322,7 +322,7 @@ BPage {
                             id: _insideText2
                             horizontalAlignment: Text.AlignHCenter
                             anchors.horizontalCenter: parent.horizontalCenter
-                            text: qsTr("identify")
+                            text: qsTr("Identify")
                             color: $Colors.colorPrimary
                             font {
                                 pixelSize: 28
@@ -350,7 +350,7 @@ BPage {
 
                         Image {
                             anchors.fill: parent
-                            source: "qrc:/assets/tutorial/welcome-plant-green-pot.png"
+                            source: "qrc:/assets/img/scan-plant.png"
                             fillMode: Image.PreserveAspectCrop
                         }
                     }
@@ -517,11 +517,13 @@ BPage {
             Item {}
 
             onCurrentIndexChanged: {
+                console.log("\n\n Passer ", currentIndex, count - 1 )
+                console.log("Current state ", appContent.state)
                 if (currentIndex < 0) {
                     currentIndex = 0
                 }
-                else if (currentIndex === count - 1) {
-                    page_view.push(navigator.gardenScreen)
+                else if (currentIndex >= count - 1) {
+                    appContent.state = "Navigator"
                 }
             }
         }

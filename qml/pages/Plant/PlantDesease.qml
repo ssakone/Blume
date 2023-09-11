@@ -186,11 +186,16 @@ BPage {
                             RowLayout {
                                 width: parent.width
                                 spacing: 10
-                                IconSvg {
+                                Rectangle {
                                     Layout.preferredWidth: 120
-                                    Layout.preferredHeight: 120
-                                    source: "qrc:/assets/icons_custom/scan_plant.svg"
+                                    Layout.preferredHeight: 140
+                                    radius: 10
+                                    Image {
+                                        anchors.fill: parent
+                                        source: "qrc:/assets/img/alocasia 1.png"
+                                    }
                                 }
+
                                 Column {
                                     Layout.fillWidth: true
                                     Label {
