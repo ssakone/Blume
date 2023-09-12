@@ -497,7 +497,7 @@ ApplicationWindow {
             }
         }
 
-        Tutorial {
+        TutorialNew {
             anchors.fill: parent
             id: screenTutorial
         }
@@ -541,7 +541,7 @@ ApplicationWindow {
         }
 
         // Initial state
-        state: "Navigator"
+        state: "Tutorial"
 
         property var previousStates: []
 
@@ -626,7 +626,7 @@ ApplicationWindow {
                 }
                 PropertyChanges {
                     target: appHeader
-                    visible: true
+                    visible: false
                 }
                 PropertyChanges {
                     target: page_view

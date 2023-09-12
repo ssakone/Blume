@@ -59,6 +59,9 @@ Item {
     property var signInPage: Component {
         SignIn {}
     }
+    property var gardenScreen: Component {
+        GardenScreen {}
+    }
     property var gardenPlantsList: Component {
         GardenPlantsList {}
     }

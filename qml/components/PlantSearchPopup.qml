@@ -39,7 +39,8 @@ Drawer {
                 leading.onClicked: {
                     control.close()
                 }
-
+                color: Qt.rgba(12, 200, 25, 0)
+                foregroundColor: $Colors.colorPrimary
                 noAutoPop: true
             }
             SearchPlants {

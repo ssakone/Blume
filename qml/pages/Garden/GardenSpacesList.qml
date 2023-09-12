@@ -5,44 +5,82 @@ import ThemeEngine
 
 import "../../components"
 import "../../components_generic"
+import SortFilterProxyModel
 
 BPage {
     id: control
     header: AppBar {
-        title: qsTr("Rooms")
+        id: header
+        title: qsTr("Liste des salles")
+        statusBarVisible: false
+        leading.icon: Icons.close
+        color: Qt.rgba(12, 200, 25, 0)
+        foregroundColor: $Colors.colorPrimary
     }
 
-    ListView {
-        anchors.fill: parent
-        anchors.margins: 10
-        clip: true
-        model: $Model.space
-        spacing: 10
-        delegate: GardenSpaceLine {
-            width: control.width
-            height: 85
-            title: (libelle[0] === "'" ? libelle.slice(1, -1) : libelle)
-            subtitle: description[0] === "'" ? description.slice(1, -1) : description
-            isOutdoor: type === 1
-            iconSource: type === 1 ? Icons.homeOutline : Icons.landFields
-            onClicked: {
-                let data = {
-                    "name": libelle,
-                    "type": type,
-                    "description": description,
-                    "status": model.status ?? 0,
-                    "space_id": id
-                }
-                page_view.push(navigator.gardenSpaceDetails, data)
-            }
+    SortFilterProxyModel {
+        id: sortedSpaceModel
+        sourceModel: $Model.space
+
+        sorters: StringSorter {
+            roleName: "libelle"
+            sortOrder: Qt.AscendingOrder
         }
     }
 
-    ButtonWireframe {
-        height: 60
-        width: 60
-        fullColor: $Colors.colorPrimary
-        componentRadius: 30
+    RowLayout {
+        anchors.fill: parent
+        Item {
+            Layout.preferredWidth: 10
+        }
+        ListView {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            clip: true
+            model: sortedSpaceModel
+            spacing: 10
+            delegate: GardenSpaceLinePreview {
+                width: control.width
+                title: (libelle[0] === "'" ? libelle.slice(1, -1) : libelle)
+                subtitle: description[0] === "'" ? description.slice(1, -1) : description
+                isOutdoor: type === 1
+                iconSource: type === 1 ? Icons.homeOutline : Icons.landFields
+                onClicked: {
+                    let data = {
+                        "name": libelle,
+                        "type": type,
+                        "description": description,
+                        "status": model.status ?? 0,
+                        "space_id": id
+                    }
+                    page_view.push(navigator.gardenSpaceDetails, data)
+                }
+                imagesSourcesList: {
+                    const result = []
+                    for(let i = 0; i < $Model.space.plantInSpace.count; i++) {
+                        let space = $Model.space.plantInSpace.get(i)
+                        if(space.space_id === model.id) {
+                            result.push(space)
+                        }
+                    }
+                    return result
+                }
+            }
+        }
+
+        Item {
+            Layout.preferredWidth: 10
+        }
+    }
+
+
+    NiceButton {
+        text: "+ Ajouter une nouvelle salle"
+        height: 50
+        radius: 30
+        leftPadding: 10
+        rightPadding: 10
+        font.weight: Font.DemiBold
         anchors {
             bottom: parent.bottom
             bottomMargin: 30
@@ -52,14 +90,6 @@ BPage {
         }
 
         onClicked: page_view.push(navigator.gardenEditSpace)
-
-        Text {
-            text: "+"
-            color: "white"
-            font.pixelSize: 32
-            anchors.centerIn: parent
-        }
-
 
         Behavior on scale {
             NumberAnimation {

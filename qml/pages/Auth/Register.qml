@@ -22,6 +22,7 @@ BPage {
 
     property bool isSubmiting: false
     property string errorText: ""
+    property color shade: Qt.rgba(15, 200, 15, 0.7)
 
     function handleSignIn() {
         isSubmiting = true
@@ -42,142 +43,239 @@ BPage {
                })
     }
 
-    header: AppBar {
-        title: "Registration"
-    }
+    header: Item {}
 
-    background: Rectangle {
-        color: $Colors.colorPrimary
+    IconSvg {
+        source: "qrc:/assets/icons_custom/tulipe_left.svg"
+        height: 180
+        width: 70
+        anchors {
+            left: parent.left
+            top: parent.top
+            topMargin: 150
+        }
+        transform: Rotation {
+            angle: 10
+        }
     }
-
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 20
-
-        Alert {
-            Layout.fillWidth: true
-            Layout.minimumHeight: 40
-            time: 5000
-            visible: errorText !== ""
-            text: errorText
-            callback: function() {
-                root.errorText = "";
-            }
-        }
+        anchors.margins: 25
+        spacing: 25
 
         Item {
             Layout.fillHeight: true
         }
 
-        ClipRRect {
-            Layout.preferredWidth: 150
-            Layout.preferredHeight: 150
+        IconSvg {
+            source: "qrc:/assets/logos/logo.svg"
+            Layout.preferredHeight: 120
+            Layout.preferredWidth: Layout.preferredHeight
             Layout.alignment: Qt.AlignHCenter
-            IconSvg {
-                anchors.fill: parent
-                source: "qrc:/assets/logos/blume.svg"
-            }
         }
 
-        Column {
+        ColumnLayout {
             Layout.fillWidth: true
-            padding: 10
-            spacing: 25
+            spacing: 20
 
             Column {
-                width: parent.width - 2*parent.padding
-
-                TextField {
-                    id: emailField
-                    width: parent.width
-                    height: 60
-                    leftPadding: 40
-                    font.pixelSize: 16
-                    font.weight: Font.Light
-                    placeholderText: "Email"
-
-                    IconSvg {
-                        source: Icons.account
-                        anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
-                        color: "white"
-                        width: 30
-                        height: width
-                    }
-                }
-
-                TextField {
-                    id: pwdField
-                    width: parent.width
-                    height: 60
-                    leftPadding: 40
-                    font.pixelSize: 16
-                    font.weight: Font.Light
-                    placeholderText: "Password"
-
-                    IconSvg {
-                        source: Icons.security
-                        anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
-                        color: "white"
-                        width: 30
-                        height: width
-                    }
-                }
-
-            }
-
-            Column {
-                width: parent.width - 2*parent.padding
-                spacing: 10
-
-                ButtonWireframe {
-                    width: parent.width
-                    height: 60
-                    primaryColor: $Colors.colorPrimary
-                    componentRadius: 20
-                    text: qsTr("Create my account")
-                    onClicked: handleSignIn()
-                    BusyIndicator {
-                        anchors.fill: parent
-                        running: isSubmiting
-                    }
-                }
-
-                ButtonWireframe {
-                    width: parent.width
-                    height: 60
-                    primaryColor: $Colors.colorPrimary
-                    fullColor: true
-                    componentRadius: 20
-                    text: qsTr("Already have an account")
-                    onClicked: page_view.pop()
-
-                    Rectangle {
-                        anchors.fill: parent
-                        radius: parent.componentRadius
-                        color: Qt.rgba(0, 0, 0, 0)
-                        border {
-                            width: 1
-                            color: "white"
-                        }
-                    }
-                }
+                Layout.fillWidth: true
+                spacing: 7
 
                 Label {
-                    text: "Forgot password ?"
-                    font.underline: true
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: qsTr("Nom")
+                }
+                TextField {
+                    id: nameInput
+                    padding: 5
+                    leftPadding: 40
+
+                    width: parent.width
+                    height: 50
+
+                    verticalAlignment: Text.AlignVCenter
+
+                    font {
+                        pixelSize: 14
+                        weight: Font.Light
+                    }
+
+                    background: Rectangle {
+                        radius: 15
+                        color: root.shade
+                        border {
+                            color: $Colors.colorPrimary
+                            width: 1
+                        }
+                    }
+
+                    IconSvg {
+                        anchors.leftMargin: 7
+                        source: Icons.account
+                        color: $Colors.colorPrimary
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
                 }
 
             }
+
+            Column {
+                Layout.fillWidth: true
+                spacing: 7
+
+                Label {
+                    text: qsTr("Prenom")
+                }
+                TextField {
+                    id: pwdInput
+                    padding: 5
+                    leftPadding: 40
+
+                    width: parent.width
+                    height: 50
+
+                    verticalAlignment: Text.AlignVCenter
+
+                    font {
+                        pixelSize: 14
+                        weight: Font.Light
+                    }
+
+                    background: Rectangle {
+                        radius: 15
+                        color: root.shade
+                        border {
+                            color: $Colors.colorPrimary
+                            width: 1
+                        }
+                    }
+
+                    IconSvg {
+                        anchors.leftMargin: 10
+                        source: Icons.account
+                        color: $Colors.colorPrimary
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
+
+            }
+
+            Column {
+                Layout.fillWidth: true
+                spacing: 7
+
+                Label {
+                    text: qsTr("Email")
+                }
+                TextField {
+                    id: emailInput
+                    padding: 5
+                    leftPadding: 40
+
+                    width: parent.width
+                    height: 50
+
+                    verticalAlignment: Text.AlignVCenter
+
+                    font {
+                        pixelSize: 14
+                        weight: Font.Light
+                    }
+
+                    background: Rectangle {
+                        radius: 15
+                        color: root.shade
+                        border {
+                            color: $Colors.colorPrimary
+                            width: 1
+                        }
+                    }
+
+                    IconSvg {
+                        anchors.leftMargin: 10
+                        source: Icons.email
+                        color: $Colors.colorPrimary
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
+
+            }
+
+            Column {
+                Layout.fillWidth: true
+                spacing: 7
+
+                Label {
+                    text: qsTr("Username")
+                }
+                TextField {
+                    id: usernameInput
+                    padding: 5
+                    leftPadding: 40
+
+                    width: parent.width
+                    height: 50
+
+                    verticalAlignment: Text.AlignVCenter
+
+                    font {
+                        pixelSize: 14
+                        weight: Font.Light
+                    }
+
+                    background: Rectangle {
+                        radius: 15
+                        color: root.shade
+                        border {
+                            color: $Colors.colorPrimary
+                            width: 1
+                        }
+                    }
+
+                    IconSvg {
+                        anchors.leftMargin: 50
+                        source: Icons.tag
+                        color: $Colors.colorPrimary
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
+
+            }
+
+            NiceButton {
+                text: qsTr("S'inscrire")
+                Layout.fillWidth: true
+                Layout.preferredHeight: 60
+                Layout.topMargin: 10
+
+                foregroundColor: $Colors.white
+                backgroundColor: $Colors.colorPrimary
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                Layout.margins: 10
+                Item {
+                    Layout.fillWidth: true
+                }
+                Label {
+                    text: qsTr("Passer")
+                    color: $Colors.colorPrimary
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: page_view.pop()
+                    }
+                }
+            }
+
         }
 
 
         Item {
             Layout.fillHeight: true
         }
-
     }
+
+
 }

@@ -45,6 +45,7 @@ Item {
                        "method": 'GET',
                        "url": query
                    }).then(response => {
+                               console.log("Fetch success")
                                let data = JSON.parse(response).data
 
                                // Remove null value

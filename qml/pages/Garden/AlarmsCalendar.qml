@@ -276,7 +276,7 @@ BPage {
             Label {
                 text: qsTr("No task ! \n\n You should first create a room")
                 visible: alarmsTodoToday.count === 0 && alarmsLate.count === 0
-                color: Theme.colorSecondary
+                color: $Colors.colorSecondary
                 opacity: 0.8
                 width: parent.width
                 wrapMode: Text.Wrap
@@ -290,7 +290,6 @@ BPage {
             ButtonWireframe {
                 text: "Go"
                 fullColor: true
-                primaryColor: Theme.colorPrimary
                 fulltextColor: $Colors.white
                 anchors.horizontalCenter: parent.horizontalCenter
                 componentRadius: 10

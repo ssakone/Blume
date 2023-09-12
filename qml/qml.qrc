@@ -121,6 +121,7 @@
         <file>pages/Feed.qml</file>
         <file>components_generic/Avatar.qml</file>
         <file>pages/Auth/SignIn.qml</file>
+        <file>pages/TutorialNew.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>

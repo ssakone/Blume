@@ -10,6 +10,7 @@ import QtAndroidTools
 import "pages/Plant/"
 import "pages/Garden"
 import "pages/Auth"
+import "pages"
 import "services/"
 import "models/"
 import "components/"
@@ -471,7 +472,7 @@ ApplicationWindow {
             } else if (appContent.state === "Permissions") {
                 appContent.state = screenPermissions.entryPoint
             } else if (appContent.state === "Tutorial") {
-                appContent.state = screenTutorial.entryPoint
+                appContent.state = "Navigator"
             } else if (appContent.state === "PlantBrowser") {
                 screenPlantBrowser.backAction()
             } else if (appContent.state === "Navigator") {
@@ -552,8 +553,10 @@ ApplicationWindow {
             }
         }
 
-        Tutorial {
-            anchors.fill: parent
+        TutorialNew {
+            y: -appHeader.height
+            width: parent.width
+            height: parent.height + appHeader.height
             id: screenTutorial
         }
 
@@ -611,7 +614,7 @@ ApplicationWindow {
         }
 
         // Initial state
-        state: "Navigator"
+        state: "Tutorial"
 
         onStateChanged: {
 
@@ -697,7 +700,7 @@ ApplicationWindow {
                 }
                 PropertyChanges {
                     target: appHeader
-                    visible: true
+                    visible: false
                 }
                 PropertyChanges {
                     target: page_view

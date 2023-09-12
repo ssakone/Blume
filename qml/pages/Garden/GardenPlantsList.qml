@@ -60,7 +60,6 @@ BPage {
             ButtonWireframe {
                 text: "Go"
                 fullColor: true
-                primaryColor: Theme.colorPrimary
                 fulltextColor: $Colors.white
                 anchors.horizontalCenter: parent.horizontalCenter
                 componentRadius: 10

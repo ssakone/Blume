@@ -53,6 +53,8 @@ ListModel {
                 placeholders.push("?");
             }
 
+            columns.push("created_at")
+
             var i, j;
 
             for (i = 0; i < values.length; i++) {
@@ -69,6 +71,8 @@ ListModel {
                     }
                 }
             }
+
+            placeholders.push((new Date()).getTime())
 
             let query = `INSERT INTO ${control.tableName} (${columns.join(', ')}) VALUES (`;
 
