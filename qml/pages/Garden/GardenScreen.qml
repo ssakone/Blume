@@ -458,10 +458,10 @@ BPage {
                                 anchors.margins: 10
 
                                 IconSvg {
-                                    source: Icons.viewDashboardOutline
+                                    source: "qrc:/assets/icons_custom/house.svg"
                                     color: _insideMouse.containsMouse
                                            || _insideMouse.containsPress ? _insideControl.foregroundColor : $Colors.white
-                                    Layout.preferredHeight: 30
+                                    Layout.preferredHeight: 45
                                     Layout.preferredWidth: Layout.preferredHeight
                                     Layout.alignment: Qt.AlignHCenter
                                 }

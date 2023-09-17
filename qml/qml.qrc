@@ -122,6 +122,7 @@
         <file>components_generic/Avatar.qml</file>
         <file>pages/Auth/SignIn.qml</file>
         <file>pages/TutorialNew.qml</file>
+        <file>pages/Device/DeviceScanPage.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>

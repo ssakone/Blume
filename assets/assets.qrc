@@ -7417,6 +7417,9 @@
         <file>img/scan-plant.png</file>
         <file>img/plant-with-insect.png</file>
         <file>img/alocasia 1.png</file>
+        <file>img/scan-in-salon.svg</file>
+        <file>icons_custom/radar-sensors.svg</file>
+        <file>img/pots-group.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
