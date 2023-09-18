@@ -19,73 +19,73 @@ BPage {
 
     objectName: "DeviceList"
 
-//    header: Loader {
-//        id: deviceListHeader
-//        z: 10
-//        sourceComponent: AppBar {
-//            id: mobileDeviceHeader
-//            title: qsTr("Appareils connectés")
-//            noAutoPop: true
-//            isHomeScreen: true
-//            statusBarVisible: false
-//            leading.visible: false
-//            titleLabel.leftPadding: 15
-//            color: Qt.rgba(12, 200, 25, 0)
-//            foregroundColor: $Colors.white
-//            actions: RowLayout {
-//                width: parent.width
-//                IconSvg {
-//                    id: workingIndicator
-//                    Layout.fillWidth: true
-//                    height: 24;
+    header: Loader {
+        id: deviceListHeader
+        z: 10
+        sourceComponent: AppBar {
+            id: mobileDeviceHeader
+            title: qsTr("Appareils connectés")
+            noAutoPop: true
+            isHomeScreen: true
+            statusBarVisible: false
+            leading.visible: true
+            titleLabel.leftPadding: 15
+            color: Qt.rgba(12, 200, 25, 0)
+            foregroundColor: $Colors.white
+            actions: RowLayout {
+                width: parent.width
+                IconSvg {
+                    id: workingIndicator
+                    Layout.fillWidth: true
+                    height: 24;
 
-//                    source: {
-//                        if (deviceManager.scanning)
-//                            return "qrc:/assets/icons_material/baseline-search-24px.svg"
-//                        else if (deviceManager.syncing)
-//                            return "qrc:/assets/icons_custom/duotone-date_all-24px.svg"
-//                        else if (deviceManager.listening)
-//                            return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
-//                        else
-//                            return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
-//                    }
-//                    color: Theme.colorHeaderContent
-//                    opacity: 0
-//                    Behavior on opacity { OpacityAnimator { duration: 333 } }
+                    source: {
+                        if (deviceManager.scanning)
+                            return "qrc:/assets/icons_material/baseline-search-24px.svg"
+                        else if (deviceManager.syncing)
+                            return "qrc:/assets/icons_custom/duotone-date_all-24px.svg"
+                        else if (deviceManager.listening)
+                            return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+                        else
+                            return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+                    }
+                    color: Theme.colorHeaderContent
+                    opacity: 0
+                    Behavior on opacity { OpacityAnimator { duration: 333 } }
 
-//                    NumberAnimation on rotation { // refreshAnimation (rotate)
-//                        from: 0
-//                        to: 360
-//                        duration: 2000
-//                        loops: Animation.Infinite
-//                        easing.type: Easing.Linear
-//                        running: (deviceManager.updating && !deviceManager.scanning && !deviceManager.syncing)
-//                        alwaysRunToEnd: true
-//                        onStarted: workingIndicator.opacity = 1
-//                        onStopped: workingIndicator.opacity = 0
-//                    }
-//                    SequentialAnimation on opacity { // scanAnimation (fade)
-//                        loops: Animation.Infinite
-//                        running: (deviceManager.scanning || deviceManager.listening || deviceManager.syncing)
-//                        onStopped: workingIndicator.opacity = 0
-//                        PropertyAnimation { to: 1; duration: 750; }
-//                        PropertyAnimation { to: 0.33; duration: 750; }
-//                    }
-//                }
+                    NumberAnimation on rotation { // refreshAnimation (rotate)
+                        from: 0
+                        to: 360
+                        duration: 2000
+                        loops: Animation.Infinite
+                        easing.type: Easing.Linear
+                        running: (deviceManager.updating && !deviceManager.scanning && !deviceManager.syncing)
+                        alwaysRunToEnd: true
+                        onStarted: workingIndicator.opacity = 1
+                        onStopped: workingIndicator.opacity = 0
+                    }
+                    SequentialAnimation on opacity { // scanAnimation (fade)
+                        loops: Animation.Infinite
+                        running: (deviceManager.scanning || deviceManager.listening || deviceManager.syncing)
+                        onStopped: workingIndicator.opacity = 0
+                        PropertyAnimation { to: 1; duration: 750; }
+                        PropertyAnimation { to: 0.33; duration: 750; }
+                    }
+                }
 
-//                IconSvg {
-//                    source: "qrc:/assets/icons_material/baseline-more_vert-24px.svg"
-//                    color: $Colors.colorPrimary
-//                    Layout.preferredWidth: 30
-//                    Layout.preferredHeight: Layout.preferredWidth
-//                    MouseArea {
-//                        anchors.fill: parent
-//                        onClicked: actionMenuDevices.open()
-//                    }
-//                }
-//            }
-//        }
-//    }
+                IconSvg {
+                    source: "qrc:/assets/icons_material/baseline-more_vert-24px.svg"
+                    color: $Colors.colorPrimary
+                    Layout.preferredWidth: 30
+                    Layout.preferredHeight: Layout.preferredWidth
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: actionMenuDevices.open()
+                    }
+                }
+            }
+        }
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     Component.onCompleted: {

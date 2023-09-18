@@ -220,5 +220,24 @@ Popup {
             }
         }
 
+        Rectangle {
+            height: 1
+            width: parent.width
+            color: Theme.colorSeparator
+        }
+
+        ActionMenuItem {
+            id: actionMoreSettings
+
+            index: 9
+            text: qsTr("Plus de paramètres")
+            source: "qrc:/assets/icons_material/baseline-settings-20px.svg"
+            layoutDirection: actionMenu.layoutDirection
+            onClicked: {
+                screenSettings.loadScreen()
+                actionMenu.close()
+            }
+        }
+
     }
 }

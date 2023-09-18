@@ -123,6 +123,7 @@
         <file>pages/Auth/SignIn.qml</file>
         <file>pages/TutorialNew.qml</file>
         <file>pages/Device/DeviceScanPage.qml</file>
+        <file>components/WeatherCard.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>PosometreDialog.qml</file>

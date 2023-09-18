@@ -86,7 +86,10 @@ BPage {
             height: 100
             title: plant.name_scientific
             subtitle: plant.noms_communs[0]?.name ?? ""
-            roomName: ""
+            roomName: {
+                console.log("\n\n created_attt ", created_at, "\n\n")
+                return "Ajoutée le " + (new Date(created_at)).toLocaleDateString()
+            }
             imageSource: plant.images_plantes.length
                          > 0 ? "https://blume.mahoudev.com/assets/"
                                + plant.images_plantes[0].directus_files_id : ""
