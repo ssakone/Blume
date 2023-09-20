@@ -29,6 +29,8 @@ QtObject {
         }
     }
 
+    property string colorHeaderContent: "white"
+
     property alias red: root.red500
     property alias pink: root.pink500
     property alias purple: root.purple500

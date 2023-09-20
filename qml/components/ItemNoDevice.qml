@@ -5,7 +5,6 @@ import QtQuick.Layouts
 
 Item {
     id: itemNoDevice
-    anchors.fill: parent
     property bool hasLaunchedScanOnce: false
 
     ////////////////////////////////////////////////////////////////////////////
@@ -35,92 +34,12 @@ Item {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    Rectangle {
-        id: ellispis
-        anchors {
-            bottom: parent.top
-            bottomMargin: -160
-            horizontalCenter: parent.horizontalCenter
-        }
-
-        height: 1200
-        width: height / 1.7
-        radius: height
-
-        gradient: $Colors.gradientPrimary
-    }
-
     ColumnLayout {
         id: column
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-
-        ColumnLayout {
-            Layout.fillWidth: true
-            Layout.topMargin: 25
-            Layout.leftMargin: 32
-            Layout.rightMargin: 32
-
-            RowLayout {
-                Layout.fillWidth: true
-                Text {
-                    Layout.fillWidth: true
-                    text: qsTr("Appareils connectés")
-                    font {
-                        pixelSize: 28
-                        family: "Courrier"
-                        weight: Font.Bold
-                    }
-                    color: $Colors.white
-                }
-                Rectangle {
-                    Layout.preferredWidth: 40
-                    Layout.preferredHeight: Layout.preferredWidth
-                    radius: Layout.preferredHeight / 2
-                    color: $Colors.white
-
-
-                    IconSvg {
-                        anchors.centerIn: parent
-                        source: "qrc:/assets/icons/svg/bell-alert.svg"
-                        color: $Colors.colorPrimary
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: page_view.push(navigator.loginPage)
-                        }
-                    }
-                }
-
-            }
-
-            Column {
-                Layout.fillWidth: true
-                Text {
-                    text: qsTr("Connectez-vous pour connaitre")
-                    opacity: .5
-                    color: $Colors.white
-                    font {
-                        pixelSize: 16
-                        family: "Courrier"
-                        weight: Font.Bold
-                    }
-                }
-                Text {
-                    text: qsTr("l'état de vos plantes")
-                    opacity: .5
-                    color: $Colors.white
-                    font {
-                        pixelSize: 16
-                        family: "Courrier"
-                        weight: Font.Bold
-                    }
-                    horizontalAlignment: Text.AlignHCenter
-                }
-            }
-
-        }
 
         Flickable {
             Layout.fillWidth: true
@@ -251,12 +170,13 @@ Item {
                             leftPadding: 20
                             rightPadding: leftPadding
                             onClicked: {
-                                if (utilsApp.checkMobileBleLocationPermission()) {
-                                    scan()
-                                } else {
-                                    utilsApp.getMobileBleLocationPermission()
-                                    retryScan.start()
-                                }
+//                                if (utilsApp.checkMobileBleLocationPermission()) {
+//                                    scan()
+//                                } else {
+//                                    utilsApp.getMobileBleLocationPermission()
+//                                    retryScan.start()
+//                                }
+                                page_view.push(navigator.deviceScannerPage)
                             }
                         }
 

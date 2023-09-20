@@ -24,6 +24,7 @@ BPage {
     property var plant_results
     property var view: pageControl.StackView.view
     padding: 0
+    backgroundColor: "#F8FFFC"
     onVisibleChanged: {
         if (visible) {
             image.source = ""
@@ -44,8 +45,13 @@ BPage {
         preferredPositioningMethods: PositionSource.SatellitePositioningMethods
     }
     header: AppBar {
-        title: identifierLayoutView.currentIndex === 0 ? "Back" : "Results"
+        title: qsTr("Insectes")
+        z: 5
         noAutoPop: true
+        statusBarVisible: false
+        leading.icon: Icons.close
+        color: Qt.rgba(12, 200, 25, 0)
+        foregroundColor: $Colors.colorPrimary
         leading.onClicked: {
             if (identifierLayoutView.currentIndex === 0) {
                 pageControl.view.pop()
@@ -58,8 +64,42 @@ BPage {
         }
     }
 
+    Rectangle {
+        id: head
+        anchors {
+            bottom: parent.top
+            bottomMargin: -130
+            horizontalCenter: parent.horizontalCenter
+        }
+
+        height: 1200
+        width: height / 1.7
+        radius: height
+        z: 1
+
+        gradient: $Colors.gradientPrimary
+    }
+
+    IconSvg {
+        z: 3
+        width: 120
+        height: width
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: head.bottom
+        anchors.bottomMargin: -height / 2
+        source: "qrc:/assets/img/bug-detect-insect.svg"
+    }
+
     ColumnLayout {
-        anchors.fill: parent
+        z: 4
+        anchors {
+            top: head.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            topMargin: 80
+        }
+
         anchors.margins: 0
         spacing: 0
 
@@ -87,8 +127,9 @@ BPage {
                         function onImageSelected(path) {
                             image.source = "file://?" + Math.random()
                             image.source = "file://" + path
-                            if(fromCamera) analyserButton.clicked()
-                            fromGalery  = false
+                            if (fromCamera)
+                                analyserButton.clicked()
+                            fromGalery = false
                             fromCamera = false
                         }
                     }
@@ -180,6 +221,7 @@ BPage {
                                 Image {
                                     id: image
                                     anchors.fill: parent
+                                    anchors.margins: 35
                                     fillMode: (Qt.platform.os === 'ios'
                                                || Qt.platform.os === 'android') ? Image.PreserveAspectCrop : Image.PreserveAspectFit
                                 }
@@ -189,7 +231,7 @@ BPage {
                                     spacing: 10
                                     padding: 25
 
-                                    title: qsTr("Identify plant")
+                                    title: ""
                                     subtitle: qsTr("Be sure to take a clear, bright photo that includes only the plant you want to identify")
                                     onClicked: tabView.chooseFile
                                 }
@@ -225,7 +267,8 @@ BPage {
                                     }
 
                                     ClipRRect {
-                                        visible: Qt.platform.os == 'ios' || Qt.platform.os == 'android'
+                                        visible: Qt.platform.os == 'ios'
+                                                 || Qt.platform.os == 'android'
                                         width: 60
                                         height: width
                                         radius: height / 2
@@ -248,9 +291,7 @@ BPage {
                                             }
                                         }
                                     }
-
                                 }
-
                             }
 
                             Loader {
@@ -403,7 +444,8 @@ BPage {
                                                     === "windows" ? "file:///" : "file://",
                                                     ""))],
                                         "modifiers": ["crops_fast", "similar_images"],
-                                        "language": Qt.locale().name.slice(0, 2),
+                                        "language": Qt.locale().name.slice(0,
+                                                                           2),
                                         "plant_details": ["common_names", "taxonomy", "url", "wiki_description", "wiki_image", "wiki_images", "edible_parts", "propagation_methods"],
                                         "longitude": gps.position.coordinate.longitude,
                                         "latitude": gps.position.coordinate.latitude
@@ -443,7 +485,6 @@ BPage {
                                 }
                             }
                         }
-
                     }
 
                     Image2Base64 {
@@ -463,10 +504,10 @@ BPage {
                         }
                     }
 
-//                    Item {
-//                        Layout.fillHeight: true
-//                        Layout.fillWidth: true
-//                    }
+                    //                    Item {
+                    //                        Layout.fillHeight: true
+                    //                        Layout.fillWidth: true
+                    //                    }
                 }
             }
             Item {
@@ -504,17 +545,70 @@ BPage {
                     }
 
                     delegate: ItemDelegate {
+                        id: card
                         required property int index
                         required property variant modelData
+                        property int blumeMatchID
+                        property bool isLoaded: false
+
+                        Component.onCompleted: {
+                            const url = `https://blume.mahoudev.com/items/Plantes?limit=1&fields=*.*&filter[name_scientific][_contains]=${modelData["plant_name"]}`
+
+                            let appLang = Qt.locale().name.slice(0, 2)
+
+                            Http.fetch({
+                                           "method": "GET",
+                                           "url": url,
+                                           "headers": {
+                                               "Accept": 'application/json',
+                                               "Content-Type": 'application/json',
+                                               "Content-Lang": appLang
+                                           }
+                                       }).then(function (response) {
+                                           console.log(url, response)
+                                           const parsedResponse = JSON.parse(
+                                                                    response)?.data
+                                           if (parsedResponse.length > 0) {
+                                               card.blumeMatchID = parsedResponse[0].id
+                                           } else {
+                                               card.blumeMatchID = 0
+                                           }
+                                           card.isLoaded = true
+                                       }).catch(function (err) {
+                                           console.log(Object.keys(err))
+                                           card.isLoaded = true
+                                       })
+                        }
+
+                        Column {
+                            id: indicatorCol
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            BusyIndicator {
+                                running: !card.isLoaded
+                                width: 20
+                                height: width
+                                visible: running
+                            }
+
+                            IconSvg {
+                                visible: card.isLoaded
+                                         && card.blumeMatchID === 0
+                                source: Icons.alert
+                                width: 15
+                                height: width
+                            }
+                        }
 
                         Column {
                             anchors.verticalCenter: parent.verticalCenter
-                            anchors.left: parent.left
+                            anchors.left: indicatorCol.right
                             anchors.leftMargin: 10
                             spacing: 10
                             Label {
                                 text: modelData["plant_name"]
                                 font.pixelSize: 16
+                                font.weight: Font.DemiBold
                             }
                             Label {
                                 text: modelData["plant_details"]["common_names"][0]
@@ -542,9 +636,19 @@ BPage {
                             }
                         }
 
-                        onClicked: page_view.push(plantResultPage, {
-                                                      "plant_data": modelData
-                                                  })
+                        onClicked: {
+                            if (blumeMatchID > 0) {
+                                page_view.push(navigator.plantPage, {
+                                                   "plant": {
+                                                       "id": blumeMatchID
+                                                   }
+                                               })
+                            } else {
+                                page_view.push(plantResultPage, {
+                                                   "plant_data": modelData
+                                               })
+                            }
+                        }
                     }
                 }
             }

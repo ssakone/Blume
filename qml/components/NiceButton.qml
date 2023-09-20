@@ -12,7 +12,7 @@ T.Button {
     id: control
 
     property color backgroundColor: $Colors.colorPrimary
-    property color foregroundColor: Theme.colorHeaderContent
+    property color foregroundColor: $Colors.colorHeaderContent
     property int radius: 18
     property color backgroundBorderColor: "black"
     property int backgroundBorderWidth: 0

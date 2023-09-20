@@ -466,6 +466,7 @@ BPage {
                     width: parent.width - 20
                     height: getStartedRow.height
                     contentWidth: getStartedRow.width
+                    visible: $Model.alarm.count === 0
 
                     RowLayout {
                         id: getStartedRow

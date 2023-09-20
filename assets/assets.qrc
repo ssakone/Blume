@@ -7420,6 +7420,11 @@
         <file>img/scan-in-salon.svg</file>
         <file>icons_custom/radar-sensors.svg</file>
         <file>img/pots-group.png</file>
+        <file>icons_custom/pictures-group.svg</file>
+        <file>img/bug-detect-insect.svg</file>
+        <file>icons_custom/double-forks.svg</file>
+        <file>icons_custom/death-head.svg</file>
+        <file>icons_custom/double-forks.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

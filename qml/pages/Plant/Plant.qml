@@ -17,7 +17,11 @@ BPage {
     property string error: ""
 
     header: AppBar {
-        title: plant["name_scientific"]?? ""
+        title: ""
+        statusBarVisible: false
+        leading.icon: Icons.close
+        color: Qt.rgba(12, 200, 25, 0)
+        foregroundColor: $Colors.colorPrimary
     }
 
     onFocusChanged: {

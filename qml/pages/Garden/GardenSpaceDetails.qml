@@ -185,7 +185,7 @@ BPage {
                             ButtonWireframe {
                                 text: qsTr("Add new")
                                 componentRadius: 20
-                                fullColor: Theme.colorPrimary
+                                fullColor: $Colors.colorPrimary
                                 fulltextColor: "white"
                                 leftPadding: 20
                                 rightPadding: leftPadding
@@ -327,7 +327,7 @@ BPage {
                             ButtonWireframe {
                                 text: qsTr("Add new")
                                 componentRadius: 20
-                                fullColor: Theme.colorPrimary
+                                fullColor: $Colors.colorPrimary
                                 fulltextColor: "white"
                                 leftPadding: 20
                                 rightPadding: leftPadding
@@ -423,7 +423,6 @@ BPage {
             }
         }
     }
-
     Popup {
         id: removeAlarmPopup
         property var alarm
@@ -590,7 +589,7 @@ BPage {
         dim: false
         modal: true
         interactive: false
-        z: 1000
+        z: 100
         background: Item {
             Rectangle {
                 width: parent.width
@@ -692,8 +691,8 @@ BPage {
                                 delegate: ButtonWireframe {
                                     text: modelData
                                     fullColor: true
-                                    primaryColor: index === typeAlarm.currentIndex ? Theme.colorPrimary : $Colors.gray300
-                                    fulltextColor: index === typeAlarm.currentIndex ? "white" : Theme.colorPrimary
+                                    primaryColor: index === typeAlarm.currentIndex ? $Colors.colorPrimary : $Colors.gray300
+                                    fulltextColor: index === typeAlarm.currentIndex ? "white" : $Colors.colorPrimary
                                     font.pixelSize: 14
                                     componentRadius: implicitHeight / 2
                                     onClicked: {
@@ -919,6 +918,79 @@ BPage {
                                                                 err?.message)
                                                 })
                                 }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Drawer {
+        id: choosePlantPopup
+        property var callback
+        width: parent.width
+        height: parent.height - 55
+        edge: Qt.BottomEdge
+        dim: true
+        modal: true
+        z: 200
+        background: Item {
+            Rectangle {
+                width: parent.width
+                height: parent.height + 60
+                radius: 18
+            }
+        }
+        function show(c) {
+            choosePlantPopup.callback = c
+            open()
+        }
+
+        ClipRRect {
+            anchors.fill: parent
+            anchors.margins: -1
+            radius: 18
+            BPage {
+                anchors.fill: parent
+                header: AppBar {
+                    title: qsTr("Choose plant")
+                    statusBarVisible: false
+                    leading.icon: Icons.close
+                    leading.onClicked: {
+                        choosePlantPopup.close()
+                    }
+
+                    noAutoPop: true
+                }
+                ListView {
+                    id: plantListView
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    spacing: 10
+                    model: plantInSpace
+                    delegate: Item {
+                        id: insideControl
+                        property var plant: JSON.parse(plant_json)
+                        width: inside.width
+                        height: inside.height
+                        GardenPlantLine {
+                            id: inside
+                            width: plantListView.width - 10
+                            height: 100
+                            title: insideControl.plant.name_scientific
+                            subtitle: insideControl.plant.noms_communs[0]?.name
+                                      ?? ""
+                            roomName: ""
+                            imageSource: insideControl.plant.images_plantes.length
+                                         > 0 ? "https://blume.mahoudev.com/assets/"
+                                               + insideControl.plant.images_plantes[0].directus_files_id : ""
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                choosePlantPopup.callback(insideControl.plant)
+                                choosePlantPopup.close()
                             }
                         }
                     }

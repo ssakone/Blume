@@ -5,7 +5,6 @@ import ThemeEngine 1.0
 
 Item {
     id: deviceList
-    anchors.fill: parent
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -45,25 +44,11 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    Rectangle {
-        id: ellispis
-        anchors {
-            bottom: parent.top
-            bottomMargin: -160
-            horizontalCenter: parent.horizontalCenter
-        }
-
-        height: 1200
-        width: height / 1.7
-        radius: height
-
-        gradient: $Colors.gradientPrimary
-    }
 
     GridView {
         id: devicesView
         anchors {
-            top: ellispis.bottom
+            top: parent.top
             left: parent.left
             right: parent.right
             bottom: parent.bottom

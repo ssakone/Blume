@@ -1,7 +1,10 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 import "../../components_generic"
 import "../../components"
+import "../.."
+
 
 BPage {
     property int spaceID
@@ -18,66 +21,84 @@ BPage {
 
     header: AppBar {
         id: header
-        title: shouldCreate ? qsTr("Créer une nouvelle salle") : qsTr("Modifier la salle")
+        title: ""
         statusBarVisible: false
         leading.icon: Icons.close
         color: Qt.rgba(12, 200, 25, 0)
         foregroundColor: $Colors.colorPrimary
 
-        ButtonWireframeIcon {
-            visible: spaceID
-            height: 36
-            anchors.right: parent.right
-            anchors.rightMargin: 10
-            anchors.verticalCenter: parent.verticalCenter
+    }
 
-            primaryColor: $Colors.red300
-            secondaryColor: Qt.rgba(0, 0, 0, 0)
-            fulltextColor: $Colors.colorPrimary
+    function scan() {
+        if (!deviceManager.updating) {
+            if (deviceManager.scanning) {
+                deviceManager.scanDevices_stop()
+            } else {
+                deviceManager.scanDevices_start()
+            }
+        } else
+            console.warn("deviceManager.updating")
+    }
 
-            background: Item {}
-
-            source: Icons.trashCan
-            sourceSize: 30
-
-            onClicked: confirmRoomDeletionPopup.open()
+    Component.onCompleted: {
+        if (utilsApp.checkMobileBleLocationPermission()) {
+            scan()
+        } else {
+            utilsApp.getMobileBleLocationPermission()
+            retryScan.start()
         }
     }
-    Flickable {
+
+    ColumnLayout {
+        id: _insideCol
         anchors.fill: parent
-        contentHeight: _insideCol.height
+        spacing: 15
+        anchors.horizontalCenter: parent.horizontalCenter
+
+        Label {
+            Layout.alignment: Qt.AlignHCenter
+            text: qsTr("Scan en cours...")
+            color: $Colors.colorPrimary
+            font {
+                weight: Font.DemiBold
+                pixelSize: 24
+            }
+        }
+
+        Image {
+            Layout.preferredHeight: 180
+            Layout.preferredWidth: Layout.preferredHeight
+            Layout.alignment: Qt.AlignHCenter
+            anchors.margins: 15
+            source: "qrc:/assets/icons_custom/radar-sensors.svg"
+        }
+
         Column {
-            id: _insideCol
-            padding: 10
-            width: parent.width - 2*padding
-            spacing: 15
-            anchors.horizontalCenter: parent.horizontalCenter
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            leftPadding: 10
+            rightPadding: 10
 
-            Label {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr("Scan en cours...")
-                font {
-                    weight: Font.DemiBold
-                    pixelSize: 24
-                }
-            }
-
-            Image {
-                width: parent.width
-                source: "qrc:/assets/icons_custom/radar-sensors.svg"
-            }
-
-            Column {
-                width: parent.width
+            ColumnLayout {
+                width: parent.width - 20
+                height: parent.height
                 Label {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr("Scan en cours...")
+                    text: qsTr("Capteurs détectés...")
+                    color: $Colors.colorPrimary
                     font {
                         weight: Font.DemiBold
+                        pixelSize: 16
                     }
                 }
-            }
 
+                DeviceListUnified {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                }
+            }
         }
+
+
     }
+
 }

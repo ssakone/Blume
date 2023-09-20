@@ -19,73 +19,73 @@ BPage {
 
     objectName: "DeviceList"
 
-    header: Loader {
-        id: deviceListHeader
-        z: 10
-        sourceComponent: AppBar {
-            id: mobileDeviceHeader
-            title: qsTr("Appareils connectés")
-            noAutoPop: true
-            isHomeScreen: true
-            statusBarVisible: false
-            leading.visible: true
-            titleLabel.leftPadding: 15
-            color: Qt.rgba(12, 200, 25, 0)
-            foregroundColor: $Colors.white
-            actions: RowLayout {
-                width: parent.width
-                IconSvg {
-                    id: workingIndicator
-                    Layout.fillWidth: true
-                    height: 24;
+//    header: Loader {
+//        id: deviceListHeader
+//        z: 10
+//        sourceComponent: AppBar {
+//            id: mobileDeviceHeader
+//            title: qsTr("Appareils connectés")
+//            noAutoPop: true
+//            isHomeScreen: true
+//            statusBarVisible: false
+//            leading.visible: true
+//            titleLabel.leftPadding: 15
+//            color: Qt.rgba(12, 200, 25, 0)
+//            foregroundColor: $Colors.white
+//            actions: RowLayout {
+//                width: parent.width
+//                IconSvg {
+//                    id: workingIndicator
+//                    Layout.fillWidth: true
+//                    height: 24;
 
-                    source: {
-                        if (deviceManager.scanning)
-                            return "qrc:/assets/icons_material/baseline-search-24px.svg"
-                        else if (deviceManager.syncing)
-                            return "qrc:/assets/icons_custom/duotone-date_all-24px.svg"
-                        else if (deviceManager.listening)
-                            return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
-                        else
-                            return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
-                    }
-                    color: Theme.colorHeaderContent
-                    opacity: 0
-                    Behavior on opacity { OpacityAnimator { duration: 333 } }
+//                    source: {
+//                        if (deviceManager.scanning)
+//                            return "qrc:/assets/icons_material/baseline-search-24px.svg"
+//                        else if (deviceManager.syncing)
+//                            return "qrc:/assets/icons_custom/duotone-date_all-24px.svg"
+//                        else if (deviceManager.listening)
+//                            return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+//                        else
+//                            return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
+//                    }
+//                    color: Theme.colorHeaderContent
+//                    opacity: 0
+//                    Behavior on opacity { OpacityAnimator { duration: 333 } }
 
-                    NumberAnimation on rotation { // refreshAnimation (rotate)
-                        from: 0
-                        to: 360
-                        duration: 2000
-                        loops: Animation.Infinite
-                        easing.type: Easing.Linear
-                        running: (deviceManager.updating && !deviceManager.scanning && !deviceManager.syncing)
-                        alwaysRunToEnd: true
-                        onStarted: workingIndicator.opacity = 1
-                        onStopped: workingIndicator.opacity = 0
-                    }
-                    SequentialAnimation on opacity { // scanAnimation (fade)
-                        loops: Animation.Infinite
-                        running: (deviceManager.scanning || deviceManager.listening || deviceManager.syncing)
-                        onStopped: workingIndicator.opacity = 0
-                        PropertyAnimation { to: 1; duration: 750; }
-                        PropertyAnimation { to: 0.33; duration: 750; }
-                    }
-                }
+//                    NumberAnimation on rotation { // refreshAnimation (rotate)
+//                        from: 0
+//                        to: 360
+//                        duration: 2000
+//                        loops: Animation.Infinite
+//                        easing.type: Easing.Linear
+//                        running: (deviceManager.updating && !deviceManager.scanning && !deviceManager.syncing)
+//                        alwaysRunToEnd: true
+//                        onStarted: workingIndicator.opacity = 1
+//                        onStopped: workingIndicator.opacity = 0
+//                    }
+//                    SequentialAnimation on opacity { // scanAnimation (fade)
+//                        loops: Animation.Infinite
+//                        running: (deviceManager.scanning || deviceManager.listening || deviceManager.syncing)
+//                        onStopped: workingIndicator.opacity = 0
+//                        PropertyAnimation { to: 1; duration: 750; }
+//                        PropertyAnimation { to: 0.33; duration: 750; }
+//                    }
+//                }
 
-                IconSvg {
-                    source: "qrc:/assets/icons_material/baseline-more_vert-24px.svg"
-                    color: $Colors.colorPrimary
-                    Layout.preferredWidth: 30
-                    Layout.preferredHeight: Layout.preferredWidth
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: actionMenuDevices.open()
-                    }
-                }
-            }
-        }
-    }
+//                IconSvg {
+//                    source: "qrc:/assets/icons_material/baseline-more_vert-24px.svg"
+//                    color: $Colors.colorPrimary
+//                    Layout.preferredWidth: 30
+//                    Layout.preferredHeight: Layout.preferredWidth
+//                    MouseArea {
+//                        anchors.fill: parent
+//                        onClicked: actionMenuDevices.open()
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     ////////////////////////////////////////////////////////////////////////////
     Component.onCompleted: {
@@ -234,218 +234,310 @@ BPage {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    Column {
-        id: rowbar
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        z: 2
-
-        ////////////////
-        Rectangle {
-            id: rectangleBluetoothStatus
-            anchors.left: parent.left
-            anchors.right: parent.right
-
-            height: 0
-            Behavior on height {
-                NumberAnimation {
-                    duration: 133
-                }
-            }
-
-            clip: true
-            visible: (height > 0)
-            color: Theme.colorActionbar
-
-            // prevent clicks below this area
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.AllButtons
-            }
-
-            Text {
-                id: textBluetoothStatus
-                anchors.fill: parent
-                anchors.leftMargin: 16
-                anchors.rightMargin: 16
-
-                color: Theme.colorActionbarContent
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignLeft
-                font.bold: isDesktop ? true : false
-                font.pixelSize: Theme.fontSizeComponent
-            }
-
-            ButtonWireframe {
-                id: buttonBluetoothStatus
-                height: 32
-                anchors.right: parent.right
-                anchors.rightMargin: 16
-                anchors.verticalCenter: parent.verticalCenter
-
-                fullColor: true
-                primaryColor: Theme.colorActionbarHighlight
-
-                text: {
-                    if (Qt.platform.os === "android") {
-                        if (!deviceManager.bluetoothEnabled)
-                            return qsTr("Enable")
-                        else if (!deviceManager.bluetoothPermissions)
-                            return qsTr("About")
-                    }
-                    return qsTr("Retry")
-                }
-                onClicked: {
-                    if (Qt.platform.os === "android"
-                            && !deviceManager.bluetoothPermissions) {
-                        //utilsApp.getMobileBleLocationPermission()
-                        //deviceManager.checkBluetoothPermissions()
-
-                        // someone clicked 'never ask again'?
-                        screenPermissions.loadScreenFrom("DeviceList")
-                    } else {
-                        deviceManager.enableBluetooth(
-                                    settingsManager.bluetoothControl)
-                    }
-                }
-            }
-
-            function hide() {
-                rectangleBluetoothStatus.height = 0
-            }
-            function setBluetoothWarning() {
-                textBluetoothStatus.text = qsTr("Bluetooth is disabled...")
-                rectangleBluetoothStatus.height = 48
-            }
-            function setPermissionWarning() {
-                textBluetoothStatus.text = qsTr(
-                            "Bluetooth permission is missing...")
-                rectangleBluetoothStatus.height = 48
-            }
+    Rectangle {
+        id: ellispis
+        anchors {
+            bottom: parent.top
+            bottomMargin: -180
+            horizontalCenter: parent.horizontalCenter
         }
 
-        ////////////////
-        Rectangle {
-            id: rectangleActions
-            anchors.left: parent.left
-            anchors.right: parent.right
+        height: 1200
+        width: height / 1.7
+        radius: height
 
-            height: (screenDeviceList.selectionCount) ? 48 : 0
-            Behavior on height {
-                NumberAnimation {
-                    duration: 133
-                }
-            }
+        gradient: $Colors.gradientPrimary
+    }
 
-            clip: true
-            visible: (height > 0)
-            color: Theme.colorActionbar
+    ColumnLayout {
+        anchors.fill: parent
 
-            // prevent clicks below this area
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.AllButtons
-            }
+        Column {
+            id: rowbar
+            width: parent.width
+            z: 2
 
-            Row {
+            ////////////////
+            Rectangle {
+                id: rectangleBluetoothStatus
                 anchors.left: parent.left
-                anchors.leftMargin: 12
-                anchors.verticalCenter: parent.verticalCenter
-                spacing: 8
+                anchors.right: parent.right
 
-                RoundButtonIcon {
-                    id: buttonClear
-                    width: 36
-                    height: 36
-                    anchors.verticalCenter: parent.verticalCenter
+                height: 0
+                Behavior on height {
+                    NumberAnimation {
+                        duration: 133
+                    }
+                }
 
-                    source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
-                    rotation: 180
-                    iconColor: Theme.colorActionbarContent
-                    backgroundColor: Theme.colorActionbarHighlight
-                    onClicked: screenDeviceList.exitSelectionMode()
+                clip: true
+                visible: (height > 0)
+                color: Theme.colorActionbar
+
+                // prevent clicks below this area
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.AllButtons
                 }
 
                 Text {
-                    id: textActions
+                    id: textBluetoothStatus
+                    anchors.fill: parent
+                    anchors.leftMargin: 16
+                    anchors.rightMargin: 16
+
+                    color: Theme.colorActionbarContent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                    font.bold: isDesktop ? true : false
+                    font.pixelSize: Theme.fontSizeComponent
+                }
+
+                ButtonWireframe {
+                    id: buttonBluetoothStatus
+                    height: 32
+                    anchors.right: parent.right
+                    anchors.rightMargin: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("%n device(s) selected", "",
-                               screenDeviceList.selectionCount)
-                    color: Theme.colorActionbarContent
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeComponent
+                    fullColor: true
+                    primaryColor: Theme.colorActionbarHighlight
+
+                    text: {
+                        if (Qt.platform.os === "android") {
+                            if (!deviceManager.bluetoothEnabled)
+                                return qsTr("Enable")
+                            else if (!deviceManager.bluetoothPermissions)
+                                return qsTr("About")
+                        }
+                        return qsTr("Retry")
+                    }
+                    onClicked: {
+                        if (Qt.platform.os === "android"
+                                && !deviceManager.bluetoothPermissions) {
+                            //utilsApp.getMobileBleLocationPermission()
+                            //deviceManager.checkBluetoothPermissions()
+
+                            // someone clicked 'never ask again'?
+                            screenPermissions.loadScreenFrom("DeviceList")
+                        } else {
+                            deviceManager.enableBluetooth(
+                                        settingsManager.bluetoothControl)
+                        }
+                    }
+                }
+
+                function hide() {
+                    rectangleBluetoothStatus.height = 0
+                }
+                function setBluetoothWarning() {
+                    textBluetoothStatus.text = qsTr("Bluetooth is disabled...")
+                    rectangleBluetoothStatus.height = 48
+                }
+                function setPermissionWarning() {
+                    textBluetoothStatus.text = qsTr(
+                                "Bluetooth permission is missing...")
+                    rectangleBluetoothStatus.height = 48
                 }
             }
 
-            Row {
+            ////////////////
+            Rectangle {
+                id: rectangleActions
+                anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.rightMargin: 12
-                anchors.verticalCenter: parent.verticalCenter
-                spacing: 8
 
-                ButtonCompactable {
-                    id: buttonDelete
-                    height: compact ? 36 : 34
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    compact: !wideMode
-                    iconColor: Theme.colorActionbarContent
-                    backgroundColor: Theme.colorActionbarHighlight
-                    onClicked: confirmDeleteDevice.open()
-
-                    text: qsTr("Delete")
-                    source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
+                height: (screenDeviceList.selectionCount) ? 48 : 0
+                Behavior on height {
+                    NumberAnimation {
+                        duration: 133
+                    }
                 }
 
-                ButtonCompactable {
-                    id: buttonSync
-                    height: !wideMode ? 36 : 34
-                    anchors.verticalCenter: parent.verticalCenter
-                    visible: deviceManager.bluetooth
+                clip: true
+                visible: (height > 0)
+                color: Theme.colorActionbar
 
-                    compact: !wideMode
-                    iconColor: Theme.colorActionbarContent
-                    backgroundColor: Theme.colorActionbarHighlight
-                    onClicked: screenDeviceList.syncSelectedDevice()
-
-                    text: qsTr("Synchronize history")
-                    source: "qrc:/assets/icons_material/duotone-date_range-24px.svg"
+                // prevent clicks below this area
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.AllButtons
                 }
 
-                ButtonCompactable {
-                    id: buttonRefresh
-                    height: !wideMode ? 36 : 34
+                Row {
+                    anchors.left: parent.left
+                    anchors.leftMargin: 12
                     anchors.verticalCenter: parent.verticalCenter
-                    visible: deviceManager.bluetooth
+                    spacing: 8
 
-                    compact: !wideMode
-                    iconColor: Theme.colorActionbarContent
-                    backgroundColor: Theme.colorActionbarHighlight
-                    onClicked: screenDeviceList.updateSelectedDevice()
+                    RoundButtonIcon {
+                        id: buttonClear
+                        width: 36
+                        height: 36
+                        anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Refresh")
-                    source: "qrc:/assets/icons_material/baseline-refresh-24px.svg"
+                        source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
+                        rotation: 180
+                        iconColor: Theme.colorActionbarContent
+                        backgroundColor: Theme.colorActionbarHighlight
+                        onClicked: screenDeviceList.exitSelectionMode()
+                    }
+
+                    Text {
+                        id: textActions
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTr("%n device(s) selected", "",
+                                   screenDeviceList.selectionCount)
+                        color: Theme.colorActionbarContent
+                        font.bold: true
+                        font.pixelSize: Theme.fontSizeComponent
+                    }
+                }
+
+                Row {
+                    anchors.right: parent.right
+                    anchors.rightMargin: 12
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 8
+
+                    ButtonCompactable {
+                        id: buttonDelete
+                        height: compact ? 36 : 34
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        compact: !wideMode
+                        iconColor: Theme.colorActionbarContent
+                        backgroundColor: Theme.colorActionbarHighlight
+                        onClicked: confirmDeleteDevice.open()
+
+                        text: qsTr("Delete")
+                        source: "qrc:/assets/icons_material/baseline-delete-24px.svg"
+                    }
+
+                    ButtonCompactable {
+                        id: buttonSync
+                        height: !wideMode ? 36 : 34
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: deviceManager.bluetooth
+
+                        compact: !wideMode
+                        iconColor: Theme.colorActionbarContent
+                        backgroundColor: Theme.colorActionbarHighlight
+                        onClicked: screenDeviceList.syncSelectedDevice()
+
+                        text: qsTr("Synchronize history")
+                        source: "qrc:/assets/icons_material/duotone-date_range-24px.svg"
+                    }
+
+                    ButtonCompactable {
+                        id: buttonRefresh
+                        height: !wideMode ? 36 : 34
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: deviceManager.bluetooth
+
+                        compact: !wideMode
+                        iconColor: Theme.colorActionbarContent
+                        backgroundColor: Theme.colorActionbarHighlight
+                        onClicked: screenDeviceList.updateSelectedDevice()
+
+                        text: qsTr("Refresh")
+                        source: "qrc:/assets/icons_material/baseline-refresh-24px.svg"
+                    }
                 }
             }
         }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.margins: 25
+            Layout.topMargin: 45
+
+            Rectangle {
+                Layout.preferredWidth: 30
+                Layout.preferredHeight: Layout.preferredWidth
+                radius: Layout.preferredHeight / 2
+                color: $Colors.white
+
+
+                IconSvg {
+                    width: parent.width - 4
+                    height: width
+                    anchors.centerIn: parent
+                    source: "qrc:/assets/icons_material/baseline-menu-24px.svg"
+                    color: $Colors.colorPrimary
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: appDrawer.open()
+                    }
+                }
+            }
+
+            Column {
+                Layout.fillWidth: true
+                Label {
+                    text: qsTr("Appareils connectés")
+                    font {
+                        pixelSize: 24
+                        family: "Courrier"
+                        weight: Font.Bold
+                    }
+                    color: $Colors.white
+                    width: parent.width
+                    horizontalAlignment: Text.AlignHCenter
+                }
+                Label {
+                    width: parent.width
+                    text: qsTr("Connectez-vous pour connaitre l'état de vos plantes")
+                    opacity: .5
+                    color: $Colors.white
+                    font {
+                        pixelSize: 14
+                        family: "Courrier"
+                        weight: Font.Bold
+                    }
+                    wrapMode: Text.Wrap
+                    horizontalAlignment: Text.AlignHCenter
+                }
+            }
+            Rectangle {
+                Layout.preferredWidth: 30
+                Layout.preferredHeight: Layout.preferredWidth
+                radius: Layout.preferredHeight / 2
+                color: $Colors.white
+
+
+                IconSvg {
+                    width: parent.width - 4
+                    height: width
+                    anchors.centerIn: parent
+                    source: "qrc:/assets/icons_material/baseline-more_vert-24px.svg"
+                    color: $Colors.colorPrimary
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: actionMenuDevices.open()
+                    }
+                }
+            }
+        }
+
+
+        Loader {
+            id: loaderStatus
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            asynchronous: true
+        }
+
+        ////////////////////////////////////////////////////////////////////////////
+        Loader {
+            id: loaderDeviceList
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            asynchronous: false
+        }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-    Loader {
-        id: loaderStatus
-        anchors.fill: parent
-        asynchronous: true
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    Loader {
-        id: loaderDeviceList
-        anchors.fill: parent
-        anchors.topMargin: rowbar.height
-        asynchronous: false
-    }
 
     ////////////////////////////////////////////////////////////////////////////
     Timer {
