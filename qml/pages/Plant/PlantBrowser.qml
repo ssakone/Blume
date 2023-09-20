@@ -265,13 +265,13 @@ BPage {
                                 Repeater {
                                     model: plantOptionModel
                                     Item {
-                                        Layout.preferredWidth: index === 1 ? 150 : 100
+                                        Layout.preferredWidth: index === 1 ? 120 : 90
                                         Layout.preferredHeight: Layout.preferredWidth
                                         Rectangle {
                                             anchors.fill: parent
                                             anchors.bottomMargin: 35
-                                            anchors.rightMargin: 15
-                                            anchors.leftMargin: 15
+                                            anchors.rightMargin: index === 1 ? 20 : 10
+                                            anchors.leftMargin: index === 1 ? 20 : 10
                                             radius: 15
                                             opacity: mArea.containsMouse ? .8 : 1
                                             color: bg
@@ -281,8 +281,8 @@ BPage {
                                             }
 
                                             IconSvg {
-                                                width: 64
-                                                height: 64
+                                                width: index === 1 ? 64 : 50
+                                                height: width
                                                 visible: icon !== ""
                                                 anchors.centerIn: parent
 
@@ -313,7 +313,7 @@ BPage {
                                             anchors.bottomMargin: 3
                                             height: 28
                                             wrapMode: Label.Wrap
-                                            font.pixelSize: 12
+                                            font.pixelSize: index === 1 ? 12 : 10
                                             font.weight: Font.Medium
                                             horizontalAlignment: Label.AlignHCenter
                                             verticalAlignment: Label.AlignVCenter
@@ -387,13 +387,13 @@ BPage {
                                             width: 300
                                             height: 140
                                             title: plant.name_scientific
-                                            subtitle: "Margérite"
+                                            subtitle:  plant.noms_communs[0]?.name ?? ""
                                             moreDetailsList: [{
-                                                iconSource: Components.Icons.water,
-                                                text: "Toxique"
+                                                iconSource: plant.toxicity === null ? "" : Components.Icons.water,
+                                                text: plant.toxicity === null ? "" : plant.toxicity === true ? "Toxique" : "Non toxique"
                                                 }, {
                                                     iconSource: Components.Icons.food,
-                                                    text: "Commestible"
+                                                    text:  plant.commestible ? "Commestible" : "Non commestible"
                                                     }]
                                             roomName: ""
                                             imageSource: plant.images_plantes.length
