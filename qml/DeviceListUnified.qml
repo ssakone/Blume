@@ -5,7 +5,6 @@ import ThemeEngine 1.0
 
 Item {
     id: deviceList
-    anchors.fill: parent
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -48,7 +47,13 @@ Item {
 
     GridView {
         id: devicesView
-        anchors.fill: parent
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+
         anchors.topMargin: singleColumn ? 0 : 8
         anchors.leftMargin: 6
         anchors.rightMargin: 6
@@ -83,4 +88,18 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
+//    Rectangle {
+//        anchors {
+//            bottom: parent.top
+//            bottomMargin: -220
+//            horizontalCenter: parent.horizontalCenter
+//        }
+
+//        height: 1200
+//        width: height / 1.7
+//        radius: height
+
+//        color: 'red'
+//    }
+
 }

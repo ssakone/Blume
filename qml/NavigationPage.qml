@@ -6,10 +6,14 @@ import "pages/Plant"
 import "pages/Insect"
 import "pages/Auth"
 import "pages/Garden"
+import "pages/Device"
 
 Item {
     property var deviceList: Component {
         DeviceList {}
+    }
+    property var deviceScannerPage: Component {
+        DeviceScanPage {}
     }
     property var plantIdentifierPage: Component {
         PlantIdentifier {}

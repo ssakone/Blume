@@ -31,13 +31,12 @@ ClipRRect {
         width: parent.width
         Column {
             Layout.preferredWidth: control.height
-            Layout.fillHeight: true
             Layout.alignment: Qt.AlignCenter
-            padding: 10
+            padding: 3
             ClipRRect {
                 width: parent.width - 20
-                height: width
-                radius: height / 2
+                height: control.height - 7
+                radius: 10
                 Rectangle {
                     anchors.fill: parent
                     color: $Colors.gray100
@@ -63,14 +62,15 @@ ClipRRect {
             Layout.fillWidth: true
             Layout.topMargin: 10
             Layout.bottomMargin: 15
+            spacing: 4
 
             Label {
                 text: title
-                font.pixelSize: 18
+                font.pixelSize: 16
                 font.weight: Font.Medium
                 Layout.fillWidth: true
                 rightPadding: 10
-                wrapMode: Label.Wrap
+                elide: Text.ElideRight
                 opacity: .8
             }
             Label {
@@ -79,7 +79,6 @@ ClipRRect {
                 font.weight: Font.Light
                 opacity: .6
                 Layout.fillWidth: true
-                wrapMode: Label.Wrap
                 elide: Text.ElideRight
                 rightPadding: 20
             }
@@ -91,11 +90,13 @@ ClipRRect {
             Label {
                 text: control.roomName || ""
                 color: "white"
-                padding: 5
+                padding: 2
+                leftPadding: 7
+                rightPadding: 7
                 visible: text.length > 0
-                font.capitalization: Font.AllUppercase
+                //font.capitalization: Font.AllUppercase
                 background: Rectangle {
-                    color: Theme.colorPrimary
+                    color: $Colors.colorPrimary
                     radius: 5
                 }
             }

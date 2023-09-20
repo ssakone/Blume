@@ -74,6 +74,11 @@ BPage {
             }
         }
         noAutoPop: true
+        z: 10
+        statusBarVisible: false
+        leading.icon: Icons.close
+        color: Qt.rgba(12, 200, 25, 0)
+        foregroundColor: $Colors.colorPrimary
         leading.onClicked: {
             if (identifierLayoutView.currentIndex === 0) {
                 planteDeseaseControl.StackView.view.pop()
@@ -105,6 +110,7 @@ BPage {
         anchors.fill: parent
         anchors.margins: 0
         spacing: 0
+        z: 1
         Loader {
             id: androidToolsLoader
             active: Qt.platform.os === "android"
@@ -291,7 +297,7 @@ BPage {
                                             text: qsTr("Encyclopedie des maladies")
                                             color: $Colors.colorPrimary
                                             width: parent.width
-                                            font.pixelSize: 16
+                                            font.pixelSize: 14
                                             font.weight: Font.DemiBold
                                             wrapMode: Text.Wrap
                                             horizontalAlignment: Text.AlignHCenter
@@ -407,7 +413,7 @@ BPage {
                 Rectangle {
                     anchors {
                         bottom: parent.top
-                        bottomMargin: -150
+                        bottomMargin: -180
                         horizontalCenter: parent.horizontalCenter
                     }
 
@@ -419,99 +425,190 @@ BPage {
                 }
 
                 Column {
-                    id: diseaseSearchBox
-                    topPadding: 20
-                    width: parent.width
-                    spacing: 7
-                    anchors.horizontalCenter: parent.horizontalCenter
-
-                    Label {
-                        text: qsTr("Diagnostiquez la santé de votre plante")
-                        color: $Colors.white
-                        font {
-                            pixelSize: 16
-                        }
-                        anchors.horizontalCenter: parent.horizontalCenter
+                    anchors {
+                        top: parent.top
+                        left: parent.left
+                        right: parent.right
+                        leftMargin: 15
+                        rightMargin: 15
                     }
 
-                    Item {
-                        width: parent.width - 50
-                        anchors.leftMargin: 25
-                        anchors.rightMargin: 25
-                        height: 50
+                    Column {
+                        id: diseaseSearchBox
+                        width: parent.width - 30
+                        spacing: 7
                         anchors.horizontalCenter: parent.horizontalCenter
 
-                        MouseArea {
-                            id: diseaseSearchBoxMS
-                            anchors.fill: parent
-                            anchors.rightMargin: 70
-                            onClicked: {
-                                page_view.push(navigator.deseaseEncyclopedie)
-                            }
-                        }
+                        RowLayout {
+                            width: parent.width
+                            anchors.topMargin: 5
+
+                            Rectangle {
+                                Layout.preferredWidth: 30
+                                Layout.preferredHeight: Layout.preferredWidth
+                                radius: Layout.preferredHeight / 2
+                                color: $Colors.white
 
 
-                        Rectangle {
-                            anchors {
-                                top: parent.top
-                                left: parent.left
-                                right: cameraIcon.left
-                                margins: 7
-                                verticalCenter: parent.verticalCenter
-                            }
-                            height: 50
-                            radius: 25
-                            color: $Colors.colorTertiary
-
-                            z: 10
-
-                            Row {
-                                anchors.fill: parent
-                                leftPadding: 15
-                                rightPadding: 15
-                                spacing: 10
                                 IconSvg {
-                                    source: Icons.searchWeb
-                                    color: $Colors.gray600
-                                    anchors.verticalCenter: parent.verticalCenter
-                                }
-
-                                Text {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    text: qsTr("Search for diseases")
-                                    color: $Colors.gray600
-                                    font.pixelSize: 16
+                                    width: parent.width - 4
+                                    height: width
+                                    anchors.centerIn: parent
+                                    source: "qrc:/assets/icons_material/baseline-menu-24px.svg"
+                                    color: $Colors.colorPrimary
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: appDrawer.open()
+                                    }
                                 }
                             }
 
+                            Column {
+                                Layout.fillWidth: true
+                                Label {
+                                    text: qsTr("Health menu")
+                                    font {
+                                        pixelSize: 36
+                                        family: "Courrier"
+                                        weight: Font.Bold
+                                    }
+                                    color: $Colors.white
+                                    width: parent.width
+                                    horizontalAlignment: Text.AlignHCenter
+                                }
+                                Label {
+                                    text: qsTr("Diagnostiquez la santé de vos plantes")
+                                    opacity: .5
+                                    color: $Colors.white
+                                    font {
+                                        pixelSize: 14
+                                        family: "Courrier"
+                                        weight: Font.Bold
+                                    }
+                                    width: parent.width
+                                    horizontalAlignment: Text.AlignHCenter
+                                }
+                            }
 
+                            Rectangle {
+                                Layout.preferredWidth: 30
+                                Layout.preferredHeight: Layout.preferredWidth
+                                radius: Layout.preferredHeight / 2
+                                color: $Colors.white
+
+
+                                IconSvg {
+                                    width: parent.width - 4
+                                    height: width
+                                    anchors.centerIn: parent
+                                    source: Icons.bell
+                                    color: $Colors.colorPrimary
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: page_view.push(navigator.loginPage)
+                                    }
+                                }
+                            }
                         }
 
-                        Rectangle {
-                            id: cameraIcon
-                            anchors.right: parent.right
-                            anchors.verticalCenter: parent.verticalCenter
-                            height: 40
-                            width: height
-                            color: $Colors.white
-                            enabled: true
-                            radius: 25
-
-                            IconSvg {
-                                anchors.centerIn: parent
-                                source: Icons.camera
-                                color: $Colors.colorPrimary
+                        Item {
+                            width: parent.width
+                            height: 60
+                            MouseArea {
+                                id: diseaseSearchBoxMS
+                                anchors.fill: parent
+                                anchors.rightMargin: 70
+                                onClicked: {
+                                    page_view.push(navigator.deseaseEncyclopedie)
+                                }
                             }
+                            RowLayout {
+                                anchors.top: parent.top
+                                anchors.topMargin: 14
+                                anchors.left: parent.left
+                                anchors.leftMargin: 25
+                                anchors.right: parent.right
+                                anchors.rightMargin: 25
+                                spacing: 15
+
+                                Rectangle {
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 40
+                                    z: 5
+                                    color: "#BBFEEA"
+                                    radius: height/2
+                                    Text {
+                                        text: qsTr("Search for disease")
+                                        color: $Colors.gray600
+                                        leftPadding: 15
+                                        font.pixelSize: 14
+                                        anchors {
+                                            verticalCenter: parent.verticalCenter
+                                            leftMargin: 25
+                                        }
+                                    }
+                                }
+
+                                Rectangle {
+                                    Layout.preferredHeight: 50
+                                    Layout.preferredWidth: 50
+                                    color: $Colors.white
+                                    radius: 25
+
+                                    IconSvg {
+                                        anchors.centerIn: parent
+                                        source: Icons.camera
+                                        color: $Colors.colorPrimary
+                                    }
+                                }
+
+                            }
+
                         }
 
                     }
                 }
 
+
             }
 
             Item {
+                Rectangle {
+                    id: head
+                    anchors {
+                        bottom: parent.top
+                        bottomMargin: -130
+                        horizontalCenter: parent.horizontalCenter
+                    }
+
+                    height: 1200
+                    width: height / 1.7
+                    radius: height
+                    z: 1
+
+                    gradient: $Colors.gradientPrimary
+                }
+
+                IconSvg {
+                    z: 3
+                    width: 120
+                    height: width
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: head.bottom
+                    anchors.bottomMargin: -height / 2
+                    source: "qrc:/assets/img/bug-detect-insect.svg"
+                }
+
                 ColumnLayout {
                     anchors.fill: parent
+                    anchors {
+                        top: head.bottom
+                        left: parent.left
+                        right: parent.right
+                        bottom: parent.bottom
+                        topMargin: 80
+                    }
+
                     spacing: 2
                     TabBar {
                         id: tabBar
@@ -545,6 +642,7 @@ BPage {
                         Layout.fillHeight: true
                         Layout.fillWidth: true
                         Layout.alignment: Qt.AlignHCenter
+                        Layout.topMargin: 80
                         StackLayout {
                             id: tabView
                             anchors.fill: parent
@@ -582,6 +680,7 @@ BPage {
                                 Image {
                                     id: image
                                     anchors.fill: parent
+                                    anchors.margins: 35
                                     fillMode: (Qt.platform.os == 'ios'
                                                || Qt.platform.os == 'android') ? Image.PreserveAspectCrop : Image.PreserveAspectFit
                                 }
@@ -591,7 +690,7 @@ BPage {
                                     spacing: 10
                                     padding: 25
 
-                                    title: qsTr("Detect disease")
+                                    title: ""
                                     subtitle: qsTr("Be sure to take a clear, bright photo that includes only the sick part of the plant you want to identify")
                                     onClicked: tabView.chooseFile
                                 }

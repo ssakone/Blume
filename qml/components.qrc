@@ -49,6 +49,7 @@
         <file>components/BottomTabDevices.qml</file>
         <file>components/FullScreenPopup.qml</file>
         <file>pages/Garden/GardenSpaceLinePreview.qml</file>
+        <file>components/GardenPlantLineWide.qml</file>
     </qresource>
     <qresource prefix="/js">
         <file alias="Http.js">components_js/Http.js</file>

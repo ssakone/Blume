@@ -23,12 +23,7 @@ BPage {
     objectName: "Plants"
 
     backgroundColor: $Colors.colorTertiary
-    header: Components.AppBar {
-        title: "Plants menu"
-        noAutoPop: true
-        isHomeScreen: true
-        leading.onClicked: plantBrowser.StackView.view.pop()
-    }
+    header: Item {}
 
     property string entryPoint: "DeviceList"
 
@@ -51,7 +46,7 @@ BPage {
     Rectangle {
         anchors {
             bottom: parent.top
-            bottomMargin: -150
+            bottomMargin: -200
             horizontalCenter: parent.horizontalCenter
         }
 
@@ -65,17 +60,17 @@ BPage {
     Item {
         id: item
         function resetPlantClicked() {
-            plantSearchBox.text = ""
-            plantSearchBox.focus = false
-            itemPlantBrowser.visible = true
-            itemPlantBrowser.enabled = true
+//            plantSearchBox.text = ""
+//            plantSearchBox.focus = false
+//            itemPlantBrowser.visible = true
+//            itemPlantBrowser.enabled = true
         }
 
         function focusSearchBox() {
             // Search focus is set on desktop
-            if (isDesktop) {
-                plantSearchBox.focus = true
-            }
+//            if (isDesktop) {
+//                plantSearchBox.focus = true
+//            }
         }
 
         Component.onCompleted: focusSearchBox()
@@ -86,71 +81,9 @@ BPage {
             id: itemPlantBrowser
             anchors.fill: parent
 
-            //            Rectangle {
-            //                anchors.fill: plantSearchBox
-            //                anchors.margins: -12
-            //                z: 4
-            //                color: Theme.colorBackground
-            //            }
-
-
-            RowLayout {
-                anchors.top: parent.top
-                anchors.topMargin: 14
-                anchors.left: parent.left
-                anchors.leftMargin: 12
-                anchors.right: parent.right
-                anchors.rightMargin: 12
-                spacing: 15
-
-                MouseArea {
-                    id: plantSearchBoxMS
-                    anchors.fill: parent
-                    anchors.rightMargin: 70
-                    onClicked: {
-                        page_view.push(navigator.plantSearchPage)
-                    }
-                }
-
-                TextFieldThemed {
-                    id: plantSearchBox
-                    Layout.fillWidth: true
-                    z: 5
-                    height: 50
-                    placeholderText: qsTr("Search for plants")
-                    selectByMouse: true
-                    colorSelectedText: "white"
-                    enabled: false
-//                    onFocusChanged: {
-//                        if (focus) {
-//                            plantSearchBoxMS.clicked()
-//                            focus = false
-//                        }
-//                    }
-                }
-
-                Rectangle {
-                    Layout.preferredHeight: 50
-                    Layout.preferredWidth: 50
-                    color: $Colors.white
-                    radius: 25
-
-                    IconSvg {
-                        anchors.centerIn: parent
-                        source: Components.Icons.camera
-                        color: $Colors.colorPrimary
-                    }
-                }
-
-            }
-
-
             Item {
                 anchors.fill: parent
-                anchors.topMargin: 80
-                anchors.leftMargin: 0
-                anchors.rightMargin: 0
-
+                anchors.margins: 0
                 ListModel {
                     id: plantOptionModel
 
@@ -181,84 +114,220 @@ BPage {
                 Flickable {
                     id: optionsFlickable
                     anchors.fill: parent
+                    anchors.topMargin: 30
                     contentHeight: _insideColumn.height
                     clip: true
                     Column {
                         id: _insideColumn
                         width: parent.width
+                        spacing: 20
 
-                        RowLayout {
-                            width: parent.width
-                            anchors.topMargin: 30
-                            Item {
-                                Layout.fillWidth: true
+                        Column {
+                            width: parent.width - 30
+                            leftPadding: 15
+                            rightPadding: 15
+                            spacing: 20
+
+                            RowLayout {
+                                width: parent.width
+                                anchors.topMargin: 5
+
+                                Rectangle {
+                                    Layout.preferredWidth: 30
+                                    Layout.preferredHeight: Layout.preferredWidth
+                                    radius: Layout.preferredHeight / 2
+                                    color: $Colors.white
+
+
+                                    IconSvg {
+                                        width: parent.width - 4
+                                        height: width
+                                        anchors.centerIn: parent
+                                        source: "qrc:/assets/icons_material/baseline-menu-24px.svg"
+                                        color: $Colors.colorPrimary
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onClicked: appDrawer.open()
+                                        }
+                                    }
+                                }
+
+                                Column {
+                                    Layout.fillWidth: true
+                                    Label {
+                                        text: qsTr("Plants menu")
+                                        font {
+                                            pixelSize: 36
+                                            family: "Courrier"
+                                            weight: Font.Bold
+                                        }
+                                        color: $Colors.white
+                                        width: parent.width
+                                        horizontalAlignment: Text.AlignHCenter
+                                    }
+                                    Label {
+                                        text: qsTr("Gérez les plantes de manière efficace")
+                                        opacity: .5
+                                        color: $Colors.white
+                                        font {
+                                            pixelSize: 14
+                                            family: "Courrier"
+                                            weight: Font.Bold
+                                        }
+                                        width: parent.width
+                                        horizontalAlignment: Text.AlignHCenter
+                                    }
+                                }
+                                Rectangle {
+                                    Layout.preferredWidth: 30
+                                    Layout.preferredHeight: Layout.preferredWidth
+                                    radius: Layout.preferredHeight / 2
+                                    color: $Colors.white
+
+
+                                    IconSvg {
+                                        width: parent.width - 4
+                                        height: width
+                                        anchors.centerIn: parent
+                                        source: Components.Icons.bell
+                                        color: $Colors.colorPrimary
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onClicked: page_view.push(navigator.loginPage)
+                                        }
+                                    }
+                                }
                             }
 
-                            Repeater {
-                                model: plantOptionModel
-                                Item {
-                                    Layout.preferredWidth: index === 1 ? 150 : 100
-                                    Layout.preferredHeight: Layout.preferredWidth
+                            Item {
+                                width: parent.width
+                                height: 60
+                                MouseArea {
+                                    id: plantSearchBoxMS
+                                    anchors.fill: parent
+                                    anchors.rightMargin: 70
+                                    onClicked: {
+                                        page_view.push(navigator.plantSearchPage)
+                                    }
+                                }
+                                RowLayout {
+                                    anchors.top: parent.top
+                                    anchors.topMargin: 14
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 25
+                                    anchors.right: parent.right
+                                    anchors.rightMargin: 25
+                                    spacing: 15
+
                                     Rectangle {
-                                        anchors.fill: parent
-                                        anchors.bottomMargin: 35
-                                        anchors.rightMargin: 15
-                                        anchors.leftMargin: 15
-                                        radius: 15
-                                        opacity: mArea.containsMouse ? .8 : 1
-                                        color: bg
-                                        border {
-                                            width: 1
-                                            color: $Colors.green200
-                                        }
-
-                                        IconSvg {
-                                            width: 64
-                                            height: 64
-                                            visible: icon !== ""
-                                            anchors.centerIn: parent
-
-                                            source: icon
-                                            color: 'white'
-                                        }
-
-                                        MouseArea {
-                                            id: mArea
-                                            anchors.fill: parent
-                                            enabled: action !== ""
-                                            hoverEnabled: enabled
-                                            onClicked: {
-                                                if (action === "posometre") {
-                                                    page_view.push(
-                                                                navigator.posometrePage)
-                                                } else if (action === "identify") {
-                                                    page_view.push(
-                                                                navigator.plantIdentifierPage)
-                                                }
+                                        Layout.fillWidth: true
+                                        Layout.preferredHeight: 40
+                                        id: plantSearchBox
+                                        z: 5
+                                        color: "#BBFEEA"
+                                        radius: height/2
+                                        Text {
+                                            text: qsTr("Search for plants")
+                                            color: $Colors.gray600
+                                            leftPadding: 15
+                                            font.pixelSize: 14
+                                            anchors {
+                                                verticalCenter: parent.verticalCenter
+                                                leftMargin: 25
                                             }
                                         }
                                     }
-                                    Label {
-                                        width: parent.width - 10
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        anchors.bottom: parent.bottom
-                                        anchors.bottomMargin: 3
-                                        height: 28
-                                        wrapMode: Label.Wrap
-                                        font.pixelSize: 12
-                                        font.weight: Font.Medium
-                                        horizontalAlignment: Label.AlignHCenter
-                                        verticalAlignment: Label.AlignVCenter
-                                        text: qsTr("Suggested plants")
+
+                                    Rectangle {
+                                        Layout.preferredHeight: 50
+                                        Layout.preferredWidth: 50
+                                        color: $Colors.white
+                                        radius: 25
+
+                                        IconSvg {
+                                            anchors.centerIn: parent
+                                            source: Components.Icons.camera
+                                            color: $Colors.colorPrimary
+                                        }
                                     }
+
                                 }
 
                             }
 
-                            Item {
-                                Layout.fillWidth: true
-                            }
+                            RowLayout {
+                                width: parent.width
+                                anchors.topMargin: 30
+                                Item {
+                                    Layout.fillWidth: true
+                                }
 
+                                Repeater {
+                                    model: plantOptionModel
+                                    Item {
+                                        Layout.preferredWidth: index === 1 ? 150 : 100
+                                        Layout.preferredHeight: Layout.preferredWidth
+                                        Rectangle {
+                                            anchors.fill: parent
+                                            anchors.bottomMargin: 35
+                                            anchors.rightMargin: 15
+                                            anchors.leftMargin: 15
+                                            radius: 15
+                                            opacity: mArea.containsMouse ? .8 : 1
+                                            color: bg
+                                            border {
+                                                width: 1
+                                                color: $Colors.green200
+                                            }
+
+                                            IconSvg {
+                                                width: 64
+                                                height: 64
+                                                visible: icon !== ""
+                                                anchors.centerIn: parent
+
+                                                source: icon
+                                                color: 'white'
+                                            }
+
+                                            MouseArea {
+                                                id: mArea
+                                                anchors.fill: parent
+                                                enabled: action !== ""
+                                                hoverEnabled: enabled
+                                                onClicked: {
+                                                    if (action === "posometre") {
+                                                        page_view.push(
+                                                                    navigator.posometrePage)
+                                                    } else if (action === "identify") {
+                                                        page_view.push(
+                                                                    navigator.plantIdentifierPage)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        Label {
+                                            width: parent.width - 10
+                                            anchors.horizontalCenter: parent.horizontalCenter
+                                            anchors.bottom: parent.bottom
+                                            anchors.bottomMargin: 3
+                                            height: 28
+                                            wrapMode: Label.Wrap
+                                            font.pixelSize: 12
+                                            font.weight: Font.Medium
+                                            horizontalAlignment: Label.AlignHCenter
+                                            verticalAlignment: Label.AlignVCenter
+                                            text: name
+                                        }
+                                    }
+
+                                }
+
+                                Item {
+                                    Layout.fillWidth: true
+                                }
+
+                            }
                         }
 
                         Column {
@@ -267,7 +336,7 @@ BPage {
                             topPadding: 20
                             spacing: 7
                             Label {
-                                text: qsTr("Plants you recorded")
+                                text: qsTr("Mes favoris")
                                 color: $Colors.colorPrimary
                                 font {
                                     pixelSize: 16
@@ -276,7 +345,7 @@ BPage {
                             }
 
                             Flickable {
-                                height: 120
+                                height: 140
                                 width: parent.width
                                 contentWidth: _insideRow.width
                                 clip: true
@@ -286,16 +355,47 @@ BPage {
                                     id: _insideRow
                                     spacing: 10
 
+                                    BusyIndicator {
+                                        running: favorisRepeater.model?.length === 0
+                                        visible: running
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
+
                                     Repeater {
-                                        model: $Model.space.plantInSpace
-                                        delegate: Components.GardenPlantLine {
-                                            property var plant: JSON.parse(plant_json)
+                                        id: favorisRepeater
+                                        Component.onCompleted: {
+                                            const url = `https://blume.mahoudev.com/items/Plantes?offset=${Math.ceil(Math.random() * 1000)}&limit=5&fields=*.*`
+
+                                            Http.fetch({
+                                                    method: "GET",
+                                                    url: url,
+                                                    headers: {
+                                                       "Accept": 'application/json',
+                                                       "Content-Type": 'application/json'                                                    },
+                                                }).then(function(response) {
+//                                                    console.log("Got favoris ", response)
+                                                const parsedResponse = JSON.parse(response) ?? []
+                                                console.log("Favoris ", parsedResponse?.data?.length)
+                                                favorisRepeater.model = parsedResponse.data ?? parsedResponse
+                                            })
+                                        }
+
+                                        model: []
+                                        delegate: Components.GardenPlantLineWide {
+                                            required property variant modelData
+                                            property var plant: modelData
                                             width: 300
-                                            height: 100
+                                            height: 140
                                             title: plant.name_scientific
-                                            subtitle: plant.noms_communs[0]?.name ?? ""
+                                            subtitle: "Margérite"
+                                            moreDetailsList: [{
+                                                iconSource: Components.Icons.water,
+                                                text: "Toxique"
+                                                }, {
+                                                    iconSource: Components.Icons.food,
+                                                    text: "Commestible"
+                                                    }]
                                             roomName: ""
-                                            background.color: $Colors.colorSecondary
                                             imageSource: plant.images_plantes.length
                                                          > 0 ? "https://blume.mahoudev.com/assets/"
                                                                + plant.images_plantes[0].directus_files_id : ""
@@ -358,7 +458,7 @@ BPage {
             contentWidth: (uiMode === 1) ? -1 : plantScreen.width
             contentHeight: (uiMode === 1) ? plantScreen.height : -1
 
-            boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
+            //boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
             ScrollBar.vertical: ScrollBar {
                 visible: false
             }

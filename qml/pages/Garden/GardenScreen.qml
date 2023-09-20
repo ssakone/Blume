@@ -17,7 +17,7 @@ BPage {
     id: control
     objectName: "Garden"
     header: Item {
-        height: 60
+        height: 30
     }
     backgroundColor: $Colors.colorTertiary
 
@@ -27,7 +27,7 @@ BPage {
     property var alarmsIdsToDownStatus: []
 
     property bool isWeatherLoaded: false
-    property variant weatherData: undefined
+    property variant weatherResponse: undefined
 
     Component.onCompleted: {
         loadWeather()
@@ -44,12 +44,13 @@ BPage {
         const weatherLatLong = `${gps.position.coordinate.latitude},${gps.position.coordinate.longitude}`
         const weatherKey = "56f4ae294928423cade144712232508"
         Http.fetch({
-            "url": `http://api.weatherapi.com/v1/forecast.json?key=${weatherKey}&q=${weatherLatLong}`,
+            "url": `http://api.weatherapi.com/v1/forecast.json?key=${weatherKey}&q=${weatherLatLong}&days=3`,
             "method": "GET"
         }).then(function(res) {
             try {
-                control.weatherData = JSON.parse(res)
+                control.weatherResponse = JSON.parse(res)
                 control.isWeatherLoaded = true
+                console.log("FIRST weatherResponse ", weatherResponse)
             } catch (e) {
                 console.warn(JSON.stringify(e))
             }
@@ -158,6 +159,26 @@ BPage {
             Layout.margins: 25
             Layout.topMargin: 5
 
+            Rectangle {
+                Layout.preferredWidth: 30
+                Layout.preferredHeight: Layout.preferredWidth
+                radius: Layout.preferredHeight / 2
+                color: $Colors.white
+
+
+                IconSvg {
+                    width: parent.width - 4
+                    height: width
+                    anchors.centerIn: parent
+                    source: "qrc:/assets/icons_material/baseline-menu-24px.svg"
+                    color: $Colors.colorPrimary
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: appDrawer.open()
+                    }
+                }
+            }
+
             Column {
                 Layout.fillWidth: true
                 Label {
@@ -168,26 +189,30 @@ BPage {
                         weight: Font.Bold
                     }
                     color: $Colors.white
+                    width: parent.width
+                    horizontalAlignment: Text.AlignHCenter
                 }
                 Label {
                     text: qsTr("Manage your personal garden efficiently")
                     opacity: .5
                     color: $Colors.white
                     font {
-                        pixelSize: 16
+                        pixelSize: 14
                         family: "Courrier"
                         weight: Font.Bold
                     }
                 }
             }
             Rectangle {
-                Layout.preferredWidth: 40
+                Layout.preferredWidth: 30
                 Layout.preferredHeight: Layout.preferredWidth
                 radius: Layout.preferredHeight / 2
                 color: $Colors.white
 
 
                 IconSvg {
+                    width: parent.width - 4
+                    height: width
                     anchors.centerIn: parent
                     source: Icons.bell
                     color: $Colors.colorPrimary
@@ -213,161 +238,78 @@ BPage {
                 rightPadding: 10
                 spacing: 10
 
-                Rectangle {
+                Flickable {
+                    id: weatherFlickable
                     width: parent.width - 20
-                    height: 180
-                    anchors.leftMargin: 10
-                    anchors.rightMargin: 20
-                    radius: 20
+                    height: weartherRow.height
+                    contentWidth: weartherRow.width
 
-                    color: Qt.rgba(255, 255, 255, 0.9)
+                    Row {
+                        id: weartherRow
+                        spacing: 10
 
-                    ColumnLayout {
-                        visible: isWeatherLoaded && weatherData !== undefined
-                        anchors.fill: parent
-                        anchors.margins: 10
                         Item {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
+                            width: weatherFlickable.width - 50
+                            height: 180
+                            visible: !weatherResponse
+                            BusyIndicator {
+                                visible: !isWeatherLoaded
+                                anchors.centerIn: parent
+                            }
 
                             Column {
-                                anchors.left: parent.left
-                                anchors.leftMargin: 25
+                                anchors.centerIn: parent
+                                visible: isWeatherLoaded && weatherResponse === undefined
 
                                 Label {
-                                    text: weatherData?.location?.name?? ""
+                                    text: qsTr("Weather not loaded !")
                                 }
 
-                                Image {
-                                    source: weatherData ? ("http://" + weatherData?.current?.condition?.icon?.slice(2)) : ""
-                                    width: 130
-                                    height: width
+                                NiceButton {
+                                    text: qsTr("Reload")
+                                    onClicked: loadWeather()
+                                    anchors.horizontalCenter: parent.horizontalCenter
                                 }
                             }
 
 
-                            Column {
-                                anchors.right: parent.right
-                                anchors.rightMargin: 25
-                                Label {
-                                    text: qsTr("Today")
-                                    font {
-                                        pixelSize: 14
+                        }
+
+                        Repeater {
+                            model: weatherResponse?.forecast?.forecastday
+
+                            WeatherCard {
+                                required property variant modelData
+                                required property int index
+                                width: weatherFlickable.width - 20
+                                height: 180
+                                radius: 20
+                                dateText: {
+                                    switch(index) {
+                                    case 0: return qsTr("Today")
+                                    case 1: return qsTr("Tomorrow")
+                                    case 2: return qsTr("After tomorrow")
+                                    default: return (new Date(modelData.date)).toLocaleDateString()
                                     }
-                                    anchors.horizontalCenter: parent.horizontalCenter
                                 }
-                                Label {
-                                    text: weatherData?.current?.temp_c + "° C"
-                                    color: $Colors.colorPrimary
-                                    font {
-                                        pixelSize: 36
+
+                                weatherData: {
+                                    const today = new Date()
+                                    for(let i = modelData.hour.length - 1; i >= 0 ; i--) {
+                                        if(today >= new Date(modelData.hour[i].time)) {
+                                            return modelData.hour[i]
+                                        }
                                     }
-                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    return modelData.hour[modelData.hour.length-1]
                                 }
-                                Label {
-                                    text: weatherData?.current?.condition?.text?? ""
-                                    color: $Colors.colorPrimary
-                                    font {
-                                        pixelSize: 14
-                                    }
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                }
+
+                                location: weatherResponse.location
                             }
                         }
-                        RowLayout {
-                            Layout.fillWidth: true
-                            Column {
-                                Layout.fillWidth: true
-                                IconSvg {
-                                    source: Icons.umbrella
-                                    color: $Colors.colorPrimary
-                                    width: 20
-                                    height: width
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                }
-                                Label {
-                                    text: weatherData?.current?.precip_mm?? "" + " mm"
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                }
-                                Label {
-                                    text: "Precipitation"
-                                    color: $Colors.colorPrimary
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                }
-                            }
-                            Column {
-                                Layout.fillWidth: true
-                                IconSvg {
-                                    source: Icons.water
-                                    color: $Colors.colorPrimary
-                                    width: 20
-                                    height: width
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                }
-                                Label {
-                                    text: weatherData?.current?.humidity + "%"
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                }
-                                Label {
-                                    text: "Humidité"
-                                    color: $Colors.colorPrimary
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                }
-                            }
-                            Column {
-                                Layout.fillWidth: true
-                                IconSvg {
-                                    source: Icons.windPower
-                                    color: $Colors.colorPrimary
-                                    width: 20
-                                    height: width
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                }
-                                Label {
-                                    text: weatherData?.current?.wind_kph?? "" + "km/h"
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                }
-                                Label {
-                                    text: "Vitesse du vent"
-                                    color: $Colors.colorPrimary
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                }
-                            }
 
-                        }
                     }
-
-                    BusyIndicator {
-                        visible: !isWeatherLoaded
-                        anchors.centerIn: parent
-                    }
-
-                    Column {
-                        anchors.centerIn: parent
-                        visible: isWeatherLoaded && weatherData === undefined
-
-                        Label {
-                            text: qsTr("Weather not loaded !")
-                        }
-
-                        NiceButton {
-                            text: qsTr("Reload")
-                            onClicked: loadWeather()
-                            anchors.horizontalCenter: parent.horizontalCenter
-                        }
-                    }
-
-                    ColorImage {
-                        visible: isWeatherLoaded && weatherData === undefined
-                        anchors.top: parent.top
-                        anchors.left: parent.left
-                        anchors.margins: 15
-                        source: Icons.weatherCloudy
-                        width: 50
-                        height: width
-                    }
-
                 }
+
 
                 RowLayout {
                     id: _insideControl
@@ -458,10 +400,10 @@ BPage {
                                 anchors.margins: 10
 
                                 IconSvg {
-                                    source: Icons.viewDashboardOutline
+                                    source: "qrc:/assets/icons_custom/house.svg"
                                     color: _insideMouse.containsMouse
                                            || _insideMouse.containsPress ? _insideControl.foregroundColor : $Colors.white
-                                    Layout.preferredHeight: 30
+                                    Layout.preferredHeight: 45
                                     Layout.preferredWidth: Layout.preferredHeight
                                     Layout.alignment: Qt.AlignHCenter
                                 }
@@ -524,6 +466,7 @@ BPage {
                     width: parent.width - 20
                     height: getStartedRow.height
                     contentWidth: getStartedRow.width
+                    visible: $Model.alarm.count === 0
 
                     RowLayout {
                         id: getStartedRow

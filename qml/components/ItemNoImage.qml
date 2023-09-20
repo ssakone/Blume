@@ -34,21 +34,20 @@ Column {
     }
 
     ClipRRect {
-        width: Math.min(parent.width, parent.height) - (2 * parent.padding) - 50
+        width: Math.min(parent.width, parent.height) - (2 * parent.padding) - 20
         height: width
         anchors.horizontalCenter: parent.horizontalCenter
-        radius: height / 2
+        radius: 10
 
         Rectangle {
             anchors.fill: parent
-            color: "#e5e5e5"
+            color: "#E7F9F1"
 
             IconSvg {
                 width: parent.width / 1.5
                 height: width
                 anchors.centerIn: parent
-                source: Icons.image
-                opacity: .5
+                source: "qrc:/assets/icons_custom/pictures-group.svg"
                 color: $Colors.colorPrimary
             }
         }

@@ -12,10 +12,11 @@ T.Button {
     id: control
 
     property color backgroundColor: $Colors.colorPrimary
-    property color foregroundColor: Theme.colorHeaderContent
+    property color foregroundColor: $Colors.colorHeaderContent
     property int radius: 18
     property color backgroundBorderColor: "black"
     property int backgroundBorderWidth: 0
+    property Gradient bgGradient
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             implicitContentWidth + leftPadding + rightPadding)
@@ -58,6 +59,7 @@ T.Button {
 
         radius: control.radius
         color: backgroundColor
+        gradient: bgGradient
         layer.enabled: control.enabled && control.Material.buttonColor.a > 0
         layer.effect: ElevationEffect {
             elevation: control.Material.elevation
