@@ -1,10 +1,15 @@
 # File auto generated with CMake qt_generate_qmldir. Run CMake to regenerate if files changed.
 
-module qml.components
+module Blume.components
 
+Accordion 1.0 Accordion.qml
 ActionMenuFixed 1.0 ActionMenuFixed.qml
+ActionMenuFixedDevices 1.0 ActionMenuFixedDevices.qml
 AirQualityIndicator 1.0 AirQualityIndicator.qml
+AppBar 1.0 AppBar.qml
 AppBarButton 1.0 AppBarButton.qml
+BottomTabBar 1.0 BottomTabBar.qml
+BottomTabDevices 1.0 BottomTabDevices.qml
 ButtonExperimental 1.0 ButtonExperimental.qml
 ChartEnvironmentalVoc 1.0 ChartEnvironmentalVoc.qml
 ChartHistory 1.0 ChartHistory.qml
@@ -12,8 +17,15 @@ ChartPlantDataAio 1.0 ChartPlantDataAio.qml
 ChartThermometerMinMax 1.0 ChartThermometerMinMax.qml
 ChartThermometerMinMaxBar 1.0 ChartThermometerMinMaxBar.qml
 ClipRRect 1.0 ClipRRect.qml
-singleton Http 1.0 Http.qml
+DrawerItem 1.0 DrawerItem.qml
+FormGroup 1.0 FormGroup.qml
+FullScreenPopup 1.0 FullScreenPopup.qml
+GardenActivityLine 1.0 GardenActivityLine.qml
+GardenPlantLine 1.0 GardenPlantLine.qml
+GardenPlantLineWide 1.0 GardenPlantLineWide.qml
+GardenSpaceLine 1.0 GardenSpaceLine.qml
 singleton Icons 1.0 Icons.qml
+ImagePickerArea 1.0 ImagePickerArea.qml
 IndicatorsCompact 1.0 IndicatorsCompact.qml
 IndicatorsSolid 1.0 IndicatorsSolid.qml
 ItemBannerSync 1.0 ItemBannerSync.qml
@@ -23,10 +35,19 @@ ItemNoBluetooth 1.0 ItemNoBluetooth.qml
 ItemNoData 1.0 ItemNoData.qml
 ItemNoDevice 1.0 ItemNoDevice.qml
 ItemNoDeviceNearby 1.0 ItemNoDeviceNearby.qml
+ItemNoImage 1.0 ItemNoImage.qml
 ItemNoJournal 1.0 ItemNoJournal.qml
 ItemNoPermission 1.0 ItemNoPermission.qml
 ItemNoPlant 1.0 ItemNoPlant.qml
 ItemNoPlants 1.0 ItemNoPlants.qml
 ItemWeatherBox 1.0 ItemWeatherBox.qml
 NiceButton 1.0 NiceButton.qml
+PlantSearchPopup 1.0 PlantSearchPopup.qml
+SearchBar 1.0 SearchBar.qml
+SearchPlants 1.0 SearchPlants.qml
 SectionTitle 1.0 SectionTitle.qml
+SensorDataMeasureLine 1.0 SensorDataMeasureLine.qml
+SpaceSearchPopup 1.0 SpaceSearchPopup.qml
+TableLine 1.0 TableLine.qml
+WeatherCard 1.0 WeatherCard.qml
+qml 1.0 qml.qml

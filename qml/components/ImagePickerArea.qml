@@ -7,7 +7,8 @@ import ImagePicker
 import Qt.labs.platform
 import QtAndroidTools
 
-import "../components_generic"
+import "../components_generic/"
+import "../components_themed/"
 
 ClipRRect {
     id: root

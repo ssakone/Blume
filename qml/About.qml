@@ -2,7 +2,12 @@ import QtQuick
 import QtQuick.Controls
 
 import ThemeEngine 1.0
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
+
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+import "components_js/UtilsNumber.js" as UtilsNumber
 
 Loader {
     id: aboutScreen
@@ -21,7 +26,6 @@ Loader {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     active: false
     asynchronous: false
 
@@ -31,7 +35,9 @@ Loader {
         contentHeight: column.height
 
         boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
-        ScrollBar.vertical: ScrollBar { visible: false }
+        ScrollBar.vertical: ScrollBar {
+            visible: false
+        }
 
         Column {
             id: column
@@ -45,8 +51,8 @@ Loader {
             spacing: 8
 
             ////////////////
-
-            Rectangle { // header
+            Rectangle {
+                // header
                 anchors.left: parent.left
                 anchors.leftMargin: -(screenPaddingLeft + 16)
                 anchors.right: parent.right
@@ -64,7 +70,8 @@ Loader {
                     height: 92
                     spacing: 16
 
-                    Image { // logo
+                    Image {
+                        // logo
                         width: 92
                         height: 92
                         anchors.verticalCenter: parent.verticalCenter
@@ -85,7 +92,9 @@ Loader {
                         }
                         Text {
                             color: Theme.colorSubText
-                            text: qsTr("version %1 %2").arg(utilsApp.appVersion()).arg(utilsApp.appBuildMode())
+                            text: qsTr("version %1 %2").arg(
+                                      utilsApp.appVersion()).arg(
+                                      utilsApp.appBuildMode())
                             font.pixelSize: Theme.fontSizeContentBig
                         }
                     }
@@ -103,7 +112,8 @@ Loader {
                         width: 160
                         sourceSize: 28
                         fullColor: true
-                        primaryColor: (Theme.currentTheme === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
+                        primaryColor: (Theme.currentTheme
+                                       === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
 
                         text: qsTr("WEBSITE")
                         source: "qrc:/assets/icons_material/baseline-insert_link-24px.svg"
@@ -114,11 +124,13 @@ Loader {
                         width: 160
                         sourceSize: 22
                         fullColor: true
-                        primaryColor: (Theme.currentTheme === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
+                        primaryColor: (Theme.currentTheme
+                                       === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
 
                         text: qsTr("SUPPORT")
                         source: "qrc:/assets/icons_material/baseline-support-24px.svg"
-                        onClicked: Qt.openUrlExternally("https://mahoudev.com/contact")
+                        onClicked: Qt.openUrlExternally(
+                                       "https://mahoudev.com/contact")
                     }
                 }
 
@@ -133,7 +145,6 @@ Loader {
             }
 
             ////////////////
-
             Row {
                 id: buttonsRow
                 height: 56
@@ -152,7 +163,8 @@ Loader {
 
                     sourceSize: 28
                     fullColor: true
-                    primaryColor: (Theme.currentTheme === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
+                    primaryColor: (Theme.currentTheme
+                                   === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
 
                     text: qsTr("WEBSITE")
                     source: "qrc:/assets/icons_material/baseline-insert_link-24px.svg"
@@ -164,21 +176,27 @@ Loader {
 
                     sourceSize: 22
                     fullColor: true
-                    primaryColor: (Theme.currentTheme === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
+                    primaryColor: (Theme.currentTheme
+                                   === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
 
                     text: qsTr("SUPPORT")
                     source: "qrc:/assets/icons_material/baseline-support-24px.svg"
-                    onClicked: Qt.openUrlExternally("https://mahoudev.com/contact")
+                    onClicked: Qt.openUrlExternally(
+                                   "https://mahoudev.com/contact")
                 }
             }
 
             ////////////////
-
-            Item { height: 1; width: 1; visible: isDesktop; } // spacer
+            Item {
+                height: 1
+                width: 1
+                visible: isDesktop
+            } // spacer
 
             Item {
                 id: desc
-                height: Math.max(UtilsNumber.alignTo(description.contentHeight, 8), 48)
+                height: Math.max(UtilsNumber.alignTo(description.contentHeight,
+                                                     8), 48)
                 anchors.left: parent.left
                 anchors.leftMargin: 0
                 anchors.right: parent.right
@@ -213,7 +231,6 @@ Loader {
             }
 
             ////////
-
             Item {
                 id: authors
                 height: 48
@@ -271,7 +288,6 @@ Loader {
             }
 
             ////////
-
             Item {
                 id: tuto
                 height: 48
@@ -326,7 +342,6 @@ Loader {
             }
 
             ////////
-
             Item {
                 id: permissions
                 height: 48
@@ -382,8 +397,8 @@ Loader {
                     onClicked: screenPermissions.loadScreenFrom("About")
                 }
             }
-            ////////
 
+            ////////
             IconSvg {
                 id: imageDevices
                 height: 96
@@ -400,7 +415,6 @@ Loader {
             }
 
             ////////
-
             Item {
                 height: 16
                 anchors.left: parent.left
@@ -467,12 +481,12 @@ Loader {
                     anchors.rightMargin: singleColumn ? 0 : -24
                     anchors.bottom: parent.bottom
 
-                    onClicked: Qt.openUrlExternally("https://mahoudev.com/app-blume")
+                    onClicked: Qt.openUrlExternally(
+                                   "https://mahoudev.com/app-blume")
                 }
             }
 
             ////////
-
             Item {
                 height: 16
                 anchors.left: parent.left

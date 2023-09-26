@@ -5,9 +5,12 @@ import ThemeEngine
 
 import "../components_generic"
 
+import "../components_generic/"
+import "../components_themed/"
+
 Column {
     id: root
-    property var onClicked: function() {}
+    property var onClicked: function () {}
     property string title: ""
     property string subtitle
 

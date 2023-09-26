@@ -3,9 +3,12 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
-import "components_generic/"
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
-import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+import "components_js/UtilsNumber.js" as UtilsNumber
+import "components_js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 
 Flickable {
     id: plantSensorSettings
@@ -241,6 +244,7 @@ Flickable {
                         color: Theme.colorHighContrast
                     }
                 }
+
 
                 /*
                 Column {

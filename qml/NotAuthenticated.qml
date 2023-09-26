@@ -5,6 +5,8 @@ import ThemeEngine
 
 import "components"
 import "components_generic"
+import "components_themed"
+import "popups"
 
 Popup {
     id: root
@@ -61,8 +63,6 @@ Popup {
                     Layout.alignment: Qt.AlignHCenter
                 }
             }
-
-
         }
 
         RowLayout {
@@ -93,6 +93,4 @@ Popup {
             }
         }
     }
-
-
 }

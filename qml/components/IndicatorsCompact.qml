@@ -2,8 +2,9 @@ import QtQuick
 import QtQuick.Controls
 
 import ThemeEngine 1.0
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
-import "components"
+import "../components_js/UtilsNumber.js" as UtilsNumber
+import "../components_generic/"
+import "../components_themed/"
 
 Item {
     id: indicatorsCompact
@@ -12,20 +13,23 @@ Item {
     z: 5
 
     property string colorBackground: {
-        if (headerUnicolor) return Theme.colorHeaderHighlight
-        if (uiMode === 2) return Theme.colorBackground
+        if (headerUnicolor)
+            return Theme.colorHeaderHighlight
+        if (uiMode === 2)
+            return Theme.colorBackground
         return Theme.colorForeground
     }
 
     property int legendWidth: 80
 
     ////////////////////////////////////////////////////////////////////////////
-
     function loadIndicators() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        if (!currentDevice.isPlantSensor) return
-        //console.log("DevicePlantSensorData // updateData() >> " + currentDevice)
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
+        if (!currentDevice.isPlantSensor)
+            return
 
+        //console.log("DevicePlantSensorData // updateData() >> " + currentDevice)
         soil_moisture.animated = false
         soil_conductivity.animated = false
         soil_temperature.animated = false
@@ -48,29 +52,39 @@ Item {
 
     function updateLegendSize() {
         legendWidth = 0
-        if (legendWidth < soil_moisture.legendContentWidth) legendWidth = soil_moisture.legendContentWidth
-        if (legendWidth < soil_conductivity.legendContentWidth) legendWidth = soil_conductivity.legendContentWidth
-        if (legendWidth < soil_temperature.legendContentWidth) legendWidth = soil_temperature.legendContentWidth
-        if (legendWidth < temp.legendContentWidth) legendWidth = temp.legendContentWidth
-        if (legendWidth < humi.legendContentWidth) legendWidth = humi.legendContentWidth
-        if (legendWidth < lumi.legendContentWidth) legendWidth = lumi.legendContentWidth
-        if (legendWidth < water_tank.legendContentWidth) legendWidth = water_tank.legendContentWidth
+        if (legendWidth < soil_moisture.legendContentWidth)
+            legendWidth = soil_moisture.legendContentWidth
+        if (legendWidth < soil_conductivity.legendContentWidth)
+            legendWidth = soil_conductivity.legendContentWidth
+        if (legendWidth < soil_temperature.legendContentWidth)
+            legendWidth = soil_temperature.legendContentWidth
+        if (legendWidth < temp.legendContentWidth)
+            legendWidth = temp.legendContentWidth
+        if (legendWidth < humi.legendContentWidth)
+            legendWidth = humi.legendContentWidth
+        if (legendWidth < lumi.legendContentWidth)
+            legendWidth = lumi.legendContentWidth
+        if (legendWidth < water_tank.legendContentWidth)
+            legendWidth = water_tank.legendContentWidth
     }
 
     function tempHelper(tempDeg) {
-        return (settingsManager.tempUnit === "F") ? UtilsNumber.tempCelsiusToFahrenheit(tempDeg) : tempDeg
+        return (settingsManager.tempUnit === "F") ? UtilsNumber.tempCelsiusToFahrenheit(
+                                                        tempDeg) : tempDeg
     }
 
     function updateData() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        if (!currentDevice.isPlantSensor) return
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
+        if (!currentDevice.isPlantSensor)
+            return
         //console.log("DevicePlantSensorData // updateData() >> " + currentDevice)
 
         // Has data? always display them
         if (currentDevice.isDataToday()) {
+
             //var hasHygro = (currentDevice.soilMoisture > 0 || currentDevice.soilConductivity > 0) ||
             //               (currentDevice.hasDataNamed("soilMoisture") || currentDevice.hasDataNamed("soilConductivity"))
-
             soil_moisture.visible = currentDevice.hasSoilMoistureSensor
             soil_conductivity.visible = currentDevice.hasSoilConductivitySensor
             soil_temperature.visible = currentDevice.hasSoilTemperatureSensor
@@ -120,7 +134,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Column {
         id: columnData
         anchors.left: parent.left
@@ -151,7 +164,6 @@ Item {
         }
 
         ////////
-
         SensorDataMeasureLine {
             id: soil_conductivity
             width: parent.width
@@ -170,7 +182,6 @@ Item {
         }
 
         ////////
-
         SensorDataMeasureLine {
             id: soil_temperature
             width: parent.width
@@ -183,14 +194,19 @@ Item {
 
             floatprecision: 1
             value: tempHelper(currentDevice.soilTemperature)
-            valueMin: tempHelper(settingsManager.dynaScale ? Math.floor(currentDevice.tempMin*0.80) : tempHelper(0))
-            valueMax: tempHelper(settingsManager.dynaScale ? (currentDevice.tempMax*1.20) : tempHelper(40))
+            valueMin: tempHelper(
+                          settingsManager.dynaScale ? Math.floor(
+                                                          currentDevice.tempMin
+                                                          * 0.80) : tempHelper(
+                                                          0))
+            valueMax: tempHelper(
+                          settingsManager.dynaScale ? (currentDevice.tempMax * 1.20) : tempHelper(
+                                                          40))
             limitMin: 0
             limitMax: 0
         }
 
         ////////
-
         SensorDataMeasureLine {
             id: water_tank
             width: parent.width
@@ -210,7 +226,6 @@ Item {
         }
 
         ////////
-
         SensorDataMeasureLine {
             id: temp
             width: parent.width
@@ -231,7 +246,6 @@ Item {
         }
 
         ////////
-
         SensorDataMeasureLine {
             id: humi
             width: parent.width
@@ -250,7 +264,6 @@ Item {
         }
 
         ////////
-
         SensorDataMeasureLine {
             id: lumi
             width: parent.width

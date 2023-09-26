@@ -2,7 +2,8 @@ import QtQuick
 import QtQuick.Controls
 
 import ThemeEngine 1.0
-import "../components_generic"
+import "../components_generic/"
+import "../components_themed/"
 
 Popup {
     id: actionMenu
@@ -17,15 +18,28 @@ Popup {
     focus: isMobile
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 133; } }
-    exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 133; } }
+    enter: Transition {
+        NumberAnimation {
+            property: "opacity"
+            from: 0.0
+            to: 1.0
+            duration: 133
+        }
+    }
+    exit: Transition {
+        NumberAnimation {
+            property: "opacity"
+            from: 1.0
+            to: 0.0
+            duration: 133
+        }
+    }
 
     property int layoutDirection: Qt.RightToLeft
 
     signal menuSelected(var index)
 
     ////////////////////////////////////////////////////////////////////////////
-
     background: Rectangle {
         color: Theme.colorBackground
         radius: Theme.componentRadius
@@ -39,7 +53,6 @@ Popup {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Column {
         anchors.left: parent.left
         anchors.right: parent.right
@@ -49,7 +62,6 @@ Popup {
         spacing: 4
 
         ////////
-
         Item {
             // spacer
             height: 8
@@ -152,11 +164,12 @@ Popup {
         }
 
         ////////
-
         Rectangle {
-            width: parent.width; height: 1;
+            width: parent.width
+            height: 1
             color: Theme.colorSeparator
-            visible: (deviceManager.bluetooth && (selectedDevice && selectedDevice.hasHistory))
+            visible: (deviceManager.bluetooth && (selectedDevice
+                                                  && selectedDevice.hasHistory))
         }
 
         ActionMenuItem {
@@ -180,9 +193,9 @@ Popup {
         }
 
         ////////
-
         Rectangle {
-            width: parent.width; height: 1;
+            width: parent.width
+            height: 1
             color: Theme.colorSeparator
         }
 
@@ -238,6 +251,5 @@ Popup {
                 actionMenu.close()
             }
         }
-
     }
 }

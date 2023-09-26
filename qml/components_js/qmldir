@@ -1,3 +1,6 @@
-module qml.components_js
+# File auto generated with CMake qt_generate_qmldir. Run CMake to regenerate if files changed.
 
-singleton Signaler 1.0 Signaler.qml
+module Blume.components_js
+
+Colors 1.0 Colors.qml
+Signaler 1.0 Signaler.qml

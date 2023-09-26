@@ -9,12 +9,50 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Bluetooth Network Sql)
+find_package(Qt6 REQUIRED COMPONENTS Core Bluetooth Network Sql Multimedia Xml)
 find_package(Qt6 REQUIRED COMPONENTS Gui Qml Quick QuickControls2 Svg Widgets Charts)
 
 qt_standard_project_setup()
 
 ################################################################################
+include(FetchContent)
+set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
+FetchContent_Declare(
+  Qaterial
+  GIT_REPOSITORY https://github.com/ssakone/Qaterial.git
+  GIT_TAG        qt6_update
+)
+FetchContent_MakeAvailable(Qaterial)
+
+add_subdirectory(HotWatch)
+
+set(android_sources)
+if (ANDROID)
+    set(android_sources
+        src/android_tools/QAndroidAppPermissions.cpp
+        src/android_tools/QtAndroidTools.cpp
+        src/android_tools/QAndroidAppPermissions.h
+        src/android_tools/QtAndroidTools.h
+    )
+endif()
+
+qt_generate_qrc(MahoudQML
+  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/qml
+  DEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}
+  NAME "blume.qrc"
+  PREFIX "qml/"
+  RECURSE
+  ALWAYS_OVERWRITE
+  GLOB_EXPRESSION "*.qml" "qmldir" "*.frag" "*.vert" "*.js"
+)
+
+qt6_add_resources(MahoudQML_UI_QML_RES ${MahoudQML})
+qt_generate_qmldir(BUMA_QML_DIR
+ SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/qml
+ MODULE "Blume"
+ RECURSE)
+
+###############################################################################
 
 qt_add_executable(Blume
     src/AndroidService.cpp src/AndroidService.h
@@ -55,17 +93,23 @@ qt_add_executable(Blume
     src/devices/device_jqjcy01ym.cpp src/devices/device_jqjcy01ym.h
     src/devices/device_parrotpot.cpp src/devices/device_parrotpot.h
     src/devices/device_ropot.cpp src/devices/device_ropot.h
+    src/devices/device_cgdn1.cpp src/devices/device_cgdn1.h
     src/devices/device_thermobeacon.cpp src/devices/device_thermobeacon.h
     src/devices/device_wp6003.cpp src/devices/device_wp6003.h
     src/thirdparty/RC4/rc4.cpp src/thirdparty/RC4/rc4.h
+    ${android_sources}
+    src/database/sqlplugin.cpp src/database/sqlplugin.h
     src/main.cpp
-    qml/qml.qrc
-    qml/components.qrc
+    src/posometrecamera.cpp src/posometrecamera.h
+    src/image2base64.cpp src/image2base64.h
     i18n/i18n.qrc
     assets/assets.qrc
     assets/devices.qrc
     assets/plants.qrc
+    ${MahoudQML_UI_QML_RES}
 )
+
+add_subdirectory(SortFilterProxyModel)
 
 target_include_directories(Blume PRIVATE src/)
 target_include_directories(Blume PRIVATE src/thirdparty/)
@@ -84,6 +128,14 @@ if(ANDROID)
     #target_compile_definitions(Blume PRIVATE QT_CONNECTIVITY_PATCHED)
 
     target_link_libraries(Blume PRIVATE Qt::CorePrivate)
+
+    FetchContent_Declare(
+      android_openssl
+      DOWNLOAD_EXTRACT_TIMESTAMP true
+      URL      https://github.com/KDAB/android_openssl/archive/refs/heads/master.zip
+    )
+    FetchContent_MakeAvailable(android_openssl)
+    include(${android_openssl_SOURCE_DIR}/android_openssl.cmake)
 endif()
 
 ## macOS
@@ -139,6 +191,12 @@ target_link_libraries(Blume PRIVATE
     Qt::Svg
     Qt::Widgets
     Qt::Charts
+    Qt::Multimedia
+    Qt::Xml
+    SortFilterProxyModel
+    HotWatch
+    HotWatchplugin
+    Qaterial
 )
 
 ################################################################################
@@ -172,14 +230,14 @@ install(TARGETS Blume
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-qt_generate_deploy_qml_app_script(
-    TARGET Blume
-    FILENAME_VARIABLE deploy_script
-    NO_UNSUPPORTED_PLATFORM_ERROR
-    DEPLOY_USER_QML_MODULES_ON_UNSUPPORTED_PLATFORM
-    MACOS_BUNDLE_POST_BUILD
-)
-install(SCRIPT ${deploy_script})
+#qt_generate_deploy_qml_app_script(
+#    TARGET Blume
+#    FILENAME_VARIABLE deploy_script
+#    NO_UNSUPPORTED_PLATFORM_ERROR
+#    DEPLOY_USER_QML_MODULES_ON_UNSUPPORTED_PLATFORM
+#    MACOS_BUNDLE_POST_BUILD
+#)
+#install(SCRIPT ${deploy_script})
 
 ################################################################################
 

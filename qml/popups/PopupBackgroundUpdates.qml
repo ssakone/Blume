@@ -3,13 +3,17 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
+import "../components_generic/"
+import "../components_themed/"
+
 Popup {
     id: popupBackgroundUpdates
     x: (appWindow.width / 2) - (width / 2)
-    y: singleColumn ? (appWindow.height - height - appHeader.height) : ((appWindow.height / 2) - (height / 2))
+    y: singleColumn ? (appWindow.height - height
+                       - appHeader.height) : ((appWindow.height / 2) - (height / 2))
 
     width: singleColumn ? parent.width : 640
-    height: columnContent.height + padding*2
+    height: columnContent.height + padding * 2
     padding: singleColumn ? 20 : 24
 
     modal: true
@@ -19,11 +23,10 @@ Popup {
     property bool locPerm: false
 
     onAboutToShow: {
-         locPerm = utilsApp.checkMobileBackgroundLocationPermission()
+        locPerm = utilsApp.checkMobileBackgroundLocationPermission()
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     background: Rectangle {
         color: Theme.colorBackground
         border.color: Theme.colorSeparator
@@ -39,7 +42,6 @@ Popup {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     contentItem: Item {
         Column {
             id: columnContent
@@ -57,7 +59,6 @@ Popup {
             }
 
             ////////
-
             Column {
                 width: parent.width
                 spacing: 24
@@ -91,7 +92,7 @@ Popup {
                 Flow {
                     width: parent.width
 
-                    property var btnSize: singleColumn ? width : ((width-spacing*2) / 2)
+                    property var btnSize: singleColumn ? width : ((width - spacing * 2) / 2)
                     spacing: 16
 
                     ButtonWireframeIconCentered {
@@ -105,7 +106,8 @@ Popup {
                         sourceSize: 20
 
                         onClicked: {
-                            Qt.openUrlExternally("https://developer.android.com/guide/topics/connectivity/bluetooth/permissions#declare-android11-or-lower")
+                            Qt.openUrlExternally(
+                                        "https://developer.android.com/guide/topics/connectivity/bluetooth/permissions#declare-android11-or-lower")
                         }
                     }
 
@@ -141,7 +143,6 @@ Popup {
             }
 
             ////////
-
             Column {
                 width: parent.width
                 spacing: 24
@@ -163,8 +164,8 @@ Popup {
 
                     Text {
                         width: parent.width
-                        text: qsTr("Your phone will do its best to prevent this application from running in the background.") + "<br>" +
-                              qsTr("Some settings need to be switched <b>manually</b> from the Android <b>application info panel</b>:")
+                        text: qsTr("Your phone will do its best to prevent this application from running in the background.") + "<br>" + qsTr(
+                                  "Some settings need to be switched <b>manually</b> from the Android <b>application info panel</b>:")
                         textFormat: Text.StyledText
                         font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorSubText
@@ -173,8 +174,8 @@ Popup {
 
                     Text {
                         width: parent.width
-                        text: qsTr("- autolaunch will need to be <b>enabled</b>") + "<br>" +
-                              qsTr("- battery saving feature(s) will need to be <b>disabled</b>")
+                        text: qsTr("- autolaunch will need to be <b>enabled</b>") + "<br>" + qsTr(
+                                  "- battery saving feature(s) will need to be <b>disabled</b>")
                         textFormat: Text.StyledText
                         font.pixelSize: Theme.fontSizeContent
                         color: Theme.colorSubText
@@ -185,7 +186,7 @@ Popup {
                 Flow {
                     width: parent.width
 
-                    property var btnSize: singleColumn ? width : ((width-spacing*2) / 2)
+                    property var btnSize: singleColumn ? width : ((width - spacing * 2) / 2)
                     spacing: 16
 
                     ButtonWireframeIconCentered {

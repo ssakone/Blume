@@ -2,7 +2,11 @@ import QtQuick
 import QtQuick.Controls
 
 import ThemeEngine 1.0
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+import "components_js/UtilsNumber.js" as UtilsNumber
 
 Loader {
     id: settingsScreen
@@ -21,7 +25,6 @@ Loader {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     active: false
     asynchronous: false
 
@@ -29,7 +32,6 @@ Loader {
         anchors.fill: parent
 
         ////////////////
-
         PopupBackgroundUpdates {
             id: popupBackgroundUpdates
 
@@ -40,7 +42,6 @@ Loader {
         }
 
         ////////////////
-
         Flickable {
             anchors.fill: parent
 
@@ -48,7 +49,9 @@ Loader {
             contentHeight: column.height
 
             boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
-            ScrollBar.vertical: ScrollBar { visible: false }
+            ScrollBar.vertical: ScrollBar {
+                visible: false
+            }
 
             Column {
                 id: column
@@ -60,7 +63,6 @@ Loader {
                 spacing: 8
 
                 ////////////////
-
                 SectionTitle {
                     anchors.left: parent.left
                     text: qsTr("Application")
@@ -68,7 +70,6 @@ Loader {
                 }
 
                 ////////////////
-
                 Item {
                     id: element_splitView
                     height: 48
@@ -128,9 +129,8 @@ Loader {
                     bottomPadding: isDesktop ? 12 : 0
                     visible: element_splitView.visible
 
-                    text: settingsManager.splitView ?
-                              qsTr("Devices will be split into categories (plant sensors, thermometers, air quality monitors)") :
-                              qsTr("Devices will be shown together.")
+                    text: settingsManager.splitView ? qsTr("Devices will be split into categories (plant sensors, thermometers, air quality monitors)") : qsTr(
+                                                          "Devices will be shown together.")
                     textFormat: Text.PlainText
                     wrapMode: Text.WordWrap
                     color: Theme.colorSubText
@@ -138,8 +138,8 @@ Loader {
                 }
 
                 ////////
-
-                Rectangle { // separator
+                Rectangle {
+                    // separator
                     anchors.left: parent.left
                     anchors.right: parent.right
                     height: 1
@@ -148,7 +148,6 @@ Loader {
                 }
 
                 ////////
-
                 Item {
                     id: element_minimized
                     height: 48
@@ -201,7 +200,6 @@ Loader {
                 }
 
                 ////////////////
-
                 SectionTitle {
                     anchors.left: parent.left
                     text: qsTr("Background updates")
@@ -223,7 +221,6 @@ Loader {
                 }
 
                 ////////////////
-
                 Item {
                     id: element_worker
                     height: 48
@@ -295,7 +292,8 @@ Loader {
                     topPadding: -12
                     bottomPadding: element_notifications.visible ? 0 : 12
 
-                    visible: (element_worker.visible && Qt.platform.os === "android")
+                    visible: (element_worker.visible
+                              && Qt.platform.os === "android")
 
                     text: qsTr("Wake up at a predefined interval to refresh sensor data. Only if Bluetooth (or Bluetooth control) is enabled.")
                     textFormat: Text.PlainText
@@ -314,9 +312,7 @@ Loader {
 
                     visible: (element_worker.visible && isDesktop)
 
-                    text: settingsManager.systray ?
-                              qsTr("Blume will remain active in the notification area after the window is closed, and will automatically refresh sensor data at regular interval.") :
-                              qsTr("Blume is only active while the window is open.")
+                    text: settingsManager.systray ? qsTr("Blume will remain active in the notification area after the window is closed, and will automatically refresh sensor data at regular interval.") : qsTr("Blume is only active while the window is open.")
                     textFormat: Text.PlainText
                     wrapMode: Text.WordWrap
                     color: Theme.colorSubText
@@ -324,7 +320,6 @@ Loader {
                 }
 
                 ////////
-
                 Item {
                     id: element_notifications
                     height: 48
@@ -387,12 +382,11 @@ Loader {
                     topPadding: -12
                     bottomPadding: settingsManager.notifications ? 0 : 12
 
-                    visible: (element_notifications.visible && !settingsManager.notifications)
+                    visible: (element_notifications.visible
+                              && !settingsManager.notifications)
                     opacity: settingsManager.systray ? 1 : 0.4
 
-                    text: settingsManager.notifications ?
-                              qsTr("If a plant needs water, WatchFlower will bring it to your attention!") :
-                              qsTr("If a plant needs water, WatchFlower can bring it to your attention.")
+                    text: settingsManager.notifications ? qsTr("If a plant needs water, WatchFlower will bring it to your attention!") : qsTr("If a plant needs water, WatchFlower can bring it to your attention.")
                     textFormat: Text.PlainText
                     wrapMode: Text.WordWrap
                     color: Theme.colorSubText
@@ -400,7 +394,6 @@ Loader {
                 }
 
                 ////////
-
                 Item {
                     height: 32
                     anchors.left: parent.left
@@ -408,7 +401,8 @@ Loader {
                     anchors.right: parent.right
                     anchors.rightMargin: screenPaddingRight
 
-                    visible: settingsManager.systray && settingsManager.notifications
+                    visible: settingsManager.systray
+                             && settingsManager.notifications
 
                     Text {
                         height: 32
@@ -443,7 +437,8 @@ Loader {
                     anchors.right: parent.right
                     anchors.rightMargin: screenPaddingRight
 
-                    visible: settingsManager.systray && settingsManager.notifications
+                    visible: settingsManager.systray
+                             && settingsManager.notifications
 
                     Text {
                         height: 32
@@ -478,7 +473,8 @@ Loader {
                     anchors.right: parent.right
                     anchors.rightMargin: screenPaddingRight
 
-                    visible: settingsManager.systray && settingsManager.notifications
+                    visible: settingsManager.systray
+                             && settingsManager.notifications
 
                     Text {
                         height: 32
@@ -513,7 +509,8 @@ Loader {
                     anchors.right: parent.right
                     anchors.rightMargin: screenPaddingRight
 
-                    visible: settingsManager.systray && settingsManager.notifications
+                    visible: settingsManager.systray
+                             && settingsManager.notifications
 
                     Text {
                         height: 32
@@ -542,7 +539,6 @@ Loader {
                 }
 
                 ////////
-
                 SectionTitle {
                     anchors.left: parent.left
                     text: qsTr("Bluetooth")
@@ -550,7 +546,6 @@ Loader {
                 }
 
                 ////////
-
                 Item {
                     id: element_bluetoothControl
                     height: 48
@@ -613,9 +608,7 @@ Loader {
                     bottomPadding: 0
                     visible: element_bluetoothControl.visible
 
-                    text: settingsManager.bluetoothControl ?
-                              qsTr("Blume will only operate if your device's Bluetooth is already enabled.") :
-                              qsTr("Blume will enable your device's Bluetooth in order to operate.")
+                    text: settingsManager.bluetoothControl ? qsTr("Blume will only operate if your device's Bluetooth is already enabled.") : qsTr("Blume will enable your device's Bluetooth in order to operate.")
                     textFormat: Text.PlainText
                     wrapMode: Text.WordWrap
                     color: Theme.colorSubText
@@ -623,7 +616,6 @@ Loader {
                 }
 
                 ////////
-
                 Item {
                     id: element_bluetoothRange
                     height: 48
@@ -683,9 +675,7 @@ Loader {
                     bottomPadding: 0
                     visible: element_bluetoothRange.visible
 
-                    text: settingsManager.bluetoothLimitScanningRange ?
-                              qsTr("Will only scan for sensors approximately 2 meters around you.") :
-                              qsTr("Sensor scanning range is not limited.")
+                    text: settingsManager.bluetoothLimitScanningRange ? qsTr("Will only scan for sensors approximately 2 meters around you.") : qsTr("Sensor scanning range is not limited.")
                     textFormat: Text.PlainText
                     wrapMode: Text.WordWrap
                     color: Theme.colorSubText
@@ -693,7 +683,6 @@ Loader {
                 }
 
                 ////////
-
                 Item {
                     id: element_bluetoothSimUpdate
                     height: 48
@@ -781,8 +770,8 @@ Loader {
 
                     visible: element_bluetoothSimUpdate.visible
 
-                    text: qsTr("How many sensors should be updated at once.") + "<br>" +
-                          qsTr("A lower number improves Bluetooth synchronization reliability, at the expense of speed.")
+                    text: qsTr("How many sensors should be updated at once.") + "<br>" + qsTr(
+                              "A lower number improves Bluetooth synchronization reliability, at the expense of speed.")
                     textFormat: Text.StyledText
                     wrapMode: Text.WordWrap
                     color: Theme.colorSubText
@@ -790,7 +779,6 @@ Loader {
                 }
 
                 ////////////////
-
                 SectionTitle {
                     anchors.left: parent.left
                     text: qsTr("Plant sensors")
@@ -798,7 +786,6 @@ Loader {
                 }
 
                 ////////////////
-
                 Item {
                     id: element_update
                     height: 48
@@ -858,7 +845,6 @@ Loader {
                 }
 
                 ////////
-
                 Item {
                     id: element_bigindicators
                     height: 48
@@ -920,7 +906,6 @@ Loader {
                 }
 
                 ////////
-
                 Item {
                     id: element_dynascale
                     height: 48
@@ -982,8 +967,8 @@ Loader {
                 }
 
                 ////////
-
-                Row { // indicators preview
+                Row {
+                    // indicators preview
                     height: 56
                     anchors.left: parent.left
                     anchors.leftMargin: screenPaddingLeft + (isDesktop ? 72 : 24)
@@ -1021,7 +1006,11 @@ Loader {
                             border.color: Theme.colorSeparator
 
                             opacity: (!settingsManager.bigIndicator) ? 0.66 : 0.2
-                            Behavior on opacity { OpacityAnimator { duration: 133 } }
+                            Behavior on opacity {
+                                OpacityAnimator {
+                                    duration: 133
+                                }
+                            }
 
                             MouseArea {
                                 anchors.fill: parent
@@ -1059,7 +1048,11 @@ Loader {
                             border.color: Theme.colorSeparator
 
                             opacity: (settingsManager.bigIndicator) ? 0.66 : 0.2
-                            Behavior on opacity { OpacityAnimator { duration: 133 } }
+                            Behavior on opacity {
+                                OpacityAnimator {
+                                    duration: 133
+                                }
+                            }
 
                             MouseArea {
                                 anchors.fill: parent
@@ -1070,7 +1063,6 @@ Loader {
                 }
 
                 ////////////////
-
                 SectionTitle {
                     anchors.left: parent.left
                     text: qsTr("Thermometers")
@@ -1078,7 +1070,6 @@ Loader {
                 }
 
                 ////////////////
-
                 Item {
                     id: element_thermometer_update
                     height: 48
@@ -1138,7 +1129,6 @@ Loader {
                 }
 
                 ////////
-
                 Item {
                     id: element_thermometer_unit
                     height: 48
@@ -1188,21 +1178,32 @@ Loader {
                             anchors.verticalCenter: parent.verticalCenter
 
                             model: ListModel {
-                                ListElement { idx: 1; txt: qsTr("°C"); src: ""; sz: 16; }
-                                ListElement { idx: 2; txt: qsTr("°F"); src: ""; sz: 16; }
+                                ListElement {
+                                    idx: 1
+                                    txt: qsTr("°C")
+                                    src: ""
+                                    sz: 16
+                                }
+                                ListElement {
+                                    idx: 2
+                                    txt: qsTr("°F")
+                                    src: ""
+                                    sz: 16
+                                }
                             }
 
                             currentSelection: (settingsManager.tempUnit === 'C') ? 1 : 2
-                            onMenuSelected: (index) => {
-                                currentSelection = index
-                                settingsManager.tempUnit = (index === 1) ? 'C' : 'F'
-                            }
+                            onMenuSelected: index => {
+                                                currentSelection = index
+                                                settingsManager.tempUnit = (index === 1) ? 'C' : 'F'
+                                            }
                         }
                     }
                 }
 
                 ////////////////
-/*
+
+                /*
                 SectionTitle {
                     anchors.left: parent.left
                     text: qsTr("External database")
@@ -1261,7 +1262,6 @@ Loader {
                 }
 */
                 ////////////////
-
                 SectionTitle {
                     anchors.left: parent.left
                     text: qsTr("Data archiving")
@@ -1270,7 +1270,6 @@ Loader {
                 }
 
                 ////////////////
-
                 Column {
                     anchors.left: parent.left
                     anchors.leftMargin: screenPaddingLeft + 16 + 48
@@ -1307,7 +1306,6 @@ Loader {
                 }
 
                 ////////
-
                 Row {
                     id: element_export
                     anchors.left: parent.left
@@ -1334,7 +1332,8 @@ Loader {
                                 text = qsTr("Exported")
                                 primaryColor = Theme.colorPrimary
                                 fullColor = true
-                                if (isDesktop) openFolderButton.visible = true
+                                if (isDesktop)
+                                    openFolderButton.visible = true
                             } else {
                                 text = qsTr("Export file")
                                 primaryColor = Theme.colorWarning
@@ -1371,7 +1370,8 @@ Loader {
                         text: qsTr("Export file")
                         onClicked: {
                             var file = deviceManager.exportDataOpen()
-                            utilsShare.sendFile(file, "Export file", "text/csv", 0)
+                            utilsShare.sendFile(file, "Export file",
+                                                "text/csv", 0)
                         }
                     }
                 }
@@ -1379,7 +1379,6 @@ Loader {
         }
 
         ////////////////
-
         Component {
             id: dbSettingsScalable
 
@@ -1392,7 +1391,8 @@ Loader {
                 columns: singleColumn ? 1 : 2
                 spacing: 12
 
-                property int sz: singleColumn ? grid.width : Math.min((grid.width / 2), 512) - 4
+                property int sz: singleColumn ? grid.width : Math.min(
+                                                    (grid.width / 2), 512) - 4
 
                 TextFieldThemed {
                     id: tf_database_host
@@ -1405,7 +1405,8 @@ Loader {
                     selectByMouse: true
 
                     IconSvg {
-                        width: 20; height: 20;
+                        width: 20
+                        height: 20
                         anchors.right: parent.right
                         anchors.rightMargin: 12
                         anchors.verticalCenter: parent.verticalCenter
@@ -1422,12 +1423,17 @@ Loader {
 
                     placeholderText: qsTr("Port")
                     text: settingsManager.mysqlPort
-                    onEditingFinished: settingsManager.mysqlPort = parseInt(text, 10)
-                    validator: IntValidator { bottom: 1; top: 65535; }
+                    onEditingFinished: settingsManager.mysqlPort = parseInt(
+                                           text, 10)
+                    validator: IntValidator {
+                        bottom: 1
+                        top: 65535
+                    }
                     selectByMouse: true
 
                     IconSvg {
-                        width: 20; height: 20;
+                        width: 20
+                        height: 20
                         anchors.right: parent.right
                         anchors.rightMargin: 12
                         anchors.verticalCenter: parent.verticalCenter
@@ -1448,7 +1454,8 @@ Loader {
                     selectByMouse: true
 
                     IconSvg {
-                        width: 20; height: 20;
+                        width: 20
+                        height: 20
                         anchors.right: parent.right
                         anchors.rightMargin: 12
                         anchors.verticalCenter: parent.verticalCenter
@@ -1470,7 +1477,8 @@ Loader {
                     echoMode: TextInput.PasswordEchoOnEdit
 
                     IconSvg {
-                        width: 20; height: 20;
+                        width: 20
+                        height: 20
                         anchors.right: parent.right
                         anchors.rightMargin: 12
                         anchors.verticalCenter: parent.verticalCenter

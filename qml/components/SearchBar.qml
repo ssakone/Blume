@@ -4,7 +4,8 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import ThemeEngine
 
-import "../components_generic"
+import "../components_generic/"
+import "../components_themed/"
 
 Rectangle {
     id: root
@@ -35,12 +36,11 @@ Rectangle {
                 weight: Font.Light
             }
             clip: true
-            placeholderText : "Recherche"
+            placeholderText: "Recherche"
         }
 
         Item {
             Layout.preferredWidth: 10
         }
     }
-
 }

@@ -3,6 +3,11 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+
 Rectangle {
     width: 480
     height: 720

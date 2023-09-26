@@ -10,6 +10,8 @@ import Qt5Compat.GraphicalEffects as QGE
 import SortFilterProxyModel
 import "components"
 import "components_generic"
+import "components_themed"
+import "popups"
 
 import "./pages/Garden"
 
@@ -18,14 +20,14 @@ BPage {
 
     footer: BottomTabBar {}
 
-    property var push: (page) => page_view.push(page)
+    property var push: page => page_view.push(page)
     property var pop: () => page_view.pop()
 
     StackView {
         id: page_view
         property string previousState: ""
 
-//        y: -appHeader.height
+        //        y: -appHeader.height
         width: parent.width
         height: parent.height + appHeader.height
         visible: true

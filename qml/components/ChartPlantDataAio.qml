@@ -2,7 +2,10 @@ import QtQuick
 import QtCharts
 
 import ThemeEngine 1.0
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "../components_js/UtilsNumber.js" as UtilsNumber
+
+import "../components_generic/"
+import "../components_themed/"
 
 Item {
     id: chartPlantDataAio
@@ -29,12 +32,16 @@ Item {
     }
 
     function loadGraph() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        //console.log("chartPlantDataAio // loadGraph() >> " + currentDevice)
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
 
-        hygroData.visible = currentDevice.hasSoilMoistureSensor && currentDevice.hasDataNamed("soilMoisture")
-        conduData.visible = currentDevice.hasSoilConductivitySensor && currentDevice.hasDataNamed("soilConductivity")
-        hygroData.visible |= currentDevice.hasHumiditySensor && currentDevice.hasDataNamed("humidity")
+        //console.log("chartPlantDataAio // loadGraph() >> " + currentDevice)
+        hygroData.visible = currentDevice.hasSoilMoistureSensor
+                && currentDevice.hasDataNamed("soilMoisture")
+        conduData.visible = currentDevice.hasSoilConductivitySensor
+                && currentDevice.hasDataNamed("soilConductivity")
+        hygroData.visible |= currentDevice.hasHumiditySensor
+                && currentDevice.hasDataNamed("humidity")
         tempData.visible = currentDevice.hasTemperatureSensor
         lumiData.visible = currentDevice.hasLuminositySensor
 
@@ -46,19 +53,24 @@ Item {
     }
 
     function updateGraph() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
         //console.log("chartPlantDataAio // updateGraph() >> " + currentDevice)
 
         //// DATA
         if (currentDevice.isPlantSensor) {
-            currentDevice.getChartData_plantAIO(daysTarget, axisTime, hygroData, conduData, tempData, lumiData)
+            currentDevice.getChartData_plantAIO(daysTarget, axisTime,
+                                                hygroData, conduData,
+                                                tempData, lumiData)
         } else if (currentDevice.isThermometer) {
-            currentDevice.getChartData_thermometerAIO(daysTarget, axisTime, tempData, hygroData)
+            currentDevice.getChartData_thermometerAIO(daysTarget, axisTime,
+                                                      tempData, hygroData)
         }
 
         // graph visibility
         aioGraph.visible = (tempData.count > 1)
-        showGraphDots = (settingsManager.graphAioShowDots && tempData.count < 16)
+        showGraphDots = (settingsManager.graphAioShowDots
+                         && tempData.count < 16)
 
         //// AXIS
         axisHygro.min = 0
@@ -72,27 +84,35 @@ Item {
 
         // Min/Max axis for hygrometery / humidity
         if (currentDevice.isPlantSensor) {
-            if (currentDevice.hygroMin*0.85 < 0.0) axisHygro.min = 0
-            else axisHygro.min = currentDevice.hygroMin*0.85
-            if (currentDevice.hygroMax*1.15 > 100.0) axisHygro.max = 100
-            else axisHygro.max = currentDevice.hygroMax*1.15
+            if (currentDevice.hygroMin * 0.85 < 0.0)
+                axisHygro.min = 0
+            else
+                axisHygro.min = currentDevice.hygroMin * 0.85
+            if (currentDevice.hygroMax * 1.15 > 100.0)
+                axisHygro.max = 100
+            else
+                axisHygro.max = currentDevice.hygroMax * 1.15
         }
         if (currentDevice.isThermometer) {
-            if (currentDevice.humiMin*0.85 < 0.0) axisHygro.min = 0
-            else axisHygro.min = currentDevice.humiMin*0.85
-            if (currentDevice.humiMax*1.15 > 100.0) axisHygro.max = 100
-            else axisHygro.max = currentDevice.humiMax*1.15
+            if (currentDevice.humiMin * 0.85 < 0.0)
+                axisHygro.min = 0
+            else
+                axisHygro.min = currentDevice.humiMin * 0.85
+            if (currentDevice.humiMax * 1.15 > 100.0)
+                axisHygro.max = 100
+            else
+                axisHygro.max = currentDevice.humiMax * 1.15
         }
 
         // Min/Max axis for temperature
-        axisTemp.min = currentDevice.tempMin*0.85
-        axisTemp.max = currentDevice.tempMax*1.15
+        axisTemp.min = currentDevice.tempMin * 0.85
+        axisTemp.max = currentDevice.tempMax * 1.15
 
         // Max axis for conductivity
-        axisCondu.max = currentDevice.conduMax*2.0
+        axisCondu.max = currentDevice.conduMax * 2.0
 
         // Max axis for luminosity?
-        axisLumi.max = currentDevice.luxMax*3.0
+        axisLumi.max = currentDevice.luxMax * 3.0
 
         //// ADJUSTMENTS
         hygroData.width = 2
@@ -100,18 +120,22 @@ Item {
 
         if (currentDevice.isPlantSensor) {
             // not planted? don't show hygro and condu
-            hygroData.visible = currentDevice.hasSoilMoistureSensor && currentDevice.hasDataNamed("soilMoisture")
-            conduData.visible = currentDevice.hasSoilConductivitySensor && currentDevice.hasDataNamed("soilConductivity")
+            hygroData.visible = currentDevice.hasSoilMoistureSensor
+                    && currentDevice.hasDataNamed("soilMoisture")
+            conduData.visible = currentDevice.hasSoilConductivitySensor
+                    && currentDevice.hasDataNamed("soilConductivity")
         }
 
         // Update indicator (only works if data are changed in database though...)
-        if (dateIndicator.visible) updateIndicator()
+        if (dateIndicator.visible)
+            updateIndicator()
     }
 
-    function qpoint_lerp(p0, p1, x) { return (p0.y + (x - p0.x) * ((p1.y - p0.y) / (p1.x - p0.x))) }
+    function qpoint_lerp(p0, p1, x) {
+        return (p0.y + (x - p0.x) * ((p1.y - p0.y) / (p1.x - p0.x)))
+    }
 
     ////////////////////////////////////////////////////////////////////////////
-
     ChartView {
         id: aioGraph
         anchors.fill: parent
@@ -127,63 +151,91 @@ Item {
         dropShadowEnabled: false
         animationOptions: ChartView.NoAnimation
 
-        ValueAxis { id: axisHygro; visible: false; gridVisible: false; }
-        ValueAxis { id: axisCondu; visible: false; gridVisible: false; }
-        ValueAxis { id: axisTemp; visible: false; gridVisible: false; }
-        ValueAxis { id: axisLumi; visible: false; gridVisible: false; }
-        DateTimeAxis { id: axisTime; visible: true;
-                       labelsFont.pixelSize: Theme.fontSizeContentVerySmall; labelsColor: legendColor;
-                       color: legendColor; tickCount: daysTick;
-                       gridLineColor: Theme.colorSeparator; }
+        ValueAxis {
+            id: axisHygro
+            visible: false
+            gridVisible: false
+        }
+        ValueAxis {
+            id: axisCondu
+            visible: false
+            gridVisible: false
+        }
+        ValueAxis {
+            id: axisTemp
+            visible: false
+            gridVisible: false
+        }
+        ValueAxis {
+            id: axisLumi
+            visible: false
+            gridVisible: false
+        }
+        DateTimeAxis {
+            id: axisTime
+            visible: true
+            labelsFont.pixelSize: Theme.fontSizeContentVerySmall
+            labelsColor: legendColor
+            color: legendColor
+            tickCount: daysTick
+            gridLineColor: Theme.colorSeparator
+        }
 
         LineSeries {
             id: hygroData
             useOpenGL: useOpenGL
             pointsVisible: showGraphDots
-            color: Theme.colorBlue; width: 2;
-            axisY: axisHygro; axisX: axisTime;
+            color: Theme.colorBlue
+            width: 2
+            axisY: axisHygro
+            axisX: axisTime
         }
         LineSeries {
             id: conduData
             useOpenGL: useOpenGL
             pointsVisible: showGraphDots
-            color: Theme.colorRed; width: 2;
-            axisY: axisCondu; axisX: axisTime;
+            color: Theme.colorRed
+            width: 2
+            axisY: axisCondu
+            axisX: axisTime
         }
         LineSeries {
             id: tempData
             useOpenGL: useOpenGL
             pointsVisible: showGraphDots
-            color: Theme.colorGreen; width: 2;
-            axisY: axisTemp; axisX: axisTime;
+            color: Theme.colorGreen
+            width: 2
+            axisY: axisTemp
+            axisX: axisTime
         }
         LineSeries {
             id: lumiData
             useOpenGL: useOpenGL
             pointsVisible: showGraphDots
-            color: Theme.colorYellow; width: 2;
-            axisY: axisLumi; axisX: axisTime;
+            color: Theme.colorYellow
+            width: 2
+            axisY: axisLumi
+            axisX: axisTime
         }
 
         ////////////////
-
         MouseArea {
             id: clickableGraphArea
             anchors.fill: aioGraph
 
             acceptedButtons: (Qt.LeftButton | Qt.RightButton)
 
-            onClicked: (mouse) => {
-                if (isMobile) {
-                    if (mouse.button === Qt.LeftButton) {
-                        lastMouseMap = mouse
-                        aioGraph.moveIndicator(mouse, false)
-                        mouse.accepted = true
-                    } else if (mouse.button === Qt.RightButton) {
-                        resetIndicator()
-                    }
-                }
-            }
+            onClicked: mouse => {
+                           if (isMobile) {
+                               if (mouse.button === Qt.LeftButton) {
+                                   lastMouseMap = mouse
+                                   aioGraph.moveIndicator(mouse, false)
+                                   mouse.accepted = true
+                               } else if (mouse.button === Qt.RightButton) {
+                                   resetIndicator()
+                               }
+                           }
+                       }
 
             onPressAndHold: {
                 if (isMobile) {
@@ -191,46 +243,49 @@ Item {
                 }
             }
 
-            onPressed: (mouse) => {
-                if (isDesktop) {
-                    if (mouse.button === Qt.LeftButton) {
-                        lastMouseMap = mouse
-                        aioGraph.moveIndicator(mouse, false)
-                        mouse.accepted = true
-                    } else if (mouse.button === Qt.RightButton) {
-                        resetIndicator()
-                    }
-                }
-            }
-            onReleased: (mouse) =>{
-                if (typeof (plantSensorPages) !== "undefined") {
-                    // Re-enable page swipe after we dragged the indicator
-                    plantSensorPages.interactive = isPhone
-                }
+            onPressed: mouse => {
+                           if (isDesktop) {
+                               if (mouse.button === Qt.LeftButton) {
+                                   lastMouseMap = mouse
+                                   aioGraph.moveIndicator(mouse, false)
+                                   mouse.accepted = true
+                               } else if (mouse.button === Qt.RightButton) {
+                                   resetIndicator()
+                               }
+                           }
+                       }
+            onReleased: mouse => {
+                            if (typeof (plantSensorPages) !== "undefined") {
+                                // Re-enable page swipe after we dragged the indicator
+                                plantSensorPages.interactive = isPhone
+                            }
 
-                if (mouse.button !== Qt.RightButton) {
-                    vanim.duration = 233
-                }
-            }
+                            if (mouse.button !== Qt.RightButton) {
+                                vanim.duration = 233
+                            }
+                        }
 
-            onPositionChanged: (mouse) => {
-                if (isDesktop || verticalIndicator.visible) {
+            onPositionChanged: mouse => {
+                                   if (isDesktop || verticalIndicator.visible) {
 
-                    if (typeof (plantSensorPages) !== "undefined") {
-                        // Disable page swipe while we drag the indicator
-                        plantSensorPages.interactive = false
-                    }
+                                       if (typeof (plantSensorPages) !== "undefined") {
+                                           // Disable page swipe while we drag the indicator
+                                           plantSensorPages.interactive = false
+                                       }
 
-                    vanim.duration = 0
+                                       vanim.duration = 0
 
-                    lastMouseMap = mouse
-                    aioGraph.moveIndicator(lastMouseMap, true)
-                    mouse.accepted = true
-                }
-            }
+                                       lastMouseMap = mouse
+                                       aioGraph.moveIndicator(lastMouseMap,
+                                                              true)
+                                       mouse.accepted = true
+                                   }
+                               }
 
             property var lastMouseMap: null
-            function forceUpdate() { aioGraph.moveIndicator(lastMouseMap, true) }
+            function forceUpdate() {
+                aioGraph.moveIndicator(lastMouseMap, true)
+            }
         }
 
         function moveIndicator(mouse, isMoving) {
@@ -247,20 +302,24 @@ Item {
             //console.log("clicked " + mouse.x + " " + mouse.y)
             //console.log("clicked adjusted " + ppp.x + " " + ppp.y)
             //console.log("clicked mapped " + mpmp.x + " " + mpmp.y)
-
             if (isMoving) {
                 // dragging outside the graph area?
-                if (mpmp.x < tempData.at(0).x){
-                    ppp.x = aioGraph.mapToPosition(tempData.at(0), tempData).x + aioGraph.anchors.rightMargin
+                if (mpmp.x < tempData.at(0).x) {
+                    ppp.x = aioGraph.mapToPosition(
+                                tempData.at(0),
+                                tempData).x + aioGraph.anchors.rightMargin
                     mpmp.x = tempData.at(0).x
                 }
-                if (mpmp.x > tempData.at(tempData.count-1).x){
-                    ppp.x = aioGraph.mapToPosition(tempData.at(tempData.count-1), tempData).x + aioGraph.anchors.rightMargin
-                    mpmp.x = tempData.at(tempData.count-1).x
+                if (mpmp.x > tempData.at(tempData.count - 1).x) {
+                    ppp.x = aioGraph.mapToPosition(
+                                tempData.at(tempData.count - 1),
+                                tempData).x + aioGraph.anchors.rightMargin
+                    mpmp.x = tempData.at(tempData.count - 1).x
                 }
             } else {
                 // did we clicked outside the graph area?
-                if (mpmp.x < tempData.at(0).x || mpmp.x > tempData.at(tempData.count-1).x) {
+                if (mpmp.x < tempData.at(0).x || mpmp.x > tempData.at(
+                            tempData.count - 1).x) {
                     resetIndicator()
                     return
                 }
@@ -277,7 +336,6 @@ Item {
         }
 
         ////////////////
-
         Item {
             id: legend_area
             x: aioGraph.plotArea.x
@@ -292,7 +350,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     MouseArea {
         anchors.fill: indicators
         anchors.margins: -8
@@ -306,12 +363,15 @@ Item {
     }
 
     function resetIndicator() {
-        if (appContent.state === "DevicePlantSensor" && indicatorsLoader.status === Loader.Ready) {
-            if (typeof devicePlantSensorData === "undefined" || !devicePlantSensorData) return
+        if (appContent.state === "DevicePlantSensor"
+                && indicatorsLoader.status === Loader.Ready) {
+            if (typeof devicePlantSensorData === "undefined"
+                    || !devicePlantSensorData)
+                return
             dataIndicators.resetDataBars()
         }
         if (appContent.state === "DeviceThermometer") {
-            //
+
         }
 
         vanim.duration = 0
@@ -323,12 +383,15 @@ Item {
     }
 
     function updateIndicator() {
-        if (!dateIndicator.visible) return
+        if (!dateIndicator.visible)
+            return
 
         // set date & time
         var date = new Date(verticalIndicator.clickedCoordinates.x)
-        var date_string = date.toLocaleDateString(Qt.locale(), Locale.ShortFormat)
-        var time_string = date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
+        var date_string = date.toLocaleDateString(Qt.locale(),
+                                                  Locale.ShortFormat)
+        var time_string = date.toLocaleTimeString(Qt.locale(),
+                                                  Locale.ShortFormat)
 
         //: "at" is used for DATE at HOUR
         dateIndicator.text = date_string + " " + qsTr("at") + " " + time_string
@@ -343,19 +406,28 @@ Item {
             if (Math.abs(dist) < 0.5) {
                 // nearest neighbor
                 if (appContent.state === "DevicePlantSensor") {
-                    dataIndicators.updateDataBars(hygroData.at(i).y, conduData.at(i).y, -99,
-                                                  tempData.at(i).y, -99, lumiData.at(i).y)
+                    dataIndicators.updateDataBars(hygroData.at(i).y,
+                                                  conduData.at(i).y, -99,
+                                                  tempData.at(i).y, -99,
+                                                  lumiData.at(i).y)
                 } else if (appContent.state === "DeviceThermometer") {
                     dataIndicator.visible = true
-                    dataIndicator.text = (settingsManager.tempUnit === "F") ?
-                                            UtilsNumber.tempCelsiusToFahrenheit(tempData.at(i).y).toFixed(1) + qsTr("°F") :
-                                            tempData.at(i).y.toFixed(1) + qsTr("°C")
-                    dataIndicator.text += " " + hygroData.at(i).y.toFixed(0) + "%"
+                    dataIndicator.text = (settingsManager.tempUnit
+                                          === "F") ? UtilsNumber.tempCelsiusToFahrenheit(
+                                                         tempData.at(
+                                                             i).y).toFixed(
+                                                         1) + qsTr(
+                                                         "°F") : tempData.at(
+                                                         i).y.toFixed(
+                                                         1) + qsTr("°C")
+                    dataIndicator.text += " " + hygroData.at(
+                                i).y.toFixed(0) + "%"
                 }
                 break
             } else {
                 if (dist < 0) {
-                    if (x1 < i) x1 = i
+                    if (x1 < i)
+                        x1 = i
                 } else {
                     x2 = i
                     break
@@ -366,17 +438,26 @@ Item {
         if (x1 >= 0 && x2 > x1) {
             // linear interpolation
             if (appContent.state === "DevicePlantSensor") {
-                dataIndicators.updateDataBars(qpoint_lerp(hygroData.at(x1), hygroData.at(x2), verticalIndicator.clickedCoordinates.x),
-                                              qpoint_lerp(conduData.at(x1), conduData.at(x2), verticalIndicator.clickedCoordinates.x),
-                                              -99,
-                                              qpoint_lerp(tempData.at(x1), tempData.at(x2), verticalIndicator.clickedCoordinates.x),
-                                              -99,
-                                              qpoint_lerp(lumiData.at(x1), lumiData.at(x2), verticalIndicator.clickedCoordinates.x))
+                dataIndicators.updateDataBars(
+                            qpoint_lerp(hygroData.at(x1), hygroData.at(
+                                            x2), verticalIndicator.clickedCoordinates.x), qpoint_lerp(conduData.at(x1), conduData.at(x2), verticalIndicator.clickedCoordinates.x),
+                            -99, qpoint_lerp(tempData.at(x1),
+                                             tempData.at(x2), verticalIndicator.clickedCoordinates.x), -99,
+                            qpoint_lerp(lumiData.at(x1), lumiData.at(
+                                            x2), verticalIndicator.clickedCoordinates.x))
             } else if (appContent.state === "DeviceThermometer") {
                 dataIndicator.visible = true
-                var temmp = qpoint_lerp(tempData.at(x1), tempData.at(x2), verticalIndicator.clickedCoordinates.x)
-                dataIndicator.text = (settingsManager.tempUnit === "F") ? UtilsNumber.tempCelsiusToFahrenheit(temmp).toFixed(1) + "°F" : temmp.toFixed(1) + "°C"
-                dataIndicator.text += " " + qpoint_lerp(hygroData.at(x1), hygroData.at(x2), verticalIndicator.clickedCoordinates.x).toFixed(0) + "%"
+                var temmp = qpoint_lerp(tempData.at(x1), tempData.at(x2),
+                                        verticalIndicator.clickedCoordinates.x)
+                dataIndicator.text = (settingsManager.tempUnit
+                                      === "F") ? UtilsNumber.tempCelsiusToFahrenheit(
+                                                     temmp).toFixed(
+                                                     1) + "°F" : temmp.toFixed(
+                                                     1) + "°C"
+                dataIndicator.text += " " + qpoint_lerp(
+                            hygroData.at(x1), hygroData.at(x2),
+                            verticalIndicator.clickedCoordinates.x).toFixed(
+                            0) + "%"
             }
         }
     }
@@ -395,12 +476,22 @@ Item {
 
         property var clickedCoordinates: null
 
-        Behavior on x { NumberAnimation { id: vanim; duration: 0; easing.type: Easing.InOutCubic; } }
+        Behavior on x {
+            NumberAnimation {
+                id: vanim
+                duration: 0
+                easing.type: Easing.InOutCubic
+            }
+        }
 
         onXChanged: {
-            if (isPhone) return // verticalIndicator default to middle
-            if (isTablet) return // verticalIndicator default to middle
+            if (isPhone)
+                return
+            // verticalIndicator default to middle
+            if (isTablet)
+                return
 
+            // verticalIndicator default to middle
             var direction = "middle"
             if (verticalIndicator.x > dateIndicator.width + 48)
                 direction = "right"
@@ -427,7 +518,6 @@ Item {
     }
 
     ////////////////
-
     Grid {
         id: indicators
         anchors.top: legend_area_overlay.top
@@ -443,7 +533,6 @@ Item {
 
         //transitions: Transition { AnchorAnimation { duration: 133; } }
         //move: Transition { NumberAnimation { properties: "x"; duration: 133; } }
-
         states: [
             State {
                 name: "reanchoredmid"
@@ -522,7 +611,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Item {
         id: legend_area_overlay
         x: aioGraph.x + aioGraph.plotArea.x
@@ -542,7 +630,7 @@ Item {
                 height: 34
                 anchors.verticalCenter: parent.verticalCenter
 
-//                background: true
+                //                background: true
                 source: "qrc:/assets/icons_material/outline-settings-24px.svg"
 
                 visible: isDesktop
@@ -555,34 +643,62 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
 
                 function showHide() {
-                    if (smsmsm.opacity > 0) smsmsm.opacity = 0
-                    else smsmsm.opacity = 1
+                    if (smsmsm.opacity > 0)
+                        smsmsm.opacity = 0
+                    else
+                        smsmsm.opacity = 1
                 }
 
                 enabled: (opacity > 0)
                 opacity: 0
-                Behavior on opacity { OpacityAnimator { duration: 133 } }
+                Behavior on opacity {
+                    OpacityAnimator {
+                        duration: 133
+                    }
+                }
 
                 model: ListModel {
                     id: lmSelectorMenuTxt2
-                    ListElement { idx: 1; txt: "31"; src: ""; sz: 0; }
-                    ListElement { idx: 2; txt: "14"; src: ""; sz: 0; }
-                    ListElement { idx: 3; txt: "7"; src: ""; sz: 0; }
+                    ListElement {
+                        idx: 1
+                        txt: "31"
+                        src: ""
+                        sz: 0
+                    }
+                    ListElement {
+                        idx: 2
+                        txt: "14"
+                        src: ""
+                        sz: 0
+                    }
+                    ListElement {
+                        idx: 3
+                        txt: "7"
+                        src: ""
+                        sz: 0
+                    }
                 }
 
                 currentSelection: {
-                    if (settingsManager.graphAioDays === 31) return 1
-                    if (settingsManager.graphAioDays === 14) return 2
-                    if (settingsManager.graphAioDays === 7) return 3
+                    if (settingsManager.graphAioDays === 31)
+                        return 1
+                    if (settingsManager.graphAioDays === 14)
+                        return 2
+                    if (settingsManager.graphAioDays === 7)
+                        return 3
                     return 2
                 }
 
-                onMenuSelected: (index) => {
-                    if (index === 1) settingsManager.graphAioDays = 31
-                    else if (index === 2) settingsManager.graphAioDays = 14
-                    else if (index === 3) settingsManager.graphAioDays = 7
-                    else settingsManager.graphAioDays = 14
-                }
+                onMenuSelected: index => {
+                                    if (index === 1)
+                                    settingsManager.graphAioDays = 31
+                                    else if (index === 2)
+                                    settingsManager.graphAioDays = 14
+                                    else if (index === 3)
+                                    settingsManager.graphAioDays = 7
+                                    else
+                                    settingsManager.graphAioDays = 14
+                                }
             }
         }
     }

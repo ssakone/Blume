@@ -2,7 +2,11 @@ import QtQuick
 import QtQuick.Controls
 
 import ThemeEngine 1.0
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+import "components_js/UtilsNumber.js" as UtilsNumber
 
 Loader {
     id: settingsAdvanced
@@ -22,7 +26,6 @@ Loader {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     active: false
     asynchronous: false
 
@@ -43,7 +46,6 @@ Loader {
         }
 
         ////////////////
-
         Flickable {
             anchors.fill: parent
 
@@ -51,7 +53,9 @@ Loader {
             contentHeight: column1.height
 
             boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
-            ScrollBar.vertical: ScrollBar { visible: false }
+            ScrollBar.vertical: ScrollBar {
+                visible: false
+            }
 
             Column {
                 id: column1
@@ -63,7 +67,6 @@ Loader {
                 spacing: 8
 
                 ////////////////
-
                 SectionTitle {
                     anchors.left: parent.left
                     text: "Settings"
@@ -71,7 +74,6 @@ Loader {
                 }
 
                 ////////////////
-
                 Item {
                     height: 48
                     anchors.left: parent.left
@@ -120,7 +122,6 @@ Loader {
                 }
 
                 ////////////////
-
                 SectionTitle {
                     anchors.left: parent.left
                     text: "Database"
@@ -128,7 +129,6 @@ Loader {
                 }
 
                 ////////////////
-
                 Item {
                     height: 48
                     anchors.left: parent.left
@@ -196,7 +196,6 @@ Loader {
                 }
 
                 ////////////////
-
                 SectionTitle {
                     anchors.left: parent.left
                     text: "Log"
@@ -204,7 +203,6 @@ Loader {
                 }
 
                 ////////////////
-
                 Rectangle {
                     anchors.left: parent.left
                     anchors.right: parent.right

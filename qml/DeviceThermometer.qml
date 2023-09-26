@@ -3,7 +3,11 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 import DeviceUtils 1.0
-import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+import "components_js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 
 Loader {
     id: deviceThermometer
@@ -11,12 +15,14 @@ Loader {
     property var currentDevice: null
 
     ////////
-
     function loadDevice(clickedDevice) {
         // set device
-        if (typeof clickedDevice === "undefined" || !clickedDevice) return
-        if (!clickedDevice.isThermometer) return
-        if (clickedDevice === currentDevice) return
+        if (typeof clickedDevice === "undefined" || !clickedDevice)
+            return
+        if (!clickedDevice.isThermometer)
+            return
+        if (clickedDevice === currentDevice)
+            return
         currentDevice = clickedDevice
 
         // load screen
@@ -28,14 +34,12 @@ Loader {
     }
 
     ////////
-
     function backAction() {
         if (deviceThermometer.status === Loader.Ready)
             deviceThermometer.item.backAction()
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     active: false
     asynchronous: false
 
@@ -48,20 +52,29 @@ Loader {
 
         // 1: single column (single column view or portrait tablet)
         // 2: wide mode (wide view)
-        property int uiMode: (singleColumn || (isTablet && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
+        property int uiMode: (singleColumn
+                              || (isTablet
+                                  && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
 
         property alias thermoChart: graphLoader.item
 
         property string cccc: headerUnicolor ? Theme.colorHeaderContent : "white"
 
         ////////
-
         Connections {
             target: currentDevice
-            function onSensorUpdated() { updateHeader() }
-            function onSensorsUpdated() { updateHeader() }
-            function onCapabilitiesUpdated() { updateHeader() }
-            function onStatusUpdated() { updateHeader() }
+            function onSensorUpdated() {
+                updateHeader()
+            }
+            function onSensorsUpdated() {
+                updateHeader()
+            }
+            function onCapabilitiesUpdated() {
+                updateHeader()
+            }
+            function onStatusUpdated() {
+                updateHeader()
+            }
             function onDataUpdated() {
                 updateData()
             }
@@ -100,9 +113,7 @@ Loader {
                 swipeBox.currentIndex = 1
             }
             // mobile only
-            function onRightMenuClicked() {
-                //
-            }
+            function onRightMenuClicked() {}
         }
 
         Timer {
@@ -112,29 +123,29 @@ Loader {
             onTriggered: updateStatusText()
         }
 
-        Keys.onPressed: (event) => {
-            if (event.key === Qt.Key_Left) {
-                event.accepted = true
-                if (swipeBox.currentIndex > 0)
-                    swipeBox.currentIndex--
-            } else if (event.key === Qt.Key_Right) {
-                event.accepted = true
-                if (swipeBox.currentIndex+1 < swipeBox.count)
-                    swipeBox.currentIndex++
-            } else if (event.key === Qt.Key_F5) {
-                event.accepted = true
-                deviceManager.updateDevice(currentDevice.deviceAddress)
-            } else if (event.key === Qt.Key_Backspace) {
-                event.accepted = true
-                backAction()
-            }
-        }
+        Keys.onPressed: event => {
+                            if (event.key === Qt.Key_Left) {
+                                event.accepted = true
+                                if (swipeBox.currentIndex > 0)
+                                swipeBox.currentIndex--
+                            } else if (event.key === Qt.Key_Right) {
+                                event.accepted = true
+                                if (swipeBox.currentIndex + 1 < swipeBox.count)
+                                swipeBox.currentIndex++
+                            } else if (event.key === Qt.Key_F5) {
+                                event.accepted = true
+                                deviceManager.updateDevice(
+                                    currentDevice.deviceAddress)
+                            } else if (event.key === Qt.Key_Backspace) {
+                                event.accepted = true
+                                backAction()
+                            }
+                        }
 
         ////////
-
         function loadDevice() {
-            //console.log("DeviceThermometer // loadDevice() >> " + currentDevice)
 
+            //console.log("DeviceThermometer // loadDevice() >> " + currentDevice)
             sensorTemp.visible = false
             sensorHygro.visible = false
             heatIndex.visible = false
@@ -160,8 +171,10 @@ Loader {
         }
 
         function updateHeader() {
-            if (typeof currentDevice === "undefined" || !currentDevice) return
-            if (!currentDevice.isThermometer) return
+            if (typeof currentDevice === "undefined" || !currentDevice)
+                return
+            if (!currentDevice.isThermometer)
+                return
             //console.log("DeviceThermometer // updateHeader() >> " + currentDevice)
 
             // Status
@@ -169,10 +182,12 @@ Loader {
         }
 
         function updateData() {
-            if (typeof currentDevice === "undefined" || !currentDevice) return
-            if (!currentDevice.isThermometer) return
-            //console.log("DeviceThermometer // updateData() >> " + currentDevice)
+            if (typeof currentDevice === "undefined" || !currentDevice)
+                return
+            if (!currentDevice.isThermometer)
+                return
 
+            //console.log("DeviceThermometer // updateData() >> " + currentDevice)
             if (currentDevice.temperatureC < -40) {
                 sensorDisconnected.visible = true
 
@@ -181,23 +196,28 @@ Loader {
                 heatIndex.visible = false
                 dewPoint.visible = false
                 imageBattery.visible = false
-
             } else {
                 sensorDisconnected.visible = false
 
-                if (currentDevice.hasTemperatureSensor && currentDevice.temperatureC >= -40) {
+                if (currentDevice.hasTemperatureSensor
+                        && currentDevice.temperatureC >= -40) {
                     sensorTemp.text = currentDevice.getTempString()
                     sensorTemp.visible = true
                 }
 
                 if (currentDevice.hasHumiditySensor) {
-                    if (currentDevice.humidity >= 0 && currentDevice.humidity <= 100) {
-                        sensorHygro.text = currentDevice.humidity.toFixed(0) + "% " + qsTr("humidity")
+                    if (currentDevice.humidity >= 0
+                            && currentDevice.humidity <= 100) {
+                        sensorHygro.text = currentDevice.humidity.toFixed(
+                                    0) + "% " + qsTr("humidity")
                         sensorHygro.visible = true
 
-                        if (currentDevice.temperatureC >= 27 && currentDevice.humidity >= 40) {
-                            if (currentDevice.getHeatIndex() > (currentDevice.temperature + 1)) {
-                                heatIndex.text = qsTr("feels like %1").arg(currentDevice.getHeatIndexString())
+                        if (currentDevice.temperatureC >= 27
+                                && currentDevice.humidity >= 40) {
+                            if (currentDevice.getHeatIndex(
+                                        ) > (currentDevice.temperature + 1)) {
+                                heatIndex.text = qsTr("feels like %1").arg(
+                                            currentDevice.getHeatIndexString())
                                 heatIndex.visible = true
                             } else {
                                 heatIndex.visible = false
@@ -207,38 +227,47 @@ Loader {
                         }
 
                         if (currentDevice.deviceIsOutside) {
-                            dewPoint.text = qsTr("dew point %1").arg(currentDevice.getDewPointString())
+                            dewPoint.text = qsTr("dew point %1").arg(
+                                        currentDevice.getDewPointString())
                             dewPoint.visible = true
                         }
                     }
                 }
 
-                if (currentDevice.hasBattery && currentDevice.deviceBattery >= 0) {
+                if (currentDevice.hasBattery
+                        && currentDevice.deviceBattery >= 0) {
                     imageBattery.visible = true
                 }
             }
         }
 
         function updateStatusText() {
-            if (typeof currentDevice === "undefined" || !currentDevice) return
-            if (!currentDevice.isThermometer) return
+            if (typeof currentDevice === "undefined" || !currentDevice)
+                return
+            if (!currentDevice.isThermometer)
+                return
             //console.log("DeviceThermometer // updateStatusText() >> " + currentDevice)
 
             // Status
-            textStatus.text = UtilsDeviceSensors.getDeviceStatusText(currentDevice.status)
+            textStatus.text = UtilsDeviceSensors.getDeviceStatusText(
+                        currentDevice.status)
 
-            if (currentDevice.status === DeviceUtils.DEVICE_OFFLINE &&
-                (currentDevice.isDataFresh_rt() || currentDevice.isDataToday())) {
+            if (currentDevice.status === DeviceUtils.DEVICE_OFFLINE
+                    && (currentDevice.isDataFresh_rt()
+                        || currentDevice.isDataToday())) {
                 if (currentDevice.lastUpdateMin <= 1)
                     textStatus.text = qsTr("Synced")
                 else
-                    textStatus.text = qsTr("Synced %1 ago").arg(currentDevice.lastUpdateStr)
+                    textStatus.text = qsTr("Synced %1 ago").arg(
+                                currentDevice.lastUpdateStr)
             }
         }
 
         function loadGraph() {
-            var reload = !(settingsManager.graphThermometer === "lines" && graphLoader.source === "ChartPlantDataAio.qml") ||
-                         !(settingsManager.graphThermometer === "minmax" && graphLoader.source === "ChartThermometerMinMax.qml")
+            var reload = !(settingsManager.graphThermometer === "lines"
+                           && graphLoader.source === "ChartPlantDataAio.qml")
+                    || !(settingsManager.graphThermometer === "minmax"
+                         && graphLoader.source === "ChartThermometerMinMax.qml")
 
             if (reload) {
                 graphLoader.source = ""
@@ -260,13 +289,14 @@ Loader {
         }
 
         function updateGraph() {
-            if (graphLoader.status === Loader.Ready) thermoChart.updateGraph()
+            if (graphLoader.status === Loader.Ready)
+                thermoChart.updateGraph()
         }
 
         ////////
-
         function backAction() {
-            if (swipeBox.currentIndex === 0) { // data
+            if (swipeBox.currentIndex === 0) {
+                // data
                 if (textInputLocation.focus) {
                     textInputLocation.focus = false
                     return
@@ -277,7 +307,8 @@ Loader {
                 }
             }
 
-            if (swipeBox.currentIndex === 1) { // settings
+            if (swipeBox.currentIndex === 1) {
+                // settings
                 if (isMobile) {
                     swipeBox.currentIndex = 0
                     return
@@ -288,23 +319,27 @@ Loader {
         }
 
         function isHistoryMode() {
-            if (graphLoader.status === Loader.Ready) return thermoChart.isIndicator()
+            if (graphLoader.status === Loader.Ready)
+                return thermoChart.isIndicator()
             return false
         }
         function resetHistoryMode() {
-            if (graphLoader.status === Loader.Ready) thermoChart.resetIndicator()
+            if (graphLoader.status === Loader.Ready)
+                thermoChart.resetIndicator()
         }
 
         ////////////////////////////////////////////////////////////////////////
-
         Flow {
             anchors.fill: parent
 
             Rectangle {
                 id: headerBox
 
-                property int dimboxw: Math.min(deviceThermometer.width * 0.4, isPhone ? 320 : 600)
-                property int dimboxh: Math.max(deviceThermometer.height * 0.333, isPhone ? 180 : 256)
+                property int dimboxw: Math.min(deviceThermometer.width * 0.4,
+                                               isPhone ? 320 : 600)
+                property int dimboxh: Math.max(
+                                          deviceThermometer.height * 0.333,
+                                          isPhone ? 180 : 256)
 
                 width: (uiMode === 1) ? parent.width : dimboxw
                 height: (uiMode === 1) ? dimboxh : parent.height
@@ -312,7 +347,9 @@ Loader {
                 color: Theme.colorHeader
                 z: 5
 
-                MouseArea { anchors.fill: parent } // prevent clicks below this area
+                MouseArea {
+                    anchors.fill: parent
+                } // prevent clicks below this area
 
                 Column {
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -347,7 +384,10 @@ Loader {
                         opacity: 0.8
                     }
 
-                    Item { width: 1; height: 1; } // spacer
+                    Item {
+                        width: 1
+                        height: 1
+                    } // spacer
 
                     Text {
                         id: heatIndex
@@ -373,14 +413,14 @@ Loader {
                         rotation: 90
                         anchors.horizontalCenter: parent.horizontalCenter
 
-                        source: UtilsDeviceSensors.getDeviceBatteryIcon(currentDevice.deviceBattery)
+                        source: UtilsDeviceSensors.getDeviceBatteryIcon(
+                                    currentDevice.deviceBattery)
                         fillMode: Image.PreserveAspectCrop
                         color: cccc
                     }
                 }
 
                 ////////
-
                 Row {
                     id: status
                     anchors.left: parent.left
@@ -416,7 +456,6 @@ Loader {
                 }
 
                 ////////
-
                 Row {
                     id: itemLocation
                     anchors.bottom: parent.bottom
@@ -438,7 +477,7 @@ Loader {
 
                         background: Rectangle {
                             color: $Colors.white
-                            radius: height/2
+                            radius: height / 2
                         }
 
                         text: currentDevice ? currentDevice.deviceLocationName : ""
@@ -447,7 +486,7 @@ Loader {
                             focus = false
                         }
                         Component.onCompleted: {
-                            if(text === "") {
+                            if (text === "") {
                                 forceActiveFocus()
                             }
                         }
@@ -463,10 +502,10 @@ Loader {
                             hoverEnabled: true
                             propagateComposedEvents: true
 
-                            onPressed: (mouse) => {
-                                textInputLocation.forceActiveFocus()
-                                mouse.accepted = false
-                            }
+                            onPressed: mouse => {
+                                           textInputLocation.forceActiveFocus()
+                                           mouse.accepted = false
+                                       }
                         }
                     }
                     IconSvg {
@@ -486,7 +525,6 @@ Loader {
                 }
 
                 ////////
-
                 Rectangle {
                     anchors.top: parent.top
                     anchors.right: parent.right
@@ -510,16 +548,17 @@ Loader {
             }
 
             ////////////////
-
             SwipeView {
                 id: swipeBox
 
                 width: {
-                    if (isTablet && screenOrientation == Qt.PortraitOrientation) return parent.width
+                    if (isTablet && screenOrientation == Qt.PortraitOrientation)
+                        return parent.width
                     return singleColumn ? parent.width : (parent.width - headerBox.width)
                 }
                 height: {
-                    if (isTablet && screenOrientation == Qt.PortraitOrientation) return (parent.height - headerBox.height)
+                    if (isTablet && screenOrientation == Qt.PortraitOrientation)
+                        return (parent.height - headerBox.height)
                     return singleColumn ? (parent.height - headerBox.height) : parent.height
                 }
 
@@ -564,7 +603,11 @@ Loader {
                         anchors.bottom: parent.bottom
 
                         opacity: 0
-                        Behavior on opacity { OpacityAnimator { duration: (graphLoader.status === Loader.Ready) ? 200 : 0 } }
+                        Behavior on opacity {
+                            OpacityAnimator {
+                                duration: (graphLoader.status === Loader.Ready) ? 200 : 0
+                            }
+                        }
 
                         asynchronous: true
                         onLoaded: {
@@ -572,7 +615,9 @@ Loader {
                             thermoChart.updateGraph()
 
                             graphLoader.opacity = 1
-                            noDataIndicator.visible = (currentDevice.countDataNamed("temperature", thermoChart.daysVisible) < 1)
+                            noDataIndicator.visible = (currentDevice.countDataNamed(
+                                                           "temperature",
+                                                           thermoChart.daysVisible) < 1)
                         }
                     }
                 }

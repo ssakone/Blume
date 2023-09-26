@@ -2,6 +2,11 @@ import QtQuick
 
 import ThemeEngine 1.0
 
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+
 Rectangle {
     id: rectangleHeaderBar
     width: parent.width
@@ -10,71 +15,79 @@ Rectangle {
     color: Theme.colorHeader
 
     // prevent clicks below this area
-    MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.AllButtons
+    }
 
     property int headerHeight: 52
     property string title: "Blume"
 
     ////////////////////////////////////////////////////////////////////////////
-
     property string leftMenuMode: "drawer" // drawer / back / close
-    signal leftMenuClicked()
+    signal leftMenuClicked
 
     onLeftMenuModeChanged: {
         if (leftMenuMode === "drawer")
             leftMenuImg.source = "qrc:/assets/icons_material/baseline-menu-24px.svg"
         else if (leftMenuMode === "close")
             leftMenuImg.source = "qrc:/assets/icons_material/baseline-close-24px.svg"
-        else // back
+        else
+            // back
             leftMenuImg.source = "qrc:/assets/icons_material/baseline-arrow_back-24px.svg"
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     property string rightMenuMode: "off" // on / off
-    signal rightMenuClicked()
+    signal rightMenuClicked
 
-    function rightMenuIsOpen() { return actionMenu.visible; }
-    function rightMenuClose() { actionMenu.close(); }
+    function rightMenuIsOpen() {
+        return actionMenu.visible
+    }
+    function rightMenuClose() {
+        actionMenu.close()
+    }
 
-    signal deviceRebootButtonClicked()
-    signal deviceCalibrateButtonClicked()
-    signal deviceWateringButtonClicked()
-    signal deviceLedButtonClicked()
-    signal deviceRefreshButtonClicked()
-    signal deviceRefreshRealtimeButtonClicked()
-    signal deviceRefreshHistoryButtonClicked()
-    signal deviceClearButtonClicked()
-    signal deviceDataButtonClicked() // compatibility
-    signal deviceHistoryButtonClicked() // compatibility
-    signal devicePlantButtonClicked() // compatibility
-    signal deviceSettingsButtonClicked() // compatibility
+    signal deviceRebootButtonClicked
+    signal deviceCalibrateButtonClicked
+    signal deviceWateringButtonClicked
+    signal deviceLedButtonClicked
+    signal deviceRefreshButtonClicked
+    signal deviceRefreshRealtimeButtonClicked
+    signal deviceRefreshHistoryButtonClicked
+    signal deviceClearButtonClicked
+    signal deviceDataButtonClicked
+    // compatibility
+    signal deviceHistoryButtonClicked
+    // compatibility
+    signal devicePlantButtonClicked
+    // compatibility
+    signal deviceSettingsButtonClicked
 
-    function setActiveDeviceData() { } // compatibility
-    function setActiveDeviceHistory() { } // compatibility
-    function setActiveDevicePlant() { } // compatibility
-    function setActiveDeviceSettings() { } // compatibility
+    // compatibility
+    function setActiveDeviceData() {} // compatibility
+    function setActiveDeviceHistory() {} // compatibility
+    function setActiveDevicePlant() {} // compatibility
+    function setActiveDeviceSettings() {} // compatibility
 
     ////////////////////////////////////////////////////////////////////////////
-
     ActionMenuFixed {
         id: actionMenu
 
         x: parent.width - actionMenu.width - 12
         y: screenPaddingStatusbar + screenPaddingNotch + 16
 
-        onMenuSelected: (index) => {
-            //console.log("ActionMenu clicked #" + index)
-        }
+        onMenuSelected: index => {//console.log("ActionMenu clicked #" + index)
+                        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Item {
         anchors.fill: parent
         anchors.topMargin: screenPaddingStatusbar + screenPaddingNotch
 
-        MouseArea { // left button
+        MouseArea {
+            // left button
             id: leftArea
             width: headerHeight
             height: headerHeight
@@ -97,7 +110,8 @@ Rectangle {
             }
         }
 
-        Text { // title
+        Text {
+            // title
             height: parent.height
             anchors.left: parent.left
             anchors.leftMargin: 64
@@ -112,8 +126,8 @@ Rectangle {
         }
 
         ////////////
-
-        Row { // right area
+        Row {
+            // right area
             id: menu
             anchors.top: parent.top
             anchors.right: parent.right
@@ -123,18 +137,20 @@ Rectangle {
             spacing: 4
             visible: true
 
-            Item { // right indicators
+            Item {
+                // right indicators
                 width: parent.height
                 height: width
                 anchors.verticalCenter: parent.verticalCenter
-                visible: (appContent.state !== "Tutorial" &&
-                          appContent.state !== "DevicePlantSensor" &&
-                          appContent.state !== "DeviceThermometer" &&
-                          appContent.state !== "DeviceEnvironmental")
+                visible: (appContent.state !== "Tutorial"
+                          && appContent.state !== "DevicePlantSensor"
+                          && appContent.state !== "DeviceThermometer"
+                          && appContent.state !== "DeviceEnvironmental")
 
                 IconSvg {
                     id: workingIndicator
-                    width: 24; height: 24;
+                    width: 24
+                    height: 24
                     anchors.centerIn: parent
 
                     source: {
@@ -149,39 +165,55 @@ Rectangle {
                     }
                     color: Theme.colorHeaderContent
                     opacity: 0
-                    Behavior on opacity { OpacityAnimator { duration: 333 } }
+                    Behavior on opacity {
+                        OpacityAnimator {
+                            duration: 333
+                        }
+                    }
 
-                    NumberAnimation on rotation { // refreshAnimation (rotate)
+                    NumberAnimation on rotation {
+                        // refreshAnimation (rotate)
                         from: 0
                         to: 360
                         duration: 2000
                         loops: Animation.Infinite
                         easing.type: Easing.Linear
-                        running: (deviceManager.updating && !deviceManager.scanning && !deviceManager.syncing)
+                        running: (deviceManager.updating
+                                  && !deviceManager.scanning
+                                  && !deviceManager.syncing)
                         alwaysRunToEnd: true
                         onStarted: workingIndicator.opacity = 1
                         onStopped: workingIndicator.opacity = 0
                     }
-                    SequentialAnimation on opacity { // scanAnimation (fade)
+                    SequentialAnimation on opacity {
+                        // scanAnimation (fade)
                         loops: Animation.Infinite
-                        running: (deviceManager.scanning || deviceManager.listening || deviceManager.syncing)
+                        running: (deviceManager.scanning
+                                  || deviceManager.listening
+                                  || deviceManager.syncing)
                         onStopped: workingIndicator.opacity = 0
-                        PropertyAnimation { to: 1; duration: 750; }
-                        PropertyAnimation { to: 0.33; duration: 750; }
+                        PropertyAnimation {
+                            to: 1
+                            duration: 750
+                        }
+                        PropertyAnimation {
+                            to: 0.33
+                            duration: 750
+                        }
                     }
                 }
             }
 
             ////////////
-
-            MouseArea { // right button
+            MouseArea {
+                // right button
                 width: headerHeight
                 height: headerHeight
 
-                visible: (deviceManager.bluetooth &&
-                          (appContent.state === "DevicePlantSensor" ||
-                           appContent.state === "DeviceThermometer" ||
-                           appContent.state === "DeviceEnvironmental"))
+                visible: (deviceManager.bluetooth
+                          && (appContent.state === "DevicePlantSensor"
+                              || appContent.state === "DeviceThermometer"
+                              || appContent.state === "DeviceEnvironmental"))
 
                 onClicked: {
                     rightMenuClicked()

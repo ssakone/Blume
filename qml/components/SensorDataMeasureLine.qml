@@ -2,7 +2,8 @@ import QtQuick
 import QtQuick.Controls
 import ThemeEngine
 import QtQuick.Layouts
-import "../components_generic"
+import "../components_generic/"
+import "../components_themed/"
 
 Rectangle {
     id: root
@@ -49,14 +50,14 @@ Rectangle {
         anchors {
             right: parent.right
             rightMargin: 20
-//            left: parent.left
-//            leftMargin: (2*root.width)/3
+            //            left: parent.left
+            //            leftMargin: (2*root.width)/3
             verticalCenter: parent.verticalCenter
         }
 
         spacing: 5
 
-        Item  {
+        Item {
             width: parent.width
             height: _row.height
 
@@ -65,7 +66,8 @@ Rectangle {
                 anchors.right: parent.right
                 Label {
                     text: value.toFixed(1)
-                    color: (valueMin <= value && value <= valueMax) ? $Colors.green400 : $Colors.red400
+                    color: (valueMin <= value
+                            && value <= valueMax) ? $Colors.green400 : $Colors.red400
                     font {
                         pixelSize: 24
                     }
@@ -79,7 +81,6 @@ Rectangle {
             }
         }
 
-
         Label {
             text: valueMin + ' - ' + valueMax + ' (' + suffix + ')'
             font {
@@ -88,6 +89,4 @@ Rectangle {
             }
         }
     }
-
-
 }

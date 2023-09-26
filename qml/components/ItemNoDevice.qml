@@ -3,12 +3,14 @@ import QtQuick.Controls
 import ThemeEngine 1.0
 import QtQuick.Layouts
 
+import "../components_generic/"
+import "../components_themed/"
+
 Item {
     id: itemNoDevice
     property bool hasLaunchedScanOnce: false
 
     ////////////////////////////////////////////////////////////////////////////
-
     Timer {
         id: retryScan
         interval: 333
@@ -25,7 +27,8 @@ Item {
             } else {
                 deviceManager.scanDevices_start()
             }
-        } else console.warn("deviceManager.updating")
+        } else
+            console.warn("deviceManager.updating")
     }
 
     function stop() {
@@ -33,7 +36,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     ColumnLayout {
         id: column
         anchors.top: parent.top
@@ -49,7 +51,8 @@ Item {
                 id: _insideCol
                 width: parent.width
 
-                IconSvg { // imageSearch
+                IconSvg {
+                    // imageSearch
                     width: parent.width
                     height: width
                     anchors.leftMargin: 32
@@ -58,16 +61,22 @@ Item {
 
                     source: deviceManager.scanning ? "qrc:/assets/icons_custom/radar-sensors.svg" : "qrc:/assets/img/scan-in-salon.svg"
                     fillMode: Image.PreserveAspectFit
-                    //color: $Colors.colorPrimary
 
+                    //color: $Colors.colorPrimary
                     SequentialAnimation on opacity {
                         id: scanAnimation
                         loops: Animation.Infinite
                         running: deviceManager.scanning
                         alwaysRunToEnd: true
 
-                        PropertyAnimation { to: 0.33; duration: 750; }
-                        PropertyAnimation { to: 1; duration: 750; }
+                        PropertyAnimation {
+                            to: 0.33
+                            duration: 750
+                        }
+                        PropertyAnimation {
+                            to: 1
+                            duration: 750
+                        }
                     }
                 }
 
@@ -82,21 +91,23 @@ Item {
                         leftPadding: 32
                         rightPadding: leftPadding
                         width: parent.width - 64
-
                     }
                     Column {
                         spacing: 24
-                        width: parent.width - parent.leftPadding*2
+                        width: parent.width - parent.leftPadding * 2
                         ////////
                         Column {
                             width: parent.width
-                            visible: (Qt.platform.os === "android" || Qt.platform.os === "ios")
+                            visible: (Qt.platform.os === "android"
+                                      || Qt.platform.os === "ios")
                             spacing: 4
 
                             Text {
                                 anchors.left: parent.left
                                 anchors.right: parent.right
-                                visible: (Qt.platform.os === "android" && !utilsApp.checkMobileBleLocationPermission())
+                                visible: (Qt.platform.os === "android"
+                                          && !utilsApp.checkMobileBleLocationPermission(
+                                              ))
 
                                 text: qsTr("Authorization to use Location is required to connect to the sensors </b>.")
                                 textFormat: Text.StyledText
@@ -135,26 +146,25 @@ Item {
 
                         ////////
 
-//                        Text {
-//                            id: labelNoDeviceFound
-//                            text: qsTr("Aucun capteurs détectés")
-//                            color: $Colors.colorSecondary
-//                            font.weight: Font.DemiBold
-//                            font.pixelSize: 18
-//                            anchors.horizontalCenter: parent.horizontalCenter
-//                            visible: hasLaunchedScanOnce && deviceManager.scanning
-//                            onVisibleChanged: {
-//                                console.log("Visilituy cnahfes ", visible, " --* ",  hasLaunchedScanOnce, !deviceManager.scanning)
-//                                if(visible) timerNoDeviceFound.start()
-//                            }
+                        //                        Text {
+                        //                            id: labelNoDeviceFound
+                        //                            text: qsTr("Aucun capteurs détectés")
+                        //                            color: $Colors.colorSecondary
+                        //                            font.weight: Font.DemiBold
+                        //                            font.pixelSize: 18
+                        //                            anchors.horizontalCenter: parent.horizontalCenter
+                        //                            visible: hasLaunchedScanOnce && deviceManager.scanning
+                        //                            onVisibleChanged: {
+                        //                                console.log("Visilituy cnahfes ", visible, " --* ",  hasLaunchedScanOnce, !deviceManager.scanning)
+                        //                                if(visible) timerNoDeviceFound.start()
+                        //                            }
 
-//                            Timer {
-//                                id: timerNoDeviceFound
-//                                interval: 3000
-//                                onTriggered: labelNoDeviceFound.visible = false
-//                            }
-//                        }
-
+                        //                            Timer {
+                        //                                id: timerNoDeviceFound
+                        //                                interval: 3000
+                        //                                onTriggered: labelNoDeviceFound.visible = false
+                        //                            }
+                        //                        }
                         NiceButton {
                             id: btn2
                             width: parent.width
@@ -170,12 +180,12 @@ Item {
                             leftPadding: 20
                             rightPadding: leftPadding
                             onClicked: {
-//                                if (utilsApp.checkMobileBleLocationPermission()) {
-//                                    scan()
-//                                } else {
-//                                    utilsApp.getMobileBleLocationPermission()
-//                                    retryScan.start()
-//                                }
+                                //                                if (utilsApp.checkMobileBleLocationPermission()) {
+                                //                                    scan()
+                                //                                } else {
+                                //                                    utilsApp.getMobileBleLocationPermission()
+                                //                                    retryScan.start()
+                                //                                }
                                 page_view.push(navigator.deviceScannerPage)
                             }
                         }
@@ -195,12 +205,11 @@ Item {
                                 padding: 10
                                 leftPadding: 20
                                 rightPadding: leftPadding
-                                width: parent.width - leftPadding*2
+                                width: parent.width - leftPadding * 2
                                 wrapMode: Text.Wrap
                                 anchors.verticalCenter: parent.verticalCenter
                                 horizontalAlignment: Text.AlignHCenter
                             }
-
                         }
 
                         NiceButton {
@@ -221,7 +230,6 @@ Item {
                         }
 
                         ////////
-
                         Text {
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -310,8 +318,10 @@ Item {
                                 delegate: DeviceWidget {
                                     width: parent.width
                                     height: 100
-                                    bigAssMode: (!isHdpi || (isTablet && width >= 480))
-                                    singleColumn: (appWindow.singleColumn || devicesView.cellColumnsTarget === 1)
+                                    bigAssMode: (!isHdpi || (isTablet
+                                                             && width >= 480))
+                                    singleColumn: (appWindow.singleColumn
+                                                   || devicesView.cellColumnsTarget === 1)
                                 }
                             }
                         }
@@ -323,13 +333,8 @@ Item {
 
                         ////////
                     }
-
                 }
-
-
             }
         }
-
     }
-
 }

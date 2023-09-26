@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Controls
 
 import ThemeEngine 1.0
+import "../components_generic/"
+import "../components_themed/"
 
 Popup {
     id: actionMenu
@@ -16,15 +18,28 @@ Popup {
     focus: isMobile
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 133; } }
-    exit: Transition { NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 133; } }
+    enter: Transition {
+        NumberAnimation {
+            property: "opacity"
+            from: 0.0
+            to: 1.0
+            duration: 133
+        }
+    }
+    exit: Transition {
+        NumberAnimation {
+            property: "opacity"
+            from: 1.0
+            to: 0.0
+            duration: 133
+        }
+    }
 
     property int layoutDirection: Qt.RightToLeft
 
     signal menuSelected(var index)
 
     ////////////////////////////////////////////////////////////////////////////
-
     background: Rectangle {
         color: Theme.colorBackground
         radius: Theme.componentRadius
@@ -33,7 +48,6 @@ Popup {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Column {
         anchors.left: parent.left
         anchors.right: parent.right
@@ -43,7 +57,6 @@ Popup {
         spacing: 4
 
         ////////
-
         ActionMenuItem {
             id: actionUpdate
 
@@ -51,7 +64,9 @@ Popup {
             text: qsTr("Update data")
             source: "qrc:/assets/icons_material/baseline-refresh-24px.svg"
             layoutDirection: actionMenu.layoutDirection
-            visible: (deviceManager.bluetooth && (selectedDevice && selectedDevice.hasBluetoothConnection))
+            visible: (deviceManager.bluetooth
+                      && (selectedDevice
+                          && selectedDevice.hasBluetoothConnection))
 
             onClicked: {
                 deviceRefreshButtonClicked()
@@ -67,7 +82,8 @@ Popup {
             text: qsTr("Real time data")
             source: "qrc:/assets/icons_material/duotone-update-24px.svg"
             layoutDirection: actionMenu.layoutDirection
-            visible: (deviceManager.bluetooth && (selectedDevice && selectedDevice.hasRealTime))
+            visible: (deviceManager.bluetooth
+                      && (selectedDevice && selectedDevice.hasRealTime))
 
             onClicked: {
                 deviceRefreshRealtimeButtonClicked()
@@ -77,11 +93,12 @@ Popup {
         }
 
         ////////
-
         Rectangle {
-            width: parent.width; height: 1;
+            width: parent.width
+            height: 1
             color: Theme.colorSeparator
-            visible: (deviceManager.bluetooth && (selectedDevice && selectedDevice.hasHistory))
+            visible: (deviceManager.bluetooth && (selectedDevice
+                                                  && selectedDevice.hasHistory))
         }
 
         ActionMenuItem {
@@ -91,7 +108,8 @@ Popup {
             text: qsTr("Update history")
             source: "qrc:/assets/icons_material/duotone-date_range-24px.svg"
             layoutDirection: actionMenu.layoutDirection
-            visible: (deviceManager.bluetooth && (selectedDevice && selectedDevice.hasHistory))
+            visible: (deviceManager.bluetooth && (selectedDevice
+                                                  && selectedDevice.hasHistory))
 
             onClicked: {
                 deviceRefreshHistoryButtonClicked()
@@ -107,7 +125,8 @@ Popup {
             text: qsTr("Clear history")
             source: "qrc:/assets/icons_material/duotone-date_clear-24px.svg"
             layoutDirection: actionMenu.layoutDirection
-            visible: (deviceManager.bluetooth && (selectedDevice && selectedDevice.hasHistory))
+            visible: (deviceManager.bluetooth && (selectedDevice
+                                                  && selectedDevice.hasHistory))
 
             onClicked: {
                 deviceClearButtonClicked()
@@ -117,11 +136,12 @@ Popup {
         }
 
         ////////
-
         Rectangle {
-            width: parent.width; height: 1;
+            width: parent.width
+            height: 1
             color: Theme.colorSeparator
-            visible: (actionLed.visible || actionWatering.visible || actionGraphMode.visible)
+            visible: (actionLed.visible || actionWatering.visible
+                      || actionGraphMode.visible)
         }
 
         ActionMenuItem {
@@ -131,7 +151,8 @@ Popup {
             text: qsTr("Blink LED")
             source: "qrc:/assets/icons_material/duotone-emoji_objects-24px.svg"
             layoutDirection: actionMenu.layoutDirection
-            visible: (deviceManager.bluetooth && (selectedDevice && selectedDevice.hasLED))
+            visible: (deviceManager.bluetooth && (selectedDevice
+                                                  && selectedDevice.hasLED))
 
             onClicked: {
                 deviceLedButtonClicked()
@@ -147,7 +168,8 @@ Popup {
             text: qsTr("Watering")
             source: "qrc:/assets/icons_material/duotone-local_drink-24px.svg"
             layoutDirection: actionMenu.layoutDirection
-            visible: (deviceManager.bluetooth && (selectedDevice && selectedDevice.hasWaterTank))
+            visible: (deviceManager.bluetooth
+                      && (selectedDevice && selectedDevice.hasWaterTank))
 
             onClicked: {
                 deviceWateringButtonClicked()
@@ -163,7 +185,8 @@ Popup {
             text: qsTr("Calibrate sensor")
             source: "qrc:/assets/icons_material/duotone-model_training-24px.svg"
             layoutDirection: actionMenu.layoutDirection
-            visible: (deviceManager.bluetooth && (selectedDevice && selectedDevice.hasCalibration))
+            visible: (deviceManager.bluetooth
+                      && (selectedDevice && selectedDevice.hasCalibration))
 
             onClicked: {
                 deviceCalibrateButtonClicked()
@@ -177,13 +200,16 @@ Popup {
 
             index: 16
             text: qsTr("Switch graph")
-            source: (settingsManager.graphThermometer === "minmax") ? "qrc:/assets/icons_material/duotone-insert_chart-24px.svg" : "qrc:/assets/icons_material/baseline-timeline-24px.svg"
+            source: (settingsManager.graphThermometer
+                     === "minmax") ? "qrc:/assets/icons_material/duotone-insert_chart-24px.svg" : "qrc:/assets/icons_material/baseline-timeline-24px.svg"
             layoutDirection: actionMenu.layoutDirection
             visible: (appContent.state === "DeviceThermometer")
 
             onClicked: {
-                if (settingsManager.graphThermometer === "minmax") settingsManager.graphThermometer = "lines"
-                else settingsManager.graphThermometer = "minmax"
+                if (settingsManager.graphThermometer === "minmax")
+                    settingsManager.graphThermometer = "lines"
+                else
+                    settingsManager.graphThermometer = "minmax"
                 menuSelected(index)
                 close()
             }
@@ -196,7 +222,8 @@ Popup {
             text: qsTr("Sensor infos")
             source: "qrc:/assets/icons_material/duotone-memory-24px.svg"
             layoutDirection: actionMenu.layoutDirection
-            visible: (appContent.state === "DeviceThermometer" || appContent.state === "DeviceEnvironmental")
+            visible: (appContent.state === "DeviceThermometer"
+                      || appContent.state === "DeviceEnvironmental")
 
             onClicked: {
                 deviceSettingsButtonClicked()
@@ -212,7 +239,8 @@ Popup {
             text: qsTr("Reboot sensor")
             source: "qrc:/assets/icons_material/baseline-refresh-24px.svg"
             layoutDirection: actionMenu.layoutDirection
-            visible: (deviceManager.bluetooth && (selectedDevice && selectedDevice.hasReboot))
+            visible: (deviceManager.bluetooth && (selectedDevice
+                                                  && selectedDevice.hasReboot))
 
             onClicked: {
                 deviceRebootButtonClicked()

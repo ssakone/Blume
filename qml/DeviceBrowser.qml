@@ -3,13 +3,17 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+
 Item {
     id: deviceBrowser
     implicitWidth: 480
     implicitHeight: 800
 
     ////////////////////////////////////////////////////////////////////////////
-
     function loadScreen() {
         deviceManager.scanNearby_start()
         appContent.state = "DeviceBrowser"
@@ -31,18 +35,17 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Component {
         id: componentDeviceBrowser_mobile
 
-        Item { // itemDeviceBrowser mobile
+        Item {
+            // itemDeviceBrowser mobile
             anchors.fill: parent
 
             ////////
-
             function backAction() {
                 if (areDeviceClicked()) {
-                    //
+
                 } else {
                     deviceManager.scanNearby_stop()
                     deviceManager.listenDevices_start()
@@ -55,7 +58,6 @@ Item {
             }
 
             ////////
-
             PopupBlacklistDevice {
                 id: confirmBlacklistDevice
             }
@@ -133,18 +135,17 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Component {
         id: componentDeviceBrowser_desktop
 
-        Item { // itemDeviceBrowser desktop
+        Item {
+            // itemDeviceBrowser desktop
             anchors.fill: parent
 
             ////////
-
             function backAction() {
                 if (areDeviceClicked()) {
-                    //
+
                 } else {
                     deviceManager.scanNearby_stop()
                     deviceManager.listenDevices_start()
@@ -157,7 +158,6 @@ Item {
             }
 
             ////////
-
             PopupBlacklistDevice {
                 id: confirmBlacklistDevice
             }
@@ -232,7 +232,6 @@ Item {
             }
 
             ////////////////
-
             Rectangle {
                 id: radar
                 anchors.top: parent.top
@@ -294,9 +293,22 @@ Item {
                     ParallelAnimation {
                         alwaysRunToEnd: true
                         loops: Animation.Infinite
-                        running: (appContent.state === "DeviceBrowser" && deviceManager.listening)
-                        NumberAnimation { target: ra; property: "width"; from: 0; to: radar.width*3; duration: 2500; }
-                        NumberAnimation { target: ra; property: "opacity"; from: 0.85; to: 0; duration: 2500; }
+                        running: (appContent.state === "DeviceBrowser"
+                                  && deviceManager.listening)
+                        NumberAnimation {
+                            target: ra
+                            property: "width"
+                            from: 0
+                            to: radar.width * 3
+                            duration: 2500
+                        }
+                        NumberAnimation {
+                            target: ra
+                            property: "opacity"
+                            from: 0.85
+                            to: 0
+                            duration: 2500
+                        }
                     }
                 }
 
@@ -320,7 +332,6 @@ Item {
                 }
 
                 ////////
-
                 Repeater {
                     anchors.fill: parent
                     anchors.margins: 24
@@ -334,10 +345,12 @@ Item {
                         //property int b: Math.sqrt(Math.pow(c, 2) - Math.pow(a, 2))
 
                         // Using angle
-                        property real alpha: Math.random() * (3.14/2) + (3.14/4)
+                        property real alpha: Math.random(
+                                                 ) * (3.14 / 2) + (3.14 / 4)
                         property real a: c * Math.cos(alpha)
                         property real b: c * Math.sin(alpha)
-                        property real c: radar.height * Math.abs(((boxDevice.rssi)+12) / 100)
+                        property real c: radar.height * Math.abs(
+                                             ((boxDevice.rssi) + 12) / 100)
 
                         x: (radar.width / 2) - a
                         y: radar.height - b
@@ -356,14 +369,21 @@ Item {
                             radius: width
                             z: -1
                             opacity: boxDevice.selected ? 0.5 : 0
-                            Behavior on opacity { OpacityAnimator { duration: 133 } }
+                            Behavior on opacity {
+                                OpacityAnimator {
+                                    duration: 133
+                                }
+                            }
                             color: (Theme.currentTheme === ThemeEngine.THEME_SNOW) ? Theme.colorPrimary : Theme.colorHeader
                         }
 
                         color: {
-                            if (Math.abs(boxDevice.rssi) < 65) return Theme.colorGreen
-                            if (Math.abs(boxDevice.rssi) < 85) return Theme.colorOrange
-                            if (Math.abs(boxDevice.rssi) < 100) return Theme.colorRed
+                            if (Math.abs(boxDevice.rssi) < 65)
+                                return Theme.colorGreen
+                            if (Math.abs(boxDevice.rssi) < 85)
+                                return Theme.colorOrange
+                            if (Math.abs(boxDevice.rssi) < 100)
+                                return Theme.colorRed
                             return Theme.colorRed
                         }
 

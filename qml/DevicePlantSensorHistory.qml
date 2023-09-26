@@ -2,6 +2,11 @@ import QtQuick
 
 import ThemeEngine 1.0
 
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+
 Item {
     id: devicePlantSensorHistory
 
@@ -10,8 +15,10 @@ Item {
     property int offset_day: 0
 
     function loadData() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        if (!currentDevice.isPlantSensor) return
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
+        if (!currentDevice.isPlantSensor)
+            return
         //console.log("DevicePlantSensorHistory // loadData() >> " + currentDevice)
 
         // graph visibility
@@ -22,8 +29,10 @@ Item {
         } else {
             tempChart.visible = false
         }
-        if (currentDevice.hasHumiditySensor || currentDevice.hasSoilMoistureSensor) {
-            if (currentDevice.soilMoisture > 0 || currentDevice.countDataNamed("soilMoisture") > 0) {
+        if (currentDevice.hasHumiditySensor
+                || currentDevice.hasSoilMoistureSensor) {
+            if (currentDevice.soilMoisture > 0 || currentDevice.countDataNamed(
+                        "soilMoisture") > 0) {
                 hygroChart.visible = true
                 graphCount += 1
             } else {
@@ -39,7 +48,8 @@ Item {
             lumiChart.visible = false
         }
         if (currentDevice.hasSoilConductivitySensor) {
-            if (currentDevice.soilConductivity > 0 || currentDevice.countDataNamed("soilConductivity") > 0) {
+            if (currentDevice.soilConductivity > 0
+                    || currentDevice.countDataNamed("soilConductivity") > 0) {
                 conduChart.visible = true
                 graphCount += 1
             } else {
@@ -62,16 +72,20 @@ Item {
     }
 
     function updateHeader() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        if (!currentDevice.isPlantSensor) return
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
+        if (!currentDevice.isPlantSensor)
+            return
         //console.log("DevicePlantSensorHistory // updateHeader() >> " + currentDevice)
     }
 
     function updateData() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        if (!currentDevice.isPlantSensor) return
-        //console.log("DevicePlantSensorHistory // updateData() >> " + currentDevice)
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
+        if (!currentDevice.isPlantSensor)
+            return
 
+        //console.log("DevicePlantSensorHistory // updateData() >> " + currentDevice)
         currentDevice.updateChartData_history_thismonth(31)
         currentDevice.updateChartData_history_today()
     }
@@ -93,13 +107,13 @@ Item {
         graphGrid.resetSelection()
     }
 
-    function updateColors() {
-        //
-    }
+    function updateColors() {}
 
     function updateSize() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        if (!currentDevice.isPlantSensor) return
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
+        if (!currentDevice.isPlantSensor)
+            return
         //console.log("width: " + graphGrid.width)
         //console.log("height: " + graphGrid.height)
 
@@ -117,7 +131,8 @@ Item {
                 }
             }
             if (isTablet) {
-                if (screenOrientation === Qt.PortraitOrientation || width < 480) {
+                if (screenOrientation === Qt.PortraitOrientation
+                        || width < 480) {
                     graphGrid.columns = 1
                 } else {
                     graphGrid.columns = 2
@@ -134,7 +149,8 @@ Item {
                     subHeader.height = 52
                 }
             }
-        } else { // isDesktop
+        } else {
+            // isDesktop
             if (graphGrid.width < 1080) {
                 graphGrid.columns = 1
             } else {
@@ -155,10 +171,12 @@ Item {
 
         // graph size multiplier
         if (graphCount === 3 && graphGrid.columns === 2) {
-            if (currentDevice.hasSoilMoistureSensor && currentDevice.hasDataNamed("soilMoisture")) {
+            if (currentDevice.hasSoilMoistureSensor
+                    && currentDevice.hasDataNamed("soilMoisture")) {
                 hygroChart.duo = 2
                 lumiChart.duo = 1
-            } else if (currentDevice.hasLuminositySensor && currentDevice.hasDataNamed("luminosityLux")) {
+            } else if (currentDevice.hasLuminositySensor
+                       && currentDevice.hasDataNamed("luminosityLux")) {
                 hygroChart.duo = 1
                 lumiChart.duo = 2
             }
@@ -169,7 +187,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Rectangle {
         id: subHeader
         anchors.top: parent.top
@@ -257,10 +274,10 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     property int graphCount: 4
     property int graphWidth: (graphGrid.width / graphGrid.columns)
-    property int graphHeight: (graphGrid.height / Math.ceil(graphCount / graphGrid.columns))
+    property int graphHeight: (graphGrid.height / Math.ceil(
+                                   graphCount / graphGrid.columns))
 
     Flow {
         id: graphGrid
@@ -280,7 +297,8 @@ Item {
         property int barSelectionHours: -1
 
         function hasSelection() {
-            return (barSelectionIndex >= 0 || barSelectionDays >= 0 || barSelectionHours >= 0)
+            return (barSelectionIndex >= 0 || barSelectionDays >= 0
+                    || barSelectionHours >= 0)
         }
         function resetSelection() {
             barSelectionIndex = -1
@@ -289,7 +307,6 @@ Item {
         }
 
         ////////
-
         ChartHistory {
             id: hygroChart
             width: graphWidth * duo
@@ -303,15 +320,15 @@ Item {
             suffix: "%"
             floatprecision: 0
 
-            valueMax: currentDevice.hygroMax*1.2
-            valueMin: currentDevice.hygroMin*0.8
+            valueMax: currentDevice.hygroMax * 1.2
+            valueMin: currentDevice.hygroMin * 0.8
             limitMin: currentDevice.soilMoisture_limitMin
             limitMax: currentDevice.soilMoisture_limitMax
         }
 
         ////////
-
-        ChartHistory { // graph
+        ChartHistory {
+            // graph
             id: conduChart
             width: graphWidth * duo
             height: graphHeight
@@ -324,14 +341,13 @@ Item {
             suffix: " " + "<br>" + qsTr("µs/cm")
             floatprecision: 0
 
-            valueMax: currentDevice.conduMax*1.2
-            valueMin: currentDevice.conduMin*0.8
+            valueMax: currentDevice.conduMax * 1.2
+            valueMin: currentDevice.conduMin * 0.8
             limitMin: currentDevice.soilConductivity_limitMin
             limitMax: currentDevice.soilConductivity_limitMax
         }
 
         ////////
-
         ChartHistory {
             id: tempChart
             width: graphWidth * duo
@@ -345,14 +361,13 @@ Item {
             suffix: "°"
             floatprecision: 1
 
-            valueMax: currentDevice.tempMax*1.2
-            valueMin: currentDevice.tempMin*0.8
+            valueMax: currentDevice.tempMax * 1.2
+            valueMin: currentDevice.tempMin * 0.8
             limitMin: currentDevice.temperature_limitMin
             limitMax: currentDevice.temperature_limitMax
         }
 
         ////////
-
         ChartHistory {
             id: lumiChart
             width: graphWidth * duo
@@ -366,8 +381,8 @@ Item {
             suffix: " " + "<br>" + qsTr("lux")
             floatprecision: 0
 
-            valueMax: currentDevice.luxMax*1.2
-            valueMin: currentDevice.luxMin*0.8
+            valueMax: currentDevice.luxMax * 1.2
+            valueMin: currentDevice.luxMin * 0.8
             limitMin: currentDevice.luminosityLux_limitMin
             limitMax: currentDevice.luminosityLux_limitMax
         }

@@ -1,7 +1,9 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import "../components_generic"
+
+import "../components_generic/"
+import "../components_themed/"
 
 Rectangle {
     width: parent.width - 20
@@ -27,7 +29,7 @@ Rectangle {
                 anchors.leftMargin: 25
 
                 Label {
-                    text: location?.name?? ""
+                    text: location?.name ?? ""
                 }
 
                 Image {
@@ -36,7 +38,6 @@ Rectangle {
                     height: width
                 }
             }
-
 
             Column {
                 anchors.right: parent.right
@@ -57,7 +58,7 @@ Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
                 Label {
-                    text: weatherData?.condition?.text?? ""
+                    text: weatherData?.condition?.text ?? ""
                     color: $Colors.colorPrimary
                     font {
                         pixelSize: 14
@@ -78,7 +79,7 @@ Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
                 Label {
-                    text: weatherData?.precip_mm?? "" + " mm"
+                    text: weatherData?.precip_mm ?? "" + " mm"
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
                 Label {
@@ -116,7 +117,7 @@ Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
                 Label {
-                    text: weatherData?.wind_kph?? "" + "km/h"
+                    text: weatherData?.wind_kph ?? "" + "km/h"
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
                 Label {
@@ -125,7 +126,6 @@ Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
             }
-
         }
     }
 
@@ -138,5 +138,4 @@ Rectangle {
         width: 50
         height: width
     }
-
 }

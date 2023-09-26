@@ -3,19 +3,22 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
+import "../components_generic/"
+import "../components_themed/"
+
 Rectangle {
     id: itemNoDeviceNearby
     anchors.centerIn: parent
     anchors.verticalCenterOffset: 0
 
-    width: singleColumn ? (parent.width*0.5) : (parent.height*0.4)
+    width: singleColumn ? (parent.width * 0.5) : (parent.height * 0.4)
     height: width
     radius: width
     color: Theme.colorForeground
 
     IconSvg {
         anchors.centerIn: parent
-        width: parent.width*0.8
+        width: parent.width * 0.8
         height: width
 
         source: "qrc:/assets/icons_material/baseline-radar-24px.svg"
@@ -36,8 +39,14 @@ Rectangle {
             loops: Animation.Infinite
             running: visible
 
-            PropertyAnimation { to: 0.66; duration: 1000; }
-            PropertyAnimation { to: 1; duration: 1000; }
+            PropertyAnimation {
+                to: 0.66
+                duration: 1000
+            }
+            PropertyAnimation {
+                to: 1
+                duration: 1000
+            }
         }
     }
 

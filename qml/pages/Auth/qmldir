@@ -1,0 +1,7 @@
+# File auto generated with CMake qt_generate_qmldir. Run CMake to regenerate if files changed.
+
+module Blume.pages.Auth
+
+Login 1.0 Login.qml
+Register 1.0 Register.qml
+SignIn 1.0 SignIn.qml

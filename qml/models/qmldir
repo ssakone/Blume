@@ -1,0 +1,10 @@
+# File auto generated with CMake qt_generate_qmldir. Run CMake to regenerate if files changed.
+
+module Blume.models
+
+AlarmModel 1.0 AlarmModel.qml
+DeviceModel 1.0 DeviceModel.qml
+Model 1.0 Model.qml
+ModelManager 1.0 ModelManager.qml
+PlantModel 1.0 PlantModel.qml
+SpaceModel 1.0 SpaceModel.qml

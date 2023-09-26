@@ -4,6 +4,9 @@ import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects as QGE
 import ThemeEngine
 
+import "../components_generic/"
+import "../components_themed/"
+
 ClipRRect {
     id: control
     property string title: ""
