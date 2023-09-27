@@ -31,6 +31,7 @@ IndicatorsSolid 1.0 IndicatorsSolid.qml
 ItemBannerSync 1.0 ItemBannerSync.qml
 ItemEnvBox 1.0 ItemEnvBox.qml
 ItemLoadData 1.0 ItemLoadData.qml
+ItemMenuLine 1.0 ItemMenuLine.qml
 ItemNoBluetooth 1.0 ItemNoBluetooth.qml
 ItemNoData 1.0 ItemNoData.qml
 ItemNoDevice 1.0 ItemNoDevice.qml

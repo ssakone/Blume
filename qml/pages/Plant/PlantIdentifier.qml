@@ -45,10 +45,10 @@ BPage {
         preferredPositioningMethods: PositionSource.SatellitePositioningMethods
     }
     header: AppBar {
-        title: qsTr("Insectes")
+        title: qsTr("Identifier une plante")
         z: 5
         noAutoPop: true
-        statusBarVisible: false
+        statusBarVisible: true
         leading.icon: Icons.close
         color: Qt.rgba(12, 200, 25, 0)
         foregroundColor: $Colors.colorPrimary
@@ -551,59 +551,10 @@ BPage {
                         property int blumeMatchID
                         property bool isLoaded: false
 
-                        Component.onCompleted: {
-                            const url = `https://blume.mahoudev.com/items/Plantes?limit=1&fields=*.*&filter[name_scientific][_contains]=${modelData["plant_name"]}`
-
-                            let appLang = Qt.locale().name.slice(0, 2)
-
-                            Http.fetch({
-                                           "method": "GET",
-                                           "url": url,
-                                           "headers": {
-                                               "Accept": 'application/json',
-                                               "Content-Type": 'application/json',
-                                               "Content-Lang": appLang
-                                           }
-                                       }).then(function (response) {
-                                           console.log(url, response)
-                                           const parsedResponse = JSON.parse(
-                                                                    response)?.data
-                                           if (parsedResponse.length > 0) {
-                                               card.blumeMatchID = parsedResponse[0].id
-                                           } else {
-                                               card.blumeMatchID = 0
-                                           }
-                                           card.isLoaded = true
-                                       }).catch(function (err) {
-                                           console.log(Object.keys(err))
-                                           card.isLoaded = true
-                                       })
-                        }
-
-                        Column {
-                            id: indicatorCol
-                            anchors.verticalCenter: parent.verticalCenter
-
-                            BusyIndicator {
-                                running: !card.isLoaded
-                                width: 20
-                                height: width
-                                visible: running
-                            }
-
-                            IconSvg {
-                                visible: card.isLoaded
-                                         && card.blumeMatchID === 0
-                                source: Icons.alert
-                                width: 15
-                                height: width
-                            }
-                        }
-
                         Column {
                             anchors.verticalCenter: parent.verticalCenter
-                            anchors.left: indicatorCol.right
-                            anchors.leftMargin: 10
+                            anchors.left: parent.left
+                            anchors.leftMargin: 15
                             spacing: 10
                             Label {
                                 text: modelData["plant_name"]
@@ -637,17 +588,12 @@ BPage {
                         }
 
                         onClicked: {
-                            if (blumeMatchID > 0) {
-                                page_view.push(navigator.plantPage, {
-                                                   "plant": {
-                                                       "id": blumeMatchID
-                                                   }
-                                               })
-                            } else {
-                                page_view.push(plantResultPage, {
-                                                   "plant_data": modelData
-                                               })
-                            }
+//                            console.log("\n\n Before push ", JSON.stringify(modelData))
+                            page_view.push(navigator.plantFlowercheckerPage, {
+                                               "plantName": modelData["plant_name"],
+                                               "images": modelData["similar_images"]?.map(item => item.url)
+                                           })
+
                         }
                     }
                 }

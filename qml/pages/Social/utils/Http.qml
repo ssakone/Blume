@@ -1,7 +1,7 @@
 import QtQuick 2.15
 
 QtObject {
-    property string apihost: "http://10.0.2.2:8001/"
+    property string apihost: "http://34.28.201.80/"
     //property string apihost: "http://localhost:5000/"
     //property string apihost: "http://10.0.2.2:5000/"
     //property string apihost: "http://192.168.1.97:5000/"

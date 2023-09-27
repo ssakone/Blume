@@ -43,6 +43,9 @@ Item {
     property var plantPage: Component {
         Plant {}
     }
+    property var plantFlowercheckerPage: Component {
+        PlantFlowerchecker {}
+    }
     property var plantSearchPage: Component {
         PlantSearch {}
     }

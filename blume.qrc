@@ -69,6 +69,7 @@
     <file alias="components/ItemBannerSync.qml">qml/components/ItemBannerSync.qml</file>
     <file alias="components/ItemEnvBox.qml">qml/components/ItemEnvBox.qml</file>
     <file alias="components/ItemLoadData.qml">qml/components/ItemLoadData.qml</file>
+    <file alias="components/ItemMenuLine.qml">qml/components/ItemMenuLine.qml</file>
     <file alias="components/ItemNoBluetooth.qml">qml/components/ItemNoBluetooth.qml</file>
     <file alias="components/ItemNoData.qml">qml/components/ItemNoData.qml</file>
     <file alias="components/ItemNoDevice.qml">qml/components/ItemNoDevice.qml</file>
@@ -204,6 +205,7 @@
     <file alias="pages/Plant/PlantDesease.qml">qml/pages/Plant/PlantDesease.qml</file>
     <file alias="pages/Plant/PlantDeseaseDetails.qml">qml/pages/Plant/PlantDeseaseDetails.qml</file>
     <file alias="pages/Plant/PlantDeseaseEncylopedie.qml">qml/pages/Plant/PlantDeseaseEncylopedie.qml</file>
+    <file alias="pages/Plant/PlantFlowerchecker.qml">qml/pages/Plant/PlantFlowerchecker.qml</file>
     <file alias="pages/Plant/PlantFrequencies.qml">qml/pages/Plant/PlantFrequencies.qml</file>
     <file alias="pages/Plant/PlantIdentifier.qml">qml/pages/Plant/PlantIdentifier.qml</file>
     <file alias="pages/Plant/PlantIdentifierDetails.qml">qml/pages/Plant/PlantIdentifierDetails.qml</file>
