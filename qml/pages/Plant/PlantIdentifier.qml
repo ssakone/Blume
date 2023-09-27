@@ -48,7 +48,7 @@ BPage {
         title: qsTr("Identifier une plante")
         z: 5
         noAutoPop: true
-        statusBarVisible: false
+        statusBarVisible: true
         leading.icon: Icons.close
         color: Qt.rgba(12, 200, 25, 0)
         foregroundColor: $Colors.colorPrimary

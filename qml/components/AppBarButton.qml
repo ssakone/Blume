@@ -15,6 +15,9 @@ import ThemeEngine 1.0
 
 import MaterialIcons
 
+import "../components_generic/"
+import "../components_themed/"
+
 Rectangle {
     id: buttonBackBg
     property color foregroundColor: Theme.colorHeaderContent

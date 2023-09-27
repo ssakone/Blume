@@ -3,7 +3,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import ThemeEngine
 
-import "../components_generic"
+import "../components_generic/"
+import "../components_themed/"
 
 Loader {
     id: control
@@ -29,7 +30,7 @@ Loader {
                 Rectangle {
                     width: 50
                     height: width
-                    radius: height/2
+                    radius: height / 2
                     color: parent.isActivePage ? $Colors.colorPrimary : control.bgColor
                     anchors.horizontalCenter: parent.horizontalCenter
                     ColorImage {
@@ -72,7 +73,7 @@ Loader {
                 Rectangle {
                     width: 50
                     height: width
-                    radius: height/2
+                    radius: height / 2
                     color: parent.isActivePage ? $Colors.colorPrimary : control.bgColor
                     anchors.horizontalCenter: parent.horizontalCenter
                     ColorImage {
@@ -109,21 +110,23 @@ Loader {
                 anchors.bottom: parent.top
                 anchors.bottomMargin: -45
                 property bool isActivePage: activePage === "Feed"
-               /* Rectangle {
+
+
+                /* Rectangle {
                     width: 70
                     height: width
                     radius: height/2
                     color: parent.isActivePage ? $Colors.colorPrimary : control.bgColor
                     anchors.horizontalCenter: parent.horizontalCenter
                 */
-                    IconSvg {
-                        source: Icons.accountGroup
-                        color: parent.isActivePage ? $Colors.white : $Colors.black
-                        width: 60
-                        height: width
-                    }
-//                }
+                IconSvg {
+                    source: Icons.accountGroup
+                    color: parent.isActivePage ? $Colors.white : $Colors.black
+                    width: 60
+                    height: width
+                }
 
+                //                }
                 Label {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: qsTr("Feed")
@@ -132,16 +135,14 @@ Loader {
                 }
             }
 
-
             componentRadius: 0
             fullColor: true
             primaryColor: control.bgColor
             onClicked: {
-                activePage !== "Feed" && page_view.push(navigator.feedPage)
+                activePage !== "Feed" && page_view.push(navigator.social)
                 //                appContent.state = "DeviceList"
             }
         }
-
 
         ButtonWireframe {
             Layout.preferredHeight: 70
@@ -155,7 +156,7 @@ Loader {
                 Rectangle {
                     width: 50
                     height: width
-                    radius: height/2
+                    radius: height / 2
                     color: parent.isActivePage ? $Colors.colorPrimary : control.bgColor
                     anchors.horizontalCenter: parent.horizontalCenter
                     ColorImage {
@@ -193,7 +194,7 @@ Loader {
                 Rectangle {
                     width: 50
                     height: width
-                    radius: height/2
+                    radius: height / 2
                     color: parent.isActivePage ? $Colors.colorPrimary : control.bgColor
                     anchors.horizontalCenter: parent.horizontalCenter
                     ColorImage {
@@ -210,7 +211,6 @@ Loader {
                     visible: control.showTitles
                 }
             }
-
 
             componentRadius: 0
             fullColor: true

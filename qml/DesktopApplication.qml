@@ -12,8 +12,10 @@ import "pages/Garden"
 import "pages"
 import "services/"
 import "models/"
-import "components/"
-import "components_js/"
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
 import "components_js/Http.js" as HTTP
 
 ApplicationWindow {
@@ -22,8 +24,8 @@ ApplicationWindow {
     color: Theme.colorBackground
 
     maximumWidth: 450
-    // place it on global window right
 
+    // place it on global window right
     property bool isDesktop: true
     property bool isMobile: false
     property bool isPhone: false
@@ -484,6 +486,7 @@ ApplicationWindow {
                 }
 
                 onDepthChanged: {
+
                     //                if (depth === 1)
                     //                    parent.state = previousState
                 }
@@ -536,7 +539,8 @@ ApplicationWindow {
         // Start on the tutorial?
         Component.onCompleted: {
             if (!deviceManager.areDevicesAvailable()) {
-//                screenTutorial.loadScreen()
+
+                //                screenTutorial.loadScreen()
             }
         }
 

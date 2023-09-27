@@ -8,6 +8,7 @@ import SortFilterProxyModel
 
 import "../../components"
 import "../../components_generic"
+import "../../components_themed/"
 import "../../components_js/Http.js" as Http
 
 import "../.."
@@ -31,23 +32,24 @@ BPage {
 
     Component.onCompleted: {
         fetchMore()
-        if(autoFocusSearchbar) {
+        if (autoFocusSearchbar) {
             diseaseSearchBox.forceActiveFocus()
         }
-
     }
 
     function fetchMore() {
         console.log("Gonna fetch_more...")
         let appLang = "en"
         for (var i = 0; i < $Constants.cbAppLanguage.count; i++) {
-            if ($Constants.cbAppLanguage.get(i).code === settingsManager.appLanguage)
+            if ($Constants.cbAppLanguage.get(
+                        i).code === settingsManager.appLanguage)
                 appLang = $Constants.cbAppLanguage.get(i).code
         }
         isLoading = true
-        let query = `https://public.blume.mahoudev.com/diseases?fields[]=*.*&limit=${diseaseSearchBox.displayText !== "" ? 70 : pageLimit}&offset=${currentPage
-            * pageLimit}${diseaseSearchBox.displayText
-            === "" ? '' : "&filter[nom_scientifique][_contains]=" + diseaseSearchBox.displayText}`
+        let query = `https://public.blume.mahoudev.com/diseases?fields[]=*.*&limit=${diseaseSearchBox.displayText
+            !== "" ? 70 : pageLimit}&offset=${currentPage * pageLimit}${diseaseSearchBox.displayText
+                     === "" ? '' : "&filter[nom_scientifique][_contains]="
+                              + diseaseSearchBox.displayText}`
 
         Http.fetch({
                        "method": 'GET',
@@ -61,17 +63,22 @@ BPage {
                                // Remove null value
                                if (diseaseSearchBox.displayText !== "") {
                                    diseasesModel.clear()
-                                }
+                               }
                                for (var i = 0; i < data.length; i++) {
                                    let item = data[i]
                                    let itemKeys = Object.keys(item)
-                                   for(let j=0; j < itemKeys.length; j++){
+                                   for (var j = 0; j < itemKeys.length; j++) {
                                        let key = itemKeys[j]
                                        let value = item[key]
-                                       if ( value === null) {
-                                           if('noms_communs' === key) item[key] = []
-                                           else item[key] = ""
-                                       } else if('noms_communs' === key) item[key] = value?.map(_ => ({name: _}))
+                                       if (value === null) {
+                                           if ('noms_communs' === key)
+                                           item[key] = []
+                                           else
+                                           item[key] = ""
+                                       } else if ('noms_communs' === key)
+                                       item[key] = value?.map(_ => ({
+                                                                        "name": _
+                                                                    }))
                                    }
                                    diseasesModel.append(item)
                                }
@@ -79,7 +86,6 @@ BPage {
                                isLoading = false
                            })
     }
-
 
     ListModel {
         id: diseasesModel
@@ -89,7 +95,8 @@ BPage {
         id: searchTimer
         interval: 1500
         repeat: true
-        running: diseaseSearchBox.displayText !== "" && diseaseListView.previousDisplayText !== diseaseSearchBox.text
+        running: diseaseSearchBox.displayText !== ""
+                 && diseaseListView.previousDisplayText !== diseaseSearchBox.text
         onTriggered: {
             fetchMore()
             diseaseListView.previousDisplayText = diseaseSearchBox.text
@@ -165,11 +172,9 @@ BPage {
                     }
                 }
             }
-
         }
 
-
-        GridView  {
+        GridView {
             id: diseaseList
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -202,7 +207,6 @@ BPage {
                 width: diseaseList.cellWidth
                 height: diseaseList.cellHeight
 
-
                 Column {
                     width: parent.width - 10
                     leftPadding: 10
@@ -220,8 +224,10 @@ BPage {
                         Image {
                             anchors.fill: parent
                             source: {
-                                let fileID = modelData.images?.get(0)?.directus_files_id ?? modelData.images[0]?.directus_files_id
-                                if(fileID) {
+                                let fileID = modelData.images?.get(
+                                        0)?.directus_files_id
+                                    ?? modelData.images[0]?.directus_files_id
+                                if (fileID) {
                                     return "https://blume.mahoudev.com/assets/" + fileID
                                 }
                                 return ""
@@ -248,7 +254,8 @@ BPage {
                             anchors.horizontalCenter: parent.horizontalCenter
                         }
                         Label {
-                            text: modelData.noms_communs?.get(0)?.name ?? modelData.noms_communs[0]?.name ?? ""
+                            text: modelData.noms_communs?.get(0)?.name
+                                  ?? modelData.noms_communs[0]?.name ?? ""
                             color: $Colors.black
                             fontSizeMode: Text.Fit
                             font.pixelSize: 13
@@ -257,9 +264,7 @@ BPage {
                             elide: Text.ElideRight
                             anchors.horizontalCenter: parent.horizontalCenter
                         }
-
                     }
-
                 }
 
                 MouseArea {
@@ -271,7 +276,7 @@ BPage {
 
                         page_view.push(navigator.deseaseDetailsPage, {
                                            "desease_data": {
-                                               id: modelData.id,    
+                                               "id": modelData.id
                                            },
                                            "isBlumeDisease": true
                                        })

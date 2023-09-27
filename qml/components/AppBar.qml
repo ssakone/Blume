@@ -6,6 +6,9 @@ import ThemeEngine 1.0
 
 import "../"
 
+import "../components_generic/"
+import "../components_themed/"
+
 Rectangle {
     id: control
     color: backgroundColor
@@ -21,14 +24,15 @@ Rectangle {
     // You display a menu icon that opens drawer or back icon that go back inside current stack
     property bool isHomeScreen: false
 
-    signal backButtonClicked()
+    signal backButtonClicked
 
     width: parent.width
     height: statusBarVisible ? screenPaddingStatusbar + screenPaddingNotch
                                + 52 : screenPaddingNotch + 52
 
     onBackButtonClicked: {
-        if(isHomeScreen) appDrawer.open()
+        if (isHomeScreen)
+            appDrawer.open()
         else if (!noAutoPop)
             control.parent.StackView.view.pop()
     }
@@ -59,7 +63,7 @@ Rectangle {
         }
         Flow {
             id: flowActions
-//            Layout.preferredHeight: 64
+            //            Layout.preferredHeight: 64
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter
         }

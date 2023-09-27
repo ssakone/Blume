@@ -1,6 +1,9 @@
 import QtQuick
 import QtQuick.Controls
 
+import "../components_generic/"
+import "../components_themed/"
+
 Popup {
     id: control
 
@@ -17,7 +20,6 @@ Popup {
         color: $Colors.black
     }
 
-
     Image {
         anchors.fill: parent
         source: control.source
@@ -31,4 +33,3 @@ Popup {
         onClicked: swithMode()
     }
 }
-

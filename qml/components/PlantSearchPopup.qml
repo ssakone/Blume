@@ -5,7 +5,8 @@ import ThemeEngine
 
 import SortFilterProxyModel
 
-import "../components_generic"
+import "../components_generic/"
+import "../components_themed/"
 
 Drawer {
     id: control
@@ -48,12 +49,11 @@ Drawer {
                 preventDefaultOnClick: true
                 hideCameraSearch: true
                 property variant cool: ({})
-                onItemClicked: (data) => {
-                    control.callback(data)
-                    control.close()
-                }
+                onItemClicked: data => {
+                                   control.callback(data)
+                                   control.close()
+                               }
             }
         }
-
     }
 }

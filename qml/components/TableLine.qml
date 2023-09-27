@@ -2,6 +2,9 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import "../components_generic/"
+import "../components_themed/"
+
 Rectangle {
     Layout.fillWidth: true
     Layout.minimumHeight: _row.height + 20
@@ -44,7 +47,5 @@ Rectangle {
             horizontalAlignment: Text.AlignLeft
             wrapMode: Text.Wrap
         }
-
-
     }
 }

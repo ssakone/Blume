@@ -4,12 +4,13 @@ import QtQuick.Layouts
 
 import ThemeEngine 1.0
 //import PlantUtils 1.0
-import "qrc:/js/UtilsPlantDatabase.js" as UtilsPlantDatabase
 import "components"
 import "components_generic"
+import "components_themed"
+import "popups"
 import "components_js/Http.js" as Http
-import SortFilterProxyModel
 
+import SortFilterProxyModel
 Popup {
     id: plantScreenDetailsPopup
 

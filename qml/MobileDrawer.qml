@@ -1,9 +1,13 @@
 import QtQuick
 import QtQuick.Controls
-import "components"
 import "pages/Plant/"
 
 import ThemeEngine 1.0
+
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
 
 Drawer {
     width: parent.width * 0.8
@@ -173,7 +177,6 @@ Drawer {
                     anchors.right: parent.right
                     anchors.left: parent.left
                 }
-
             }
         }
     }

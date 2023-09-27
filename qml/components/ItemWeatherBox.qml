@@ -2,9 +2,12 @@ import QtQuick
 
 import ThemeEngine 1.0
 
+import "../components_generic/"
+import "../components_themed/"
+
 Rectangle {
     id: itemWeatherBox
-    width: (duo) ? sz*2 : sz
+    width: (duo) ? sz * 2 : sz
     height: columnContent.height + (isDesktop ? 24 : 22)
     radius: 4
 
@@ -20,21 +23,19 @@ Rectangle {
     property real limit_high
     property int precision: 1
 
-    signal sensorSelection()
+    signal sensorSelection
 
     color: Theme.colorForeground
     border.color: Theme.colorSeparator
     border.width: 2
 
     ////////////////////////////////////////////////////////////////////////////
-
     MouseArea {
         anchors.fill: parent
         onPressAndHold: sensorSelection()
     }
 
     ////////
-
     IconSvg {
         anchors.right: parent.right
         anchors.rightMargin: isDesktop ? 6 : 4
@@ -64,7 +65,8 @@ Rectangle {
             wrapMode: Text.WordWrap
             color: Theme.colorSubText
             font.bold: true
-            font.pixelSize: isDesktop ? Theme.fontSizeContentVerySmall+1 : Theme.fontSizeContentVerySmall
+            font.pixelSize: isDesktop ? Theme.fontSizeContentVerySmall
+                                        + 1 : Theme.fontSizeContentVerySmall
             font.capitalization: Font.AllUppercase
         }
 
@@ -76,7 +78,8 @@ Rectangle {
             Text {
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: (itemWeatherBox.value > -99) ? itemWeatherBox.value.toFixed(itemWeatherBox.precision) : "?"
+                text: (itemWeatherBox.value > -99) ? itemWeatherBox.value.toFixed(
+                                                         itemWeatherBox.precision) : "?"
                 color: Theme.colorText
                 font.bold: false
                 font.pixelSize: {

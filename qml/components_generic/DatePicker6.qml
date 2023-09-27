@@ -3,7 +3,7 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
-import "components_generic/"
+import "../components_generic/"
 
 Item {
     id: datePicker

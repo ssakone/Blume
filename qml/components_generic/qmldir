@@ -1,19 +1,23 @@
 # File auto generated with CMake qt_generate_qmldir. Run CMake to regenerate if files changed.
 
-module qml.components_generic
+module Blume.components_generic
 
 ActionMenuItem 1.0 ActionMenuItem.qml
 ActionMenu_bottom 1.0 ActionMenu_bottom.qml
 ActionMenu_floating 1.0 ActionMenu_floating.qml
+Alert 1.0 Alert.qml
 AndroidButton 1.0 AndroidButton.qml
 AndroidButtonIcon 1.0 AndroidButtonIcon.qml
 AndroidTextField 1.0 AndroidTextField.qml
+Avatar 1.0 Avatar.qml
+BPage 1.0 BPage.qml
 ButtonCompactable 1.0 ButtonCompactable.qml
 ButtonImage 1.0 ButtonImage.qml
 ButtonText 1.0 ButtonText.qml
 ButtonWireframe 1.0 ButtonWireframe.qml
 ButtonWireframeIcon 1.0 ButtonWireframeIcon.qml
 ButtonWireframeIconCentered 1.0 ButtonWireframeIconCentered.qml
+Carousel 1.0 Carousel.qml
 CsdLinux 1.0 CsdLinux.qml
 CsdMac 1.0 CsdMac.qml
 CsdWindows 1.0 CsdWindows.qml

@@ -4,6 +4,9 @@ import QtQuick.Layouts
 
 import "../"
 
+import "../components_generic/"
+import "../components_themed/"
+
 Rectangle {
     id: root
     width: parent.width

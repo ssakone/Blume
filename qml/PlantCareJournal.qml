@@ -5,8 +5,11 @@ import ThemeEngine 1.0
 
 import JournalUtils 1.0
 
-import "components_generic/"
-import "qrc:/js/UtilsPlantJournal.js" as UtilsPlantJournal
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+import "components_js/UtilsPlantJournal.js" as UtilsPlantJournal
 
 Item {
     id: plantCareJournal
@@ -271,7 +274,7 @@ Item {
                         height: (uiMode === 2) ? 320 : rowrowrow.height
                         visible: (uiMode !== 1)
 
-                        DatePicker {
+                        DatePicker6 {
                             id: datePicker
                             anchors.fill: parent
 

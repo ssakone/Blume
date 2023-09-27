@@ -59,6 +59,8 @@
 #include <QQuickWindow>
 #include <QSurfaceFormat>
 #include <QQuickStyle>
+#include <HotWatch.h>
+#include <Qaterial/Qaterial.hpp>
 
 #if defined(Q_OS_ANDROID)
 #include "AndroidService.h"
@@ -214,6 +216,11 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     engine.addImportPath("qrc:/qml/");
     QQmlContext *engine_context = engine.rootContext();
+    HotWatch::registerSingleton();
+
+    engine.addImportPath("qrc:///");
+    qaterial::registerQmlTypes();
+    qaterial::loadQmlResources();
 
     engine_context->setContextProperty("deviceManager", dm);
     engine_context->setContextProperty("settingsManager", sm);
@@ -233,15 +240,16 @@ int main(int argc, char *argv[])
 #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS) || defined(FORCE_MOBILE_UI)
     ShareUtils *utilsShare = new ShareUtils();
     engine_context->setContextProperty("utilsShare", utilsShare);
-    engine.load(QUrl(QStringLiteral("qrc:/qml/MobileApplication.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:/qml/Loadere.qml")));
+    //engine.load(QUrl(QStringLiteral("qrc:/qml/MobileApplication.qml")));
 #else
     engine.load(QUrl(QStringLiteral("qrc:/qml/DesktopApplication.qml")));
 #endif
-    if (engine.rootObjects().isEmpty())
-    {
-        qWarning() << "Cannot init QmlApplicationEngine!";
-        return EXIT_FAILURE;
-    }
+//    if (engine.rootObjects().isEmpty())
+//    {
+//        qWarning() << "Cannot init QmlApplicationEngine!";
+//        return EXIT_FAILURE;
+//    }
 
     // For i18n retranslate
     utilsLanguage->setQmlEngine(&engine);

@@ -3,8 +3,11 @@ import QtQuick
 import ThemeEngine 1.0
 import JournalUtils 1.0
 
-import "components_generic/"
-import "qrc:/js/UtilsPlantJournal.js" as UtilsPlantJournal
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+import "components_js/UtilsPlantJournal.js" as UtilsPlantJournal
 
 Item {
     id: journalWidget
@@ -105,6 +108,7 @@ Item {
     MouseArea {
         anchors.fill: parent
         anchors.margins: -8
+
 
         /*
         propagateComposedEvents: true

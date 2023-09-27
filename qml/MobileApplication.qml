@@ -13,18 +13,26 @@ import "pages/Auth"
 import "pages"
 import "services/"
 import "models/"
-import "components/"
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
 import "components_js/"
 import "components_js/Http.js" as HTTP
 
-ApplicationWindow {
+Item {
     id: appWindow
-    minimumWidth: 480
-    minimumHeight: 960
+    //    minimumWidth: 480
+    //    minimumHeight: 960
 
-    flags: (Qt.platform.os === "android") ? Qt.Window : Qt.Window
-                                            | Qt.MaximizeUsingFullscreenGeometryHint
-    color: Theme.colorBackground
+    //    flags: (Qt.platform.os === "android") ? Qt.Window : Qt.Window
+    //                                            | Qt.MaximizeUsingFullscreenGeometryHint
+    //    color: Theme.colorBackground
+    Rectangle {
+        anchors.fill: parent
+        color: Theme.colorBackground
+    }
+
     visible: true
     property alias $SqlClient: _relay._sqliClient
     property alias $Model: _relay

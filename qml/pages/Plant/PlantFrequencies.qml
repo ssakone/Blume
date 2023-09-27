@@ -4,13 +4,12 @@ import QtQuick.Controls
 
 import "../../components_generic"
 import "../../components"
-import "qrc:/qml"
 
 BPage {
     required property var plant
 
     header: AppBar {
-        title: plant["name_scientific"]?? ""
+        title: plant["name_scientific"] ?? ""
     }
 
     ScrollView {
@@ -49,7 +48,5 @@ BPage {
                 description: plant['frequence_vaporisation'] || ""
             }
         }
-
     }
-
 }

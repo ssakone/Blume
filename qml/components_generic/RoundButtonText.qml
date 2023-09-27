@@ -1,7 +1,7 @@
 import QtQuick 2.15
 
 import ThemeEngine 1.0
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "../components_js/UtilsNumber.js" as UtilsNumber
 
 Item {
     id: control

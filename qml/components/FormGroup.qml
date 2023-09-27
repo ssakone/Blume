@@ -5,27 +5,27 @@ import QtQuick.Layouts
 import QtQuick.Controls.Material
 import ThemeEngine 1.0
 
-import "../components_generic"
+import "../components_generic/"
+import "../components_themed/"
 
 Repeater {
     required property variant schema
 
-//    function validate() {
-//        for (var i = schema.length - 1; i >= 0; i--) {
-//            for (var j = schema[i].fields.length - 1; j >= 0; j--) {
-//                let item = schema[i].fields[j]
-//                if(item.validate) {
-//                    if(item.validate(item.value) !== null) return item
-//                } else if(validate_field(item)) return item
-//            }
-//        }
-//        return null
-//    }
+    //    function validate() {
+    //        for (var i = schema.length - 1; i >= 0; i--) {
+    //            for (var j = schema[i].fields.length - 1; j >= 0; j--) {
+    //                let item = schema[i].fields[j]
+    //                if(item.validate) {
+    //                    if(item.validate(item.value) !== null) return item
+    //                } else if(validate_field(item)) return item
+    //            }
+    //        }
+    //        return null
+    //    }
 
-//    function validate_field(field) {
-//        if(field.is_required && !field.value) return field
-//    }
-
+    //    function validate_field(field) {
+    //        if(field.is_required && !field.value) return field
+    //    }
     model: schema
     delegate: Column {
         required property variant modelData
@@ -70,8 +70,7 @@ Repeater {
                 width: parent.width
                 spacing: 7
                 Label {
-                    text: (modelData.is_required ? "* " : "")
-                          + modelData.label
+                    text: (modelData.is_required ? "* " : "") + modelData.label
                     font {
                         pixelSize: 16
                         weight: Font.Bold
@@ -133,4 +132,3 @@ Repeater {
         }
     }
 }
-

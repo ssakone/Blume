@@ -3,11 +3,16 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+
 Item {
     id: devicePlantSensorCare
 
     function loadData() {
-//        plantInfos.visible = false
+        //        plantInfos.visible = false
         plantLimits.visible = true
         plantJournal.visible = false
 
@@ -15,14 +20,16 @@ Item {
     }
 
     function updateHeader() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
         //console.log("devicePlantSensorCare // updateHeader() >> " + currentDevice)
     }
 
     function updateLimits() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        //console.log("devicePlantSensorCare // updateLimits() >> " + currentDevice)
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
 
+        //console.log("devicePlantSensorCare // updateLimits() >> " + currentDevice)
         plantLimits.updateLimits()
     }
 
@@ -36,11 +43,13 @@ Item {
     }
 
     onWidthChanged: updateSize()
-    //onHeightChanged: updateSize()
 
+    //onHeightChanged: updateSize()
     function updateSize() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        if (!currentDevice.isPlantSensor) return
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
+        if (!currentDevice.isPlantSensor)
+            return
 
         // grid geometry
         if (isMobile) {
@@ -52,8 +61,7 @@ Item {
                     subHeader.visible = false
                     subHeader.height = 0
                 }
-            }
-            else if (isTablet) {
+            } else if (isTablet) {
                 if (devicePlantSensorCare.width < 575) {
                     buttonPanel.anchors.rightMargin = 0
                     buttonPanel.anchors.right = undefined
@@ -66,7 +74,8 @@ Item {
                     subHeader.height = 52
                 }
             }
-        } else { // isDesktop
+        } else {
+            // isDesktop
             if (devicePlantSensorCare.width < 575) {
                 buttonPanel.anchors.rightMargin = 0
                 buttonPanel.anchors.right = undefined
@@ -82,7 +91,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Rectangle {
         id: subHeader
         anchors.top: parent.top
@@ -120,23 +128,22 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 12
 
-//            ButtonWireframe {
-//                width: 100
-//                height: isPhone ? 32 : 36
+            //            ButtonWireframe {
+            //                width: 100
+            //                height: isPhone ? 32 : 36
 
-//                fullColor: (plantInfos.visible)
-//                primaryColor: Theme.colorPrimary
-//                secondaryColor: Theme.colorBackground
+            //                fullColor: (plantInfos.visible)
+            //                primaryColor: Theme.colorPrimary
+            //                secondaryColor: Theme.colorBackground
 
-//                text: qsTr("Plant")
-//                onClicked: {
-//                    plantInfos.visible = true
-//                    plantInfos.load()
-//                    plantLimits.visible = false
-//                    plantJournal.visible = false
-//                }
-//            }
-
+            //                text: qsTr("Plant")
+            //                onClicked: {
+            //                    plantInfos.visible = true
+            //                    plantInfos.load()
+            //                    plantLimits.visible = false
+            //                    plantJournal.visible = false
+            //                }
+            //            }
             ButtonWireframe {
                 width: 100
                 height: isPhone ? 32 : 36
@@ -147,7 +154,7 @@ Item {
 
                 text: qsTr("Limits")
                 onClicked: {
-//                    plantInfos.visible = false
+                    //                    plantInfos.visible = false
                     plantLimits.visible = true
                     plantJournal.visible = false
                 }
@@ -163,7 +170,7 @@ Item {
 
                 text: qsTr("Journal")
                 onClicked: {
-//                    plantInfos.visible = false
+                    //                    plantInfos.visible = false
                     plantLimits.visible = false
                     plantJournal.visible = true
                     plantJournal.load()
@@ -184,7 +191,8 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-/*
+
+    /*
     Grid {
         anchors.top: subHeader.bottom
         anchors.left: parent.left
@@ -194,16 +202,15 @@ Item {
 */
     ////////////////////////////////////////////////////////////////////////////
 
-//    PlantCareInfos {
-//        id: plantInfos
-//        anchors.top: subHeader.bottom
-//        anchors.left: parent.left
-//        anchors.right: parent.right
-//        anchors.bottom: parent.bottom
-//    }
+    //    PlantCareInfos {
+    //        id: plantInfos
+    //        anchors.top: subHeader.bottom
+    //        anchors.left: parent.left
+    //        anchors.right: parent.right
+    //        anchors.bottom: parent.bottom
+    //    }
 
     ////////////////////////////////////////////////////////////////////////////
-
     PlantCareLimits {
         id: plantLimits
         anchors.top: subHeader.bottom
@@ -213,7 +220,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     PlantCareJournal {
         id: plantJournal
         anchors.top: subHeader.bottom

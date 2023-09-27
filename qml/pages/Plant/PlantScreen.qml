@@ -6,7 +6,7 @@ import ThemeEngine 1.0
 import "../../components_generic/"
 import "../../components/"
 import "../../"
-import "qrc:/js/UtilsPlantDatabase.js" as UtilsPlantDatabase
+import "../../components_js/UtilsPlantDatabase.js" as UtilsPlantDatabase
 
 Grid {
     id: plantScreen
@@ -35,6 +35,7 @@ Grid {
     onCurrentPlantChanged: {
         if (typeof currentPlant === "undefined" || !currentPlant)
             return
+
 
         /*
         console.log("> onCurrentPlantChanged()")
@@ -89,6 +90,7 @@ Grid {
         plantColorFlower.model = currentPlant.colorsFlower
         itemColorFruit.visible = (currentPlant.colorsFruit.length > 0)
         plantColorFruit.model = currentPlant.colorsFruit
+
 
         /*
         // sizes
@@ -519,14 +521,13 @@ Grid {
             }
 
             ////////
-
-                        ItemTag {
-                            id: itemType
-                            visible: text
-                            color: Theme.colorGreen
-                            textColor: "white"
-                            textSize: Theme.fontSizeContentSmall
-                        }
+            ItemTag {
+                id: itemType
+                visible: text
+                color: Theme.colorGreen
+                textColor: "white"
+                textSize: Theme.fontSizeContentSmall
+            }
             Flow {
                 id: itemTags
                 anchors.left: parent.left
@@ -544,6 +545,7 @@ Grid {
                     }
                 }
             }
+
 
             /*
             Column {
@@ -724,6 +726,7 @@ Grid {
 
             ////////
 
+
             /*
             Row {
                 anchors.left: parent.left
@@ -771,6 +774,7 @@ Grid {
                 }
             }
 */
+
 
             /*
             Column {
@@ -1298,6 +1302,7 @@ Grid {
                     font.pixelSize: Theme.fontSizeContent
                 }
             }
+
 
             /*
             Column {

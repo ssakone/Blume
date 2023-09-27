@@ -6,7 +6,8 @@ import ThemeEngine
 
 import Qt5Compat.GraphicalEffects as QGE
 
-import "../components_generic"
+import "../components_generic/"
+import "../components_themed/"
 
 ClipRRect {
     id: root

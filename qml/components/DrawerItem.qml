@@ -3,9 +3,12 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
+import "../components_generic/"
+import "../components_themed/"
+
 Item {
     id: control
-    signal clicked()
+    signal clicked
 
     height: 48
     anchors.left: parent.left
@@ -15,7 +18,6 @@ Item {
     property alias iconSource: _iconSvg.source
     property alias iconColor: _iconSvg.color
     property alias color: _text.color
-
 
     MouseArea {
         anchors.fill: parent
@@ -31,7 +33,11 @@ Item {
             radius: Theme.componentRadius
             color: Theme.colorForeground
             opacity: parent.containsPress
-            Behavior on opacity { OpacityAnimator { duration: 133 } }
+            Behavior on opacity {
+                OpacityAnimator {
+                    duration: 133
+                }
+            }
         }
     }
 
@@ -45,13 +51,20 @@ Item {
 
         color: _text.color
 
-        SequentialAnimation on opacity { // scanAnimation (fade)
+        SequentialAnimation on opacity {
+            // scanAnimation (fade)
             loops: Animation.Infinite
             running: deviceManager.scanning
             alwaysRunToEnd: true
 
-            PropertyAnimation { to: 0.33; duration: 750; }
-            PropertyAnimation { to: 1; duration: 750; }
+            PropertyAnimation {
+                to: 0.33
+                duration: 750
+            }
+            PropertyAnimation {
+                to: 1
+                duration: 750
+            }
         }
     }
     Text {

@@ -9,8 +9,9 @@ import Qt5Compat.GraphicalEffects as QGE
 
 import "../../components"
 import "../../components_generic"
+import "../../components_themed"
 import "../../components_js/Utils.js" as Utils
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "../../components_js/UtilsNumber.js" as UtilsNumber
 import "../.."
 
 BPage {
@@ -42,16 +43,19 @@ BPage {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: page_view.push(navigator.gardenEditSpace, {
-                                                  spaceID: space_id,
-                                                  spaceName: control.space_name[0] === "'" ? control.space_name.slice(
-                                                                                                 1,
-                                                                                                 -1) : control.space_name,
-                                                  spaceDescription: control.description[0] === "'" ? control.description.slice(
-                                                                                                        1,
-                                                                                                        -1) : control.description,
-                                                  isOutDoor: type === 1,
-                                                  callback: function(updated) {
-                                                      if(updated.libelle) header.title = updated.libelle
+                                                  "spaceID": space_id,
+                                                  "spaceName": control.space_name[0]
+                                                  === "'" ? control.space_name.slice(
+                                                                1,
+                                                                -1) : control.space_name,
+                                                  "spaceDescription": control.description[0]
+                                                  === "'" ? control.description.slice(
+                                                                1,
+                                                                -1) : control.description,
+                                                  "isOutDoor": type === 1,
+                                                  "callback": function (updated) {
+                                                      if (updated.libelle)
+                                                          header.title = updated.libelle
                                                   }
                                               })
                 }
@@ -260,23 +264,21 @@ BPage {
                                     repeat: true
                                     running: plantInSpace.count === 0
                                     onTriggered: {
-                                        if(up) {
-                                            if(parent.scale <= max) {
+                                        if (up) {
+                                            if (parent.scale <= max) {
                                                 parent.scale += 0.01
                                             } else {
                                                 up = false
                                             }
                                         } else {
-                                            if(parent.scale >= min) {
+                                            if (parent.scale >= min) {
                                                 parent.scale -= 0.01
                                             } else {
                                                 up = true
                                             }
                                         }
-
                                     }
                                 }
-
                             }
                         }
 
@@ -346,25 +348,24 @@ BPage {
                                     property bool up: true
                                     interval: 50
                                     repeat: true
-                                    running: plantInSpace.count > 0 && alarmInSpace.count === 0
+                                    running: plantInSpace.count > 0
+                                             && alarmInSpace.count === 0
                                     onTriggered: {
-                                        if(up) {
-                                            if(parent.scale <= max) {
+                                        if (up) {
+                                            if (parent.scale <= max) {
                                                 parent.scale += 0.01
                                             } else {
                                                 up = false
                                             }
                                         } else {
-                                            if(parent.scale >= min) {
+                                            if (parent.scale >= min) {
                                                 parent.scale -= 0.01
                                             } else {
                                                 up = true
                                             }
                                         }
-
                                     }
                                 }
-
                             }
                         }
 

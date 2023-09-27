@@ -7,7 +7,7 @@ import ThemeEngine
 import "../../components_generic"
 import "../../components_js"
 import "../../components"
-import "qrc:/qml"
+import "../../"
 import "../../components_js/Http.js" as Http
 
 BPage {

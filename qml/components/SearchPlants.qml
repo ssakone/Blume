@@ -8,6 +8,7 @@ import SortFilterProxyModel
 
 import ".."
 import "../components_generic"
+import "../components_themed/"
 import "../components_js/Http.js" as Http
 
 Item {
@@ -27,10 +28,9 @@ Item {
 
     Component.onCompleted: {
         fetchMore()
-        if(autoFocusSearchbar) {
+        if (autoFocusSearchbar) {
             plantSearchBox.forceActiveFocus()
         }
-
     }
 
     function fetchMore() {
@@ -83,7 +83,9 @@ Item {
     onItemClicked: data => {
                        plantSearchBox.focus = false
                        if (preventDefaultOnClick === false) {
-                           page_view.push(navigator.plantPage, {plant: data})
+                           page_view.push(navigator.plantPage, {
+                                              "plant": data
+                                          })
                        }
                    }
 
@@ -199,7 +201,6 @@ Item {
             cellWidth: plantList.width > 800 ? plantList.width / 5 : (plantList.width > 500 ? plantList.width / 3 : plantList.width / 2)
             cellHeight: cellWidth + 60
 
-
             ScrollBar.vertical: ScrollBar {
                 property bool isLoading: false
                 id: searchScrollBar
@@ -224,7 +225,6 @@ Item {
                 width: plantList.cellWidth
                 height: plantList.cellHeight
 
-
                 Column {
                     width: parent.width - 10
                     leftPadding: 10
@@ -242,8 +242,10 @@ Item {
                         Image {
                             anchors.fill: parent
                             source: {
-                                let fileID = modelData.images_plantes?.get(0)?.directus_files_id ?? modelData.images_plantes[0]?.directus_files_id
-                                if(fileID) {
+                                let fileID = modelData.images_plantes?.get(
+                                        0)?.directus_files_id
+                                    ?? modelData.images_plantes[0]?.directus_files_id
+                                if (fileID) {
                                     return "https://blume.mahoudev.com/assets/" + fileID
                                 }
                                 return ""
@@ -261,16 +263,14 @@ Item {
                             let objectData = {}
                             for (let field in schema) {
                                 const fieldType = schema[field].type
-        //                            console.log(field, " -> ", typeof modelData[field],
-        //                                        modelData[field])
-                                if(fieldType === 'string') {
+                                //                            console.log(field, " -> ", typeof modelData[field],
+                                //                                        modelData[field])
+                                if (fieldType === 'string') {
                                     objectData[field] = modelData[field]
-                                } else if(fieldType === 'array') {
+                                } else if (fieldType === 'array') {
                                     objectData[field] = stringify()
                                 }
-
                             }
-
                         }
                     }
 
@@ -286,7 +286,8 @@ Item {
                             anchors.horizontalCenter: parent.horizontalCenter
                         }
                         Label {
-                            text: modelData.noms_communs?.get(0)?.name ?? modelData.noms_communs[0]?.name ?? ""
+                            text: modelData.noms_communs?.get(0)?.name
+                                  ?? modelData.noms_communs[0]?.name ?? ""
                             color: $Colors.black
                             fontSizeMode: Text.Fit
                             font.pixelSize: 13
@@ -295,9 +296,7 @@ Item {
                             elide: Text.ElideRight
                             anchors.horizontalCenter: parent.horizontalCenter
                         }
-
                     }
-
                 }
 
                 MouseArea {
@@ -469,33 +468,33 @@ Item {
                                 "type": "string"
                             },
                             "images_plantes": {
-                                "type": "array",
+                                "type": "array"
                             },
                             "images_maladies": {
-                                "type": "array",
+                                "type": "array"
                             }
                         }
 
                         let objectData = {}
                         for (let field in schema) {
                             const fieldType = schema[field].type
-                            if(fieldType === 'string') {
+                            if (fieldType === 'string') {
                                 objectData[field] = modelData[field]
-                            } else if(fieldType === 'array') {
+                            } else if (fieldType === 'array') {
                                 objectData[field] = []
-                                const size = modelData[field].count?? modelData[field].length
-                                for(let i=0; i< size; i++) {
-                                    objectData[field].push(modelData[field].get(i))
+                                const size = modelData[field].count
+                                           ?? modelData[field].length
+                                for (var i = 0; i < size; i++) {
+                                    objectData[field].push(
+                                                modelData[field].get(i))
                                 }
                             }
-//                            console.log(field, ' -> ', fieldType, ' -> ', modelData[field], ' -> ', objectData[field])
-
+                            //                            console.log(field, ' -> ', fieldType, ' -> ', modelData[field], ' -> ', objectData[field])
                         }
 
                         itemClicked(objectData)
                     }
                 }
-
             }
 
             ItemNoPlants {

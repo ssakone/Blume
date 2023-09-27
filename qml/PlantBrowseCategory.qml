@@ -8,6 +8,8 @@ import QtQuick.Dialogs
 import Qt.labs.platform
 import "components" as Components
 import "components_generic"
+import "components_themed"
+import "popups"
 import "components_js/Http.js" as Http
 import Qt5Compat.GraphicalEffects
 
@@ -38,13 +40,12 @@ BPage {
                                    loadingIndicator.running = false
                                })
         }
-
-
     }
 
     onItemClicked: data => {
-                       page_view.push(navigator.plantPage, {plant: data})
-
+                       page_view.push(navigator.plantPage, {
+                                          "plant": data
+                                      })
                    }
 
     GridView {
@@ -61,10 +62,8 @@ BPage {
             required property variant modelData
             required property int index
 
-
             width: plantList.cellWidth
             height: plantList.cellHeight
-
 
             Column {
                 width: parent.width - 10
@@ -83,8 +82,10 @@ BPage {
                     Image {
                         anchors.fill: parent
                         source: {
-                            let fileID = modelData?.images_plantes?.get(0)?.directus_files_id ?? modelData.images_plantes[0]?.directus_files_id
-                            if(fileID) {
+                            let fileID = modelData?.images_plantes?.get(
+                                    0)?.directus_files_id
+                                ?? modelData.images_plantes[0]?.directus_files_id
+                            if (fileID) {
                                 return "https://blume.mahoudev.com/assets/" + fileID
                             }
                             return ""
@@ -102,16 +103,14 @@ BPage {
                         let objectData = {}
                         for (let field in schema) {
                             const fieldType = schema[field].type
-    //                            console.log(field, " -> ", typeof modelData[field],
-    //                                        modelData[field])
-                            if(fieldType === 'string') {
+                            //                            console.log(field, " -> ", typeof modelData[field],
+                            //                                        modelData[field])
+                            if (fieldType === 'string') {
                                 objectData[field] = modelData[field]
-                            } else if(fieldType === 'array') {
+                            } else if (fieldType === 'array') {
                                 objectData[field] = stringify()
                             }
-
                         }
-
                     }
                 }
 
@@ -136,9 +135,7 @@ BPage {
                         elide: Text.ElideRight
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
-
                 }
-
             }
 
             MouseArea {
@@ -150,10 +147,9 @@ BPage {
                     itemClicked(modelData)
                 }
             }
-
         }
 
-        ItemNoPlants {
+        Components.ItemNoPlants {
             visible: (plants_list.length === 0
                       && loadingIndicator.running === false)
         }

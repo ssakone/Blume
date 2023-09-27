@@ -3,7 +3,10 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects as QGE
 import ThemeEngine
-import "../components_generic"
+
+import "../components_generic/"
+import "../components_themed/"
+
 ClipRRect {
     id: control
     property string title: ""
@@ -41,7 +44,6 @@ ClipRRect {
                 source: imageSource
                 asynchronous: true
             }
-
         }
 
         ColumnLayout {
@@ -103,7 +105,6 @@ ClipRRect {
                             }
                         }
                     }
-
                 }
             }
 
@@ -119,8 +120,6 @@ ClipRRect {
                     radius: 5
                 }
             }
-
-
         }
     }
 

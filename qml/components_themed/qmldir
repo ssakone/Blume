@@ -1,6 +1,6 @@
 # File auto generated with CMake qt_generate_qmldir. Run CMake to regenerate if files changed.
 
-module qml.components_themed
+module Blume.components_themed
 
 ButtonIconThemed 1.0 ButtonIconThemed.qml
 ButtonThemed 1.0 ButtonThemed.qml
@@ -21,8 +21,8 @@ SelectorMenuThemed 1.0 SelectorMenuThemed.qml
 SelectorMenuThemedItem 1.0 SelectorMenuThemedItem.qml
 SliderThemed 1.0 SliderThemed.qml
 SpinBoxThemed 1.0 SpinBoxThemed.qml
-SwitchThemed_desktop 1.0 SwitchThemed_desktop.qml
-SwitchThemed_mobile 1.0 SwitchThemed_mobile.qml
+SwitchThemedDesktop 1.0 SwitchThemedDesktop.qml
+SwitchThemedMobile 1.0 SwitchThemedMobile.qml
 TextAreaThemed 1.0 TextAreaThemed.qml
 TextFieldThemed 1.0 TextFieldThemed.qml
 ToolTipThemed 1.0 ToolTipThemed.qml

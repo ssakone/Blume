@@ -3,9 +3,13 @@ import QtQuick.Controls.impl 2.15
 import QtQuick.Templates 2.15 as T
 
 //import QtGraphicalEffects 1.15 // Qt5
-import Qt5Compat.GraphicalEffects // Qt6
+import Qt5Compat.GraphicalEffects
 
+// Qt6
 import ThemeEngine 1.0
+
+import "../components_generic/"
+import "../components_themed/"
 
 T.Button {
     id: control
@@ -31,7 +35,6 @@ T.Button {
     property string borderColor: Theme.colorComponentBorder
 
     ////////////////////////////////////////////////////////////////////////////
-
     background: Rectangle {
         implicitWidth: 80
         implicitHeight: Theme.componentHeight
@@ -44,7 +47,6 @@ T.Button {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     contentItem: Text {
         text: control.text
         textFormat: Text.PlainText

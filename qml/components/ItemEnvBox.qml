@@ -2,6 +2,9 @@ import QtQuick
 
 import ThemeEngine 1.0
 
+import "../components_generic/"
+import "../components_themed/"
+
 Item {
     id: itemEnvBox
     width: 144
@@ -25,17 +28,15 @@ Item {
         return Theme.colorGreen
     }
 
-    signal sensorSelection()
+    signal sensorSelection
 
     ////////////////////////////////////////////////////////////////////////////
-
     MouseArea {
         anchors.fill: parent
         onPressAndHold: sensorSelection()
     }
 
     ////////
-
     Rectangle {
         color: itemEnvBox.color
         anchors.top: parent.top
@@ -46,7 +47,6 @@ Item {
     }
 
     ////////
-
     Column {
         anchors.left: parent.left
         anchors.leftMargin: 16
@@ -74,7 +74,8 @@ Item {
         }
 
         Text {
-            text: (itemEnvBox.value > -99) ? itemEnvBox.value.toFixed(itemEnvBox.precision) : "?"
+            text: (itemEnvBox.value > -99) ? itemEnvBox.value.toFixed(
+                                                 itemEnvBox.precision) : "?"
             color: Theme.colorSubText
             font.bold: false
             font.pixelSize: isPhone ? 24 : 26

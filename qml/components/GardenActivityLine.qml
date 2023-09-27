@@ -5,7 +5,8 @@ import QtQuick.Controls
 import Qt5Compat.GraphicalEffects as QGE
 
 import ThemeEngine
-import "../components_generic"
+import "../components_generic/"
+import "../components_themed/"
 
 Rectangle {
     id: control
@@ -60,7 +61,6 @@ Rectangle {
                 id: image
                 anchors.fill: parent
             }
-
         }
 
         Item {
@@ -164,8 +164,6 @@ Rectangle {
                             radius: 5
                         }
                     }
-
-
                 }
 
                 Item {
@@ -207,7 +205,7 @@ Rectangle {
                 anchors.fill: parent
                 radius: 5
                 color: control.isDone ? $Colors.colorPrimary : $Colors.gray50
-                border.color: control.isDone ?  $Colors.colorPrimary : $Colors.gray600
+                border.color: control.isDone ? $Colors.colorPrimary : $Colors.gray600
                 border.width: 1
                 IconSvg {
                     visible: control.isDone
@@ -218,14 +216,13 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked:  {
+                    onClicked: {
                         control.isDone = !control.isDone
                         control.checked(control.isDone)
                     }
                 }
             }
         }
-
     }
 
     MouseArea {

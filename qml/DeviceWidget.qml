@@ -2,10 +2,13 @@ import QtQuick
 
 import ThemeEngine 1.0
 import DeviceUtils 1.0
-import Qt5Compat.GraphicalEffects  as QGE
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
-import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
-import "components" as Components
+import Qt5Compat.GraphicalEffects as QGE
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+import "components_js/UtilsNumber.js" as UtilsNumber
+import "components_js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 
 Item {
     id: deviceWidget
@@ -15,9 +18,12 @@ Item {
     property var linkedPlant
 
     property var boxDevice: pointer
-    property bool hasHygro: boxDevice.isPlantSensor &&
-                            ((boxDevice.soilMoisture > 0 || boxDevice.soilConductivity > 0) ||
-                             (boxDevice.hasDataNamed("soilMoisture") || boxDevice.hasDataNamed("soilConductivity")))
+    property bool hasHygro: boxDevice.isPlantSensor
+                            && ((boxDevice.soilMoisture > 0
+                                 || boxDevice.soilConductivity > 0)
+                                || (boxDevice.hasDataNamed("soilMoisture")
+                                    || boxDevice.hasDataNamed(
+                                        "soilConductivity")))
 
     property bool wideAssMode: (width >= 380) || (isTablet && width >= 480)
     property bool bigAssMode: false
@@ -25,14 +31,31 @@ Item {
 
     Connections {
         target: boxDevice
-        function onSensorUpdated() { initBoxData() }
-        function onSensorsUpdated() { initBoxData() }
-        function onCapabilitiesUpdated() { initBoxData() }
-        function onStatusUpdated() { updateSensorStatus() }
-        function onSettingsUpdated() { updateSensorStatus(); updateSensorSettings(); }
-        function onDataUpdated() { updateSensorData() }
-        function onRefreshUpdated() { updateSensorData() }
-        function onLimitsUpdated() { updateSensorData() }
+        function onSensorUpdated() {
+            initBoxData()
+        }
+        function onSensorsUpdated() {
+            initBoxData()
+        }
+        function onCapabilitiesUpdated() {
+            initBoxData()
+        }
+        function onStatusUpdated() {
+            updateSensorStatus()
+        }
+        function onSettingsUpdated() {
+            updateSensorStatus()
+            updateSensorSettings()
+        }
+        function onDataUpdated() {
+            updateSensorData()
+        }
+        function onRefreshUpdated() {
+            updateSensorData()
+        }
+        function onLimitsUpdated() {
+            updateSensorData()
+        }
     }
     Connections {
         target: ThemeEngine
@@ -49,52 +72,50 @@ Item {
             updateSensorStatus()
             updateSensorData()
         }
-        function onTempUnitChanged() {
-//            if (loaderIndicators.item) loaderIndicators.item.updateData()
+        function onTempUnitChanged() {//            if (loaderIndicators.item) loaderIndicators.item.updateData()
         }
     }
 
     Component.onCompleted: initBoxData()
 
     ////////////////////////////////////////////////////////////////////////////
-
     function initBoxData() {
-//        console.log("DeviceWidget // initBoxData() >> " + JSON.stringify(boxDevice))
+        //        console.log("DeviceWidget // initBoxData() >> " + JSON.stringify(boxDevice))
 
         // Set icon
-        imageDevice.source = UtilsDeviceSensors.getDeviceIcon(boxDevice, hasHygro)
+        imageDevice.source = UtilsDeviceSensors.getDeviceIcon(boxDevice,
+                                                              hasHygro)
 
         // Load indicators
-//        if (!loaderIndicators.sourceComponent) {
-//            if (boxDevice.isPlantSensor) {
-//                loaderIndicators.sourceComponent = componentPlantSensor
-//            } else if (boxDevice.isThermometer) {
-//                if (boxDevice.hasHumiditySensor)
-//                    loaderIndicators.sourceComponent = componentText_2l
-//                else
-//                    loaderIndicators.sourceComponent = componentText_1l
-//            } else if (boxDevice.isEnvironmentalSensor) {
-//                if (boxDevice.hasSetting("primary")) {
-//                    var primary = boxDevice.getSetting("primary")
-//                    if (primary === "hygrometer") {
-//                        if (boxDevice.hasHumiditySensor)
-//                            loaderIndicators.sourceComponent = componentText_2l
-//                        else
-//                            loaderIndicators.sourceComponent = componentText_1l
-//                    } else if (primary === "radioactivity") {
-//                        loaderIndicators.sourceComponent = componentText_1l
-//                    } else {
-//                        loaderIndicators.sourceComponent = componentEnvironmentalGauge
-//                    }
-//                }
-//            }
+        //        if (!loaderIndicators.sourceComponent) {
+        //            if (boxDevice.isPlantSensor) {
+        //                loaderIndicators.sourceComponent = componentPlantSensor
+        //            } else if (boxDevice.isThermometer) {
+        //                if (boxDevice.hasHumiditySensor)
+        //                    loaderIndicators.sourceComponent = componentText_2l
+        //                else
+        //                    loaderIndicators.sourceComponent = componentText_1l
+        //            } else if (boxDevice.isEnvironmentalSensor) {
+        //                if (boxDevice.hasSetting("primary")) {
+        //                    var primary = boxDevice.getSetting("primary")
+        //                    if (primary === "hygrometer") {
+        //                        if (boxDevice.hasHumiditySensor)
+        //                            loaderIndicators.sourceComponent = componentText_2l
+        //                        else
+        //                            loaderIndicators.sourceComponent = componentText_1l
+        //                    } else if (primary === "radioactivity") {
+        //                        loaderIndicators.sourceComponent = componentText_1l
+        //                    } else {
+        //                        loaderIndicators.sourceComponent = componentEnvironmentalGauge
+        //                    }
+        //                }
+        //            }
 
-//            if (loaderIndicators.item) {
-//                loaderIndicators.item.initData()
-//                loaderIndicators.item.updateData()
-//            }
-//        }
-
+        //            if (loaderIndicators.item) {
+        //                loaderIndicators.item.initData()
+        //                loaderIndicators.item.updateData()
+        //            }
+        //        }
         updateSensorSettings()
         updateSensorStatus()
         updateSensorData()
@@ -102,8 +123,10 @@ Item {
 
     function updateSensorStatus() {
         // Text
-        textStatus.text = UtilsDeviceSensors.getDeviceStatusText(boxDevice.status)
-        textStatus.color = UtilsDeviceSensors.getDeviceStatusColor(boxDevice.status)
+        textStatus.text = UtilsDeviceSensors.getDeviceStatusText(
+                    boxDevice.status)
+        textStatus.color = UtilsDeviceSensors.getDeviceStatusColor(
+                    boxDevice.status)
 
         if (boxDevice.status === DeviceUtils.DEVICE_OFFLINE) {
             if (boxDevice.isDataFresh_rt()) {
@@ -122,15 +145,20 @@ Item {
         // Image
         if (!boxDevice.isDataToday()) {
             if (boxDevice.status === DeviceUtils.DEVICE_QUEUED) {
-                imageStatus.source = "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
+                imageStatus.source
+                        = "qrc:/assets/icons_material/duotone-settings_bluetooth-24px.svg"
             } else if (boxDevice.status === DeviceUtils.DEVICE_CONNECTING) {
-                imageStatus.source = "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
+                imageStatus.source
+                        = "qrc:/assets/icons_material/duotone-bluetooth_searching-24px.svg"
             } else if (boxDevice.status === DeviceUtils.DEVICE_CONNECTED) {
-                imageStatus.source = "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
+                imageStatus.source
+                        = "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
             } else if (boxDevice.status >= DeviceUtils.DEVICE_WORKING) {
-                imageStatus.source = "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
+                imageStatus.source
+                        = "qrc:/assets/icons_material/duotone-bluetooth_connected-24px.svg"
             } else {
-                imageStatus.source = "qrc:/assets/icons_material/baseline-bluetooth_disabled-24px.svg"
+                imageStatus.source
+                        = "qrc:/assets/icons_material/baseline-bluetooth_disabled-24px.svg"
             }
         }
     }
@@ -138,17 +166,23 @@ Item {
     function updateSensorSettings() {
         // Title
         if (boxDevice.isPlantSensor) {
-            $Model.device.sqlGetByDeviceAddress(boxDevice.deviceAddress).then(function (rs) {
-                console.log("\n Device = ", boxDevice.deviceAddress, " textTitle.text = ", rs, rs?.plant_name, rs?.space_name, rs?.device_address, " \n")
-                if(rs) {// If we have this device in our DB
-                    textTitle.visible = true
-                    textTitle.text = rs.plant_name.slice(1, -1)
-                    textLocation.text  = rs.space_name.slice(1, -1)
-                } else {
-                    textTitle.visible = false
-                    textLocation.text = `<font color='${$Colors.red200}'>No plant connected</font>`
-                }
-            })
+            $Model.device.sqlGetByDeviceAddress(boxDevice.deviceAddress).then(
+                        function (rs) {
+                            console.log("\n Device = ",
+                                        boxDevice.deviceAddress,
+                                        " textTitle.text = ", rs,
+                                        rs?.plant_name, rs?.space_name,
+                                        rs?.device_address, " \n")
+                            if (rs) {
+                                // If we have this device in our DB
+                                textTitle.visible = true
+                                textTitle.text = rs.plant_name.slice(1, -1)
+                                textLocation.text = rs.space_name.slice(1, -1)
+                            } else {
+                                textTitle.visible = false
+                                textLocation.text = `<font color='${$Colors.red200}'>No plant connected</font>`
+                            }
+                        })
         } else if (boxDevice.isThermometer) {
             if (boxDevice.deviceName === "ThermoBeacon")
                 textTitle.text = boxDevice.deviceName
@@ -171,31 +205,33 @@ Item {
 
     function updateSensorIcon() {
         if (boxDevice.isPlantSensor) {
-            $Model.device.sqlGetByDeviceAddress(boxDevice.deviceAddress).then(function (_deviceDBData) {
-                deviceWidget.linkedPlant = JSON.parse(_deviceDBData?.plant_json ?? null)
-                const firstImageID = deviceWidget.linkedPlant?.images_plantes[0]?.directus_files_id
-                if(firstImageID) {
-                    imageDevice.source = "https://blume.mahoudev.com/assets/" + firstImageID
-                }
-
-            })
-//            if (hasHygro) {
-//                if (boxDevice.deviceName === "ropot" || boxDevice.deviceName === "Parrot pot")
-//                    imageDevice.source = "qrc:/assets/icons_custom/pot_flower-24px.svg"
-//                else
-//                    imageDevice.source = "qrc:/assets/icons_material/outline-local_florist-24px.svg"
-//            } else {
-//                if (boxDevice.deviceName === "ropot" || boxDevice.deviceName === "Parrot pot")
-//                    imageDevice.source = "qrc:/assets/icons_custom/pot_empty-24px.svg"
-//                else
-//                    imageDevice.source = "qrc:/assets/icons_material/outline-settings_remote-24px.svg"
-//            }
+            $Model.device.sqlGetByDeviceAddress(boxDevice.deviceAddress).then(
+                        function (_deviceDBData) {
+                            deviceWidget.linkedPlant = JSON.parse(
+                                        _deviceDBData?.plant_json ?? null)
+                            const firstImageID = deviceWidget.linkedPlant?.images_plantes[0]?.directus_files_id
+                            if (firstImageID) {
+                                imageDevice.source = "https://blume.mahoudev.com/assets/"
+                                        + firstImageID
+                            }
+                        })
+            //            if (hasHygro) {
+            //                if (boxDevice.deviceName === "ropot" || boxDevice.deviceName === "Parrot pot")
+            //                    imageDevice.source = "qrc:/assets/icons_custom/pot_flower-24px.svg"
+            //                else
+            //                    imageDevice.source = "qrc:/assets/icons_material/outline-local_florist-24px.svg"
+            //            } else {
+            //                if (boxDevice.deviceName === "ropot" || boxDevice.deviceName === "Parrot pot")
+            //                    imageDevice.source = "qrc:/assets/icons_custom/pot_empty-24px.svg"
+            //                else
+            //                    imageDevice.source = "qrc:/assets/icons_material/outline-settings_remote-24px.svg"
+            //            }
         }
     }
 
     function updateSensorWarnings() {
-        // Warnings icons (for sensors with available data)
 
+        // Warnings icons (for sensors with available data)
         if (boxDevice.isDataToday()) {
 
             if (boxDevice.isPlantSensor) {
@@ -204,22 +240,26 @@ Item {
                 alarmFreeze.visible = false
 
                 // Water me notif
-                if (hasHygro && boxDevice.soilMoisture < deviceWidget.linkedPlant?.metrique_humidite_minimale_du_sol) {
+                if (hasHygro && boxDevice.soilMoisture
+                        < deviceWidget.linkedPlant?.metrique_humidite_minimale_du_sol) {
                     alarmWater.visible = true
                     alarmWater.source = "qrc:/assets/icons_material/duotone-water_mid-24px.svg"
                     alarmFreeze.color = Theme.colorBlue
-                } else if (boxDevice.soilMoisture > deviceWidget.linkedPlant?.metrique_humidite_maximale_du_sol) {
+                } else if (boxDevice.soilMoisture
+                           > deviceWidget.linkedPlant?.metrique_humidite_maximale_du_sol) {
                     alarmWater.visible = true
                     alarmWater.source = "qrc:/assets/icons_material/duotone-water_full-24px.svg"
                     alarmFreeze.color = Theme.colorYellow
                 }
 
                 // Extreme temperature notif
-                if (boxDevice.temperatureC > deviceWidget.linkedPlant?.metrique_temperature_maximale) {
+                if (boxDevice.temperatureC
+                        > deviceWidget.linkedPlant?.metrique_temperature_maximale) {
                     alarmFreeze.visible = true
                     alarmFreeze.color = Theme.colorYellow
                     alarmFreeze.source = "qrc:/assets/icons_material/duotone-wb_sunny-24px.svg"
-                } else if (boxDevice.temperatureC <= 2 && boxDevice.temperatureC > -80) {
+                } else if (boxDevice.temperatureC <= 2
+                           && boxDevice.temperatureC > -80) {
                     alarmFreeze.visible = true
                     alarmFreeze.source = "qrc:/assets/icons_material/baseline-ac_unit-24px.svg"
 
@@ -230,7 +270,6 @@ Item {
                     else
                         alarmFreeze.color = Theme.colorBlue
                 }
-
             } else if (boxDevice.isEnvironmentalSensor) {
 
                 alarmVentilate.visible = false
@@ -238,16 +277,18 @@ Item {
                 //alarmWarning.visible = false
 
                 // Air warning
-                if ((boxDevice.hasVocSensor && boxDevice.voc > 1000) ||
-                    (boxDevice.hasHchoSensor && boxDevice.hcho > 1000) ||
-                    (boxDevice.hasCo2Sensor && boxDevice.co2 > 1500)) {
+                if ((boxDevice.hasVocSensor && boxDevice.voc > 1000)
+                        || (boxDevice.hasHchoSensor && boxDevice.hcho > 1000)
+                        || (boxDevice.hasCo2Sensor && boxDevice.co2 > 1500)) {
                     alarmVentilate.visible = true
                     alarmVentilate.color = Theme.colorRed
-                } else if ((boxDevice.hasVocSensor && boxDevice.voc > 500) ||
-                           (boxDevice.hasHchoSensor && boxDevice.hcho > 500) ||
-                           (boxDevice.hasCo2Sensor && boxDevice.co2 > 850) ||
-                           (boxDevice.hasPM25Sensor && boxDevice.pm25 > 120) ||
-                           (boxDevice.hasPM10Sensor && boxDevice.pm10 > 350)) {
+                } else if ((boxDevice.hasVocSensor && boxDevice.voc > 500)
+                           || (boxDevice.hasHchoSensor && boxDevice.hcho
+                               > 500) || (boxDevice.hasCo2Sensor
+                                          && boxDevice.co2 > 850)
+                           || (boxDevice.hasPM25Sensor && boxDevice.pm25
+                               > 120) || (boxDevice.hasPM10Sensor
+                                          && boxDevice.pm10 > 350)) {
                     alarmVentilate.visible = true
                     alarmVentilate.color = Theme.colorYellow
                 }
@@ -269,12 +310,12 @@ Item {
     function updateSensorData() {
         updateSensorIcon()
         updateSensorWarnings()
-//        if (loaderIndicators.item) loaderIndicators.item.updateData()
+        //        if (loaderIndicators.item) loaderIndicators.item.updateData()
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
-    Rectangle { // bottomSeparator
+    Rectangle {
+        // bottomSeparator
         height: 1
         anchors.left: parent.left
         anchors.leftMargin: -6
@@ -298,21 +339,34 @@ Item {
         radius: 4
         border.width: 2
         border.color: {
-            if (singleColumn) return "transparent"
-            if (mousearea.containsPress) return Theme.colorSecondary
+            if (singleColumn)
+                return "transparent"
+            if (mousearea.containsPress)
+                return Theme.colorSecondary
             return Theme.colorSeparator
         }
-        Behavior on border.color { ColorAnimation { duration: 133 } }
+        Behavior on border.color {
+            ColorAnimation {
+                duration: 133
+            }
+        }
 
         color: boxDevice.selected ? Theme.colorSeparator : Theme.colorDeviceWidget
-        Behavior on color { ColorAnimation { duration: 133 } }
+        Behavior on color {
+            ColorAnimation {
+                duration: 133
+            }
+        }
 
         opacity: boxDevice.selected ? 0.5 : (singleColumn ? 0 : 1)
-        Behavior on opacity { OpacityAnimator { duration: 133 } }
+        Behavior on opacity {
+            OpacityAnimator {
+                duration: 133
+            }
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Item {
         id: deviceWidgetRectangle
         anchors.fill: parent
@@ -325,48 +379,54 @@ Item {
             anchors.fill: parent
             acceptedButtons: Qt.LeftButton | Qt.MiddleButton
 
-            onClicked: (mouse) => {
-                if (typeof boxDevice === "undefined" || !boxDevice) return
+            onClicked: mouse => {
+                           if (typeof boxDevice === "undefined" || !boxDevice)
+                           return
 
-                if (mouse.button === Qt.LeftButton) {
-                    // multi selection
-                    if ((mouse.modifiers & Qt.ControlModifier) ||
-                        (deviceList.selectionMode)) {
-                        if (!boxDevice.selected) {
-                            deviceList.selectDevice(index, boxDevice.deviceType)
-                        } else {
-                            deviceList.deselectDevice(index, boxDevice.deviceType)
-                        }
-                        return
-                    }
+                           if (mouse.button === Qt.LeftButton) {
+                               // multi selection
+                               if ((mouse.modifiers & Qt.ControlModifier)
+                                   || (deviceList.selectionMode)) {
+                                   if (!boxDevice.selected) {
+                                       deviceList.selectDevice(
+                                           index, boxDevice.deviceType)
+                                   } else {
+                                       deviceList.deselectDevice(
+                                           index, boxDevice.deviceType)
+                                   }
+                                   return
+                               }
 
-                    // regular click
-                    //if (boxDevice.isDataAvailable()) {
-                        selectedDevice = boxDevice
+                               // regular click
+                               //if (boxDevice.isDataAvailable()) {
+                               selectedDevice = boxDevice
 
-                        if (boxDevice.isPlantSensor) {
-                            screenDevicePlantSensor.loadDevice(boxDevice)
-                            appContent.state = "DevicePlantSensor"
-                        } else if (boxDevice.isThermometer) {
-                            screenDeviceThermometer.loadDevice(boxDevice)
-                            appContent.state = "DeviceThermometer"
-                        } else if (boxDevice.isEnvironmentalSensor) {
-                            screenDeviceEnvironmental.loadDevice(boxDevice)
-                            appContent.state = "DeviceEnvironmental"
-                        }
-                    //}
-                }
+                               if (boxDevice.isPlantSensor) {
+                                   screenDevicePlantSensor.loadDevice(boxDevice)
+                                   appContent.state = "DevicePlantSensor"
+                               } else if (boxDevice.isThermometer) {
+                                   screenDeviceThermometer.loadDevice(boxDevice)
+                                   appContent.state = "DeviceThermometer"
+                               } else if (boxDevice.isEnvironmentalSensor) {
+                                   screenDeviceEnvironmental.loadDevice(
+                                       boxDevice)
+                                   appContent.state = "DeviceEnvironmental"
+                               }
+                               //}
+                           }
 
-                if (mouse.button === Qt.MiddleButton) {
-                   // multi selection
-                   if (!boxDevice.selected) {
-                       deviceList.selectDevice(index, boxDevice.deviceType)
-                   } else {
-                       deviceList.deselectDevice(index, boxDevice.deviceType)
-                   }
-                   return
-                }
-            }
+                           if (mouse.button === Qt.MiddleButton) {
+                               // multi selection
+                               if (!boxDevice.selected) {
+                                   deviceList.selectDevice(index,
+                                                           boxDevice.deviceType)
+                               } else {
+                                   deviceList.deselectDevice(
+                                       index, boxDevice.deviceType)
+                               }
+                               return
+                           }
+                       }
 
             onPressAndHold: {
                 // multi selection
@@ -380,7 +440,6 @@ Item {
         }
 
         ////////////////
-
         Row {
             id: rowLeft
             anchors.top: parent.top
@@ -394,16 +453,17 @@ Item {
 
             spacing: bigAssMode ? (singleColumn ? 20 : 12) : (singleColumn ? 24 : 10)
 
-            Components.ClipRRect {
+            ClipRRect {
                 width: 60
                 height: width
-                radius: height/2
+                radius: height / 2
                 anchors.verticalCenter: parent.verticalCenter
 
                 Rectangle {
                     color: $Colors.gray200
                     anchors.fill: parent
-                    visible: imageDevice.source.toString().slice(0, 4) === "http"
+                    visible: imageDevice.source.toString().slice(0,
+                                                                 4) === "http"
                 }
 
                 Image {
@@ -412,9 +472,7 @@ Item {
                     fillMode: Image.PreserveAspectCrop
                     asynchronous: true
                 }
-
             }
-
 
             Column {
                 anchors.verticalCenter: parent.verticalCenter
@@ -423,7 +481,7 @@ Item {
                     id: textTitle
                     width: rowLeft.width - imageDevice.width - rowLeft.spacing
 
-//                    textFormat: Text.PlainText
+                    //                    textFormat: Text.PlainText
                     color: Theme.colorText
                     font.pixelSize: bigAssMode ? 22 : 20
                     //font.capitalization: Font.Capitalize
@@ -456,8 +514,10 @@ Item {
                         height: bigAssMode ? 32 : 30
                         anchors.verticalCenter: parent.verticalCenter
 
-                        visible: (boxDevice.hasBattery && boxDevice.deviceBattery >= 0)
-                        source: UtilsDeviceSensors.getDeviceBatteryIcon(boxDevice.deviceBattery)
+                        visible: (boxDevice.hasBattery
+                                  && boxDevice.deviceBattery >= 0)
+                        source: UtilsDeviceSensors.getDeviceBatteryIcon(
+                                    boxDevice.deviceBattery)
                         color: Theme.colorIcon
                         rotation: 90
                         fillMode: Image.PreserveAspectCrop
@@ -475,13 +535,19 @@ Item {
                             id: opa
                             loops: Animation.Infinite
                             alwaysRunToEnd: true
-                            running: (visible &&
-                                      boxDevice.status !== DeviceUtils.DEVICE_OFFLINE &&
-                                      boxDevice.status !== DeviceUtils.DEVICE_QUEUED &&
-                                      boxDevice.status !== DeviceUtils.DEVICE_CONNECTED)
+                            running: (visible
+                                      && boxDevice.status !== DeviceUtils.DEVICE_OFFLINE
+                                      && boxDevice.status !== DeviceUtils.DEVICE_QUEUED
+                                      && boxDevice.status !== DeviceUtils.DEVICE_CONNECTED)
 
-                            PropertyAnimation { to: 0.33; duration: 750; }
-                            PropertyAnimation { to: 1; duration: 750; }
+                            PropertyAnimation {
+                                to: 0.33
+                                duration: 750
+                            }
+                            PropertyAnimation {
+                                to: 1
+                                duration: 750
+                            }
                         }
                     }
                 }
@@ -489,8 +555,8 @@ Item {
         }
 
         ////////////////
-
-        Row { // alarms icons
+        Row {
+            // alarms icons
             height: 24
             spacing: 8
             anchors.right: rowRight.left
@@ -543,8 +609,14 @@ Item {
                         running: visible
                         loops: Animation.Infinite
 
-                        PropertyAnimation { to: 0.1; duration: 1000; }
-                        PropertyAnimation { to: 0.33; duration: 1000; }
+                        PropertyAnimation {
+                            to: 0.1
+                            duration: 1000
+                        }
+                        PropertyAnimation {
+                            to: 0.33
+                            duration: 1000
+                        }
                     }
                 }
             }
@@ -573,12 +645,20 @@ Item {
                         alwaysRunToEnd: true
                         loops: Animation.Infinite
 
-                        PropertyAnimation { to: 0; duration: 1000; }
-                        PropertyAnimation { to: 1; duration: 1000; }
+                        PropertyAnimation {
+                            to: 0
+                            duration: 1000
+                        }
+                        PropertyAnimation {
+                            to: 1
+                            duration: 1000
+                        }
                     }
                 }
             }
-/*
+
+
+            /*
             IconSvg {
                 id: alarmWarning
                 width: bigAssMode ? 28 : 24
@@ -594,7 +674,6 @@ Item {
         }
 
         ////////////////
-
         Row {
             id: rowRight
             anchors.top: parent.top
@@ -608,18 +687,17 @@ Item {
 
             ////
 
-//            Loader {
-//                id: loaderIndicators
-//                anchors.verticalCenter: parent.verticalCenter
+            //            Loader {
+            //                id: loaderIndicators
+            //                anchors.verticalCenter: parent.verticalCenter
 
-//                visible: boxDevice.hasDataToday
+            //                visible: boxDevice.hasDataToday
 
-//                sourceComponent: null
-//                asynchronous: false
-//            }
+            //                sourceComponent: null
+            //                asynchronous: false
+            //            }
 
             ////
-
             IconSvg {
                 id: imageForward
                 width: 32
@@ -633,7 +711,6 @@ Item {
         }
 
         ////////////////
-
         IconSvg {
             id: imageStatus
             width: 32
@@ -649,19 +726,26 @@ Item {
             SequentialAnimation on opacity {
                 id: refreshAnimation
                 loops: Animation.Infinite
-                running: (visible &&
-                          boxDevice.status === DeviceUtils.DEVICE_CONNECTING ||
-                          boxDevice.status === DeviceUtils.DEVICE_CONNECTED ||
-                          boxDevice.status === DeviceUtils.DEVICE_WORKING)
+                running: (visible
+                          && boxDevice.status === DeviceUtils.DEVICE_CONNECTING
+                          || boxDevice.status === DeviceUtils.DEVICE_CONNECTED
+                          || boxDevice.status === DeviceUtils.DEVICE_WORKING)
                 alwaysRunToEnd: true
-                OpacityAnimator { from: 0.8; to: 0; duration: 750 }
-                OpacityAnimator { from: 0; to: 0.8; duration: 750 }
+                OpacityAnimator {
+                    from: 0.8
+                    to: 0
+                    duration: 750
+                }
+                OpacityAnimator {
+                    from: 0
+                    to: 0.8
+                    duration: 750
+                }
             }
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Component {
         id: componentPlantSensor
 
@@ -674,12 +758,8 @@ Item {
             property int sensorWidth: isPhone ? 8 : (bigAssMode ? 12 : 10)
             property int sensorRadius: bigAssMode ? 3 : 2
 
-            function initData() {
-                //
-            }
-            function updateData() {
-                //
-            }
+            function initData() {}
+            function updateData() {}
 
             Item {
                 id: hygro
@@ -703,11 +783,18 @@ Item {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
 
-                    height: UtilsNumber.normalize(boxDevice.soilMoisture, boxDevice.soilMoisture_limitMin - 1, boxDevice.soilMoisture_limitMax) * rowRight.height
+                    height: UtilsNumber.normalize(
+                                boxDevice.soilMoisture,
+                                boxDevice.soilMoisture_limitMin - 1,
+                                boxDevice.soilMoisture_limitMax) * rowRight.height
 
                     color: Theme.colorBlue
                     radius: rectangleSensors.sensorRadius
-                    Behavior on height { NumberAnimation { duration: 333 } }
+                    Behavior on height {
+                        NumberAnimation {
+                            duration: 333
+                        }
+                    }
                 }
             }
 
@@ -733,11 +820,18 @@ Item {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
 
-                    height: UtilsNumber.normalize(boxDevice.soilConductivity, boxDevice.soilConductivity_limitMin, boxDevice.soilConductivity_limitMax) * rowRight.height
+                    height: UtilsNumber.normalize(
+                                boxDevice.soilConductivity,
+                                boxDevice.soilConductivity_limitMin,
+                                boxDevice.soilConductivity_limitMax) * rowRight.height
 
                     color: Theme.colorRed
                     radius: rectangleSensors.sensorRadius
-                    Behavior on height { NumberAnimation { duration: 333 } }
+                    Behavior on height {
+                        NumberAnimation {
+                            duration: 333
+                        }
+                    }
                 }
             }
 
@@ -761,11 +855,18 @@ Item {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
 
-                    height: UtilsNumber.normalize(boxDevice.temperatureC, boxDevice.temperature_limitMin - 1, boxDevice.temperature_limitMax) * rowRight.height
+                    height: UtilsNumber.normalize(
+                                boxDevice.temperatureC,
+                                boxDevice.temperature_limitMin - 1,
+                                boxDevice.temperature_limitMax) * rowRight.height
 
                     color: Theme.colorGreen
                     radius: rectangleSensors.sensorRadius
-                    Behavior on height { NumberAnimation { duration: 333 } }
+                    Behavior on height {
+                        NumberAnimation {
+                            duration: 333
+                        }
+                    }
                 }
             }
 
@@ -791,18 +892,24 @@ Item {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
 
-                    height: UtilsNumber.normalize(boxDevice.luminosityLux, boxDevice.luminosityLux_limitMin, boxDevice.luminosityLux_limitMax) * rowRight.height
+                    height: UtilsNumber.normalize(
+                                boxDevice.luminosityLux,
+                                boxDevice.luminosityLux_limitMin,
+                                boxDevice.luminosityLux_limitMax) * rowRight.height
 
                     color: Theme.colorYellow
                     radius: rectangleSensors.sensorRadius
-                    Behavior on height { NumberAnimation { duration: 333 } }
+                    Behavior on height {
+                        NumberAnimation {
+                            duration: 333
+                        }
+                    }
                 }
             }
         }
     }
 
     ////////////////
-
     Component {
         id: componentText_1l
 
@@ -810,7 +917,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 4
 
-            function initData() { }
+            function initData() {}
 
             function updateData() {
                 if (boxDevice.isEnvironmentalSensor) {
@@ -825,12 +932,10 @@ Item {
                     if (boxDevice.hasTemperatureSensor) {
                         text.text = boxDevice.temperature.toFixed(1)
                         unit.text = "°"
-                    }
-                    else if (boxDevice.hasHumiditySensor) {
+                    } else if (boxDevice.hasHumiditySensor) {
                         text.text = boxDevice.humidity.toFixed(0)
                         unit.text = "%"
-                    }
-                    else if (boxDevice.hasPressureSensor) {
+                    } else if (boxDevice.hasPressureSensor) {
                         text.text = boxDevice.pressure.toFixed(0)
                         unit.text = "hPa"
                     }
@@ -859,7 +964,6 @@ Item {
     }
 
     ////////////////
-
     Component {
         id: componentText_2l
 
@@ -867,11 +971,13 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 0
 
-            function initData() { }
+            function initData() {}
 
             function updateData() {
-                if (boxDevice.temperature > -40) textOne.text = boxDevice.temperature.toFixed(1) + "°"
-                if (boxDevice.humidity > 0) textTwo.text = boxDevice.humidity.toFixed(0) + "%"
+                if (boxDevice.temperature > -40)
+                    textOne.text = boxDevice.temperature.toFixed(1) + "°"
+                if (boxDevice.humidity > 0)
+                    textTwo.text = boxDevice.humidity.toFixed(0) + "%"
             }
 
             Text {
@@ -896,7 +1002,6 @@ Item {
     }
 
     ////////////////
-
     Component {
         id: componentEnvironmentalGauge
 
@@ -914,12 +1019,18 @@ Item {
                 if (boxDevice.hasSetting("primary")) {
                     primaryValue = boxDevice.getSetting("primary")
                 } else {
-                    if (boxDevice.hasVocSensor) primaryValue = "voc"
-                    else if (boxDevice.hasCo2Sensor) primaryValue = "co2"
-                    else if (boxDevice.hasPM10Sensor) primaryValue = "pm10"
-                    else if (boxDevice.hasHchoSensor) primaryValue = "hcho"
-                    else if (boxDevice.hasGeigerCounter) primaryValue = "nuclear"
-                    else primaryValue = "hygrometer"
+                    if (boxDevice.hasVocSensor)
+                        primaryValue = "voc"
+                    else if (boxDevice.hasCo2Sensor)
+                        primaryValue = "co2"
+                    else if (boxDevice.hasPM10Sensor)
+                        primaryValue = "pm10"
+                    else if (boxDevice.hasHchoSensor)
+                        primaryValue = "hcho"
+                    else if (boxDevice.hasGeigerCounter)
+                        primaryValue = "nuclear"
+                    else
+                        primaryValue = "hygrometer"
                 }
 
                 if (primaryValue === "voc") {
@@ -937,7 +1048,8 @@ Item {
                     limitMax = 750
                     gaugeValue.value = boxDevice.hcho
                 } else if (primaryValue === "co2") {
-                    gaugeLegend.text = boxDevice.haseCo2Sensor ? qsTr("eCO₂") : qsTr("CO₂")
+                    gaugeLegend.text = boxDevice.haseCo2Sensor ? qsTr("eCO₂") : qsTr(
+                                                                     "CO₂")
                     gaugeValue.from = 0
                     gaugeValue.to = 2000
                     limitMin = 850
@@ -966,23 +1078,36 @@ Item {
                 }
 
                 // value
-                if (primaryValue === "voc") gaugeValue.value = boxDevice.voc
-                else if (primaryValue === "hcho") gaugeValue.value = boxDevice.hcho
-                else if (primaryValue === "co2") gaugeValue.value = boxDevice.co2
-                else if (primaryValue === "co") gaugeValue.value = boxDevice.co
-                else if (primaryValue === "o2") gaugeValue.value = boxDevice.o2
-                else if (primaryValue === "o3") gaugeValue.value = boxDevice.o3
-                else if (primaryValue === "no2") gaugeValue.value = boxDevice.no2
-                else if (primaryValue === "so2") gaugeValue.value = boxDevice.so2
-                else if (primaryValue === "pm1") gaugeValue.value = boxDevice.pm1
-                else if (primaryValue === "pm25") gaugeValue.value = boxDevice.pm25
-                else if (primaryValue === "pm10") gaugeValue.value = boxDevice.pm10
+                if (primaryValue === "voc")
+                    gaugeValue.value = boxDevice.voc
+                else if (primaryValue === "hcho")
+                    gaugeValue.value = boxDevice.hcho
+                else if (primaryValue === "co2")
+                    gaugeValue.value = boxDevice.co2
+                else if (primaryValue === "co")
+                    gaugeValue.value = boxDevice.co
+                else if (primaryValue === "o2")
+                    gaugeValue.value = boxDevice.o2
+                else if (primaryValue === "o3")
+                    gaugeValue.value = boxDevice.o3
+                else if (primaryValue === "no2")
+                    gaugeValue.value = boxDevice.no2
+                else if (primaryValue === "so2")
+                    gaugeValue.value = boxDevice.so2
+                else if (primaryValue === "pm1")
+                    gaugeValue.value = boxDevice.pm1
+                else if (primaryValue === "pm25")
+                    gaugeValue.value = boxDevice.pm25
+                else if (primaryValue === "pm10")
+                    gaugeValue.value = boxDevice.pm10
 
                 // limits
                 if (limitMin > 0 && limitMax > 0) {
                     var clr = Theme.colorGreen
-                    if (gaugeValue.value > limitMax) clr = Theme.colorRed
-                    else if (gaugeValue.value > limitMin) clr = Theme.colorOrange
+                    if (gaugeValue.value > limitMax)
+                        clr = Theme.colorRed
+                    else if (gaugeValue.value > limitMin)
+                        clr = Theme.colorOrange
                     gaugeValue.arcColor = clr
                     gaugeValue.backgroundColor = clr
                 }

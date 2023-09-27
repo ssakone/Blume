@@ -1,0 +1,16 @@
+# File auto generated with CMake qt_generate_qmldir. Run CMake to regenerate if files changed.
+
+module Blume.pages.Plant
+
+Plant 1.0 Plant.qml
+PlantBrowser 1.0 PlantBrowser.qml
+PlantDesease 1.0 PlantDesease.qml
+PlantDeseaseDetails 1.0 PlantDeseaseDetails.qml
+PlantDeseaseEncylopedie 1.0 PlantDeseaseEncylopedie.qml
+PlantFlowerchecker 1.0 PlantFlowerchecker.qml
+PlantFrequencies 1.0 PlantFrequencies.qml
+PlantIdentifier 1.0 PlantIdentifier.qml
+PlantIdentifierDetails 1.0 PlantIdentifierDetails.qml
+PlantScreen 1.0 PlantScreen.qml
+PlantSearch 1.0 PlantSearch.qml
+PlantShortDescriptions 1.0 PlantShortDescriptions.qml

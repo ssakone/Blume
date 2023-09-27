@@ -4,8 +4,12 @@ import QtQuick.Layouts
 
 import ThemeEngine 1.0
 import DeviceUtils 1.0
-import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
+
 import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+import "components_js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 import "./pages/Plant"
 
 Item {
@@ -14,16 +18,19 @@ Item {
     // 1: single column (single column view or portrait tablet)
     // 2: wide mode, two main rows (wide view)
     // 3: wide mode, two main columns (wide view, phones)
-    property int uiMode: (singleColumn || (isTablet && screenOrientation === Qt.PortraitOrientation)) ? 1 : (isPhone ? 3 : 2)
+    property int uiMode: (singleColumn
+                          || (isTablet && screenOrientation
+                              === Qt.PortraitOrientation)) ? 1 : (isPhone ? 3 : 2)
 
     property var dataIndicators: indicatorsLoader.item
     property var dataChart: graphLoader.item
 
     ////////////////////////////////////////////////////////////////////////////
-
     function loadData() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        if (!currentDevice.isPlantSensor) return
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
+        if (!currentDevice.isPlantSensor)
+            return
         //console.log("DevicePlantSensorData // loadData() >> " + currentDevice)
 
         // force graph reload
@@ -68,10 +75,11 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     function updateHeader() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        if (!currentDevice.isPlantSensor) return
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
+        if (!currentDevice.isPlantSensor)
+            return
         //console.log("DevicePlantSensorData // updateHeader() >> " + currentDevice)
 
         // Status
@@ -86,11 +94,14 @@ Item {
     }
 
     function updateStatusText() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        if (!currentDevice.isPlantSensor) return
-        //console.log("DevicePlantSensorData // updateStatusText() >> " + currentDevice)
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
+        if (!currentDevice.isPlantSensor)
+            return
 
-        textStatus.text = UtilsDeviceSensors.getDeviceStatusText(currentDevice.status)
+        //console.log("DevicePlantSensorData // updateStatusText() >> " + currentDevice)
+        textStatus.text = UtilsDeviceSensors.getDeviceStatusText(
+                    currentDevice.status)
         textStatus.color = Theme.colorHighContrast
         textStatus.font.bold = false
 
@@ -99,7 +110,8 @@ Item {
                 if (currentDevice.lastUpdateMin <= 1)
                     textStatus.text = qsTr("Synced")
                 else
-                    textStatus.text = qsTr("Synced %1 ago").arg(currentDevice.lastUpdateStr)
+                    textStatus.text = qsTr("Synced %1 ago").arg(
+                                currentDevice.lastUpdateStr)
             } else {
                 textStatus.color = Theme.colorRed
             }
@@ -107,17 +119,21 @@ Item {
     }
 
     function updateData() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        if (!currentDevice.isPlantSensor) return
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
+        if (!currentDevice.isPlantSensor)
+            return
         //console.log("DevicePlantSensorData // updateData() >> " + currentDevice)
     }
 
     function updateLegendSizes() {
-        if (indicatorsLoader.status === Loader.Ready) dataIndicators.updateLegendSize()
+        if (indicatorsLoader.status === Loader.Ready)
+            dataIndicators.updateLegendSize()
     }
 
     function updateGraph() {
-        if (graphLoader.status === Loader.Ready) dataChart.updateGraph()
+        if (graphLoader.status === Loader.Ready)
+            dataChart.updateGraph()
     }
 
     function backAction() {
@@ -138,21 +154,22 @@ Item {
     }
 
     function isHistoryMode() {
-        if (graphLoader.status === Loader.Ready) return dataChart.isIndicator()
+        if (graphLoader.status === Loader.Ready)
+            return dataChart.isIndicator()
         return false
     }
     function resetHistoryMode() {
-        if (graphLoader.status === Loader.Ready) dataChart.resetIndicator()
+        if (graphLoader.status === Loader.Ready)
+            dataChart.resetIndicator()
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Rectangle {
         id: subHeaderBackground
         width: parent.width
         height: (uiMode === 1) ? itemHeader.height : contentGrid_lvl2.height
-        //Behavior on height { NumberAnimation { duration: 133 } }
 
+        //Behavior on height { NumberAnimation { duration: 133 } }
         visible: (uiMode !== 3)
         color: headerUnicolor ? Theme.colorBackground : Theme.colorForeground
 
@@ -169,7 +186,6 @@ Item {
     }
 
     ////////
-
     Grid {
         id: contentGrid_lvl1
         anchors.fill: parent
@@ -185,7 +201,6 @@ Item {
             spacing: 0
 
             ////////
-
             Item {
                 id: itemHeader
                 width: parent.columns === 1 ? parent.width : (parent.width * 0.36)
@@ -208,7 +223,8 @@ Item {
                         radius: height / 2
                         color: $Colors.gray200
 
-                        visible: !(linkedPlant === undefined || linkedPlant === null)
+                        visible: !(linkedPlant === undefined
+                                   || linkedPlant === null)
 
                         RowLayout {
                             anchors.fill: parent
@@ -233,16 +249,16 @@ Item {
                                 }
                             }
 
-
                             Column {
                                 Layout.fillWidth: true
                                 spacing: 5
                                 Label {
-                                    text: linkedPlant?.name_scientific  || ""
+                                    text: linkedPlant?.name_scientific || ""
                                     font.pixelSize: 16
                                 }
                                 Label {
-                                    text: linkedPlant?.noms_communs?.length > 0 ? linkedPlant?.noms_communs[0].name : ""
+                                    text: linkedPlant?.noms_communs?.length
+                                          > 0 ? linkedPlant?.noms_communs[0].name : ""
                                     font.pixelSize: 13
                                 }
                             }
@@ -270,10 +286,11 @@ Item {
                                     fulltextColor: $Colors.white
                                     componentRadius: 0
                                     onClicked: {
-                                        $Model.device.sqlDeleteByDeviceAddress(currentDevice.deviceAddress)
-                                        .then(function (rs) {
-                                            plantScreenDetails.close()
-                                        })
+                                        $Model.device.sqlDeleteByDeviceAddress(
+                                                    currentDevice.deviceAddress).then(
+                                                    function (rs) {
+                                                        plantScreenDetails.close()
+                                                    })
                                     }
                                 }
                             }
@@ -318,7 +335,8 @@ Item {
                             font.bold: false
                             color: Theme.colorHighContrast
 
-                            text: (linkedSpaceName && linkedSpaceName.slice(1, -1))  || ""
+                            text: (linkedSpaceName && linkedSpaceName.slice(
+                                       1, -1)) || ""
                         }
 
                         IconSvg {
@@ -332,8 +350,13 @@ Item {
                             source: "qrc:/assets/icons_material/duotone-edit-24px.svg"
                             color: Theme.colorSubText
 
-                            opacity: (isMobile || !textInputLocation.text || textInputLocation.focus) ? 0.9 : 0
-                            Behavior on opacity { OpacityAnimator { duration: 133 } }
+                            opacity: (isMobile || !textInputLocation.text
+                                      || textInputLocation.focus) ? 0.9 : 0
+                            Behavior on opacity {
+                                OpacityAnimator {
+                                    duration: 133
+                                }
+                            }
                         }
                     }
 
@@ -376,38 +399,48 @@ Item {
                     Connections {
                         target: $Model.device
                         function onUpdated() {
-                            $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
-                                linkedPlant = JSON.parse(rs.plant_json)
-                                linkedSpaceName = rs?.space_name
-                                currentDevice.devicePlantName = linkedPlant?.name_scientific
-                                currentDevice.deviceLocationName = linkedSpaceName
-                                console.log("\n\n\n Catch onUpdated()")
-                            })
+                            $Model.device.sqlGetByDeviceAddress(
+                                        currentDevice.deviceAddress).then(
+                                        function (rs) {
+                                            linkedPlant = JSON.parse(
+                                                        rs.plant_json)
+                                            linkedSpaceName = rs?.space_name
+                                            currentDevice.devicePlantName
+                                                    = linkedPlant?.name_scientific
+                                            currentDevice.deviceLocationName = linkedSpaceName
+                                            console.log("\n\n\n Catch onUpdated()")
+                                        })
                         }
                     }
                     Connections {
                         target: $Model.device
                         function onCreated() {
-                            $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
-                                linkedPlant = JSON.parse(rs.plant_json)
-                                linkedSpaceName = rs?.space_name
-                                currentDevice.devicePlantName = linkedPlant?.name_scientific
-                                currentDevice.deviceLocationName = linkedSpaceName
-                                console.log("\n\n\n Catch onCreated() ")
-                            })
+                            $Model.device.sqlGetByDeviceAddress(
+                                        currentDevice.deviceAddress).then(
+                                        function (rs) {
+                                            linkedPlant = JSON.parse(
+                                                        rs.plant_json)
+                                            linkedSpaceName = rs?.space_name
+                                            currentDevice.devicePlantName
+                                                    = linkedPlant?.name_scientific
+                                            currentDevice.deviceLocationName = linkedSpaceName
+                                            console.log("\n\n\n Catch onCreated() ")
+                                        })
                         }
                     }
 
                     Connections {
                         target: $Model.device
                         function onDeleted() {
-                            $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
-                                linkedPlant = undefined
-                                linkedSpaceName = ""
-                                currentDevice.devicePlantName = ""
-                                currentDevice.deviceLocationName = linkedSpaceName
-                                console.log("\n\n\n Catch onDeleted() ")
-                            })
+                            $Model.device.sqlGetByDeviceAddress(
+                                        currentDevice.deviceAddress).then(
+                                        function (rs) {
+                                            linkedPlant = undefined
+                                            linkedSpaceName = ""
+                                            currentDevice.devicePlantName = ""
+                                            currentDevice.deviceLocationName = linkedSpaceName
+                                            console.log("\n\n\n Catch onDeleted() ")
+                                        })
                         }
                     }
 
@@ -439,13 +472,15 @@ Item {
                                 TabButton {
                                     text: qsTr("Plants of my garden")
                                     background: Rectangle {
-                                        color: tabBar.currentIndex === 0 ? Theme.colorPrimary : $Colors.white
+                                        color: tabBar.currentIndex
+                                               === 0 ? Theme.colorPrimary : $Colors.white
                                     }
                                 }
                                 TabButton {
                                     text: qsTr("All plants")
                                     background: Rectangle {
-                                        color: tabBar.currentIndex === 1 ? Theme.colorPrimary : $Colors.white
+                                        color: tabBar.currentIndex
+                                               === 1 ? Theme.colorPrimary : $Colors.white
                                     }
                                 }
                             }
@@ -467,25 +502,28 @@ Item {
                                         spacing: 10
                                         model: $Model.space.plantInSpace
                                         delegate: GardenPlantLine {
-                                            property var plant: JSON.parse(plant_json)
+                                            property var plant: JSON.parse(
+                                                                    plant_json)
                                             width: parent.width
                                             height: 100
                                             title: plant.name_scientific
-                                            subtitle: plant.noms_communs[0]?.name ?? ""
+                                            subtitle: plant.noms_communs[0]?.name
+                                                      ?? ""
                                             roomName: {
-                                                $Model.space.sqlGet(space_id).then(res => {
-                                                                                          roomName = res.libelle
-                                                                                      }).catch(
+                                                $Model.space.sqlGet(
+                                                            space_id).then(
+                                                            res => {
+                                                                roomName = res.libelle
+                                                            }).catch(
                                                             console.warn)
                                                 return ""
                                             }
-                                            imageSource: plant.images_plantes.length
-                                                         > 0 ? "https://blume.mahoudev.com/assets/"
-                                                               + plant.images_plantes[0].directus_files_id : ""
+                                            imageSource: plant.images_plantes.length > 0 ? "https://blume.mahoudev.com/assets/" + plant.images_plantes[0].directus_files_id : ""
                                             onClicked: {
                                                 plantScreenDetailsLoader.active = true
-                                                plantScreenDetailsLoader.item.loadPlantDetails(plant)
-                                             }
+                                                plantScreenDetailsLoader.item.loadPlantDetails(
+                                                            plant)
+                                            }
                                         }
                                     }
                                 }
@@ -498,110 +536,116 @@ Item {
                                         hideCameraSearch: true
                                         onItemClicked: plantData => {
                                                            plantScreenDetailsLoader.active = true
-                                                           plantScreenDetailsLoader.item.loadPlantDetails(plantData)
-                                            console.log(currentDevice.deviceAddress)
-                                        }
+                                                           plantScreenDetailsLoader.item.loadPlantDetails(
+                                                               plantData)
+                                                           console.log(
+                                                               currentDevice.deviceAddress)
+                                                       }
                                     }
                                 }
-
                             }
 
                             Loader {
                                 id: plantScreenDetailsLoader
                                 active: false
                                 sourceComponent: PlantScreenDetails {
-                                            id: plantScreenDetailsPopup
+                                    id: plantScreenDetailsPopup
 
-                                            function loadPlantDetails(data) {
-                                                plantScreenDetailsPopup.plant = data
-                                                plantScreenDetailsPopup.open()
-                                            }
+                                    function loadPlantDetails(data) {
+                                        plantScreenDetailsPopup.plant = data
+                                        plantScreenDetailsPopup.open()
+                                    }
 
-                                            RowLayout {
-                                                id: bottomSelector
-                                                width: parent.width
-                                                height: 60
-                                                anchors.bottom: parent.bottom
-                                                spacing: 0
+                                    RowLayout {
+                                        id: bottomSelector
+                                        width: parent.width
+                                        height: 60
+                                        anchors.bottom: parent.bottom
+                                        spacing: 0
 
-                                                ButtonWireframe {
-                                                    Layout.fillWidth: true
-                                                    Layout.preferredHeight: parent.height
-                                                    text:  qsTr("Cancel")
-                                                    componentRadius: 0
-                                                    onClicked:{
-                                                         plantScreenDetailsPopup.close()
-                                                         plantScreenDetailsPopup.plant = null
-                                                    }
-                                                }
-
-                                                ButtonWireframe {
-                                                    Layout.fillWidth: true
-                                                    Layout.preferredHeight: parent.height
-                                                    fullColor: true
-                                                    primaryColor: Theme.colorPrimary
-                                                    fulltextColor: "white"
-                                                    componentRadius: 0
-                                                    text:  qsTr("Choose this plant")
-
-                                                    function save(plant, space) {
-                                                        console.log("\n\n\n function save ", plant, space)
-                                                        $Model.device.sqlGetByDeviceAddress(currentDevice.deviceAddress).then(function (rs) {
-                                                            if(rs) {
-                                                                console.log("\n\n IN update -------------------- ", plant.id, space.id)
-                                                                $Model.device.sqlUpdateByDeviceAddress(currentDevice.deviceAddress, {
-                                                                                        plant_id: plant.id,
-                                                                                        space_id: space.id,
-                                                                                        space_name: space.libelle,
-                                                                                        plant_name: plantScreenDetailsPopup.plant.name_scientific,
-                                                                                        plant_json: JSON.stringify(plantScreenDetailsPopup.plant)
-                                                                                        }).then(function (res) {
-                                                                                            plantScreenDetailsPopup.close()
-                                                                                            plantBrowserPop.close()
-                                                                                        }).catch(err => console.warn(JSON.stringify(err)))
-                                                            } else {
-                                                                console.log("\n\n IN create -------------------- ", plant.id, space.id)
-                                                                $Model.device.sqlCreate({
-                                                                                        device_address: currentDevice.deviceAddress,
-                                                                                        plant_id: plant.id,
-                                                                                        space_id: space.id,
-                                                                                        space_name: space.libelle,
-                                                                                        plant_name: plantScreenDetailsPopup.plant.name_scientific,
-                                                                                        plant_json: JSON.stringify(plantScreenDetailsPopup.plant)
-                                                                                        }).then(function (res) {
-                                                                                            plantScreenDetailsPopup.close()
-                                                                                            plantBrowserPop.close()
-                                                                                        }).catch(err => console.warn(JSON.stringify(err)))
-
-                                                            }
-
-                                                        })
-                                                    }
-
-                                                    onClicked: {
-                                                        $Model.plant.sqlGetWhere({remote_id: `${plantScreenDetailsPopup.plant.id}`}).then(function (res){
-                                                            console.log("\n My RES ", res)
-                                                            if(res?.length > 1) {
-                                                                console.log("\n\n // This plant already has one Room")
-                                                                plantScreenDetailsPopup.selectGardenSpace(save)
-                                                                console.log("\n end")
-                                                            } else {
-                                                                console.log("\n gonna add to garden")
-                                                                plantScreenDetailsPopup.addToGarden(save)
-
-                                                            }
-                                                                                              }).catch(function (err){
-                                                                                              console.warn(JSON.stringify(err))
-                                                                                              })
-
-                                                    }
-                                                }
+                                        ButtonWireframe {
+                                            Layout.fillWidth: true
+                                            Layout.preferredHeight: parent.height
+                                            text: qsTr("Cancel")
+                                            componentRadius: 0
+                                            onClicked: {
+                                                plantScreenDetailsPopup.close()
+                                                plantScreenDetailsPopup.plant = null
                                             }
                                         }
 
+                                        ButtonWireframe {
+                                            Layout.fillWidth: true
+                                            Layout.preferredHeight: parent.height
+                                            fullColor: true
+                                            primaryColor: Theme.colorPrimary
+                                            fulltextColor: "white"
+                                            componentRadius: 0
+                                            text: qsTr("Choose this plant")
 
+                                            function save(plant, space) {
+                                                console.log("\n\n\n function save ",
+                                                            plant, space)
+                                                $Model.device.sqlGetByDeviceAddress(
+                                                            currentDevice.deviceAddress).then(
+                                                            function (rs) {
+                                                                if (rs) {
+                                                                    console.log("\n\n IN update -------------------- ", plant.id, space.id)
+                                                                    $Model.device.sqlUpdateByDeviceAddress(currentDevice.deviceAddress, {
+                                                                                                               "plant_id": plant.id,
+                                                                                                               "space_id": space.id,
+                                                                                                               "space_name": space.libelle,
+                                                                                                               "plant_name": plantScreenDetailsPopup.plant.name_scientific,
+                                                                                                               "plant_json": JSON.stringify(plantScreenDetailsPopup.plant)
+                                                                                                           }).then(function (res) {
+                                                                                                               plantScreenDetailsPopup.close()
+                                                                                                               plantBrowserPop.close()
+                                                                                                           }).catch(err => console.warn(JSON.stringify(err)))
+                                                                } else {
+                                                                    console.log("\n\n IN create -------------------- ", plant.id, space.id)
+                                                                    $Model.device.sqlCreate({
+                                                                                                "device_address": currentDevice.deviceAddress,
+                                                                                                "plant_id": plant.id,
+                                                                                                "space_id": space.id,
+                                                                                                "space_name": space.libelle,
+                                                                                                "plant_name": plantScreenDetailsPopup.plant.name_scientific,
+                                                                                                "plant_json": JSON.stringify(plantScreenDetailsPopup.plant)
+                                                                                            }).then(
+                                                                                function (res) {
+                                                                                    plantScreenDetailsPopup.close()
+                                                                                    plantBrowserPop.close()
+                                                                                }).catch(
+                                                                                err => console.warn(
+                                                                                    JSON.stringify(
+                                                                                        err)))
+                                                                }
+                                                            })
+                                            }
+
+                                            onClicked: {
+                                                $Model.plant.sqlGetWhere({
+                                                                             "remote_id": `${plantScreenDetailsPopup.plant.id}`
+                                                                         }).then(
+                                                            function (res) {
+                                                                console.log("\n My RES ",
+                                                                            res)
+                                                                if (res?.length > 1) {
+                                                                    console.log("\n\n // This plant already has one Room")
+                                                                    plantScreenDetailsPopup.selectGardenSpace(save)
+                                                                    console.log("\n end")
+                                                                } else {
+                                                                    console.log("\n gonna add to garden")
+                                                                    plantScreenDetailsPopup.addToGarden(save)
+                                                                }
+                                                            }).catch(
+                                                            function (err) {
+                                                                console.warn(JSON.stringify(err))
+                                                            })
+                                            }
+                                        }
+                                    }
+                                }
                             }
-
                         }
 
                         ButtonWireframe {
@@ -626,7 +670,6 @@ Item {
             }
 
             ////////
-
             Item {
                 id: itemIndicators
                 height: Math.max(itemHeader.height, indicatorsLoader.height)
@@ -647,12 +690,14 @@ Item {
         }
 
         ////////////////////////////////////////////////////////////////////////
-
         Item {
             width: (contentGrid_lvl1.width / contentGrid_lvl1.columns)
             height: {
-                if (contentGrid_lvl1.columns === 1) return (contentGrid_lvl1.height - contentGrid_lvl1.spacing - contentGrid_lvl2.height)
-                else return contentGrid_lvl1.height
+                if (contentGrid_lvl1.columns === 1)
+                    return (contentGrid_lvl1.height - contentGrid_lvl1.spacing
+                            - contentGrid_lvl2.height)
+                else
+                    return contentGrid_lvl1.height
             }
             clip: true
             visible: false
@@ -672,7 +717,11 @@ Item {
                 anchors.fill: parent
 
                 opacity: 0
-                Behavior on opacity { OpacityAnimator { duration: (graphLoader.status === Loader.Ready) ? 200 : 0 } }
+                Behavior on opacity {
+                    OpacityAnimator {
+                        duration: (graphLoader.status === Loader.Ready) ? 200 : 0
+                    }
+                }
 
                 asynchronous: true
                 onLoaded: {
@@ -680,7 +729,9 @@ Item {
                     dataChart.updateGraph()
 
                     graphLoader.opacity = 1
-                    noDataIndicator.visible = (currentDevice.countDataNamed("temperature", dataChart.daysVisible) <= 1)
+                    noDataIndicator.visible = (currentDevice.countDataNamed(
+                                                   "temperature",
+                                                   dataChart.daysVisible) <= 1)
                 }
             }
         }

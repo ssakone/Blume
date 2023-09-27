@@ -2,6 +2,11 @@ import QtQuick
 
 import ThemeEngine 1.0
 
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+
 Rectangle {
     id: mobileMenu
     anchors.left: parent.left
@@ -15,17 +20,16 @@ Rectangle {
     height: hhh + screenPaddingBottom
     color: appWindow.isTablet ? Theme.colorTabletmenu : Theme.colorBackground
 
-    visible: (isTablet && (appContent.state === "DevicePlantSensor" ||
-                           appContent.state === "DeviceList" ||
-                           appContent.state === "DeviceBrowser" ||
-                           appContent.state === "PlantBrowser" ||
-                           appContent.state === "Settings" ||
-                           appContent.state === "About")) ||
-             (isPhone && screenOrientation === Qt.PortraitOrientation &&
-                          (appContent.state === "DevicePlantSensor"))
+    visible: (isTablet && (appContent.state === "DevicePlantSensor"
+                           || appContent.state === "DeviceList"
+                           || appContent.state === "DeviceBrowser"
+                           || appContent.state === "PlantBrowser"
+                           || appContent.state === "Settings"
+                           || appContent.state === "About"))
+             || (isPhone && screenOrientation
+                 === Qt.PortraitOrientation && (appContent.state === "DevicePlantSensor"))
 
     ////////////////////////////////////////////////////////////////////////////
-
     Rectangle {
         anchors.top: parent.top
         anchors.left: parent.left
@@ -37,14 +41,16 @@ Rectangle {
     }
 
     // prevent clicks below this area
-    MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; }
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.AllButtons
+    }
 
     ////////////////////////////////////////////////////////////////////////////
-
-    signal deviceDataButtonClicked()
-    signal deviceHistoryButtonClicked()
-    signal devicePlantButtonClicked()
-    signal deviceSettingsButtonClicked()
+    signal deviceDataButtonClicked
+    signal deviceHistoryButtonClicked
+    signal devicePlantButtonClicked
+    signal deviceSettingsButtonClicked
 
     function setActiveDeviceData() {
         menuDeviceData.selected = true
@@ -72,18 +78,20 @@ Rectangle {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
-    Row { // main menu
+    Row {
+        // main menu
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -screenPaddingBottom
-        spacing: (!appWindow.wideMode || (appWindow.isPhone && utilsScreen.screenSize < 5.0)) ? -10 : 20
+        spacing: (!appWindow.wideMode
+                  || (appWindow.isPhone
+                      && utilsScreen.screenSize < 5.0)) ? -10 : 20
 
-        visible: (appContent.state === "DeviceList" ||
-                  appContent.state === "DeviceBrowser" ||
-                  appContent.state === "PlantBrowser" ||
-                  appContent.state === "Settings" ||
-                  appContent.state === "About")
+        visible: (appContent.state === "DeviceList"
+                  || appContent.state === "DeviceBrowser"
+                  || appContent.state === "PlantBrowser"
+                  || appContent.state === "Settings"
+                  || appContent.state === "About")
 
         MobileMenuItem_horizontal {
             id: menuMainView
@@ -149,18 +157,20 @@ Rectangle {
             colorContent: Theme.colorTabletmenuContent
             colorHighlight: Theme.colorTabletmenuHighlight
 
-            selected: (appContent.state === "About" || appContent.state === "Permissions")
+            selected: (appContent.state === "About"
+                       || appContent.state === "Permissions")
             onClicked: screenAbout.loadScreen()
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
-    Row { // plant care
+    Row {
+        // plant care
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -screenPaddingBottom
-        spacing: (!wideMode || (isPhone && utilsScreen.screenSize < 5.0)) ? -10 : 20
+        spacing: (!wideMode || (isPhone
+                                && utilsScreen.screenSize < 5.0)) ? -10 : 20
 
         visible: (appContent.state === "DevicePlantSensor")
 
@@ -223,23 +233,25 @@ Rectangle {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
-    Row { // thermometer
+    Row {
+        // thermometer
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -screenPaddingBottom
-        spacing: (!wideMode || (isPhone && utilsScreen.screenSize < 5.0)) ? -12 : 24
+        spacing: (!wideMode || (isPhone
+                                && utilsScreen.screenSize < 5.0)) ? -12 : 24
 
         visible: (appContent.state === "DeviceThermometer")
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
-    Row { // environmental
+    Row {
+        // environmental
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -screenPaddingBottom
-        spacing: (!wideMode || (isPhone && utilsScreen.screenSize < 5.0)) ? -12 : 24
+        spacing: (!wideMode || (isPhone
+                                && utilsScreen.screenSize < 5.0)) ? -12 : 24
 
         visible: (appContent.state === "DeviceEnvironmental")
     }

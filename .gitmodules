@@ -1,3 +1,7 @@
 [submodule "SortFilterProxyModel"]
 	path = SortFilterProxyModel
 	url = https://github.com/oKcerG/SortFilterProxyModel
+
+[submodule "HotWatch"]
+	path = HotWatch
+	url = https://github.com/ssakone/HotWatch

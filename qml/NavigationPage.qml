@@ -7,6 +7,7 @@ import "pages/Insect"
 import "pages/Auth"
 import "pages/Garden"
 import "pages/Device"
+import "pages/Social"
 
 Item {
     property var deviceList: Component {
@@ -44,9 +45,6 @@ Item {
     }
     property var plantFlowercheckerPage: Component {
         PlantFlowerchecker {}
-    }
-    property var plantDetailsLinePage: Component {
-        DetailsLineScreen {}
     }
     property var plantSearchPage: Component {
         PlantSearch {}
@@ -90,6 +88,10 @@ Item {
 
     property var feedPage: Component {
         Feed {}
+    }
+
+    property var social: Component {
+        App {}
     }
 
     Connections {

@@ -1,0 +1,11 @@
+# File auto generated with CMake qt_generate_qmldir. Run CMake to regenerate if files changed.
+
+module Blume.pages.Garden
+
+AlarmsCalendar 1.0 AlarmsCalendar.qml
+GardenEditSpace 1.0 GardenEditSpace.qml
+GardenPlantsList 1.0 GardenPlantsList.qml
+GardenScreen 1.0 GardenScreen.qml
+GardenSpaceDetails 1.0 GardenSpaceDetails.qml
+GardenSpaceLinePreview 1.0 GardenSpaceLinePreview.qml
+GardenSpacesList 1.0 GardenSpacesList.qml

@@ -4,6 +4,11 @@ import QtQuick.Controls
 import ThemeEngine 1.0
 import "./pages/Plant"
 
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+
 Item {
     id: plantCareInfos
 

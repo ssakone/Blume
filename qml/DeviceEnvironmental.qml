@@ -3,7 +3,12 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 import DeviceUtils 1.0
-import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
+
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+import "components_js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 
 Loader {
     id: deviceEnvironmental
@@ -11,12 +16,14 @@ Loader {
     property var currentDevice: null
 
     ////////
-
     function loadDevice(clickedDevice) {
         // set device
-        if (typeof clickedDevice === "undefined" || !clickedDevice) return
-        if (!clickedDevice.isEnvironmentalSensor) return
-        if (clickedDevice === currentDevice) return
+        if (typeof clickedDevice === "undefined" || !clickedDevice)
+            return
+        if (!clickedDevice.isEnvironmentalSensor)
+            return
+        if (clickedDevice === currentDevice)
+            return
         currentDevice = clickedDevice
 
         // load screen
@@ -28,14 +35,12 @@ Loader {
     }
 
     ////////
-
     function backAction() {
         if (deviceEnvironmental.status === Loader.Ready)
             deviceEnvironmental.item.backAction()
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     active: false
     asynchronous: false
 
@@ -48,7 +53,9 @@ Loader {
 
         // 1: single column (single column view or portrait tablet)
         // 2: wide mode (wide view)
-        property int uiMode: (singleColumn || (isTablet && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
+        property int uiMode: (singleColumn
+                              || (isTablet
+                                  && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
 
         property bool isAirMonitor: false
         property bool isWeatherStation: false
@@ -65,13 +72,20 @@ Loader {
         property int itemCount_WeatherStation: 3
 
         ////////
-
         Connections {
             target: currentDevice
-            function onSensorUpdated() { updateHeader() }
-            function onSensorsUpdated() { updateHeader() }
-            function onCapabilitiesUpdated() { updateHeader() }
-            function onStatusUpdated() { updateHeader() }
+            function onSensorUpdated() {
+                updateHeader()
+            }
+            function onSensorsUpdated() {
+                updateHeader()
+            }
+            function onCapabilitiesUpdated() {
+                updateHeader()
+            }
+            function onStatusUpdated() {
+                updateHeader()
+            }
             function onDataUpdated() {
                 updateHeader()
                 updateData()
@@ -110,35 +124,35 @@ Loader {
                 swipeBox.currentIndex = 1
             }
             // mobile only
-            function onRightMenuClicked() {
-                //
-            }
+            function onRightMenuClicked() {}
         }
 
         Timer {
-            interval: 60000; running: true; repeat: true;
+            interval: 60000
+            running: true
+            repeat: true
             onTriggered: updateStatusText()
         }
 
         ////////
-
-        Keys.onPressed: (event) => {
-            if (event.key === Qt.Key_Left) {
-                event.accepted = true
-                if (swipeBox.currentIndex > 0)
-                    swipeBox.currentIndex--
-            } else if (event.key === Qt.Key_Right) {
-                event.accepted = true
-                if (swipeBox.currentIndex+1 < swipeBox.count)
-                    swipeBox.currentIndex++
-            } else if (event.key === Qt.Key_F5) {
-                event.accepted = true
-                deviceManager.updateDevice(currentDevice.deviceAddress)
-            } else if (event.key === Qt.Key_Backspace) {
-                event.accepted = true
-                appWindow.backAction()
-            }
-        }
+        Keys.onPressed: event => {
+                            if (event.key === Qt.Key_Left) {
+                                event.accepted = true
+                                if (swipeBox.currentIndex > 0)
+                                swipeBox.currentIndex--
+                            } else if (event.key === Qt.Key_Right) {
+                                event.accepted = true
+                                if (swipeBox.currentIndex + 1 < swipeBox.count)
+                                swipeBox.currentIndex++
+                            } else if (event.key === Qt.Key_F5) {
+                                event.accepted = true
+                                deviceManager.updateDevice(
+                                    currentDevice.deviceAddress)
+                            } else if (event.key === Qt.Key_Backspace) {
+                                event.accepted = true
+                                appWindow.backAction()
+                            }
+                        }
 
         onPrimaryChanged: {
             currentDevice.setSetting("primary", primary)
@@ -151,9 +165,9 @@ Loader {
         }
 
         ////////
-
         function backAction() {
-            if (swipeBox.currentIndex === 0) { // data
+            if (swipeBox.currentIndex === 0) {
+                // data
                 if (textInputLocation.focus) {
                     textInputLocation.focus = false
                     return
@@ -164,7 +178,8 @@ Loader {
                 }
             }
 
-            if (swipeBox.currentIndex === 1) { // settings
+            if (swipeBox.currentIndex === 1) {
+                // settings
                 if (isMobile) {
                     swipeBox.currentIndex = 0
                     return
@@ -182,29 +197,37 @@ Loader {
         }
 
         ////////
-
         function loadDevice() {
-            //console.log("DeviceEnvironmental // loadDevice() >> " + currentDevice)
 
+            //console.log("DeviceEnvironmental // loadDevice() >> " + currentDevice)
             if (currentDevice.hasSetting("primary")) {
                 primary = currentDevice.getSetting("primary")
             } else {
-                if (currentDevice.hasVocSensor) primary = "voc"
-                else if (currentDevice.hasCoSensor) primary = "co"
-                else if (currentDevice.hasCo2Sensor) primary = "co2"
-                else if (currentDevice.hasPM25Sensor) primary = "pm25"
-                else if (currentDevice.hasPM10Sensor) primary = "pm10"
-                else if (currentDevice.hasHchoSensor) primary = "hcho"
-                else if (currentDevice.hasGeigerCounter) primary = "radioactivity"
-                else primary = "hygrometer"
+                if (currentDevice.hasVocSensor)
+                    primary = "voc"
+                else if (currentDevice.hasCoSensor)
+                    primary = "co"
+                else if (currentDevice.hasCo2Sensor)
+                    primary = "co2"
+                else if (currentDevice.hasPM25Sensor)
+                    primary = "pm25"
+                else if (currentDevice.hasPM10Sensor)
+                    primary = "pm10"
+                else if (currentDevice.hasHchoSensor)
+                    primary = "hcho"
+                else if (currentDevice.hasGeigerCounter)
+                    primary = "radioactivity"
+                else
+                    primary = "hygrometer"
             }
 
             // Update device type
-            if (currentDevice.hasPM1Sensor || currentDevice.hasPM25Sensor || currentDevice.hasPM10Sensor ||
-                currentDevice.hasO2Sensor || currentDevice.hasO3Sensor ||
-                currentDevice.hasCoSensor || currentDevice.hasCo2Sensor ||
-                currentDevice.hasNo2Sensor || currentDevice.hasSo2Sensor ||
-                currentDevice.hasVocSensor || currentDevice.hasHchoSensor) {
+            if (currentDevice.hasPM1Sensor || currentDevice.hasPM25Sensor
+                    || currentDevice.hasPM10Sensor || currentDevice.hasO2Sensor
+                    || currentDevice.hasO3Sensor || currentDevice.hasCoSensor
+                    || currentDevice.hasCo2Sensor || currentDevice.hasNo2Sensor
+                    || currentDevice.hasSo2Sensor || currentDevice.hasVocSensor
+                    || currentDevice.hasHchoSensor) {
                 isAirMonitor = true
             } else {
                 isAirMonitor = false
@@ -212,12 +235,14 @@ Loader {
 
             isGeigerCounter = currentDevice.hasGeigerCounter
 
-            if (currentDevice.hasTemperatureSensor || currentDevice.hasHumiditySensor ||
-                currentDevice.hasPressureSensor ||
-                currentDevice.hasLuminositySensor || currentDevice.hasUvSensor ||
-                currentDevice.hasSoundSensor ||
-                currentDevice.hasWaterLevelSensor ||
-                currentDevice.hasWindDirectionSensor || currentDevice.hasWindSpeedSensor) {
+            if (currentDevice.hasTemperatureSensor
+                    || currentDevice.hasHumiditySensor
+                    || currentDevice.hasPressureSensor
+                    || currentDevice.hasLuminositySensor
+                    || currentDevice.hasUvSensor || currentDevice.hasSoundSensor
+                    || currentDevice.hasWaterLevelSensor
+                    || currentDevice.hasWindDirectionSensor
+                    || currentDevice.hasWindSpeedSensor) {
                 isWeatherStation = true
             } else {
                 isWeatherStation = false
@@ -225,23 +250,37 @@ Loader {
 
             // Update sizes
             itemCount_AirMonitor = 0
-            if (currentDevice.hasPM1Sensor) itemCount_AirMonitor++
-            if (currentDevice.hasPM25Sensor) itemCount_AirMonitor++
-            if (currentDevice.hasPM10Sensor) itemCount_AirMonitor++
-            if (currentDevice.hasVocSensor) itemCount_AirMonitor++
-            if (currentDevice.hasHchoSensor) itemCount_AirMonitor++
-            if (currentDevice.hasCoSensor) itemCount_AirMonitor++
-            if (currentDevice.hasCo2Sensor) itemCount_AirMonitor++
-            if (itemCount_AirMonitor > 3) itemCount_AirMonitor = 3
+            if (currentDevice.hasPM1Sensor)
+                itemCount_AirMonitor++
+            if (currentDevice.hasPM25Sensor)
+                itemCount_AirMonitor++
+            if (currentDevice.hasPM10Sensor)
+                itemCount_AirMonitor++
+            if (currentDevice.hasVocSensor)
+                itemCount_AirMonitor++
+            if (currentDevice.hasHchoSensor)
+                itemCount_AirMonitor++
+            if (currentDevice.hasCoSensor)
+                itemCount_AirMonitor++
+            if (currentDevice.hasCo2Sensor)
+                itemCount_AirMonitor++
+            if (itemCount_AirMonitor > 3)
+                itemCount_AirMonitor = 3
             airFlow.updateSize()
 
             itemCount_WeatherStation = 0
-            if (currentDevice.hasTemperatureSensor) itemCount_WeatherStation++
-            if (currentDevice.hasHumiditySensor) itemCount_WeatherStation++
-            if (currentDevice.hasPressureSensor) itemCount_WeatherStation++
-            if (currentDevice.hasSoundSensor) itemCount_WeatherStation++
-            if (currentDevice.hasLuminositySensor) itemCount_WeatherStation++
-            if (currentDevice.hasUvSensor) itemCount_WeatherStation++
+            if (currentDevice.hasTemperatureSensor)
+                itemCount_WeatherStation++
+            if (currentDevice.hasHumiditySensor)
+                itemCount_WeatherStation++
+            if (currentDevice.hasPressureSensor)
+                itemCount_WeatherStation++
+            if (currentDevice.hasSoundSensor)
+                itemCount_WeatherStation++
+            if (currentDevice.hasLuminositySensor)
+                itemCount_WeatherStation++
+            if (currentDevice.hasUvSensor)
+                itemCount_WeatherStation++
             weatherFlow.updateSize()
 
             swipeBox.disableAnimation()
@@ -266,10 +305,12 @@ Loader {
         }
 
         function loadIndicator() {
-            if (typeof currentDevice === "undefined" || !currentDevice) return
-            if (!currentDevice.isEnvironmentalSensor) return
-            //console.log("DeviceEnvironmental // loadIndicator()")
+            if (typeof currentDevice === "undefined" || !currentDevice)
+                return
+            if (!currentDevice.isEnvironmentalSensor)
+                return
 
+            //console.log("DeviceEnvironmental // loadIndicator()")
             if (primary === "voc") {
                 indicatorAirQuality.legend = qsTr("VOC")
                 indicatorAirQuality.limitMin = 500
@@ -285,7 +326,8 @@ Loader {
                 indicatorAirQuality.valueMax = 1000
                 indicatorAirQuality.value = currentDevice.hcho
             } else if (primary === "co2") {
-                indicatorAirQuality.legend = (currentDevice.haseCo2Sensor ? qsTr("eCO2") : qsTr("CO2"))
+                indicatorAirQuality.legend = (currentDevice.haseCo2Sensor ? qsTr("eCO2") : qsTr(
+                                                                                "CO2"))
                 indicatorAirQuality.limitMin = 850
                 indicatorAirQuality.limitMax = 1500
                 indicatorAirQuality.valueMin = 0
@@ -308,17 +350,19 @@ Loader {
             }
 
             if (primary === "hygrometer") {
-                //
+
             }
 
             if (primary === "barometer") {
-                //
+
             }
         }
 
         function updateHeader() {
-            if (typeof currentDevice === "undefined" || !currentDevice) return
-            if (!currentDevice.isEnvironmentalSensor) return
+            if (typeof currentDevice === "undefined" || !currentDevice)
+                return
+            if (!currentDevice.isEnvironmentalSensor)
+                return
             //console.log("DeviceEnvironmental // updateHeader() >> " + currentDevice)
 
             //indicatorAirQuality.visible = isAirMonitor && currentDevice.hasDataToday
@@ -328,19 +372,25 @@ Loader {
             // Indicators
             if (primary === "hygrometer") {
 
-                if (currentDevice.hasTemperatureSensor && currentDevice.temperatureC >= -40) {
+                if (currentDevice.hasTemperatureSensor
+                        && currentDevice.temperatureC >= -40) {
                     sensorTemp.text = currentDevice.getTempString()
                     sensorTemp.visible = true
                 }
 
                 if (currentDevice.hasHumiditySensor) {
-                    if (currentDevice.humidity >= 0 && currentDevice.humidity <= 100) {
-                        sensorHygro.text = currentDevice.humidity.toFixed(0) + "% " + qsTr("humidity")
+                    if (currentDevice.humidity >= 0
+                            && currentDevice.humidity <= 100) {
+                        sensorHygro.text = currentDevice.humidity.toFixed(
+                                    0) + "% " + qsTr("humidity")
                         sensorHygro.visible = true
 
-                        if (currentDevice.temperatureC >= 27 && currentDevice.humidity >= 40) {
-                            if (currentDevice.getHeatIndex() > (currentDevice.temperature + 1)) {
-                                heatIndex.text = qsTr("feels like %1").arg(currentDevice.getHeatIndexString())
+                        if (currentDevice.temperatureC >= 27
+                                && currentDevice.humidity >= 40) {
+                            if (currentDevice.getHeatIndex(
+                                        ) > (currentDevice.temperature + 1)) {
+                                heatIndex.text = qsTr("feels like %1").arg(
+                                            currentDevice.getHeatIndexString())
                                 heatIndex.visible = true
                             } else {
                                 heatIndex.visible = false
@@ -350,25 +400,38 @@ Loader {
                         }
 
                         if (currentDevice.deviceIsOutside) {
-                            dewPoint.text = qsTr("dew point %1").arg(currentDevice.getDewPointString())
+                            dewPoint.text = qsTr("dew point %1").arg(
+                                        currentDevice.getDewPointString())
                             dewPoint.visible = true
                         }
                     }
                 }
             } else if (primary === "barometer") {
+
                 // TODO
             } else if (isAirMonitor) {
-                if (primary === "voc") indicatorAirQuality.value = currentDevice.voc
-                else if (primary === "hcho") indicatorAirQuality.value = currentDevice.hcho
-                else if (primary === "co2") indicatorAirQuality.value = currentDevice.co2
-                else if (primary === "co") indicatorAirQuality.value = currentDevice.co
-                else if (primary === "o2") indicatorAirQuality.value = currentDevice.o2
-                else if (primary === "o3") indicatorAirQuality.value = currentDevice.o3
-                else if (primary === "no2") indicatorAirQuality.value = currentDevice.no2
-                else if (primary === "so2") indicatorAirQuality.value = currentDevice.so2
-                else if (primary === "pm1") indicatorAirQuality.value = currentDevice.pm1
-                else if (primary === "pm25") indicatorAirQuality.value = currentDevice.pm25
-                else if (primary === "pm10") indicatorAirQuality.value = currentDevice.pm10
+                if (primary === "voc")
+                    indicatorAirQuality.value = currentDevice.voc
+                else if (primary === "hcho")
+                    indicatorAirQuality.value = currentDevice.hcho
+                else if (primary === "co2")
+                    indicatorAirQuality.value = currentDevice.co2
+                else if (primary === "co")
+                    indicatorAirQuality.value = currentDevice.co
+                else if (primary === "o2")
+                    indicatorAirQuality.value = currentDevice.o2
+                else if (primary === "o3")
+                    indicatorAirQuality.value = currentDevice.o3
+                else if (primary === "no2")
+                    indicatorAirQuality.value = currentDevice.no2
+                else if (primary === "so2")
+                    indicatorAirQuality.value = currentDevice.so2
+                else if (primary === "pm1")
+                    indicatorAirQuality.value = currentDevice.pm1
+                else if (primary === "pm25")
+                    indicatorAirQuality.value = currentDevice.pm25
+                else if (primary === "pm10")
+                    indicatorAirQuality.value = currentDevice.pm10
             }
 
             // Status
@@ -376,32 +439,42 @@ Loader {
         }
 
         function updateData() {
-            if (typeof currentDevice === "undefined" || !currentDevice) return
-            if (!currentDevice.isEnvironmentalSensor) return
+            if (typeof currentDevice === "undefined" || !currentDevice)
+                return
+            if (!currentDevice.isEnvironmentalSensor)
+                return
             //console.log("DeviceEnvironmental // updateData() >> " + currentDevice)
         }
 
         function updateStatusText() {
-            if (typeof currentDevice === "undefined" || !currentDevice) return
-            if (!currentDevice.isEnvironmentalSensor) return
+            if (typeof currentDevice === "undefined" || !currentDevice)
+                return
+            if (!currentDevice.isEnvironmentalSensor)
+                return
+
             //console.log("DeviceEnvironmental // updateStatusText() >> " + currentDevice)
+            textStatus.text = UtilsDeviceSensors.getDeviceStatusText(
+                        currentDevice.status)
 
-            textStatus.text = UtilsDeviceSensors.getDeviceStatusText(currentDevice.status)
-
-            if (currentDevice.status === DeviceUtils.DEVICE_OFFLINE &&
-                (currentDevice.isDataFresh_rt() || currentDevice.isDataToday())) {
+            if (currentDevice.status === DeviceUtils.DEVICE_OFFLINE
+                    && (currentDevice.isDataFresh_rt()
+                        || currentDevice.isDataToday())) {
                 if (currentDevice.lastUpdateMin <= 1)
                     textStatus.text = qsTr("Synced")
                 else
-                    textStatus.text = qsTr("Synced %1 ago").arg(currentDevice.lastUpdateStr)
+                    textStatus.text = qsTr("Synced %1 ago").arg(
+                                currentDevice.lastUpdateStr)
             }
         }
 
         function loadGraph() {
             if (isAirMonitor) {
-                if (currentDevice.hasPM1Sensor || currentDevice.hasPM25Sensor || currentDevice.hasPM10Sensor ||
-                    currentDevice.hasVocSensor || currentDevice.hasHchoSensor ||
-                    currentDevice.hasCoSensor || currentDevice.hasCo2Sensor) {
+                if (currentDevice.hasPM1Sensor || currentDevice.hasPM25Sensor
+                        || currentDevice.hasPM10Sensor
+                        || currentDevice.hasVocSensor
+                        || currentDevice.hasHchoSensor
+                        || currentDevice.hasCoSensor
+                        || currentDevice.hasCo2Sensor) {
                     if (primary === "hygrometer") {
                         graphLoader.source = ""
                         graphLoader.opacity = 0
@@ -418,23 +491,28 @@ Loader {
         }
 
         function updateGraph() {
-            if (typeof currentDevice === "undefined" || !currentDevice) return
-            if (!currentDevice.isEnvironmentalSensor) return
+            if (typeof currentDevice === "undefined" || !currentDevice)
+                return
+            if (!currentDevice.isEnvironmentalSensor)
+                return
             //console.log("DeviceEnvironmental // updateGraph() >> " + currentDevice)
 
             // GRAPH
             if (isAirMonitor) {
-                if (currentDevice.hasPM25Sensor || currentDevice.hasPM10Sensor) {
+                if (currentDevice.hasPM25Sensor
+                        || currentDevice.hasPM10Sensor) {
                     currentDevice.updateChartData_environmentalEnv(90)
-                } else if (currentDevice.hasVocSensor || currentDevice.hasHchoSensor || currentDevice.hasCo2Sensor) {
+                } else if (currentDevice.hasVocSensor
+                           || currentDevice.hasHchoSensor
+                           || currentDevice.hasCo2Sensor) {
                     currentDevice.updateChartData_environmentalVoc(90)
                 }
             }
         }
 
         ////////////////////////////////////////////////////////////////////////
-
         property real fakeAQI: 25
+
         //   0- 50 (good)
         //  51-100 (moderate)
         // 101-150 (unhealthy for Sensitive Groups)
@@ -443,15 +521,17 @@ Loader {
         // 301-500 (Hazardous)
 
         ////////////////////////////////////////////////////////////////////////
-
         Flow {
             anchors.fill: parent
 
             Rectangle {
                 id: headerBox
 
-                property int dimboxw: Math.min(deviceEnvironmental.width * 0.4, isPhone ? 320 : 600)
-                property int dimboxh: Math.max(deviceEnvironmental.height * 0.333, isPhone ? 180 : 256)
+                property int dimboxw: Math.min(deviceEnvironmental.width * 0.4,
+                                               isPhone ? 320 : 600)
+                property int dimboxh: Math.max(
+                                          deviceEnvironmental.height * 0.333,
+                                          isPhone ? 180 : 256)
 
                 width: (uiMode === 1) ? parent.width : dimboxw
                 height: (uiMode === 1) ? dimboxh : parent.height
@@ -460,7 +540,6 @@ Loader {
                 z: 5
 
                 //MouseArea { anchors.fill: parent } // prevent clicks below this area
-
                 Item {
                     anchors.top: parent.top
                     anchors.left: parent.left
@@ -469,7 +548,6 @@ Loader {
                     anchors.bottomMargin: 24
 
                     ////////////////
-
                     IconSvg {
                         id: indicatorDisconnected
                         width: isMobile ? 96 : 128
@@ -482,23 +560,19 @@ Loader {
                     }
 
                     ////////////////
-
                     AirQualityIndicator {
                         id: indicatorAirQuality
-                        width: (uiMode === 1) ? headerBox.height-24 : headerBox.width * 0.60
+                        width: (uiMode === 1) ? headerBox.height - 24 : headerBox.width * 0.60
                         height: width
                         anchors.centerIn: parent
 
-                        visible: (currentDevice && currentDevice.hasDataToday &&
-                                  (primary === "voc" || primary === "hcho" ||
-                                   primary === "co" || primary === "co2" ||
-                                   primary === "pm1" || primary === "pm25" || primary === "pm10"))
+                        visible: (currentDevice
+                                  && currentDevice.hasDataToday && (primary === "voc" || primary === "hcho" || primary === "co" || primary === "co2" || primary === "pm1" || primary === "pm25" || primary === "pm10"))
 
                         color: cccc
                     }
 
                     ////////////////
-
                     Column {
                         id: indicatorHygrometer
                         width: isMobile ? 96 : 128
@@ -506,8 +580,9 @@ Loader {
                         anchors.centerIn: parent
                         spacing: 2
 
-                        visible: (currentDevice && currentDevice.hasDataToday &&
-                                  (primary === "hygrometer" || primary === "barometer"))
+                        visible: (currentDevice && currentDevice.hasDataToday
+                                  && (primary === "hygrometer"
+                                      || primary === "barometer"))
 
                         Text {
                             id: sensorTemp
@@ -527,7 +602,10 @@ Loader {
                             opacity: 0.8
                         }
 
-                        Item { width: 1; height: 1; } // spacer
+                        Item {
+                            width: 1
+                            height: 1
+                        } // spacer
 
                         Text {
                             id: heatIndex
@@ -548,14 +626,14 @@ Loader {
                     }
 
                     ////////////////
-
                     IconSvg {
                         id: indicatorRadioactivity
                         width: isMobile ? 128 : 160
                         height: isMobile ? 128 : 160
                         anchors.centerIn: parent
 
-                        visible: (currentDevice && currentDevice.hasDataToday && primary === "radioactivity")
+                        visible: (currentDevice && currentDevice.hasDataToday
+                                  && primary === "radioactivity")
                         color: cccc
                         source: "qrc:/assets/icons_custom/nuclear_icon_big.svg"
 
@@ -569,37 +647,50 @@ Loader {
                             id: radioactivityAnimation
                             loops: Animation.Infinite
                             running: false
-                            onStopped: indicatorRadioactivity.opacity = indicatorRadioactivity.maxOpacity
-                            OpacityAnimator { from: indicatorRadioactivity.minOpacity; to: indicatorRadioactivity.maxOpacity; duration: indicatorRadioactivity.duration }
-                            OpacityAnimator { from: indicatorRadioactivity.maxOpacity; to: indicatorRadioactivity.minOpacity; duration: indicatorRadioactivity.duration }
+                            onStopped: indicatorRadioactivity.opacity
+                                       = indicatorRadioactivity.maxOpacity
+                            OpacityAnimator {
+                                from: indicatorRadioactivity.minOpacity
+                                to: indicatorRadioactivity.maxOpacity
+                                duration: indicatorRadioactivity.duration
+                            }
+                            OpacityAnimator {
+                                from: indicatorRadioactivity.maxOpacity
+                                to: indicatorRadioactivity.minOpacity
+                                duration: indicatorRadioactivity.duration
+                            }
                         }
                     }
 
                     ////////////////
-
                     IconSvg {
                         id: imageBattery
                         width: isPhone ? 20 : 24
                         height: isPhone ? 32 : 36
                         rotation: 90
                         anchors.top: {
-                            if (indicatorAirQuality.visible) return indicatorAirQuality.bottom
-                            if (indicatorHygrometer.visible) return indicatorHygrometer.bottom
-                            if (indicatorRadioactivity.visible) return indicatorRadioactivity.bottom
+                            if (indicatorAirQuality.visible)
+                                return indicatorAirQuality.bottom
+                            if (indicatorHygrometer.visible)
+                                return indicatorHygrometer.bottom
+                            if (indicatorRadioactivity.visible)
+                                return indicatorRadioactivity.bottom
                             return indicatorAirQuality.bottom
                         }
                         anchors.topMargin: 12
                         anchors.horizontalCenter: parent.horizontalCenter
 
-                        visible: (currentDevice.hasBattery && currentDevice.deviceBattery >= 0)
-                        source: UtilsDeviceSensors.getDeviceBatteryIcon(currentDevice.deviceBattery)
+                        visible: (currentDevice.hasBattery
+                                  && currentDevice.deviceBattery >= 0)
+                        source: UtilsDeviceSensors.getDeviceBatteryIcon(
+                                    currentDevice.deviceBattery)
                         fillMode: Image.PreserveAspectCrop
-                        color: UtilsDeviceSensors.getDeviceBatteryColor(currentDevice.deviceBattery)
+                        color: UtilsDeviceSensors.getDeviceBatteryColor(
+                                   currentDevice.deviceBattery)
                     }
                 }
 
                 ////////
-
                 Row {
                     id: status
                     anchors.left: parent.left
@@ -635,7 +726,6 @@ Loader {
                 }
 
                 ////////
-
                 Row {
                     id: itemLocation
                     anchors.bottom: parent.bottom
@@ -655,8 +745,14 @@ Loader {
                         source: "qrc:/assets/icons_material/duotone-edit-24px.svg"
                         color: cccc
 
-                        opacity: (isMobile || !textInputLocation.text || textInputLocation.focus || textInputLocationArea.containsMouse) ? 0.9 : 0
-                        Behavior on opacity { OpacityAnimator { duration: 133 } }
+                        opacity: (isMobile || !textInputLocation.text
+                                  || textInputLocation.focus
+                                  || textInputLocationArea.containsMouse) ? 0.9 : 0
+                        Behavior on opacity {
+                            OpacityAnimator {
+                                duration: 133
+                            }
+                        }
                     }
                     TextInput {
                         id: textInputLocation
@@ -684,10 +780,10 @@ Loader {
                             hoverEnabled: true
                             propagateComposedEvents: true
 
-                            onPressed: (mouse) => {
-                                textInputLocation.forceActiveFocus()
-                                mouse.accepted = false
-                            }
+                            onPressed: mouse => {
+                                           textInputLocation.forceActiveFocus()
+                                           mouse.accepted = false
+                                       }
                         }
                     }
                     IconSvg {
@@ -702,7 +798,6 @@ Loader {
                 }
 
                 ////////
-
                 Rectangle {
                     anchors.top: parent.top
                     anchors.right: parent.right
@@ -726,16 +821,17 @@ Loader {
             }
 
             ////////////////////////////////////////////////////////////////////
-
             SwipeView {
                 id: swipeBox
 
                 width: {
-                    if (isTablet && screenOrientation == Qt.PortraitOrientation) return parent.width
+                    if (isTablet && screenOrientation == Qt.PortraitOrientation)
+                        return parent.width
                     return singleColumn ? parent.width : (parent.width - headerBox.width)
                 }
                 height: {
-                    if (isTablet && screenOrientation == Qt.PortraitOrientation) return (parent.height - headerBox.height)
+                    if (isTablet && screenOrientation == Qt.PortraitOrientation)
+                        return (parent.height - headerBox.height)
                     return singleColumn ? (parent.height - headerBox.height) : parent.height
                 }
 
@@ -759,7 +855,6 @@ Loader {
                 }
 
                 ////////////////
-
                 Item {
                     ItemBannerSync {
                         id: bannersync
@@ -789,7 +884,7 @@ Loader {
                             Rectangle {
                                 id: airBoxes
                                 width: parent.width
-                                height: airFlow.height + (airFlow.anchors.topMargin*2)
+                                height: airFlow.height + (airFlow.anchors.topMargin * 2)
 
                                 visible: isAirMonitor
                                 color: headerUnicolor ? Theme.colorBackground : Theme.colorForeground
@@ -807,15 +902,22 @@ Loader {
 
                                     onWidthChanged: updateSize()
                                     function updateSize() {
-                                        var availableWidth = swipeBox.width - (anchors.leftMargin + anchors.rightMargin)
-                                        var cellColumnsTarget = Math.trunc(availableWidth / (wwwTarget + spacing))
+                                        var availableWidth = swipeBox.width
+                                                - (anchors.leftMargin + anchors.rightMargin)
+                                        var cellColumnsTarget = Math.trunc(
+                                                    availableWidth / (wwwTarget + spacing))
                                         if (itemCount_AirMonitor >= cellColumnsTarget) {
-                                            www = (availableWidth - (spacing * cellColumnsTarget)) / cellColumnsTarget
+                                            www = (availableWidth - (spacing * cellColumnsTarget))
+                                                    / cellColumnsTarget
                                         } else {
-                                            www = (availableWidth - (spacing * itemCount_AirMonitor)) / itemCount_AirMonitor
+                                            www = (availableWidth
+                                                   - (spacing * itemCount_AirMonitor))
+                                                    / itemCount_AirMonitor
                                         }
-                                        if (www > (availableWidth/2)) www = (availableWidth/2)
-                                        if (www > wwwMax) www = wwwMax
+                                        if (www > (availableWidth / 2))
+                                            www = (availableWidth / 2)
+                                        if (www > wwwMax)
+                                            www = wwwMax
                                         //console.log("--- airFlow cellWidth: " + www)
                                     }
 
@@ -890,7 +992,8 @@ Loader {
                                         precision: 0
                                         onSensorSelection: primary = "hcho"
                                     }
-/*
+
+                                    /*
                                     ItemEnvBox {
                                         id: o2
                                         width: airFlow.www
@@ -956,7 +1059,8 @@ Loader {
                                         width: airFlow.www
                                         visible: currentDevice.hasCo2Sensor
 
-                                        title: (currentDevice.haseCo2Sensor ? qsTr("eCO2") : qsTr("CO2"))
+                                        title: (currentDevice.haseCo2Sensor ? qsTr("eCO2") : qsTr(
+                                                                                  "CO2"))
                                         legend: qsTr("ppm")
                                         value: currentDevice.co2
                                         precision: 0
@@ -978,11 +1082,10 @@ Loader {
                             }
 
                             ////////////////////////////////////////////////////
-
                             Rectangle {
                                 id: radBoxes
                                 width: parent.width
-                                height: radFlow.height + (radFlow.anchors.topMargin*2)
+                                height: radFlow.height + (radFlow.anchors.topMargin * 2)
 
                                 visible: isGeigerCounter
                                 color: headerUnicolor ? Theme.colorBackground : Theme.colorForeground
@@ -1000,15 +1103,22 @@ Loader {
 
                                     onWidthChanged: updateSize()
                                     function updateSize() {
-                                        var availableWidth = swipeBox.width - (anchors.leftMargin + anchors.rightMargin)
-                                        var cellColumnsTarget = Math.trunc(availableWidth / (wwwTarget + spacing))
+                                        var availableWidth = swipeBox.width
+                                                - (anchors.leftMargin + anchors.rightMargin)
+                                        var cellColumnsTarget = Math.trunc(
+                                                    availableWidth / (wwwTarget + spacing))
                                         if (itemCount_GeigerCounter >= cellColumnsTarget) {
-                                            www = (availableWidth - (spacing * cellColumnsTarget)) / cellColumnsTarget
+                                            www = (availableWidth - (spacing * cellColumnsTarget))
+                                                    / cellColumnsTarget
                                         } else {
-                                            www = (availableWidth - (spacing * itemCount_GeigerCounter)) / itemCount_GeigerCounter
+                                            www = (availableWidth
+                                                   - (spacing * itemCount_GeigerCounter))
+                                                    / itemCount_GeigerCounter
                                         }
-                                        if (www > (availableWidth/2)) www = (availableWidth/2)
-                                        if (www > wwwMax) www = wwwMax
+                                        if (www > (availableWidth / 2))
+                                            www = (availableWidth / 2)
+                                        if (www > wwwMax)
+                                            www = wwwMax
                                         //console.log("--- radFlow cellWidth: " + www)
                                     }
 
@@ -1056,14 +1166,13 @@ Loader {
                             }
 
                             ////////////////////////////////////////////////////
-
                             Rectangle {
                                 id: weatherBoxes
 
                                 visible: isWeatherStation
 
                                 width: parent.width
-                                height: weatherFlow.height + (weatherFlow.anchors.topMargin*2)
+                                height: weatherFlow.height + (weatherFlow.anchors.topMargin * 2)
                                 color: Theme.colorBackground
                                 z: 3
 
@@ -1079,15 +1188,22 @@ Loader {
 
                                     onWidthChanged: updateSize()
                                     function updateSize() {
-                                        var availableWidth = swipeBox.width - (anchors.leftMargin + anchors.rightMargin)
-                                        var cellColumnsTarget = Math.trunc(availableWidth / (wwwTarget + spacing))
+                                        var availableWidth = swipeBox.width
+                                                - (anchors.leftMargin + anchors.rightMargin)
+                                        var cellColumnsTarget = Math.trunc(
+                                                    availableWidth / (wwwTarget + spacing))
                                         if (itemCount_WeatherStation >= cellColumnsTarget) {
-                                            www = (availableWidth - (spacing * cellColumnsTarget)) / cellColumnsTarget
+                                            www = (availableWidth - (spacing * cellColumnsTarget))
+                                                    / cellColumnsTarget
                                         } else {
-                                            www = (availableWidth - (spacing * itemCount_WeatherStation)) / itemCount_WeatherStation
+                                            www = (availableWidth
+                                                   - (spacing * itemCount_WeatherStation))
+                                                    / itemCount_WeatherStation
                                         }
-                                        if (www > (availableWidth/2)) www = (availableWidth/2)
-                                        if (www > wwwMax) www = wwwMax
+                                        if (www > (availableWidth / 2))
+                                            www = (availableWidth / 2)
+                                        if (www > wwwMax)
+                                            www = wwwMax
                                         //console.log("--- weatherFlow cellWidth: " + www)
                                     }
 
@@ -1156,7 +1272,8 @@ Loader {
                                         value: currentDevice.uv
                                         precision: 0
                                     }
-/*
+
+                                    /*
                                     ItemWeatherBox {
                                         id: sound
                                         visible: currentDevice.hasSoundSensor
@@ -1208,7 +1325,6 @@ Loader {
                             }
 
                             ////////////////////////////////////////////////////
-
                             Item {
                                 width: parent.width
                                 height: (sensorFlick.height - airBoxes.height - weatherBoxes.height)
@@ -1223,7 +1339,12 @@ Loader {
                                     anchors.fill: parent
 
                                     opacity: 0
-                                    Behavior on opacity { OpacityAnimator { duration: (graphLoader.status === Loader.Ready) ? 200 : 0 } }
+                                    Behavior on opacity {
+                                        OpacityAnimator {
+                                            duration: (graphLoader.status
+                                                       === Loader.Ready) ? 200 : 0
+                                        }
+                                    }
 
                                     asynchronous: true
                                     onLoaded: {
@@ -1231,7 +1352,10 @@ Loader {
                                         envChart.updateGraph()
 
                                         graphLoader.opacity = 1
-                                        noDataIndicator.visible = (currentDevice.countDataNamed("temperature", envChart.daysVisible) < 1)
+                                        noDataIndicator.visible
+                                                = (currentDevice.countDataNamed(
+                                                       "temperature",
+                                                       envChart.daysVisible) < 1)
                                     }
                                 }
                             }
@@ -1242,7 +1366,6 @@ Loader {
                 }
 
                 ////////////////
-
                 DevicePlantSensorSettings {
                     id: sensorSettings
                 }

@@ -3,6 +3,9 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
+import "../components_generic/"
+import "../components_themed/"
+
 Item {
     id: chartThermometerMinMax
     anchors.fill: parent
@@ -17,16 +20,18 @@ Item {
     property int daysVisible: 0
 
     function loadGraph() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        //console.log("chartThermometerMinMax // loadGraph() >> " + currentDevice)
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
 
+        //console.log("chartThermometerMinMax // loadGraph() >> " + currentDevice)
         daysVisible = 0
     }
 
     function updateGraph() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        //console.log("chartThermometerMinMax // updateGraph() >> " + currentDevice)
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
 
+        //console.log("chartThermometerMinMax // updateGraph() >> " + currentDevice)
         var daysVisibleNew = Math.floor(width / widgetWidthTarget)
         var daysMax = daysVisibleNew
 
@@ -37,18 +42,22 @@ Item {
 
             currentDevice.updateChartData_thermometerMinMax(daysMax)
 
-            mmGraph.visible = currentDevice.countDataNamed("temperature", daysMax)
+            mmGraph.visible = currentDevice.countDataNamed("temperature",
+                                                           daysMax)
             //mmGraphFlick.contentX = (mmGraph.width - mmGraphFlick.width) // WIP
         }
     }
 
     onWidthChanged: updateGraph()
 
-    function isIndicator() { return false }
-    function resetHistoryMode() { }
+    function isIndicator() {
+        return false
+    }
+    function resetHistoryMode() {}
 
     ////////////////////////////////////////////////////////////////////////////
-/*
+
+    /*
     Flickable { // WIP
         id: mmGraphFlick
         anchors.fill: parent
@@ -57,20 +66,22 @@ Item {
         flickableDirection: Flickable.HorizontalFlick
         boundsBehavior: Flickable.StopAtBounds
 */
-        Row {
-            id: mmGraph
-            height: parent.height
-            anchors.right: parent.right
+    Row {
+        id: mmGraph
+        height: parent.height
+        anchors.right: parent.right
 
-            spacing: 0
-            layoutDirection: Qt.LeftToRight
+        spacing: 0
+        layoutDirection: Qt.LeftToRight
 
-            //onWidthChanged: mmGraphFlick.contentX = (mmGraph.width - mmGraphFlick.width)
-
-            Repeater {
-                model: currentDevice.aioMinMaxData
-                ChartThermometerMinMaxBar { width: widgetWidth; height: mmGraph.height; }
+        //onWidthChanged: mmGraphFlick.contentX = (mmGraph.width - mmGraphFlick.width)
+        Repeater {
+            model: currentDevice.aioMinMaxData
+            ChartThermometerMinMaxBar {
+                width: widgetWidth
+                height: mmGraph.height
             }
         }
+    }
     //}
 }

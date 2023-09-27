@@ -2,23 +2,25 @@ import QtQuick
 
 import ThemeEngine 1.0
 
+import "../components_generic/"
+import "../components_themed/"
+
 Rectangle {
     id: itemNoPlants
     anchors.centerIn: parent
     anchors.verticalCenterOffset: -40
 
-
-    width: singleColumn ? (parent.width*0.5) : (parent.height*0.4)
+    width: singleColumn ? (parent.width * 0.5) : (parent.height * 0.4)
     height: width
     radius: width
     color: Theme.colorForeground
 
     property alias textItem: textItem
-    signal clicked()
+    signal clicked
 
     IconSvg {
         anchors.centerIn: parent
-        width: parent.width*0.66
+        width: parent.width * 0.66
         height: width
 
         source: "qrc:/assets/logos/blume_monochrome.svg"

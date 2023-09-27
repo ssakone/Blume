@@ -6,13 +6,18 @@ import Qt5Compat.GraphicalEffects
 
 import ThemeEngine 1.0
 import "./pages/Plant"
+
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+
 Loader {
     id: plantBrowser
 
     property string entryPoint: "DeviceList"
 
     ////////////////////////////////////////////////////////////////////////////
-
     function loadScreen() {
         // Load the data
         plantDatabase.load()
@@ -49,7 +54,6 @@ Loader {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     active: false
     asynchronous: true
 
@@ -73,7 +77,8 @@ Loader {
 
         function forwardAction() {
             if (appContent.state === "PlantBrowser") {
-                if (typeof plantScreen.currentPlant !== "undefined" && plantScreen.currentPlant) {
+                if (typeof plantScreen.currentPlant !== "undefined"
+                        && plantScreen.currentPlant) {
                     plantSearchBox.focus = false
                     itemPlantBrowser.visible = false
                     itemPlantBrowser.enabled = false
@@ -87,7 +92,8 @@ Loader {
         }
 
         function isPlantClicked() {
-            if (itemPlantViewer.visible) return true
+            if (itemPlantViewer.visible)
+                return true
             return false
         }
 
@@ -114,7 +120,6 @@ Loader {
         }
 
         ////////////////
-
         Item {
             id: itemPlantBrowser
             anchors.fill: parent
@@ -152,7 +157,8 @@ Loader {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
 
-                        text: qsTr("%1 plants").arg(((plantSearchBox.displayText) ? plantDatabase.plantCountFiltered : plantDatabase.plantCount))
+                        text: qsTr("%1 plants").arg(
+                                  ((plantSearchBox.displayText) ? plantDatabase.plantCountFiltered : plantDatabase.plantCount))
                         font.pixelSize: Theme.fontSizeContentSmall
                         color: Theme.colorSubText
                     }
@@ -163,7 +169,7 @@ Loader {
                         anchors.verticalCenter: parent.verticalCenter
 
                         visible: plantSearchBox.text.length
-//                        highlightMode: "color"
+                        //                        highlightMode: "color"
                         source: "qrc:/assets/icons_material/baseline-backspace-24px.svg"
 
                         onClicked: plantSearchBox.text = ""
@@ -203,7 +209,7 @@ Loader {
                     width: ListView.view.width
                     height: 40
 
-                    color: (index % 2) ? Theme.colorForeground :Theme.colorBackground
+                    color: (index % 2) ? Theme.colorForeground : Theme.colorBackground
 
                     Row {
                         anchors.left: parent.left
@@ -251,7 +257,6 @@ Loader {
         }
 
         ////////////////////////////////////////////////////////////////////
-
         Flickable {
             id: itemPlantViewer
             anchors.fill: parent
@@ -262,13 +267,17 @@ Loader {
 
             // 1: single column (single column view or portrait tablet)
             // 2: wide mode (wide view)
-            property int uiMode: (singleColumn || (isTablet && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
+            property int uiMode: (singleColumn
+                                  || (isTablet
+                                      && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
 
             contentWidth: (uiMode === 1) ? -1 : plantScreen.width
             contentHeight: (uiMode === 1) ? plantScreen.height : -1
 
             boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
-            ScrollBar.vertical: ScrollBar { visible: false }
+            ScrollBar.vertical: ScrollBar {
+                visible: false
+            }
 
             function setPlant() {
                 plantScreen.currentPlant = currentDevice.plant
@@ -285,7 +294,6 @@ Loader {
         }
 
         ////////////////////////////////////////////////////////////////////
-
         Rectangle {
             id: plantSelector_desktop
             anchors.top: parent.top
@@ -296,10 +304,9 @@ Loader {
             height: 52
             color: headerUnicolor ? Theme.colorBackground : Theme.colorForeground
 
-            visible: (!singleColumn &&
-                      appContent.state === "PlantBrowser" &&
-                      screenPlantBrowser.entryPoint === "DevicePlantSensor" &&
-                      isPlantClicked())
+            visible: (!singleColumn && appContent.state === "PlantBrowser"
+                      && screenPlantBrowser.entryPoint === "DevicePlantSensor"
+                      && isPlantClicked())
 
             Text {
                 anchors.left: parent.left
@@ -331,8 +338,9 @@ Loader {
                     source: "qrc:/assets/icons_material/baseline-check_circle-24px.svg"
 
                     onClicked: {
-                         selectedDevice.setPlantName(plantScreen.currentPlant.name)
-                         appContent.state = "DevicePlantSensor"
+                        selectedDevice.setPlantName(
+                                    plantScreen.currentPlant.name)
+                        appContent.state = "DevicePlantSensor"
                     }
                 }
                 ButtonWireframe {
@@ -363,7 +371,6 @@ Loader {
         }
 
         ////////
-
         Rectangle {
             id: plantSelector_mobile
             anchors.left: parent.left
@@ -373,10 +380,9 @@ Loader {
             z: 5
             height: 52
             color: Theme.colorForeground
-            visible: (singleColumn &&
-                      appContent.state === "PlantBrowser" &&
-                      screenPlantBrowser.entryPoint === "DevicePlantSensor" &&
-                      isPlantClicked())
+            visible: (singleColumn && appContent.state === "PlantBrowser"
+                      && screenPlantBrowser.entryPoint === "DevicePlantSensor"
+                      && isPlantClicked())
 
             RowLayout {
                 anchors.left: parent.left
@@ -399,8 +405,9 @@ Loader {
                     source: "qrc:/assets/icons_material/baseline-check_circle-24px.svg"
 
                     onClicked: {
-                         selectedDevice.setPlantName(plantScreen.currentPlant.name)
-                         appContent.state = "DevicePlantSensor"
+                        selectedDevice.setPlantName(
+                                    plantScreen.currentPlant.name)
+                        appContent.state = "DevicePlantSensor"
                     }
                 }
                 ButtonWireframe {
