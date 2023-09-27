@@ -7425,6 +7425,9 @@
         <file>icons_custom/double-forks.svg</file>
         <file>icons_custom/death-head.svg</file>
         <file>icons_custom/double-forks.png</file>
+        <file>icons_custom/blue-thumb.svg</file>
+        <file>icons_custom/share.svg</file>
+        <file>icons_custom/co2.svg</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

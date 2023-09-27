@@ -26,6 +26,11 @@ BPage {
 
     onFocusChanged: {
         if(focus) {
+            if(isLoaded) {
+                plantLoader.item.open()
+                return
+            }
+
             const url = `https://public.blume.mahoudev.com/plants/${plant.id}?fields=*.*`
 
 
@@ -46,6 +51,7 @@ BPage {
                 control.isLoaded = true
             }).catch(function (err) {
                 console.log(Object.keys(err))
+                console.log(err, JSON.stringify(err))
                 control.error = "Erreur inattendue"
                 control.isLoaded = true
             })
@@ -53,6 +59,7 @@ BPage {
     }
 
     Loader {
+        id: plantLoader
         active: control.isLoaded && !control.error
         sourceComponent: PlantScreenDetails {
             id: pop
