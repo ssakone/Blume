@@ -42,6 +42,12 @@ Item {
     property var plantPage: Component {
         Plant {}
     }
+    property var plantFlowercheckerPage: Component {
+        PlantFlowerchecker {}
+    }
+    property var plantDetailsLinePage: Component {
+        DetailsLineScreen {}
+    }
     property var plantSearchPage: Component {
         PlantSearch {}
     }

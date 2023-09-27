@@ -12,7 +12,8 @@ import "../../components_js/Http.js" as Http
 
 BPage {
     id: control
-    required property var plant
+    required property string plantName
+    property var images: []
     property bool isLoaded: false
     property string error: ""
 
@@ -25,36 +26,16 @@ BPage {
     }
 
     onFocusChanged: {
+        console.log("Received plantName ", plantName)
+        console.log("Received iamges ", images)
         if(focus) {
             if(isLoaded) {
                 plantLoader.item.open()
                 return
             }
-
-            const url = `https://public.blume.mahoudev.com/plants/${plant.id}?fields=*.*`
-
-
             let appLang = Qt.locale().name.slice(0, 2)
+            control.isLoaded = true
 
-            Http.fetch({
-                    method: "GET",
-                    url: url,
-                    headers: {
-                       "Accept": 'application/json',
-                       "Content-Type": 'application/json',
-                       "Content-Lang": appLang
-                    },
-                }).then(function(response) {
-                console.log(response)
-                const parsedResponse = JSON.parse(response)
-                control.plant = parsedResponse.data ?? parsedResponse
-                control.isLoaded = true
-            }).catch(function (err) {
-                console.log(Object.keys(err))
-                console.log(err, JSON.stringify(err))
-                control.error = "Erreur inattendue"
-                control.isLoaded = true
-            })
         }
     }
 
@@ -63,7 +44,12 @@ BPage {
         active: control.isLoaded && !control.error
         sourceComponent: PlantScreenDetails {
             id: pop
-            plant: control.plant
+            plant: {
+                "name_scientific": plantName,
+                "nom_botanique": plantName
+            }
+            imagesURL: control.images
+
             hideBaseHeader: true
             parent: parent
             Component.onCompleted: open()

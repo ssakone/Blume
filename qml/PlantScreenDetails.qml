@@ -22,6 +22,11 @@ Popup {
     padding: 0
 
     property var plant: null
+    property var imagesURL: []
+
+    Component.onCompleted: {
+        console.log("\n\n imagesURL ", imagesURL)
+    }
 
     property bool fullScreen: false
     property bool hideBaseHeader: false
@@ -258,6 +263,7 @@ Popup {
                                 }
 
                                 Image {
+                                    visible: Boolean(plant['images_plantes'])
                                     anchors.fill: parent
                                     source: {
                                         if (plant['images_plantes']?.count !== undefined) {
@@ -274,6 +280,13 @@ Popup {
                                         return ""
                                     }
 
+                                    clip: true
+                                }
+
+                                Image {
+                                    visible: imagesURL
+                                    source: imagesURL[0]
+                                    anchors.fill: parent
                                     clip: true
                                 }
 
@@ -322,17 +335,23 @@ Popup {
                                                     Layout.fillWidth: true
                                                 }
 
-                                                RowLayout {
+                                                Row {
                                                     Layout.fillWidth: true
                                                     spacing: 12
                                                     IconSvg {
-                                                        source: Icons.handOkay
+                                                        source: "qrc:/assets/icons_custom/share.svg"
+                                                        color: $Colors.colorPrimary
+                                                        anchors.verticalCenter: parent.verticalCenter
                                                     }
                                                     IconSvg {
-                                                        source: Icons.badminton
+                                                        source: "qrc:/assets/icons_custom/blue-thumb.svg"
+                                                        color: $Colors.colorPrimary
+                                                        anchors.verticalCenter: parent.verticalCenter
                                                     }
                                                     IconSvg {
                                                         source: Icons.heart
+                                                        color: $Colors.colorPrimary
+                                                        anchors.verticalCenter: parent.verticalCenter
                                                     }
                                                 }
 
@@ -384,49 +403,111 @@ Popup {
                                                         padding: 10
                                                     }
 
-                                                    RowLayout {
-                                                        width: parent.width
+                                                    Flickable {
+                                                        width: parent.width - 20
+                                                        height: 50
+                                                        contentWidth: insideRow1.width
+                                                        clip: true
+                                                        Row {
+                                                            id: insideRow1
 
-                                                        RowLayout {
-                                                            Layout.fillWidth: true
-                                                            IconSvg {
-                                                                source: "qrc:/assets/icons_custom/double-forks.png"
-                                                            }
-
-                                                            Column {
-                                                                Layout.fillWidth: true
-                                                                Label {
-                                                                    text: qsTr("Commestible")
-                                                                    font.pixelSize: 18
+                                                            RowLayout {
+                                                                Layout.preferredWidth: 150
+                                                                IconSvg {
+                                                                    source: "qrc:/assets/icons_custom/double-forks.png"
+                                                                    MouseArea {
+                                                                        anchors.fill: parent
+                                                                        onClicked: {
+                                                                            plantScreenDetailsPopup.close()
+                                                                            page_view.push(navigator.plantDetailsLinePage, {
+                                                                                                                                                                              iconSource: "qrc:/assets/icons_custom/double-forks.png",
+                                                                                                                                                                              titleText: qsTr("Commestibilité"),
+                                                                                                                                                                              description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Commestible ?? qsTr("Inconnu") : '...'
+                                                                                                                                                                              })
+                                                                        }
+                                                                    }
                                                                 }
-                                                                Label {
-                                                                    width: 120
-                                                                    wrapMode: Text.Wrap
-                                                                    text:   barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Commestible ?? qsTr("Inconnu") : '...'
-                                                                }
-                                                            }
-                                                        }
 
-                                                        RowLayout {
-                                                            Layout.fillWidth: true
-                                                            IconSvg {
-                                                                source: "qrc:/assets/icons_custom/death-head.svg"
-                                                            }
-
-                                                            Column {
-                                                                Layout.fillWidth: true
-                                                                Label {
-                                                                    wrapMode: Text.Wrap
-                                                                    text: qsTr("Toxique")
-                                                                    font.pixelSize: 18
-                                                                }
-                                                                Label {
-                                                                    width: 120
-                                                                    text:  barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Toxicité ?? qsTr("Inconnu") : '...'
+                                                                Column {
+                                                                    Layout.fillWidth: true
+                                                                    Label {
+                                                                        text: qsTr("Commestibilité")
+                                                                        font.pixelSize: 14
+                                                                    }
+                                                                    Label {
+                                                                        width: 120
+                                                                        wrapMode: Text.Wrap
+                                                                        text:   barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Commestible ?? qsTr("Inconnu") : '...'
+                                                                    }
                                                                 }
                                                             }
+
+                                                            RowLayout {
+                                                                Layout.preferredWidth: 150
+                                                                IconSvg {
+                                                                    source: "qrc:/assets/icons_custom/death-head.svg"
+                                                                    MouseArea {
+                                                                        anchors.fill: parent
+                                                                        onClicked: {
+                                                                            plantScreenDetailsPopup.close()
+                                                                            page_view.push(navigator.plantDetailsLinePage, {
+                                                                                                      iconSource: "qrc:/assets/icons_custom/death-head.svg",
+                                                                                                      titleText: qsTr("Toxicité"),
+                                                                                                      description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Toxicité ?? qsTr("Inconnu") : '...'
+                                                                                                      })
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                Column {
+                                                                    Layout.fillWidth: true
+                                                                    Label {
+                                                                        wrapMode: Text.Wrap
+                                                                        text: qsTr("Toxicité")
+                                                                        font.pixelSize: 14
+                                                                    }
+                                                                    Label {
+                                                                        width: 120
+                                                                        text:  barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Toxicité ?? qsTr("Inconnu") : '...'
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            RowLayout {
+                                                                Layout.preferredWidth: 150
+                                                                IconSvg {
+                                                                    source: "qrc:/assets/icons_custom/co2.svg"
+                                                                    MouseArea {
+                                                                        anchors.fill: parent
+                                                                        onClicked: {
+                                                                            plantScreenDetailsPopup.close()
+                                                                            page_view.push(navigator.plantDetailsLinePage, {
+                                                                                                      iconSource: "qrc:/assets/icons_custom/co2.svg",
+                                                                                                      titleText: qsTr("Absorption de CO2"),
+                                                                                                      description:  barDetailsColumn.gptDetails ? qsTr("Faible") : '...'
+                                                                                           })
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                Column {
+                                                                    Layout.fillWidth: true
+                                                                    Label {
+                                                                        wrapMode: Text.Wrap
+                                                                        text: qsTr("Absorption de CO2")
+                                                                        font.pixelSize: 14
+                                                                        width: parent.width
+                                                                    }
+                                                                    Label {
+                                                                        width: 120
+                                                                        text:  barDetailsColumn.gptDetails ? qsTr("Faible") : '...'
+                                                                    }
+                                                                }
+                                                            }
+
                                                         }
                                                     }
+
 
 
 
@@ -692,6 +773,16 @@ Popup {
                                                                 }
                                                             }
                                                         }
+
+
+                                                        Repeater {
+                                                            model: imagesURL
+                                                            delegate: Image {
+                                                                source: {
+                                                                    return modelData
+                                                                }
+                                                            }
+                                                        }
                                                     }
 
                                                     RowLayout {
@@ -703,7 +794,7 @@ Popup {
                                                         }
 
                                                         Repeater {
-                                                            model: plant['images_plantes']
+                                                            model: plant['images_plantes'] || imagesURL
                                                             delegate: Rectangle {
                                                                 width: 10
                                                                 height: 10
