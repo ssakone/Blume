@@ -35,7 +35,7 @@ Rectangle {
         height: width
         anchors.centerIn: parent
 
-        source: buttonBackBg.icon
+        source: parent.icon
         color: parent.foregroundColor
     }
     MouseArea {

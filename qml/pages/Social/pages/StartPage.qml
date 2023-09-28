@@ -1,156 +1,129 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import ImageTools
 
-import Qaterial as Qaterial
-import QtWebSockets
-import QtMultimedia
+import QtQuick.Controls.Material
+import "../../../components"
+import "../../../components_generic"
 
-import "../components"
+BPage {
+    id: askPage
+    property string currentObj: ""
+    header: AppBar {
+        title: ""
+        onBackButtonClicked: {
+            page_view.pop()
+        }
+    }
 
-Page {
+    ColumnLayout {
+        anchors.fill: parent
 
-    component StyledButton: Button {
-        text: "Créer un compte"
-        anchors.horizontalCenter: parent.horizontalCenter
-        width: 160
-        height: 50
-        palette.buttonText: 'white'
-        background: Rectangle {
-            radius: 5
-            color: parent.hovered ? "#203b3e" : "#025d4b"
-            border.color: "#ccc"
-            border.width: 1.5
-            function styleFont() {
-                return {
-                    "pixelSize": 18
+        Rectangle {
+            id: head
+            Layout.preferredHeight: 250
+            Layout.fillWidth: true
+            color: $Colors.colorPrimary
+
+
+            Image {
+                source: "qrc:/assets/img/plant_pot.png"
+                width: parent.width
+                fillMode: Image.PreserveAspectCrop
+            }
+        }
+
+
+        Column {
+            id: colHeadFaqForm
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.topMargin: -60
+
+            Rectangle {
+                width: parent.width
+                height: insideCol2.height + 70
+                color: $Colors.colorTertiary
+                radius: 50
+                IconSvg {
+                    source: "qrc:/assets/icons_custom/tulipe_right.svg"
+                    height: 180
+                    anchors {
+                        right: parent.right
+                        bottom: parent.bottom
+                        bottomMargin: 200
+                    }
+                }
+
+                IconSvg {
+                    source: "qrc:/assets/icons_custom/tulipe_left.svg"
+                    height: 180
+                    width: 70
+                    anchors {
+                        left: parent.left
+                        bottom: parent.bottom
+                        bottomMargin: 40
+                    }
+                }
+
+                Column {
+                    id: insideCol2
+                    width: parent.width
+                    padding: width < 500 ? 10 : width / 11
+                    topPadding: 30
+                    bottomPadding: 70
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    spacing: 15
+
+                    IconSvg {
+                        width: 150
+                        height: 150
+                        source: "qrc:/assets/logos/blume.svg"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+
+                    Label {
+                        text: qsTr("Register or sign up to your Blume account to get access to all features")
+                        width: (parent.width - parent.padding * 2) / 1.4
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        wrapMode: Text.Wrap
+                        font {
+                            weight: Font.Light
+                            pixelSize: 15
+                        }
+                    }
+
+                    NiceButton {
+                        text: qsTr("Log in")
+                        width: 180
+                        height: 50
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        onClicked: {
+                            view.pop()
+                            view.push(loginPage)
+                        }
+                    }
+                    NiceButton {
+                        text: qsTr("Sign up")
+                        width: 180
+                        height: 50
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        foregroundColor: $Colors.colorPrimary
+                        backgroundColor: $Colors.white
+                        backgroundBorderWidth: 1
+                        backgroundBorderColor: $Colors.colorPrimary
+                        onClicked: {
+                            view.pop()
+                            view.push(registerPage)
+                        }
+                    }
                 }
             }
         }
-    }
-    background: Rectangle {
-        color: Qaterial.Colors.teal800
-        Image {
-            anchors.fill: parent
-            fillMode: Image.PreserveAspectCrop
-            source: "https://picsum.photos/1000"
-            opacity: .2
-        }
-    }
 
-    Column {
-        anchors.centerIn: parent
-        spacing: 15
-        Label {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: "Blume"
-            font.family: 'Comic Sans MS'
-            color: "white"
-            font.weight: Font.Black
-            font.pixelSize: 50
-            bottomPadding: 40
-        }
-        Qaterial.Label {
-            anchors.horizontalCenter: parent.horizontalCenter
-            font.pixelSize: 18
-            font.family: 'Comic Sans MS'
-            color: "white"
-            text: "Authentication"
-        }
-
-        TextField {
-            id: username
-            placeholderText: "Identifiant"
-            backgroundColor: Qaterial.Colors.white
-            horizontalAlignment: Text.AlignHCenter
-            font.pixelSize: 21
-            radius: 30
-            width: 280
-            height: 50
-            onTextChanged: errorLabel.visible = false
-        }
-
-        TextField {
-            id: password
-            placeholderText: "Mot de passe"
-            backgroundColor: Qaterial.Colors.white
-            horizontalAlignment: Text.AlignHCenter
-            font.pixelSize: 21
-            radius: 30
-            width: 280
-            height: 50
-            echoMode: TextInput.Password
-            onTextChanged: errorLabel.visible = false
-            Keys.onReturnPressed: {
-                connectButton.clicked()
-            }
-        }
-
-        Qaterial.Label {
-            id: errorLabel
-            visible: false
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: "Mot de passe incorrect"
-            color: "red"
-        }
-
-        Qaterial.ExtendedFabButton {
-            id: connectButton
-            property bool busy: false
-            text: busy ? "" : "Creer / Connecter"
-            width: 230
-            //enabled: !busy
-            anchors.horizontalCenter: parent.horizontalCenter
-            icon.source: Qaterial.Icons.lock
-
-            Qaterial.BusyIndicator {
-                anchors.centerIn: parent
-                width: 30
-                running: parent.busy
-            }
-
-            onClicked: {
-                Qt.callLater(function () {
-                    if (username.text === '' || password.text === '') {
-                        errorLabel.visible = true
-                        return
-                    }
-                    if (busy === true) {
-                        return
-                    }
-                    busy = true
-                    http.auth(username.text, password.text).then(function (rs) {
-                        const data = JSON.parse(rs)
-
-                        console.log(rs)
-
-                        if (data.status === "ok") {
-                            privateKey = data.privateKey
-                            publicKey = data.pubkey
-                            view.push(feedPage)
-                            relay.active = false
-                            relay.active = true
-                            messagesRelay.active = false
-                            messagesRelay.active = true
-                            http.getContacts().then(function (rs) {
-                                friendLists = JSON.parse(rs)
-                                busy = false
-                            }).catch(function (e) {
-                                console.log(JSON.stringify(e))
-                                busy = false
-                            })
-                        } else {
-                            if (data.status === "Error during authentication") {
-                                errorLabel.visible = true
-                                busy = false
-                            }
-                        }
-                    }).catch(e => {
-                                 console.log(JSON.stringify(e))
-                                 busy = false
-                             })
-                })
-            }
-        }
     }
 }

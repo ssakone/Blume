@@ -2,6 +2,7 @@
 
 module Blume.pages.Plant
 
+DetailsLineScreen 1.0 DetailsLineScreen.qml
 Plant 1.0 Plant.qml
 PlantBrowser 1.0 PlantBrowser.qml
 PlantDesease 1.0 PlantDesease.qml

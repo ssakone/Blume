@@ -25,6 +25,7 @@ BPage {
     }
 
     onFocusChanged: {
+        console.log("\n Plant Page :: ", focus, isLoaded)
         if(focus) {
             if(isLoaded) {
                 plantLoader.item.open()

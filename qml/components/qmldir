@@ -22,6 +22,7 @@ FormGroup 1.0 FormGroup.qml
 FullScreenPopup 1.0 FullScreenPopup.qml
 GardenActivityLine 1.0 GardenActivityLine.qml
 GardenPlantLine 1.0 GardenPlantLine.qml
+GardenPlantLineImage 1.0 GardenPlantLineImage.qml
 GardenPlantLineWide 1.0 GardenPlantLineWide.qml
 GardenSpaceLine 1.0 GardenSpaceLine.qml
 singleton Icons 1.0 Icons.qml

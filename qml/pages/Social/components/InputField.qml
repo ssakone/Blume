@@ -9,14 +9,20 @@ Rectangle {
     anchors.margins: 8
     radius: 24
     id: textArea
+    color: Qt.rgba(0,0,0,0)
     TextField {
         id: inputField
         background: Rectangle {
-            radius: 24
-            color: "#e2e0dc"
+            color: Qt.rgba(0,0,0,0)
+            radius: 10
+            border {
+                width: 1
+                color: $Colors.colorPrimary
+            }
         }
         font.pixelSize: 22
         color: "black"
+        placeholderTextColor: $Colors.colorPrimary
         anchors.fill: parent
         padding: 10
         topPadding: 11

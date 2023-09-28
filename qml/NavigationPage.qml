@@ -13,6 +13,9 @@ Item {
     property var deviceList: Component {
         DeviceList {}
     }
+    property var descriptionPage: Component {
+        DescriptionScreen {}
+    }
     property var deviceScannerPage: Component {
         DeviceScanPage {}
     }

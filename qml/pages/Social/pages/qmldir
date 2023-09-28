@@ -5,9 +5,11 @@ module Blume.pages.Social.pages
 FeedDetailsPage 1.0 FeedDetailsPage.qml
 FeedPage 1.0 FeedPage.qml
 FindUser 1.0 FindUser.qml
+Login 1.0 Login.qml
 MessageList 1.0 MessageList.qml
 MessagePage 1.0 MessagePage.qml
 PostEditPage 1.0 PostEditPage.qml
 ProfileEditPage 1.0 ProfileEditPage.qml
+Register 1.0 Register.qml
 StartPage 1.0 StartPage.qml
 UserProfile 1.0 UserProfile.qml

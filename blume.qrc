@@ -60,6 +60,7 @@
     <file alias="components/FullScreenPopup.qml">qml/components/FullScreenPopup.qml</file>
     <file alias="components/GardenActivityLine.qml">qml/components/GardenActivityLine.qml</file>
     <file alias="components/GardenPlantLine.qml">qml/components/GardenPlantLine.qml</file>
+    <file alias="components/GardenPlantLineImage.qml">qml/components/GardenPlantLineImage.qml</file>
     <file alias="components/GardenPlantLineWide.qml">qml/components/GardenPlantLineWide.qml</file>
     <file alias="components/GardenSpaceLine.qml">qml/components/GardenSpaceLine.qml</file>
     <file alias="components/Icons.qml">qml/components/Icons.qml</file>
@@ -185,6 +186,7 @@
     <file alias="pages/Auth/Register.qml">qml/pages/Auth/Register.qml</file>
     <file alias="pages/Auth/SignIn.qml">qml/pages/Auth/SignIn.qml</file>
     <file alias="pages/Auth/qmldir">qml/pages/Auth/qmldir</file>
+    <file alias="pages/DescriptionScreen.qml">qml/pages/DescriptionScreen.qml</file>
     <file alias="pages/Device/DeviceScanPage.qml">qml/pages/Device/DeviceScanPage.qml</file>
     <file alias="pages/Device/qmldir">qml/pages/Device/qmldir</file>
     <file alias="pages/Faq.qml">qml/pages/Faq.qml</file>
@@ -200,6 +202,7 @@
     <file alias="pages/Insect/InsectDetailsScreen.qml">qml/pages/Insect/InsectDetailsScreen.qml</file>
     <file alias="pages/Insect/InsectIdentifier.qml">qml/pages/Insect/InsectIdentifier.qml</file>
     <file alias="pages/Insect/qmldir">qml/pages/Insect/qmldir</file>
+    <file alias="pages/Plant/DetailsLineScreen.qml">qml/pages/Plant/DetailsLineScreen.qml</file>
     <file alias="pages/Plant/Plant.qml">qml/pages/Plant/Plant.qml</file>
     <file alias="pages/Plant/PlantBrowser.qml">qml/pages/Plant/PlantBrowser.qml</file>
     <file alias="pages/Plant/PlantDesease.qml">qml/pages/Plant/PlantDesease.qml</file>
@@ -229,10 +232,12 @@
     <file alias="pages/Social/pages/FeedDetailsPage.qml">qml/pages/Social/pages/FeedDetailsPage.qml</file>
     <file alias="pages/Social/pages/FeedPage.qml">qml/pages/Social/pages/FeedPage.qml</file>
     <file alias="pages/Social/pages/FindUser.qml">qml/pages/Social/pages/FindUser.qml</file>
+    <file alias="pages/Social/pages/Login.qml">qml/pages/Social/pages/Login.qml</file>
     <file alias="pages/Social/pages/MessageList.qml">qml/pages/Social/pages/MessageList.qml</file>
     <file alias="pages/Social/pages/MessagePage.qml">qml/pages/Social/pages/MessagePage.qml</file>
     <file alias="pages/Social/pages/PostEditPage.qml">qml/pages/Social/pages/PostEditPage.qml</file>
     <file alias="pages/Social/pages/ProfileEditPage.qml">qml/pages/Social/pages/ProfileEditPage.qml</file>
+    <file alias="pages/Social/pages/Register.qml">qml/pages/Social/pages/Register.qml</file>
     <file alias="pages/Social/pages/StartPage.qml">qml/pages/Social/pages/StartPage.qml</file>
     <file alias="pages/Social/pages/UserProfile.qml">qml/pages/Social/pages/UserProfile.qml</file>
     <file alias="pages/Social/pages/qmldir">qml/pages/Social/pages/qmldir</file>

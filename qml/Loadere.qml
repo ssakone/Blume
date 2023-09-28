@@ -12,7 +12,7 @@ ApplicationWindow {
 
     flags: (Qt.platform.os === "android") ? Qt.Window : Qt.Window
                                             | Qt.MaximizeUsingFullscreenGeometryHint
-    property string ip: ""
+    property string ip: "http://192.168.1.180:8000/"
     //color: Theme.colorBackground
     Loader {
         id: loader
@@ -22,6 +22,7 @@ ApplicationWindow {
     }
 
     Qaterial.RoundButton {
+        visible: ip !== ""
         icon.source: Qaterial.Icons.refresh
         anchors.bottom: parent.bottom
         anchors.right: parent.right
@@ -31,7 +32,7 @@ ApplicationWindow {
         onClicked: {
             loader.source = ""
             HotWatcher.clearCache()
-            loader.source = `http://${ip}/MobileApplication.qml`
+            loader.source = `${ip}MobileApplication.qml`
         }
     }
 

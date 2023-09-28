@@ -7428,6 +7428,8 @@
         <file>icons_custom/blue-thumb.svg</file>
         <file>icons_custom/share.svg</file>
         <file>icons_custom/co2.svg</file>
+        <file>img/bg-profile.png</file>
+        <file>img/bg-profile.svg</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

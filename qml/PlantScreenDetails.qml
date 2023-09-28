@@ -420,15 +420,14 @@ Popup {
                                                                         anchors.fill: parent
                                                                         onClicked: {
                                                                             plantScreenDetailsPopup.close()
-                                                                            page_view.push(navigator.plantDetailsLinePage, {
-                                                                                                                                                                              iconSource: "qrc:/assets/icons_custom/double-forks.png",
-                                                                                                                                                                              titleText: qsTr("Commestibilité"),
-                                                                                                                                                                              description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Commestible ?? qsTr("Inconnu") : '...'
-                                                                                                                                                                              })
+                                                                            page_view.push(navigator.descriptionPage, {
+                                                                               iconSource: "qrc:/assets/icons_custom/death-head.svg",
+                                                                               text: qsTr("Toxicité"),
+                                                                               description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Commestible ?? qsTr("Inconnu") : '...'
+                                                                            })
                                                                         }
                                                                     }
                                                                 }
-
                                                                 Column {
                                                                     Layout.fillWidth: true
                                                                     Label {
@@ -451,9 +450,9 @@ Popup {
                                                                         anchors.fill: parent
                                                                         onClicked: {
                                                                             plantScreenDetailsPopup.close()
-                                                                            page_view.push(navigator.plantDetailsLinePage, {
+                                                                            page_view.push(navigator.descriptionPage, {
                                                                                                       iconSource: "qrc:/assets/icons_custom/death-head.svg",
-                                                                                                      titleText: qsTr("Toxicité"),
+                                                                                                      text: qsTr("Toxicité"),
                                                                                                       description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Toxicité ?? qsTr("Inconnu") : '...'
                                                                                                       })
                                                                         }
@@ -482,9 +481,9 @@ Popup {
                                                                         anchors.fill: parent
                                                                         onClicked: {
                                                                             plantScreenDetailsPopup.close()
-                                                                            page_view.push(navigator.plantDetailsLinePage, {
+                                                                            page_view.push(navigator.descriptionPage, {
                                                                                                       iconSource: "qrc:/assets/icons_custom/co2.svg",
-                                                                                                      titleText: qsTr("Absorption de CO2"),
+                                                                                                      text: qsTr("Absorption de CO2"),
                                                                                                       description:  barDetailsColumn.gptDetails ? qsTr("Faible") : '...'
                                                                                            })
                                                                         }

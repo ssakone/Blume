@@ -31,6 +31,8 @@ Rectangle {
                                + 52 : screenPaddingNotch + 52
 
     onBackButtonClicked: {
+
+        console.log("IN PARENT APPBAR ", page_view.depth)
         if (isHomeScreen)
             appDrawer.open()
         else if (!noAutoPop)

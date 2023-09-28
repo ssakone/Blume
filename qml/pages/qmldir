@@ -3,6 +3,7 @@
 module Blume.pages
 
 AskHelp 1.0 AskHelp.qml
+DescriptionScreen 1.0 DescriptionScreen.qml
 Faq 1.0 Faq.qml
 Feed 1.0 Feed.qml
 Posometre 1.0 Posometre.qml

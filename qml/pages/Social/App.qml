@@ -64,6 +64,16 @@ Item {
     }
 
     Component {
+        id: loginPage
+        Login {}
+    }
+
+    Component {
+        id: registerPage
+        Register {}
+    }
+
+    Component {
         id: profileEditPage
         ProfileEditPage {}
     }
@@ -634,6 +644,10 @@ Item {
     StackView {
         id: view
         anchors.fill: parent
+        onFocusChanged: {
+            console.log("StackView focus changed ", focus)
+        }
+
         Component.onCompleted: {
             Qaterial.Style.theme = Qaterial.Style.Theme.Light
             Qaterial.Style.accentColor = Qaterial.Colors.teal
