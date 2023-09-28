@@ -484,7 +484,10 @@ Item {
             } else if (appContent.state === "PlantBrowser") {
                 screenPlantBrowser.backAction()
             } else if (appContent.state === "Navigator") {
-                if (page_view.depth === 1) {
+                if(page_view.indepthStacksList.length > 0) {
+                    const popTopStack = page_view.indepthStacksList[page_view.indepthStacksList.length - 1]
+                    popTopStack()
+                } else if (page_view.depth === 1) {
                     if (exitTimer.running)
                         Qt.quit()
                     else
@@ -539,6 +542,7 @@ Item {
             StackView {
                 id: page_view
                 property string previousState: ""
+                property var indepthStacksList: []
 
                 Layout.fillHeight: true
                 Layout.fillWidth: true

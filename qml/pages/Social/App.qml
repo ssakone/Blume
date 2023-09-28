@@ -649,6 +649,7 @@ Item {
         }
 
         Component.onCompleted: {
+            page_view.indepthStacksList.push(view.pop)
             Qaterial.Style.theme = Qaterial.Style.Theme.Light
             Qaterial.Style.accentColor = Qaterial.Colors.teal
             initialItem = root.privateKey.length > 0 ? feedPage : startPage

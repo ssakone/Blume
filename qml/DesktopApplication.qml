@@ -478,6 +478,7 @@ ApplicationWindow {
             StackView {
                 id: page_view
                 property string previousState: ""
+                property var indepthStacksList: []
 
                 Layout.fillHeight: true
                 Layout.fillWidth: true
