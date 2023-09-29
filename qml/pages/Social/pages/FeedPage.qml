@@ -74,7 +74,7 @@ Page {
                                 width: 100
                                 avatarSize: 80
                                 source: JSON.parse(modelData["profile"]
-                                                   || "{}").picture || ""
+                                                   || "{}").picture || Qaterial.Icons.faceManProfile
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 onClicked: {
                                     const data = JSON.parse(
@@ -163,7 +163,7 @@ Page {
                                                     _nameLabel.text = root.author[pubkey].name
                                                             || ""
                                                     _avatar.source = root.author[pubkey].picture
-                                                            || ""
+                                                            || Qaterial.Icons.faceProfile
                                                 }
                                             }, pubc)
                                         }
@@ -176,7 +176,7 @@ Page {
                                                             _nameLabel.text = info.name
                                                                     || ""
                                                             _avatar.source = info.picture
-                                                                    || ""
+                                                                    || Qaterial.Icons.faceProfile
                                                         }
                                                     })
                                     }
