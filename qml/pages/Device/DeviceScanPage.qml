@@ -40,14 +40,26 @@ BPage {
             console.warn("deviceManager.updating")
     }
 
-    Component.onCompleted: {
-        if (utilsApp.checkMobileBleLocationPermission()) {
-            scan()
-        } else {
-            utilsApp.getMobileBleLocationPermission()
-            retryScan.start()
+    onFocusChanged: {
+        if(focus) {
+            if (utilsApp.checkMobileBleLocationPermission()) {
+                scan()
+            } else {
+                utilsApp.getMobileBleLocationPermission()
+                retryScan.start()
+            }
         }
+
     }
+
+    Timer {
+        id: retryScan
+        interval: 333
+        running: false
+        repeat: false
+        onTriggered: scan()
+    }
+
 
     ColumnLayout {
         id: _insideCol
@@ -66,11 +78,28 @@ BPage {
         }
 
         Image {
-            Layout.preferredHeight: 180
-            Layout.preferredWidth: Layout.preferredHeight
+            Layout.preferredHeight: 240
+            Layout.preferredWidth: 240
             Layout.alignment: Qt.AlignHCenter
             anchors.margins: 15
             source: "qrc:/assets/icons_custom/radar-sensors.svg"
+
+            SequentialAnimation on opacity {
+                id: scanAnimation
+                loops: Animation.Infinite
+                running: deviceManager.scanning
+                alwaysRunToEnd: true
+
+                PropertyAnimation {
+                    to: 0.33
+                    duration: 750
+                }
+                PropertyAnimation {
+                    to: 1
+                    duration: 750
+                }
+            }
+
         }
 
         Column {

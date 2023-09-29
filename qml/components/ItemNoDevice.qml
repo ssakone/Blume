@@ -5,6 +5,7 @@ import QtQuick.Layouts
 
 import "../components_generic/"
 import "../components_themed/"
+import "../"
 
 Item {
     id: itemNoDevice
@@ -59,25 +60,8 @@ Item {
                     anchors.rightMargin: 32
                     anchors.topMargin: deviceManager.scanning ? 30 : 0
 
-                    source: deviceManager.scanning ? "qrc:/assets/icons_custom/radar-sensors.svg" : "qrc:/assets/img/scan-in-salon.svg"
+                    source: "qrc:/assets/img/scan-in-salon.svg"
                     fillMode: Image.PreserveAspectFit
-
-                    //color: $Colors.colorPrimary
-                    SequentialAnimation on opacity {
-                        id: scanAnimation
-                        loops: Animation.Infinite
-                        running: deviceManager.scanning
-                        alwaysRunToEnd: true
-
-                        PropertyAnimation {
-                            to: 0.33
-                            duration: 750
-                        }
-                        PropertyAnimation {
-                            to: 1
-                            duration: 750
-                        }
-                    }
                 }
 
                 Container {
@@ -169,7 +153,6 @@ Item {
                             id: btn2
                             width: parent.width
                             height: 60
-                            visible: !deviceManager.scanning
                             anchors.horizontalCenter: parent.horizontalCenter
 
                             text: qsTr("Launch detection") // qsTr("Launch detection")
@@ -180,12 +163,6 @@ Item {
                             leftPadding: 20
                             rightPadding: leftPadding
                             onClicked: {
-                                //                                if (utilsApp.checkMobileBleLocationPermission()) {
-                                //                                    scan()
-                                //                                } else {
-                                //                                    utilsApp.getMobileBleLocationPermission()
-                                //                                    retryScan.start()
-                                //                                }
                                 page_view.push(navigator.deviceScannerPage)
                             }
                         }
@@ -210,23 +187,6 @@ Item {
                                 anchors.verticalCenter: parent.verticalCenter
                                 horizontalAlignment: Text.AlignHCenter
                             }
-                        }
-
-                        NiceButton {
-                            width: parent.width
-                            height: 60
-                            visible: deviceManager.scanning
-                            anchors.horizontalCenter: parent.horizontalCenter
-
-                            text: qsTr("Arreter la détection")
-                            backgroundColor: $Colors.red400
-                            foregroundColor: $Colors.white
-                            radius: 10
-                            font.pixelSize: 18
-                            padding: 10
-                            leftPadding: 20
-                            rightPadding: leftPadding
-                            onClicked: stop()
                         }
 
                         ////////
@@ -298,30 +258,6 @@ Item {
                                             }
                                         }
                                     }
-                                }
-                            }
-                        }
-
-                        Column {
-                            width: parent.width
-                            spacing: 10
-                            visible: deviceManager.scanning
-                            Text {
-                                text: qsTr("Capteurs détectés")
-                                color: $Colors.colorPrimary
-                                font.weight: Font.DemiBold
-                                font.pixelSize: 18
-                            }
-
-                            Repeater {
-                                model: deviceManager.devicesList
-                                delegate: DeviceWidget {
-                                    width: parent.width
-                                    height: 100
-                                    bigAssMode: (!isHdpi || (isTablet
-                                                             && width >= 480))
-                                    singleColumn: (appWindow.singleColumn
-                                                   || devicesView.cellColumnsTarget === 1)
                                 }
                             }
                         }

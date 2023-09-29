@@ -29,18 +29,13 @@ Page {
         RowLayout {
             anchors.fill: parent
             spacing: 0
-            ButtonImage {
-                visible: false
-            }
-            Item {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Text {
-                    leftPadding: 10
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.weight: Font.Bold
-                    font.pixelSize: 20
-                    text: qsTr("Blume Social")
+            IconImage {
+                Layout.leftMargin: 15
+                source: Qaterial.Icons.close
+                color: $Colors.colorPrimary
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: page_view.pop()
                 }
             }
         }

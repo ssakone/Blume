@@ -142,6 +142,7 @@ BPage {
         }
 
         if (deviceManager.hasDevices) {
+            console.log("\n\n deviceManager.hasDevices ", deviceManager.hasDevices)
             // The sensor list is shown
             loaderStatus.source = ""
             loaderStatus.visible = false
@@ -159,11 +160,10 @@ BPage {
             loaderStatus.visible = true
             loaderDeviceList.visible = false
             rectangleBluetoothStatus.hide()
-
             if (!deviceManager.bluetooth) {
-                loaderStatus.source = "ItemNoBluetooth.qml"
+                loaderStatus.source = "components/ItemNoBluetooth.qml"
             } else {
-                loaderStatus.source = "ItemNoDevice.qml"
+                loaderStatus.source = "components/ItemNoDevice.qml"
             }
         }
     }
@@ -456,8 +456,8 @@ BPage {
 
             Rectangle {
                 Layout.preferredWidth: 30
-                Layout.preferredHeight: Layout.preferredWidth
-                radius: Layout.preferredHeight / 2
+                Layout.preferredHeight: 30
+                radius: height / 2
                 color: $Colors.white
 
                 IconSvg {
@@ -502,8 +502,8 @@ BPage {
             }
             Rectangle {
                 Layout.preferredWidth: 30
-                Layout.preferredHeight: Layout.preferredWidth
-                radius: Layout.preferredHeight / 2
+                Layout.preferredHeight: 30
+                radius: height / 2
                 color: $Colors.white
 
                 IconSvg {
@@ -533,6 +533,7 @@ BPage {
             Layout.fillHeight: true
             Layout.fillWidth: true
             asynchronous: false
+            sourceComponent: ItemNoDevice {}
         }
     }
 
