@@ -589,14 +589,52 @@ BPage {
                     gradient: $Colors.gradientPrimary
                 }
 
-                IconSvg {
+                Image {
                     z: 3
                     width: 120
                     height: width
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: head.bottom
                     anchors.bottomMargin: -height / 2
-                    source: "qrc:/assets/img/bug-detect-insect.svg"
+                    source: "qrc:/assets/img/plant-with-insect.png"
+
+                    IconSvg {
+                        anchors.centerIn: parent
+                        source: "qrc:/assets/img/overlay-scan.svg"
+                        color: "white"
+                    }
+
+                    ClipRRect {
+                        visible: Qt.platform.os == 'ios'
+                                 || Qt.platform.os == 'android'
+                        width: 50
+                        height: width
+                        radius: height / 2
+
+                        anchors {
+                            horizontalCenter: parent.horizontalCenter
+                            bottom: parent.bottom
+                            bottomMargin: -height/2
+                        }
+
+                        ButtonWireframe {
+                            fullColor: true
+                            primaryColor: $Colors.colorPrimary
+                            anchors.fill: parent
+                            onClicked: {
+                                if (Qt.platform.os === 'ios') {
+                                    imgPicker.openCamera()
+                                } else {
+                                    androidToolsLoader.item.openCamera()
+                                }
+                            }
+                            IconSvg {
+                                anchors.centerIn: parent
+                                source: Icons.camera
+                                color: "white"
+                            }
+                        }
+                    }
                 }
 
                 ColumnLayout {
@@ -693,62 +731,6 @@ BPage {
                                     title: ""
                                     subtitle: qsTr("Be sure to take a clear, bright photo that includes only the sick part of the plant you want to identify")
                                     onClicked: tabView.chooseFile
-                                }
-                                Column {
-                                    width: 70
-                                    anchors {
-                                        bottom: parent.bottom
-                                        bottomMargin: 10
-
-                                        right: parent.right
-                                        rightMargin: 10
-                                    }
-                                    spacing: 7
-
-                                    ClipRRect {
-                                        visible: image.source.toString() !== ""
-                                        width: 60
-                                        height: width
-                                        radius: height / 2
-
-                                        ButtonWireframe {
-                                            fullColor: true
-                                            primaryColor: $Colors.colorPrimary
-                                            anchors.fill: parent
-                                            onClicked: tabView.chooseFile()
-                                            IconSvg {
-                                                anchors.centerIn: parent
-                                                source: Icons.image
-                                                color: "white"
-                                            }
-                                        }
-                                    }
-
-                                    ClipRRect {
-                                        visible: Qt.platform.os == 'ios'
-                                                 || Qt.platform.os == 'android'
-                                        width: 60
-                                        height: width
-                                        radius: height / 2
-
-                                        ButtonWireframe {
-                                            fullColor: true
-                                            primaryColor: $Colors.colorPrimary
-                                            anchors.fill: parent
-                                            onClicked: {
-                                                if (Qt.platform.os === 'ios') {
-                                                    imgPicker.openCamera()
-                                                } else {
-                                                    androidToolsLoader.item.openCamera()
-                                                }
-                                            }
-                                            IconSvg {
-                                                anchors.centerIn: parent
-                                                source: Icons.camera
-                                                color: "white"
-                                            }
-                                        }
-                                    }
                                 }
                             }
 
@@ -914,15 +896,13 @@ BPage {
                                                      //                                                console.log(r)
                                                      planteDeseaseControl.analyseResults = datas
                                                      imgAnalysisSurface.loading = false
-                                                     identifierLayoutView.currentIndex = 2
-                                                     console.log(datas.health_assessment.diseases[0]['similar_images'])
-                                                     if (datas.is_plant
-                                                             && planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability < 0.7) {
-                                                         identifedPlantListView.model
-                                                                 = datas.health_assessment.diseases
-                                                     } else {
-                                                         identifedPlantListView.model = []
-                                                     }
+//                                                     identifierLayoutView.currentIndex = 2
+                                                     page_view.push(navigator.diseaseIdentifierResultsPage, {
+                                                        "resultsList": datas.health_assessment.diseases,
+                                                        "scanedImage": image.source.toString(),
+                                                        "isPlant": datas.is_plant,
+                                                        "healthyProbability": planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability
+                                                        })
                                                  }).catch(function (e) {
                                                      imgAnalysisSurface.loading = false
                                                      console.log(JSON.stringify(
@@ -955,6 +935,7 @@ BPage {
                     //                        Layout.fillWidth: true
                     //                    }
                 }
+
             }
             Item {
                 ListView {

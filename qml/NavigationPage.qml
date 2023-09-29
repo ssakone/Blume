@@ -58,6 +58,12 @@ Item {
     property var plantFrequenciesPage: Component {
         PlantFrequencies {}
     }
+    property var plantIdentifierResultsPage: Component {
+        PlantIdentifierResultsScreen {}
+    }
+    property var diseaseIdentifierResultsPage: Component {
+        PlantIdentifierResultsScreen {}
+    }
     property var insectDetailPage: Component {
         InsectDetailsScreen {}
     }

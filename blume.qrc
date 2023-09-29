@@ -203,6 +203,7 @@
     <file alias="pages/Insect/InsectIdentifier.qml">qml/pages/Insect/InsectIdentifier.qml</file>
     <file alias="pages/Insect/qmldir">qml/pages/Insect/qmldir</file>
     <file alias="pages/Plant/DetailsLineScreen.qml">qml/pages/Plant/DetailsLineScreen.qml</file>
+    <file alias="pages/Plant/DiseasIdentifierResultsScreen.qml">qml/pages/Plant/DiseasIdentifierResultsScreen.qml</file>
     <file alias="pages/Plant/Plant.qml">qml/pages/Plant/Plant.qml</file>
     <file alias="pages/Plant/PlantBrowser.qml">qml/pages/Plant/PlantBrowser.qml</file>
     <file alias="pages/Plant/PlantDesease.qml">qml/pages/Plant/PlantDesease.qml</file>
@@ -212,6 +213,7 @@
     <file alias="pages/Plant/PlantFrequencies.qml">qml/pages/Plant/PlantFrequencies.qml</file>
     <file alias="pages/Plant/PlantIdentifier.qml">qml/pages/Plant/PlantIdentifier.qml</file>
     <file alias="pages/Plant/PlantIdentifierDetails.qml">qml/pages/Plant/PlantIdentifierDetails.qml</file>
+    <file alias="pages/Plant/PlantIdentifierResultsScreen.qml">qml/pages/Plant/PlantIdentifierResultsScreen.qml</file>
     <file alias="pages/Plant/PlantScreen.qml">qml/pages/Plant/PlantScreen.qml</file>
     <file alias="pages/Plant/PlantSearch.qml">qml/pages/Plant/PlantSearch.qml</file>
     <file alias="pages/Plant/PlantShortDescriptions.qml">qml/pages/Plant/PlantShortDescriptions.qml</file>

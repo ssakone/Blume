@@ -80,15 +80,67 @@ BPage {
         gradient: $Colors.gradientPrimary
     }
 
-    IconSvg {
+    Item {
+        id: middlePreview
         z: 3
         width: 120
-        height: width
+        height: width + 20
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: head.bottom
         anchors.bottomMargin: -height / 2
-        source: "qrc:/assets/img/bug-detect-insect.svg"
+
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 7
+            IconSvg {
+                Layout.fillWidth: true
+                Layout.preferredHeight: width
+                source: "qrc:/assets/icons_custom/scan_plant.svg"
+                fillMode: Image.PreserveAspectCrop
+            }
+            Label {
+                text: qsTr("Identifier une plante")
+                Layout.fillWidth: true
+                horizontalAlignment: Text.AlignHCenter
+            }
+        }
+
+        ClipRRect {
+            visible: Qt.platform.os == 'ios'
+                     || Qt.platform.os == 'android'
+            width: 40
+            height: width
+            radius: height / 2
+            anchors {
+                top: parent.bottom
+                left: parent.right
+
+                topMargin: -35
+                leftMargin: -7
+            }
+
+            ButtonWireframe {
+                fullColor: true
+                primaryColor: $Colors.colorPrimary
+                anchors.fill: parent
+                onClicked: {
+                    if (Qt.platform.os === 'ios') {
+                        imgPicker.openCamera()
+                    } else {
+                        androidToolsLoader.item.openCamera()
+                    }
+                }
+                IconSvg {
+                    anchors.centerIn: parent
+                    source: Icons.camera
+                    color: "white"
+                }
+            }
+        }
+
     }
+
+
 
     ColumnLayout {
         z: 4
@@ -236,62 +288,6 @@ BPage {
                                     onClicked: tabView.chooseFile
                                 }
 
-                                Column {
-                                    width: 70
-                                    anchors {
-                                        bottom: parent.bottom
-                                        bottomMargin: 10
-
-                                        right: parent.right
-                                        rightMargin: 10
-                                    }
-                                    spacing: 7
-
-                                    ClipRRect {
-                                        visible: image.source.toString() !== ""
-                                        width: 60
-                                        height: width
-                                        radius: height / 2
-
-                                        ButtonWireframe {
-                                            fullColor: true
-                                            primaryColor: $Colors.colorPrimary
-                                            anchors.fill: parent
-                                            onClicked: tabView.chooseFile()
-                                            IconSvg {
-                                                anchors.centerIn: parent
-                                                source: Icons.image
-                                                color: "white"
-                                            }
-                                        }
-                                    }
-
-                                    ClipRRect {
-                                        visible: Qt.platform.os == 'ios'
-                                                 || Qt.platform.os == 'android'
-                                        width: 60
-                                        height: width
-                                        radius: height / 2
-
-                                        ButtonWireframe {
-                                            fullColor: true
-                                            primaryColor: $Colors.colorPrimary
-                                            anchors.fill: parent
-                                            onClicked: {
-                                                if (Qt.platform.os === 'ios') {
-                                                    imgPicker.openCamera()
-                                                } else {
-                                                    androidToolsLoader.item.openCamera()
-                                                }
-                                            }
-                                            IconSvg {
-                                                anchors.centerIn: parent
-                                                source: Icons.camera
-                                                color: "white"
-                                            }
-                                        }
-                                    }
-                                }
                             }
 
                             Loader {
@@ -456,13 +452,12 @@ BPage {
                                                      let datas = JSON.parse(r)
                                                      pageControl.plant_results = datas
                                                      imgAnalysisSurface.loading = false
-                                                     identifierLayoutView.currentIndex = 1
-                                                     if (datas.is_plant)
-                                                         identifedPlantListView.model
-                                                                 = datas.suggestions.slice(
-                                                                     0, 3)
-                                                     else
-                                                         identifedPlantListView.model = []
+                                                     page_view.push(navigator.plantIdentifierResultsPage, {
+                                                        "resultsList": datas.suggestions?.slice(0, 3),
+                                                        "scanedImage": image.source.toString(),
+                                                        "isPlant": datas.is_plant
+                                                        })
+
                                                  }).catch(function (e) {
                                                      imgAnalysisSurface.loading = false
                                                      console.log('Erreur',
@@ -501,99 +496,6 @@ BPage {
                             Layout.preferredHeight: 45
                             height: 45
                             onClicked: tabView.currentIndex = 1 //fileDialog.open()
-                        }
-                    }
-
-                    //                    Item {
-                    //                        Layout.fillHeight: true
-                    //                        Layout.fillWidth: true
-                    //                    }
-                }
-            }
-            Item {
-                ListView {
-                    id: identifedPlantListView
-                    anchors.fill: parent
-                    model: 0
-                    spacing: 5
-                    clip: true
-                    header: Column {
-                        width: identifedPlantListView.width
-                        padding: 10
-                        spacing: 3
-                        Label {
-                            font.pixelSize: 16
-                            width: 300
-                            wrapMode: Label.Wrap
-                            horizontalAlignment: Label.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            verticalAlignment: Qt.AlignVCenter
-                            visible: pageControl.plant_results?.is_plant
-                                     ?? false
-                            text: qsTr("One of these results should match your search")
-                        }
-                        Label {
-                            font.pixelSize: 28
-                            width: 300
-                            wrapMode: Label.Wrap
-                            horizontalAlignment: Label.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            verticalAlignment: Qt.AlignVCenter
-                            visible: !pageControl.plant_results?.is_plant
-                            text: qsTr("No plant detected")
-                        }
-                    }
-
-                    delegate: ItemDelegate {
-                        id: card
-                        required property int index
-                        required property variant modelData
-                        property int blumeMatchID
-                        property bool isLoaded: false
-
-                        Column {
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.left: parent.left
-                            anchors.leftMargin: 15
-                            spacing: 10
-                            Label {
-                                text: modelData["plant_name"]
-                                font.pixelSize: 16
-                                font.weight: Font.DemiBold
-                            }
-                            Label {
-                                text: modelData["plant_details"]["common_names"][0]
-                            }
-                        }
-
-                        height: 100
-                        width: identifedPlantListView.width
-
-                        ClipRRect {
-                            anchors.right: parent.right
-                            anchors.rightMargin: 10
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: 80
-                            height: width
-                            radius: height / 2
-
-                            Rectangle {
-                                anchors.fill: parent
-                                color: "teal"
-                                Image {
-                                    source: modelData["plant_details"]["wiki_image"]["value"]
-                                    anchors.fill: parent
-                                }
-                            }
-                        }
-
-                        onClicked: {
-//                            console.log("\n\n Before push ", JSON.stringify(modelData))
-                            page_view.push(navigator.plantFlowercheckerPage, {
-                                               "plantName": modelData["plant_name"],
-                                               "images": modelData["similar_images"]?.map(item => item.url)
-                                           })
-
                         }
                     }
                 }
