@@ -88,16 +88,16 @@ Popup {
                     width: parent.btnSize
 
                     text: qsTr("Je refuse")
-                    primaryColor: Theme.colorSubText
-                    secondaryColor: Theme.colorForeground
+                    primaryColor: $Colors.red400
+                    fullColor: true
 
-                    onClicked: Qt.quit()
+                    onClicked: popupLocationNotification.close()
                 }
                 ButtonWireframe {
                     width: parent.btnSize
 
                     text: qsTr("J'accepte")
-                    primaryColor: Theme.colorGreen
+                    primaryColor: $Colors.colorPrimary
                     fullColor: true
 
                     onClicked: {

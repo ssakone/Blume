@@ -7,12 +7,15 @@ import "../.."
 
 
 BPage {
+    id: control
     property int spaceID
     property string spaceName: ""
     property string spaceDescription: ""
     property bool isOutDoor: false
     property bool shouldCreate: spaceName === "" && spaceDescription === ""
     property var callback: function () {}
+
+    property bool hasPermissions: utilsApp.getMobileBleLocationPermission()
 
 
     background.opacity: 0.5
@@ -44,6 +47,8 @@ BPage {
                 utilsApp.getMobileBleLocationPermission()
                 retryScan.start()
             }
+        } else {
+            deviceManager.scanDevices_stop()
         }
 
     }
@@ -53,77 +58,180 @@ BPage {
         interval: 333
         running: false
         repeat: false
-        onTriggered: scan()
+        onTriggered: {
+            if (utilsApp.checkMobileBleLocationPermission()) {
+                hasPermissions = true
+                scan()
+            } else {
+                hasPermissions = utilsApp.getMobileBleLocationPermission()
+                retryScan.start()
+            }
+        }
     }
 
-
-    ColumnLayout {
-        id: _insideCol
+    Flickable {
         anchors.fill: parent
-        spacing: 15
-        anchors.horizontalCenter: parent.horizontalCenter
-
-        Label {
-            Layout.alignment: Qt.AlignHCenter
-            text: qsTr("Scan en cours...")
-            color: $Colors.colorPrimary
-            font {
-                weight: Font.DemiBold
-                pixelSize: 24
-            }
-        }
-
-        Image {
-            Layout.preferredHeight: 240
-            Layout.preferredWidth: 240
-            Layout.alignment: Qt.AlignHCenter
-            anchors.margins: 15
-            source: "qrc:/assets/icons_custom/radar-sensors.svg"
-
-            SequentialAnimation on opacity {
-                id: scanAnimation
-                loops: Animation.Infinite
-                running: deviceManager.scanning
-                alwaysRunToEnd: true
-
-                PropertyAnimation {
-                    to: 0.33
-                    duration: 750
-                }
-                PropertyAnimation {
-                    to: 1
-                    duration: 750
-                }
-            }
-
-        }
+        contentHeight: _insideCol.height
 
         Column {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            leftPadding: 10
-            rightPadding: 10
+            id: _insideCol
+            anchors.fill: parent
+            spacing: 15
+            anchors.horizontalCenter: parent.horizontalCenter
 
-            ColumnLayout {
-                width: parent.width - 20
-                height: parent.height
+            Column {
+                width: parent.width
                 Label {
-                    text: qsTr("Capteurs détectés...")
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: qsTr("Scan en cours...")
                     color: $Colors.colorPrimary
+                    visible: deviceManager.scanning
                     font {
                         weight: Font.DemiBold
-                        pixelSize: 16
+                        pixelSize: 24
                     }
                 }
 
-                DeviceListUnified {
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
+                Label {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: qsTr("Scan terminé")
+                    color: "#D68C44"
+                    visible: hasPermissions && !deviceManager.scanning
+                    font {
+                        weight: Font.DemiBold
+                        pixelSize: 24
+                    }
+                }
+
+                Label {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: qsTr("Autorisations non accordées")
+                    color: $Colors.red300
+                    visible: !hasPermissions
+                    font {
+                        weight: Font.DemiBold
+                        pixelSize: 24
+                    }
                 }
             }
+
+
+            Image {
+                height: 240
+                width: height
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.margins: 15
+                source: "qrc:/assets/icons_custom/radar-sensors.svg"
+
+                SequentialAnimation on opacity {
+                    id: scanAnimation
+                    loops: Animation.Infinite
+                    running: deviceManager.scanning
+                    alwaysRunToEnd: true
+
+                    PropertyAnimation {
+                        to: 0.33
+                        duration: 750
+                    }
+                    PropertyAnimation {
+                        to: 1
+                        duration: 750
+                    }
+                }
+
+            }
+
+            Item {
+                width: 1
+                height: 100
+                visible: !deviceManager.scanning
+            }
+
+            Column {
+                width: parent.width
+                leftPadding: 10
+                rightPadding: 10
+
+                Column {
+                    width: parent.width - 20
+                    spacing: 30
+
+                    Label {
+                        text: qsTr("Aucun capteur trouvé !")
+                        color: "#D68C44"
+                        width: parent.width
+                        wrapMode: Text.Wrap
+                        horizontalAlignment: Text.AlignHCenter
+                        font {
+                            weight: Font.DemiBold
+                            pixelSize: 24
+                        }
+                        visible: hasPermissions && !deviceManager.scanning
+                    }
+                    Label {
+                        text: qsTr("Merci de vérifier vos capteurs et relancez la recherche.")
+                        width: parent.width
+                        leftPadding: 30
+                        rightPadding: 30
+                        wrapMode: Text.Wrap
+                        horizontalAlignment: Text.AlignHCenter
+                        color: $Colors.colorPrimary
+                        font {
+                            weight: Font.Light
+                            pixelSize: 16
+                        }
+                        visible: hasPermissions && !deviceManager.scanning
+                    }
+
+                    NiceButton {
+                        id: btn2
+                        width: parent.width
+                        height: 60
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        text: hasPermissions ? qsTr("Launch detection") : qsTr("Accorder les autorisation")
+                        visible: !deviceManager.scanning
+                        bgGradient: $Colors.gradientPrimary
+                        radius: 10
+                        font.pixelSize: 18
+                        padding: 10
+                        leftPadding: 20
+                        rightPadding: leftPadding
+                        onClicked: {
+                            console.log("click")
+                            retryScan.start()
+                        }
+                    }
+
+
+                }
+
+                Column {
+                    width: parent.width - 20
+                    visible: deviceManager.scanning
+                    Label {
+                        text: qsTr("Capteurs détectés...")
+                        color: $Colors.colorPrimary
+                        font {
+                            weight: Font.DemiBold
+                            pixelSize: 16
+                        }
+                    }
+
+                    Repeater {
+                        model: deviceManager.devicesList
+                        delegate: DeviceWidget {
+                            width: parent.width
+                            height: 100
+                            bigAssMode: (!isHdpi || (isTablet && width >= 480))
+                        }
+                    }
+                }
+            }
+
+
         }
-
-
     }
+
 
 }
