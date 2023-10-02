@@ -76,9 +76,6 @@ BPage {
         noAutoPop: true
         z: 10
         statusBarVisible: false
-        leading.icon: Icons.close
-        color: Qt.rgba(12, 200, 25, 0)
-        foregroundColor: $Colors.colorPrimary
         leading.onClicked: {
             if (identifierLayoutView.currentIndex === 0) {
                 planteDeseaseControl.StackView.view.pop()

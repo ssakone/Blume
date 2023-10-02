@@ -8,9 +8,6 @@ import "../../components_generic"
 BPage {
     header: AppBar {
         title: ""
-        leading.icon: Icons.close
-        color: Qt.rgba(12, 200, 25, 0)
-        foregroundColor: $Colors.colorPrimary
     }
 
     property string iconSource: _icon.source

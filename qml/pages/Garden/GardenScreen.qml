@@ -161,8 +161,8 @@ BPage {
 
             Rectangle {
                 Layout.preferredWidth: 30
-                Layout.preferredHeight: Layout.preferredWidth
-                radius: Layout.preferredHeight / 2
+                Layout.preferredHeight: width
+                radius: width / 2
                 color: $Colors.white
 
 
@@ -205,8 +205,8 @@ BPage {
             }
             Rectangle {
                 Layout.preferredWidth: 30
-                Layout.preferredHeight: Layout.preferredWidth
-                radius: Layout.preferredHeight / 2
+                Layout.preferredHeight: width
+                radius: width / 2
                 color: $Colors.white
 
 

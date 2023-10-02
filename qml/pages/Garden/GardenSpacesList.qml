@@ -13,9 +13,6 @@ BPage {
         id: header
         title: qsTr("Liste des salles")
         statusBarVisible: false
-//        leading.icon: Icons.close
-        color: Qt.rgba(12, 200, 25, 0)
-        foregroundColor: $Colors.colorPrimary
     }
 
     SortFilterProxyModel {

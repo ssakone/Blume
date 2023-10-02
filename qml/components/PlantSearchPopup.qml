@@ -36,12 +36,9 @@ Drawer {
             header: AppBar {
                 title: "Choose plant"
                 statusBarVisible: false
-                leading.icon: Icons.close
                 leading.onClicked: {
                     control.close()
                 }
-                color: Qt.rgba(12, 200, 25, 0)
-                foregroundColor: $Colors.colorPrimary
                 noAutoPop: true
             }
             SearchPlants {

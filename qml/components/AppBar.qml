@@ -12,8 +12,8 @@ import "../components_themed/"
 Rectangle {
     id: control
     color: backgroundColor
-    property color backgroundColor: $Colors.primary
-    property color foregroundColor: Theme.colorHeaderContent
+    property color backgroundColor: Qt.rgba(12, 200, 25, 0)
+    property color foregroundColor: $Colors.colorPrimary
     property alias leading: buttonBackBg
     property alias title: _label.text
     property alias titleLabel: _label
@@ -47,13 +47,18 @@ Rectangle {
         spacing: 2
         AppBarButton {
             id: buttonBackBg
-            icon: isHomeScreen ? "qrc:/assets/icons_material/baseline-menu-24px.svg" : "qrc:/assets/menus/menu_back.svg"
+            icon {
+                source: isHomeScreen ? "qrc:/assets/icons_material/baseline-menu-24px.svg" : Icons.close
+//                color: foregroundColor
+            }
+
             Layout.preferredHeight: 64
             Layout.preferredWidth: 64
             Layout.alignment: Qt.AlignVCenter
             foregroundColor: control.foregroundColor
             onClicked: backButtonClicked()
         }
+
         Label {
             id: _label
             font.pixelSize: 21

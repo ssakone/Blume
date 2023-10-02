@@ -647,7 +647,6 @@ BPage {
                     title: addAlarmPopup.shouldUpdate ? qsTr("Update task ") : qsTr(
                                                             "New task")
                     statusBarVisible: false
-                    leading.icon: Icons.close
                     leading.onClicked: {
                         addAlarmPopup.close()
                     }
@@ -957,7 +956,6 @@ BPage {
                 header: AppBar {
                     title: qsTr("Choose plant")
                     statusBarVisible: false
-                    leading.icon: Icons.close
                     leading.onClicked: {
                         choosePlantPopup.close()
                     }
