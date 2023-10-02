@@ -201,6 +201,7 @@
     <file alias="pages/Garden/qmldir">qml/pages/Garden/qmldir</file>
     <file alias="pages/Insect/InsectDetailsScreen.qml">qml/pages/Insect/InsectDetailsScreen.qml</file>
     <file alias="pages/Insect/InsectIdentifier.qml">qml/pages/Insect/InsectIdentifier.qml</file>
+    <file alias="pages/Insect/InsectIdentifierResultsList.qml">qml/pages/Insect/InsectIdentifierResultsList.qml</file>
     <file alias="pages/Insect/qmldir">qml/pages/Insect/qmldir</file>
     <file alias="pages/Plant/DetailsLineScreen.qml">qml/pages/Plant/DetailsLineScreen.qml</file>
     <file alias="pages/Plant/DiseasIdentifierResultsScreen.qml">qml/pages/Plant/DiseasIdentifierResultsScreen.qml</file>

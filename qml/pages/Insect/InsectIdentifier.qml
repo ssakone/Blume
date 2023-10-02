@@ -58,10 +58,54 @@ Page {
         }
     }
 
+    Rectangle {
+        id: head
+        anchors {
+            bottom: parent.top
+            bottomMargin: -130
+            horizontalCenter: parent.horizontalCenter
+        }
+
+        height: 1200
+        width: height / 1.7
+        radius: height
+        z: 3
+
+        gradient: $Colors.gradientPrimary
+    }
+
+    Image {
+        id: middleImage
+        z: 3
+        width: 120
+//        height: width
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: head.bottom
+        anchors.topMargin: -height / 2
+        source: "qrc:/assets/img/bug-detect-insect.svg"
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                if (Qt.platform.os === 'ios') {
+                    imgPicker.openCamera()
+                } else {
+                    androidToolsLoader.item.openCamera()
+                }
+            }
+        }
+    }
+
     ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 0
+        anchors {
+            top: middleImage.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            topMargin: 20
+        }
         spacing: 0
+        z: 3
 
         Loader {
             id: androidToolsLoader
@@ -179,6 +223,7 @@ Page {
                                 Image {
                                     id: image
                                     anchors.fill: parent
+                                    anchors.margins: 30
                                     fillMode: (Qt.platform.os == 'ios'
                                                || Qt.platform.os == 'android') ? Image.PreserveAspectCrop : Image.PreserveAspectFit
                                 }
@@ -216,37 +261,11 @@ Page {
                                             onClicked: tabView.chooseFile()
                                             IconSvg {
                                                 anchors.centerIn: parent
-                                                source: Icons.image
+                                                source: Icons.reload
                                                 color: "white"
                                             }
                                         }
                                     }
-
-                                    ClipRRect {
-                                        visible: Qt.platform.os == 'ios' || Qt.platform.os == 'android'
-                                        width: 60
-                                        height: width
-                                        radius: height / 2
-
-                                        ButtonWireframe {
-                                            fullColor: true
-                                            primaryColor: Theme.colorPrimary
-                                            anchors.fill: parent
-                                            onClicked: {
-                                                if (Qt.platform.os === 'ios') {
-                                                    imgPicker.openCamera()
-                                                } else {
-                                                    androidToolsLoader.item.openCamera()
-                                                }
-                                            }
-                                            IconSvg {
-                                                anchors.centerIn: parent
-                                                source: Icons.camera
-                                                color: "white"
-                                            }
-                                        }
-                                    }
-
                                 }
 
                             }
@@ -413,9 +432,10 @@ Page {
                                                     let datas = JSON.parse(r)
                                                     imgAnalysisSurface.loading = false
                                                     pageControl.insects = datas.result.classification.suggestions
-                                                    identifedPlantListView.model
-                                                            = pageControl.insects
-                                                    identifierLayoutView.currentIndex = 1
+                                                    page_view.push(navigator.insectIdentifierResultsPage, {
+                                                       "resultsList": datas.result.classification.suggestions,
+                                                       "scanedImage": image.source.toString()
+                                                       })
                                                 }).catch(function (e) {
                                                     imgAnalysisSurface.loading = false
                                                     console.log('Erreur',

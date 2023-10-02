@@ -4,3 +4,4 @@ module Blume.pages.Insect
 
 InsectDetailsScreen 1.0 InsectDetailsScreen.qml
 InsectIdentifier 1.0 InsectIdentifier.qml
+InsectIdentifierResultsList 1.0 InsectIdentifierResultsList.qml

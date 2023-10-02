@@ -67,6 +67,9 @@ Item {
     property var insectIdentifier: Component {
         InsectIdentifier {}
     }
+    property var insectIdentifierResultsPage: Component {
+        InsectIdentifierResultsList {}
+    }
     property var insectDetailPage: Component {
         InsectDetailsScreen {}
     }
