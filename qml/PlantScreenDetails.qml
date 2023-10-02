@@ -366,7 +366,7 @@ Popup {
                                                 spacing: 15
 
                                                 Label {
-                                                    text: plant["nom_botanique"] ?? barDetailsColumn.gptDetails?.nom_botanique ??  ""
+                                                    text: (plant["nom_botanique"] || barDetailsColumn.gptDetails?.nom_botanique )??  ""
                                                     wrapMode: Text.Wrap
                                                     font.pixelSize: 14
                                                     color: $Colors.colorPrimary
@@ -541,15 +541,15 @@ Popup {
                                                                    const parsed = JSON.parse(res)
 
                                                                    barDetailsColumn.gptDetails = {
-                                                                       "nom_botanique": parsed['botanical_name'],
-                                                                       "noms_communs": parsed["common_name"],
-                                                                       "description": parsed["description"],
-                                                                       "usage": parsed["usage"],
-                                                                       "is_commestible": parsed["eatable"],
-                                                                       "is_toxique": parsed["toxicity"],
+                                                                       "nom_botanique": parsed['nom_botanique'],
+                                                                       "noms_communs": parsed["nom commun"],
+                                                                       "description": parsed["Description"],
+                                                                       "usage": parsed["Usage"],
+                                                                       "is_commestible": parsed["Commestible"],
+                                                                       "is_toxique": parsed["Toxicité"],
                                                                        "taux_abs_co2": parsed["co2_absorption"],
                                                                        "description_taux_abs_co2": parsed["co2_absorption_desc"],
-                                                                       "blague": parsed["joke"]
+                                                                       "blague": parsed["Blague"]
                                                                    }
                                                                }).catch(function(err) {
                                                                    console.log("FETCH ERROR", err?.status, typeof err?.status)
@@ -561,37 +561,42 @@ Popup {
                                                         ColumnLayout {
                                                             width: parent.width
                                                             spacing: 10
-                                                            RowLayout {
-                                                                id: detailsBar
-                                                                Layout.fillWidth: true
-                                                                property int currentIndex: 0
-                                                                spacing: 0
-                                                                Repeater {
-                                                                    model: [qsTr("Description"), qsTr("Usage"), qsTr("Blague"), qsTr("Quizz")]
-                                                                    Label {
-                                                                        text: modelData
-                                                                        padding: 4
-                                                                        leftPadding: 10
-                                                                        rightPadding: 10
-                                                                        Layout.fillWidth: true
-                                                                        color: detailsBar.currentIndex === index ? "#9C7703" : "black"
-                                                                        font {
-                                                                            weight: Font.DemiBold
-                                                                            pixelSize: 16
-                                                                        }
 
-                                                                        background: Rectangle {
-                                                                            color: detailsBar.currentIndex === index ? "#FFE9A1" : $Colors.colorTertiary
-                                                                        }
-                                                                        MouseArea {
-                                                                            anchors.fill: parent
-                                                                            onClicked: {
-                                                                                if(detailsBar.currentIndex !== index) detailsBar.currentIndex = index
+                                                            Flickable {
+                                                                Layout.fillWidth: true
+                                                                Layout.preferredHeight: 40
+                                                                contentWidth: detailsBar.width + 60
+                                                                flickableDirection: Flickable.HorizontalFlick
+
+                                                                Row {
+                                                                    id: detailsBar
+                                                                    property int currentIndex: 0
+                                                                    spacing: 10
+                                                                    Repeater {
+                                                                        model: [qsTr("Noms communs"), qsTr("Description"), qsTr("Usage"), qsTr("Blague"), qsTr("Quizz")]
+                                                                        Label {
+                                                                            text: modelData
+                                                                            padding: 5
+                                                                            color: detailsBar.currentIndex === index ? "#9C7703" : "black"
+                                                                            font {
+                                                                                weight: Font.Light
+                                                                                pixelSize: 14
+                                                                            }
+
+                                                                            background: Rectangle {
+                                                                                color: detailsBar.currentIndex === index ? "#FFE9A1" : $Colors.colorTertiary
+                                                                            }
+                                                                            MouseArea {
+                                                                                anchors.fill: parent
+                                                                                onClicked: {
+                                                                                    if(detailsBar.currentIndex !== index) detailsBar.currentIndex = index
+                                                                                }
                                                                             }
                                                                         }
                                                                     }
                                                                 }
                                                             }
+
 
                                                             Item {
                                                                 Layout.fillWidth: true
@@ -601,6 +606,19 @@ Popup {
                                                                     currentIndex: detailsBar.currentIndex
                                                                     anchors.fill: parent
 
+                                                                    Item {
+                                                                        Layout.fillWidth: true
+                                                                        Layout.fillHeight: true
+                                                                        Label {
+                                                                            width: parent.width - 20
+                                                                            leftPadding: 10
+                                                                            rightPadding: 10
+                                                                            wrapMode: Text.Wrap
+                                                                            font.pixelSize: 16
+                                                                            font.weight: Font.Light
+                                                                            text: barDetailsColumn.gptDetails?.noms_communs?.join(", \n") ?? barDetailsColumn.gptDetails?.inconnu ?? ""
+                                                                        }
+                                                                    }
                                                                     Item {
                                                                         Layout.fillWidth: true
                                                                         Layout.fillHeight: true
