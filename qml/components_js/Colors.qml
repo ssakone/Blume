@@ -16,6 +16,7 @@ QtObject {
     property alias colorSecondary: root.secondary
     property alias colorTertiary: root.tertiary
     property alias colorBlue: root.blueSky
+    property alias colorBgPrimary: root.bgPrimary
 
     property Gradient gradientPrimary: Gradient {
         orientation: Gradient.Horizontal
@@ -51,6 +52,7 @@ QtObject {
     property alias gray: root.gray500
     property alias blueGray: root.blueGray500
 
+    readonly property string bgPrimary: "#E3F9F2"
     readonly property string blueSky: "#00E0D2"
     readonly property string secondary: "#92D8B8"
     readonly property string primary: "#359276"

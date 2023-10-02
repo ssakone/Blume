@@ -25,10 +25,6 @@ Popup {
     property var plant: null
     property var imagesURL: []
 
-    Component.onCompleted: {
-        console.log("\n\n imagesURL ", imagesURL)
-    }
-
     property bool fullScreen: false
     property bool hideBaseHeader: false
 
@@ -320,12 +316,14 @@ Popup {
 
                                             RowLayout {
                                                 Layout.fillWidth: true
+                                                Layout.leftMargin: 15
+                                                Layout.rightMargin: 15
                                                 spacing: 15
 
                                                 Label {
                                                     text: plant?.name_scientific ?? ""
                                                     wrapMode: Text.Wrap
-                                                    font.pixelSize: 24
+                                                    font.pixelSize: 16
                                                     color: $Colors.colorPrimary
                                                     font.weight: Font.DemiBold
                                                     Layout.alignment: Qt.AlignHCenter
@@ -337,22 +335,27 @@ Popup {
                                                 }
 
                                                 Row {
-                                                    Layout.fillWidth: true
                                                     spacing: 12
                                                     IconSvg {
                                                         source: "qrc:/assets/icons_custom/share.svg"
                                                         color: $Colors.colorPrimary
                                                         anchors.verticalCenter: parent.verticalCenter
+                                                        width: 25
+                                                        height: width
                                                     }
                                                     IconSvg {
                                                         source: "qrc:/assets/icons_custom/blue-thumb.svg"
                                                         color: $Colors.colorPrimary
                                                         anchors.verticalCenter: parent.verticalCenter
+                                                        width: 25
+                                                        height: width
                                                     }
                                                     IconSvg {
                                                         source: Icons.heart
                                                         color: $Colors.colorPrimary
                                                         anchors.verticalCenter: parent.verticalCenter
+                                                        width: 25
+                                                        height: width
                                                     }
                                                 }
 
@@ -363,9 +366,9 @@ Popup {
                                                 spacing: 15
 
                                                 Label {
-                                                    text: plant["nom_botanique"] ?? ""
+                                                    text: plant["nom_botanique"] ?? barDetailsColumn.gptDetails?.nom_botanique ??  ""
                                                     wrapMode: Text.Wrap
-                                                    font.pixelSize: 16
+                                                    font.pixelSize: 14
                                                     color: $Colors.colorPrimary
                                                     font.weight: Font.DemiBold
                                                     Layout.alignment: Qt.AlignHCenter
@@ -423,7 +426,7 @@ Popup {
                                                                             page_view.push(navigator.descriptionPage, {
                                                                                iconSource: "qrc:/assets/icons_custom/death-head.svg",
                                                                                text: qsTr("Toxicité"),
-                                                                               description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Commestible ?? qsTr("Inconnu") : '...'
+                                                                               description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_commestible ?? qsTr("Inconnu") : '...'
                                                                             })
                                                                         }
                                                                     }
@@ -437,7 +440,7 @@ Popup {
                                                                     Label {
                                                                         width: 120
                                                                         wrapMode: Text.Wrap
-                                                                        text:   barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Commestible ?? qsTr("Inconnu") : '...'
+                                                                        text:   barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_commestible ?? qsTr("Inconnu") : '...'
                                                                     }
                                                                 }
                                                             }
@@ -453,7 +456,7 @@ Popup {
                                                                             page_view.push(navigator.descriptionPage, {
                                                                                                       iconSource: "qrc:/assets/icons_custom/death-head.svg",
                                                                                                       text: qsTr("Toxicité"),
-                                                                                                      description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Toxicité ?? qsTr("Inconnu") : '...'
+                                                                                                      description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_toxique ?? qsTr("Inconnu") : '...'
                                                                                                       })
                                                                         }
                                                                     }
@@ -468,7 +471,7 @@ Popup {
                                                                     }
                                                                     Label {
                                                                         width: 120
-                                                                        text:  barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Toxicité ?? qsTr("Inconnu") : '...'
+                                                                        text:  barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_toxique ?? qsTr("Inconnu") : '...'
                                                                     }
                                                                 }
                                                             }
@@ -484,7 +487,7 @@ Popup {
                                                                             page_view.push(navigator.descriptionPage, {
                                                                                                       iconSource: "qrc:/assets/icons_custom/co2.svg",
                                                                                                       text: qsTr("Absorption de CO2"),
-                                                                                                      description:  barDetailsColumn.gptDetails ? qsTr("Faible") : '...'
+                                                                                                      description:  barDetailsColumn.gptDetails && barDetailsColumn.gptDetails?.description_taux_abs_co2 ? qsTr(barDetailsColumn.gptDetails?.description_taux_abs_co2) : '...'
                                                                                            })
                                                                         }
                                                                     }
@@ -500,7 +503,7 @@ Popup {
                                                                     }
                                                                     Label {
                                                                         width: 120
-                                                                        text:  barDetailsColumn.gptDetails ? qsTr("Faible") : '...'
+                                                                        text:  barDetailsColumn.gptDetails?.taux_abs_co2 ? qsTr(barDetailsColumn.gptDetails?.taux_abs_co2) : '...'
                                                                     }
                                                                 }
                                                             }
@@ -535,7 +538,19 @@ Popup {
                                                                 "method": "GET"
                                                                }).then(function(res) {
                                                                    barDetailsColumn.isGptDetailsRunning = false
-                                                                   barDetailsColumn.gptDetails = JSON.parse(res)
+                                                                   const parsed = JSON.parse(res)
+
+                                                                   barDetailsColumn.gptDetails = {
+                                                                       "nom_botanique": parsed['botanical_name'],
+                                                                       "noms_communs": parsed["common_name"],
+                                                                       "description": parsed["description"],
+                                                                       "usage": parsed["usage"],
+                                                                       "is_commestible": parsed["eatable"],
+                                                                       "is_toxique": parsed["toxicity"],
+                                                                       "taux_abs_co2": parsed["co2_absorption"],
+                                                                       "description_taux_abs_co2": parsed["co2_absorption_desc"],
+                                                                       "blague": parsed["joke"]
+                                                                   }
                                                                }).catch(function(err) {
                                                                    console.log("FETCH ERROR", err?.status, typeof err?.status)
                                                                    control.isGptDetailsRunning = false
@@ -585,44 +600,53 @@ Popup {
                                                                 StackLayout {
                                                                     currentIndex: detailsBar.currentIndex
                                                                     anchors.fill: parent
+
                                                                     Item {
                                                                         Layout.fillWidth: true
                                                                         Layout.fillHeight: true
                                                                         Label {
-                                                                            width: 360
+                                                                            width: parent.width - 20
+                                                                            leftPadding: 10
+                                                                            rightPadding: 10
                                                                             wrapMode: Text.Wrap
                                                                             font.pixelSize: 16
                                                                             font.weight: Font.Light
-                                                                            text: barDetailsColumn.gptDetails?.Description?? barDetailsColumn.gptDetails?.inconnu ?? ""
+                                                                            text: barDetailsColumn.gptDetails?.description?? barDetailsColumn.gptDetails?.inconnu ?? ""
                                                                         }
                                                                     }
                                                                     Item {
                                                                         Layout.fillWidth: true
                                                                         Layout.fillHeight: true
                                                                         Label {
-                                                                            width: parent.width
+                                                                            width: parent.width - 20
+                                                                            leftPadding: 10
+                                                                            rightPadding: 10
                                                                             wrapMode: Text.Wrap
                                                                             font.pixelSize: 16
                                                                             font.weight: Font.Light
-                                                                            text: barDetailsColumn.gptDetails?.Usage?? ""
+                                                                            text: barDetailsColumn.gptDetails?.usage?? ""
                                                                         }
                                                                     }
                                                                     Item {
                                                                         Layout.fillWidth: true
                                                                         Layout.fillHeight: true
                                                                         Label {
-                                                                            width: parent.width
+                                                                            width: parent.width - 20
+                                                                            leftPadding: 10
+                                                                            rightPadding: 10
                                                                             wrapMode: Text.Wrap
                                                                             font.pixelSize: 16
                                                                             font.weight: Font.Light
-                                                                            text: barDetailsColumn.gptDetails?.Blague?? ""
+                                                                            text: barDetailsColumn.gptDetails?.blague?? ""
                                                                         }
                                                                     }
                                                                     Item {
                                                                         Layout.fillWidth: true
                                                                         Layout.fillHeight: true
                                                                         Label {
-                                                                            width: parent.width
+                                                                            width: parent.width - 20
+                                                                            leftPadding: 10
+                                                                            rightPadding: 10
                                                                             wrapMode: Text.Wrap
                                                                             font.pixelSize: 16
                                                                             font.weight: Font.Light
