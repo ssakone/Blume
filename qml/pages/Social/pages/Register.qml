@@ -158,7 +158,27 @@ BPage {
                         spacing: 7
 
                         Label {
-                            text: qsTr("Email or username")
+                            text: qsTr("Email")
+                        }
+                        TextField {
+                            id: email
+                            placeholderText: "Adresse mail"
+                            backgroundColor: Qaterial.Colors.white
+                            horizontalAlignment: Text.AlignHCenter
+                            font.pixelSize: 21
+                            radius: 15
+                            width: parent.width
+                            height: 50
+                            onTextChanged: errorLabel.visible = false
+                        }
+                    }
+
+                    Column {
+                        Layout.fillWidth: true
+                        spacing: 7
+
+                        Label {
+                            text: qsTr("Username *")
                         }
                         TextField {
                             id: username
@@ -178,7 +198,7 @@ BPage {
                         spacing: 7
 
                         Label {
-                            text: qsTr("Password")
+                            text: qsTr("Password *")
                         }
                         TextField {
                             id: password
