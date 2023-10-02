@@ -366,13 +366,13 @@ Popup {
                                                 spacing: 15
 
                                                 Label {
-                                                    text: (plant["nom_botanique"] || barDetailsColumn.gptDetails?.nom_botanique )??  ""
+                                                    text: (plant?.nom_botanique || barDetailsColumn.gptDetails?.nom_botanique) ?? ""
                                                     wrapMode: Text.Wrap
                                                     font.pixelSize: 14
                                                     color: $Colors.colorPrimary
                                                     font.weight: Font.DemiBold
                                                     Layout.alignment: Qt.AlignHCenter
-                                                    Layout.fillWidth: true
+                                                    Layout.preferredWidth: 130
                                                 }
 
                                                 ButtonWireframe {
@@ -541,7 +541,7 @@ Popup {
                                                                    const parsed = JSON.parse(res)
 
                                                                    barDetailsColumn.gptDetails = {
-                                                                       "nom_botanique": parsed['nom_botanique'],
+                                                                       "nom_botanique": parsed['nom botanique'],
                                                                        "noms_communs": parsed["nom commun"],
                                                                        "description": parsed["Description"],
                                                                        "usage": parsed["Usage"],
@@ -565,22 +565,24 @@ Popup {
                                                             Flickable {
                                                                 Layout.fillWidth: true
                                                                 Layout.preferredHeight: 40
-                                                                contentWidth: detailsBar.width + 60
+                                                                contentWidth: detailsBar.width
                                                                 flickableDirection: Flickable.HorizontalFlick
 
                                                                 Row {
                                                                     id: detailsBar
                                                                     property int currentIndex: 0
-                                                                    spacing: 10
+                                                                    spacing: 0
                                                                     Repeater {
                                                                         model: [qsTr("Noms communs"), qsTr("Description"), qsTr("Usage"), qsTr("Blague"), qsTr("Quizz")]
                                                                         Label {
                                                                             text: modelData
                                                                             padding: 5
                                                                             color: detailsBar.currentIndex === index ? "#9C7703" : "black"
+                                                                            leftPadding: 10
+                                                                            rightPadding: 10
                                                                             font {
-                                                                                weight: Font.Light
-                                                                                pixelSize: 14
+                                                                                weight: Font.DemiBold
+                                                                                pixelSize: 16
                                                                             }
 
                                                                             background: Rectangle {
