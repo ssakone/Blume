@@ -26,15 +26,16 @@ BPage {
         Flickable {
             id: rootFlickable
             anchors.fill: parent
-            contentHeight: identifedPlantListView.height + selectedImageCol.height + 400
+            contentHeight: insideCol.height + 50
 
-            ColumnLayout {
-                anchors.fill: parent
+            Column {
+                id: insideCol
+                width: parent.width
                 spacing: 30
 
                 Column {
                     id: selectedImageCol
-                    Layout.fillWidth: true
+                    width: parent.width
                     spacing: 10
 
                     Label {
@@ -58,7 +59,7 @@ BPage {
                 }
 
                 ColumnLayout {
-                    Layout.fillWidth: true
+                    width: parent.width
 
                     Label {
                         color: $Colors.colorPrimary
@@ -107,10 +108,9 @@ BPage {
 
                     Flow {
                         id: identifedPlantListView
-//                        visible: isPlant
+                        visible: isPlant
                         Layout.fillWidth: true
-                        Layout.fillHeight: true
-//                        clip: true
+                        clip: true
                         spacing: 10
 
                         Repeater {
