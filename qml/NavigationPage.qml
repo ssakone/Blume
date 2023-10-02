@@ -62,7 +62,10 @@ Item {
         PlantIdentifierResultsScreen {}
     }
     property var diseaseIdentifierResultsPage: Component {
-        PlantIdentifierResultsScreen {}
+        DiseasIdentifierResultsScreen {}
+    }
+    property var insectIdentifier: Component {
+        InsectIdentifier {}
     }
     property var insectDetailPage: Component {
         InsectDetailsScreen {}

@@ -6,6 +6,7 @@ import "../../components_generic"
 import "../../components"
 
 BPage {
+
     property var resultsList: []
     required property string scanedImage
     required property bool isPlant
@@ -13,10 +14,6 @@ BPage {
 
     header: AppBar {
         title: ""
-        statusBarVisible: false
-        leading.icon: Icons.close
-        color: Qt.rgba(12, 200, 25, 0)
-        foregroundColor: $Colors.colorPrimary
     }
 
     Item {
@@ -26,93 +23,94 @@ BPage {
             rightMargin: 15
         }
 
-        ColumnLayout {
+        Flickable {
+            id: rootFlickable
             anchors.fill: parent
-            spacing: 30
-
-            Column {
-                Layout.fillWidth: true
-                spacing: 10
-
-                Label {
-                    color: $Colors.colorPrimary
-                    font.pixelSize: 24
-                    font.weight: Font.DemiBold
-                    text: qsTr("Votre image")
-                }
-
-                ClipRRect {
-                   width: parent.width
-                   height: 180
-                   radius: 20
-
-                    Image {
-                        anchors.fill: parent
-                        source: scanedImage
-                        fillMode: Image.PreserveAspectCrop
-                    }
-                }
-            }
+            contentHeight: identifedPlantListView.height + selectedImageCol.height + 400
 
             ColumnLayout {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+                anchors.fill: parent
+                spacing: 30
 
-                Label {
-                    color: $Colors.colorPrimary
-                    font.pixelSize: 24
-                    font.weight: Font.DemiBold
-                    text: qsTr("Maladies détectées")
-                    visible: isPlant
-                }
-
-                Rectangle {
-                    visible: !isPlant
+                Column {
+                    id: selectedImageCol
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 180
-                    color: $Colors.red50
-                   radius: 20
+                    spacing: 10
 
-                    border {
-                        width: 1
-                        color: $Colors.red500
+                    Label {
+                        color: $Colors.colorPrimary
+                        font.pixelSize: 24
+                        font.weight: Font.DemiBold
+                        text: qsTr("Votre image")
                     }
 
-                    Column {
-                        width: parent.width
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 10
+                    ClipRRect {
+                       width: parent.width
+                       height: 180
+                       radius: 20
 
                         Image {
-                            source: "qrc:/assets/img/flower-pot.png"
-                            width: 100
-                            height: width
-                            anchors.horizontalCenter: parent.horizontalCenter
-
-                        }
-
-                        Label {
-                            text: qsTr("Votre image n'est pas une plante")
-                            color: $Colors.red500
-                            width: parent.width / 2
-                            wrapMode: Text.Wrap
-                            font.pixelSize: 18
-                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.fill: parent
+                            source: scanedImage
+                            fillMode: Image.PreserveAspectCrop
                         }
                     }
-
                 }
 
-                Flickable {
+                ColumnLayout {
                     Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    contentHeight: identifedPlantListView.height
+
+                    Label {
+                        color: $Colors.colorPrimary
+                        font.pixelSize: 24
+                        font.weight: Font.DemiBold
+                        text: qsTr("Maladies détectées")
+                        visible: isPlant
+                    }
+
+                    Rectangle {
+                        visible: !isPlant
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 180
+                        color: $Colors.red50
+                       radius: 20
+
+                        border {
+                            width: 1
+                            color: $Colors.red500
+                        }
+
+                        Column {
+                            width: parent.width
+                            anchors.verticalCenter: parent.verticalCenter
+                            spacing: 10
+
+                            Image {
+                                source: "qrc:/assets/img/flower-pot.png"
+                                width: 100
+                                height: width
+                                anchors.horizontalCenter: parent.horizontalCenter
+
+                            }
+
+                            Label {
+                                text: qsTr("Votre image n'est pas une plante")
+                                color: $Colors.red500
+                                width: parent.width / 2
+                                wrapMode: Text.Wrap
+                                font.pixelSize: 18
+                                anchors.horizontalCenter: parent.horizontalCenter
+                            }
+                        }
+
+                    }
 
                     Flow {
                         id: identifedPlantListView
-                        visible: isPlant
-                        width: parent.width
-                        clip: true
+//                        visible: isPlant
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+//                        clip: true
                         spacing: 10
 
                         Repeater {
@@ -123,7 +121,7 @@ BPage {
                                 required property int index
                                 required property variant modelData
 
-                                width: identifedPlantListView.width / 2.15
+                                width: rootFlickable.width / 2.15
                                 height: width + 60
 
 
@@ -136,9 +134,9 @@ BPage {
 
                                         Rectangle {
                                             anchors.fill: parent
-                                            color: "teal"
+                                            color: $Colors.colorTertiary
                                             Image {
-                                                source: modelData["plant_details"]["wiki_image"]["value"]
+                                                source: modelData["similar_images"][0]["url_small"]
                                                 anchors.fill: parent
                                             }
                                         }
@@ -155,6 +153,13 @@ BPage {
                                             width: parent.width
                                             elide: Text.ElideRight
                                         }
+                                        Label {
+                                            text: modelData["disease_details"]["local_name"]
+                                            font.pixelSize: 11
+                                            color: $Colors.colorPrimary
+                                            width: parent.width
+                                            elide: Text.ElideRight
+                                        }
                                     }
 
                                 }
@@ -162,7 +167,7 @@ BPage {
 
 
                                 onClicked: {
-                                    page_view.push(resultDeseaseDetailPage, {
+                                    page_view.push(navigator.deseaseDetailsPage, {
                                                        "desease_data": modelData
                                                    })
 
@@ -173,12 +178,15 @@ BPage {
 
 
                     }
+
+
                 }
+
 
             }
 
-
         }
+
     }
 
 

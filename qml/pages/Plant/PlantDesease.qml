@@ -60,7 +60,7 @@ BPage {
 
     header: AppBar {
         width: parent.width
-        isHomeScreen: true
+        isHomeScreen: identifierLayoutView.currentIndex === 0
         title: {
             switch (identifierLayoutView.currentIndex) {
             case 0:
@@ -268,7 +268,7 @@ BPage {
                                     }
                                     MouseArea {
                                         anchors.fill: parent
-                                        onClicked: identifierLayoutView.currentIndex++
+                                        onClicked: page_view.push(navigator.insectIdentifier)
                                     }
                                 }
                                 Rectangle {

@@ -20,7 +20,7 @@ import "../../components_js/Http.js" as Http
 
 BPage {
     id: control
-    property variant desease_data
+    required property variant desease_data
     property bool isBlumeDisease: false
     property variant details: desease_data["disease_details"] ?? {}
     property bool header_hidden: false
