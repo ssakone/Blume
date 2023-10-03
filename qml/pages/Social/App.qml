@@ -39,6 +39,11 @@ Item {
     }
 
     Component {
+        id: previewPage
+        SocialPreview {}
+    }
+
+    Component {
         id: feedPage
         FeedPage {}
     }
@@ -652,7 +657,7 @@ Item {
             page_view.indepthStacksList.push(view.pop)
             Qaterial.Style.theme = Qaterial.Style.Theme.Light
             Qaterial.Style.accentColor = Qaterial.Colors.teal
-            initialItem = root.privateKey.length > 0 ? feedPage : startPage
+            initialItem = root.privateKey.length > 0 ? previewPage : startPage
             view.push(initialItem)
             messagesRelay = $Services.getWebSocket()
             messagesRelay.url = "wss://relay.damus.io"

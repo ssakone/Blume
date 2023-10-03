@@ -241,6 +241,7 @@
     <file alias="pages/Social/pages/PostEditPage.qml">qml/pages/Social/pages/PostEditPage.qml</file>
     <file alias="pages/Social/pages/ProfileEditPage.qml">qml/pages/Social/pages/ProfileEditPage.qml</file>
     <file alias="pages/Social/pages/Register.qml">qml/pages/Social/pages/Register.qml</file>
+    <file alias="pages/Social/pages/SocialPreview.qml">qml/pages/Social/pages/SocialPreview.qml</file>
     <file alias="pages/Social/pages/StartPage.qml">qml/pages/Social/pages/StartPage.qml</file>
     <file alias="pages/Social/pages/UserProfile.qml">qml/pages/Social/pages/UserProfile.qml</file>
     <file alias="pages/Social/pages/qmldir">qml/pages/Social/pages/qmldir</file>

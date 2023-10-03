@@ -198,7 +198,7 @@ BPage {
                                     if (data.status === "ok") {
                                         privateKey = data.privateKey
                                         publicKey = data.pubkey
-                                        view.push(feedPage)
+                                        view.push(previewPage)
                                         relay.active = false
                                         relay.active = true
                                         messagesRelay.active = false
