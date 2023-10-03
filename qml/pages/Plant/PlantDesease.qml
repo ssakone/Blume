@@ -370,7 +370,7 @@ BPage {
                                             }
                                             MouseArea {
                                                 anchors.fill: parent
-                                                onClicked: page_view.push(faqPage)
+                                                onClicked: page_view.push(askMore)
                                             }
                                         }
                                     }

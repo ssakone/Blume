@@ -14,6 +14,8 @@ Page {
     property string currentObj: ""
     header: AppBar {
         title: qsTr("Ask a botanist about")
+        foregroundColor: $Colors.white
+        backgroundColor: $Colors.colorPrimary
     }
 
     property variant form_schema: [{
