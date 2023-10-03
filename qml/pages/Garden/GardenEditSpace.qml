@@ -19,10 +19,6 @@ BPage {
     header: AppBar {
         id: header
         title: shouldCreate ? qsTr("Créer une nouvelle salle") : qsTr("Modifier la salle")
-        statusBarVisible: false
-        leading.icon: Icons.close
-        color: Qt.rgba(12, 200, 25, 0)
-        foregroundColor: $Colors.colorPrimary
 
         ButtonWireframeIcon {
             visible: spaceID

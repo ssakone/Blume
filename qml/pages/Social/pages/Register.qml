@@ -158,11 +158,11 @@ BPage {
                         spacing: 7
 
                         Label {
-                            text: qsTr("Email")
+                            text: qsTr("Email ou téléphone")
                         }
                         TextField {
                             id: email
-                            placeholderText: "Adresse mail"
+                            placeholderText: "Adresse mail ou numéro de téléphone"
                             backgroundColor: Qaterial.Colors.white
                             horizontalAlignment: Text.AlignHCenter
                             font.pixelSize: 21

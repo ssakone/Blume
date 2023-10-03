@@ -118,7 +118,7 @@ BPage {
                         spacing: 7
 
                         Label {
-                            text: qsTr("Email or username")
+                            text: qsTr("Username")
                         }
                         TextField {
                             id: username
