@@ -167,9 +167,15 @@ BPage {
 
 
                                 onClicked: {
-                                    page_view.push(navigator.deseaseDetailsPage, {
-                                                       "desease_data": modelData
-                                                   })
+                                    const payload = {
+                                        "diseaseName": modelData["name"],
+                                        "common_names": modelData["disease_details"]?.common_names,
+                                        "mainURL": modelData["similar_images"][0]?.url ?? "",
+                                        "similarImages": modelData["similar_images"]?.map(item => item.url)
+                                    }
+                                    console.log("\n PAYLOAD ",JSON.stringify(payload))
+                                    console.log("\n\n  modelData ", Object.keys(modelData["disease_details"]))
+                                    page_view.push(navigator.deseaseDetailsPage, payload)
 
                                 }
                             }

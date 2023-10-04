@@ -202,10 +202,12 @@ BPage {
                                 Column {
                                     Layout.fillWidth: true
                                     Label {
+                                        width: parent.width - 7
+                                        wrapMode: Label.Wrap
                                         text: qsTr("Check your plant health status")
                                         color: $Colors.colorPrimary
                                         font {
-                                            pixelSize: 16
+                                            pixelSize: 15
                                             weight: Font.DemiBold
                                         }
                                     }
@@ -214,7 +216,7 @@ BPage {
                                         wrapMode: Text.Wrap
                                         text: qsTr("Take photos of the diseased parts of your plant, and get a diagnosis.")
                                         font {
-                                            pixelSize: 16
+                                            pixelSize: 14
                                         }
                                     }
 

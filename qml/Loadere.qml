@@ -12,7 +12,7 @@ ApplicationWindow {
 
     flags: (Qt.platform.os === "android") ? Qt.Window : Qt.Window
                                             | Qt.MaximizeUsingFullscreenGeometryHint
-    property string ip: ""//"http://192.168.1.180:8000/"
+    property string ip: ""//"http://192.168.147.225:8000/"
     //color: Theme.colorBackground
     Loader {
         id: loader
