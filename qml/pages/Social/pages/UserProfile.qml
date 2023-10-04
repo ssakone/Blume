@@ -307,7 +307,7 @@ BPage {
 
                 Components.NiceButton {
                     bgGradient: $Colors.gradientPrimary
-                    text: qsTr("Modifier mon compte")
+                    text: qsTr("Edit my profile")
                     radius: 10
                     width: parent.width
                     height: 60

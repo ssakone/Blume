@@ -83,7 +83,7 @@ BPage {
                 width: parent.width
                 Label {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr("Scan en cours...")
+                    text: qsTr("Scanning...")
                     color: $Colors.colorPrimary
                     visible: deviceManager.scanning
                     font {
@@ -94,7 +94,7 @@ BPage {
 
                 Label {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr("Scan terminé")
+                    text: qsTr("Scan completed")
                     color: "#D68C44"
                     visible: hasPermissions && !deviceManager.scanning
                     font {
@@ -105,7 +105,7 @@ BPage {
 
                 Label {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr("Autorisations non accordées")
+                    text: qsTr("Permissions not granted")
                     color: $Colors.red300
                     visible: !hasPermissions
                     font {
@@ -157,7 +157,7 @@ BPage {
                     spacing: 30
 
                     Label {
-                        text: qsTr("Aucun capteur trouvé !")
+                        text: qsTr("No sensor found!")
                         color: "#D68C44"
                         width: parent.width
                         wrapMode: Text.Wrap
@@ -169,7 +169,7 @@ BPage {
                         visible: hasPermissions && !deviceManager.scanning
                     }
                     Label {
-                        text: qsTr("Merci de vérifier vos capteurs et relancez la recherche.")
+                        text: qsTr("Please check your sensors and search again.")
                         width: parent.width
                         leftPadding: 30
                         rightPadding: 30
@@ -189,7 +189,7 @@ BPage {
                         height: 60
                         anchors.horizontalCenter: parent.horizontalCenter
 
-                        text: hasPermissions ? qsTr("Launch detection") : qsTr("Accorder les autorisation")
+                        text: hasPermissions ? qsTr("Launch detection") : qsTr("Grant permissions")
                         visible: !deviceManager.scanning
                         bgGradient: $Colors.gradientPrimary
                         radius: 10
@@ -210,7 +210,7 @@ BPage {
                     width: parent.width - 20
                     visible: deviceManager.scanning
                     Label {
-                        text: qsTr("Capteurs détectés...")
+                        text: qsTr("Detected sensors...")
                         color: $Colors.colorPrimary
                         font {
                             weight: Font.DemiBold

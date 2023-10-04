@@ -118,11 +118,11 @@ BPage {
                         spacing: 7
 
                         Label {
-                            text: qsTr("Nom")
+                            text: qsTr("Last name")
                         }
                         TextField {
                             id: lastName
-                            placeholderText: "Votre nom"
+                            placeholderText: qsTr("Your last name")
                             backgroundColor: Qaterial.Colors.white
                             horizontalAlignment: Text.AlignHCenter
                             font.pixelSize: 21
@@ -138,11 +138,11 @@ BPage {
                         spacing: 7
 
                         Label {
-                            text: qsTr("Prénoms")
+                            text: qsTr("First name")
                         }
                         TextField {
                             id: firstName
-                            placeholderText: "Vos prénoms"
+                            placeholderText: qsTr("Your first name")
                             backgroundColor: Qaterial.Colors.white
                             horizontalAlignment: Text.AlignHCenter
                             font.pixelSize: 21
@@ -158,11 +158,11 @@ BPage {
                         spacing: 7
 
                         Label {
-                            text: qsTr("Email ou téléphone")
+                            text: qsTr("Email or phone")
                         }
                         TextField {
                             id: email
-                            placeholderText: "Adresse mail ou numéro de téléphone"
+                            placeholderText: qsTr("Email address or phone number")
                             backgroundColor: Qaterial.Colors.white
                             horizontalAlignment: Text.AlignHCenter
                             font.pixelSize: 21
@@ -182,7 +182,7 @@ BPage {
                         }
                         TextField {
                             id: username
-                            placeholderText: "Identifiant"
+                            placeholderText: qsTr("Your user ID")
                             backgroundColor: Qaterial.Colors.white
                             horizontalAlignment: Text.AlignHCenter
                             font.pixelSize: 21
@@ -202,7 +202,7 @@ BPage {
                         }
                         TextField {
                             id: password
-                            placeholderText: "Mot de passe"
+                            placeholderText: qsTr("Your password")
                             backgroundColor: Qaterial.Colors.white
                             horizontalAlignment: Text.AlignHCenter
                             font.pixelSize: 21
@@ -221,14 +221,14 @@ BPage {
                         id: errorLabel
                         visible: false
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Mot de passe incorrect"
+                        text: qsTr("Incorrect password")
                         color: "red"
                     }
 
                     Qaterial.ExtendedFabButton {
                         id: connectButton
                         property bool busy: false
-                        text: busy ? "" : "Creer / Connecter"
+                        text: busy ? "" : qsTr("Create my account")
                         width: 230
                         //enabled: !busy
                         anchors.horizontalCenter: parent.horizontalCenter

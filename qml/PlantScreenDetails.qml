@@ -426,7 +426,7 @@ Popup {
                                                                             page_view.push(navigator.descriptionPage, {
                                                                                iconSource: "qrc:/assets/icons_custom/death-head.svg",
                                                                                text: qsTr("Toxicité"),
-                                                                               description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_commestible ?? qsTr("Inconnu") : '...'
+                                                                               description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_commestible ?? qsTr("Unknown") : '...'
                                                                             })
                                                                         }
                                                                     }
@@ -434,13 +434,13 @@ Popup {
                                                                 Column {
                                                                     Layout.fillWidth: true
                                                                     Label {
-                                                                        text: qsTr("Commestibilité")
+                                                                        text: qsTr("Commestibility")
                                                                         font.pixelSize: 14
                                                                     }
                                                                     Label {
                                                                         width: 120
                                                                         wrapMode: Text.Wrap
-                                                                        text:   barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_commestible ?? qsTr("Inconnu") : '...'
+                                                                        text:   barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_commestible ?? qsTr("Unknown") : '...'
                                                                     }
                                                                 }
                                                             }
@@ -455,8 +455,8 @@ Popup {
                                                                             plantScreenDetailsPopup.close()
                                                                             page_view.push(navigator.descriptionPage, {
                                                                                                       iconSource: "qrc:/assets/icons_custom/death-head.svg",
-                                                                                                      text: qsTr("Toxicité"),
-                                                                                                      description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_toxique ?? qsTr("Inconnu") : '...'
+                                                                                                      text: qsTr("Toxicity"),
+                                                                                                      description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_toxique ?? qsTr("Unknown") : '...'
                                                                                                       })
                                                                         }
                                                                     }
@@ -466,12 +466,12 @@ Popup {
                                                                     Layout.fillWidth: true
                                                                     Label {
                                                                         wrapMode: Text.Wrap
-                                                                        text: qsTr("Toxicité")
+                                                                        text: qsTr("Toxicity")
                                                                         font.pixelSize: 14
                                                                     }
                                                                     Label {
                                                                         width: 120
-                                                                        text:  barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_toxique ?? qsTr("Inconnu") : '...'
+                                                                        text:  barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_toxique ?? qsTr("Unknown") : '...'
                                                                     }
                                                                 }
                                                             }
@@ -486,7 +486,7 @@ Popup {
                                                                             plantScreenDetailsPopup.close()
                                                                             page_view.push(navigator.descriptionPage, {
                                                                                                       iconSource: "qrc:/assets/icons_custom/co2.svg",
-                                                                                                      text: qsTr("Absorption de CO2"),
+                                                                                                      text: qsTr("CO2 absorption"),
                                                                                                       description:  barDetailsColumn.gptDetails && barDetailsColumn.gptDetails?.description_taux_abs_co2 ? qsTr(barDetailsColumn.gptDetails?.description_taux_abs_co2) : '...'
                                                                                            })
                                                                         }
@@ -497,7 +497,7 @@ Popup {
                                                                     Layout.fillWidth: true
                                                                     Label {
                                                                         wrapMode: Text.Wrap
-                                                                        text: qsTr("Absorption de CO2")
+                                                                        text: qsTr("CO2 absorption")
                                                                         font.pixelSize: 14
                                                                         width: parent.width
                                                                     }
@@ -573,7 +573,7 @@ Popup {
                                                                     property int currentIndex: 0
                                                                     spacing: 0
                                                                     Repeater {
-                                                                        model: [qsTr("Noms communs"), qsTr("Description"), qsTr("Usage"), qsTr("Blague"), qsTr("Quizz")]
+                                                                        model: [qsTr("Common names"), qsTr("Description"), qsTr("Usage"), qsTr("Joke"), qsTr("Quizz")]
                                                                         Label {
                                                                             text: modelData
                                                                             padding: 5
@@ -670,7 +670,7 @@ Popup {
                                                                             wrapMode: Text.Wrap
                                                                             font.pixelSize: 16
                                                                             font.weight: Font.Light
-                                                                            text: "Cette section sera disponible prochainement"
+                                                                            text: qsTr("This section will be available soon")
                                                                         }
                                                                     }
                                                                 }
@@ -710,7 +710,7 @@ Popup {
                                                                 color: "white"
                                                             }
                                                             Label {
-                                                                text: qsTr("Soin")
+                                                                text: qsTr("Care")
                                                                 color: "white"
                                                                 anchors.verticalCenter: parent.verticalCenter
                                                             }
@@ -750,7 +750,7 @@ Popup {
                                                 RowLayout {
                                                     width: parent.width
                                                     Label {
-                                                        text: qsTr("Pour l'entretien")
+                                                        text: qsTr("For plant care")
                                                         color: "#505050"
                                                     }
                                                     Item {
@@ -758,7 +758,7 @@ Popup {
                                                     }
 
                                                     Label {
-                                                        text: qsTr("Pour plus d'informations")
+                                                        text: qsTr("More informations")
                                                         color: "#505050"
                                                     }
                                                 }
@@ -798,7 +798,7 @@ Popup {
                                                         }
 
                                                         Label {
-                                                            text: qsTr("Galerie de plantes")
+                                                            text: qsTr("Plant galery")
                                                             color: $Colors.colorPrimary
                                                             font.pixelSize: 24
                                                             anchors.verticalCenter: parent.verticalCenter

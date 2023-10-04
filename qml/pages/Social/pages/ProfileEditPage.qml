@@ -100,7 +100,7 @@ Page {
                         width: parent.width
                         height: 50
                         field.placeholderTextColor: "grey"
-                        field.placeholderText: "Name"
+                        field.placeholderText: qsTr("YUour username")
                         field.text: userInfo.name || ""
                     }
 
@@ -109,7 +109,7 @@ Page {
                         width: parent.width
                         height: 50
                         field.placeholderTextColor: "grey"
-                        field.placeholderText: "Email"
+                        field.placeholderText: qsTr("your email")
                         field.text: userInfo.email || ""
                     }
 
@@ -118,7 +118,7 @@ Page {
                         width: parent.width
                         height: 50
                         field.placeholderTextColor: "grey"
-                        field.placeholderText: "Bio"
+                        field.placeholderText: qsTr("About")
                         field.text: userInfo.about || ""
                     }
 
@@ -127,7 +127,7 @@ Page {
                         width: parent.width
                         height: 50
                         field.placeholderTextColor: "grey"
-                        field.placeholderText: "Profession"
+                        field.placeholderText: qsTr("Profession")
                         field.text: userInfo.profession || ""
                     }
 
@@ -179,7 +179,7 @@ Page {
                     Qaterial.RaisedButton {
                         property bool busy: false
                         height: 55
-                        text: busy ? "" : "Modifier"
+                        text: busy ? "" : "Update"
                         palette.buttonText: "white"
                         backgroundColor: "#1d1d1d"
                         enabled: !busy || !pictureField.uploadingImage

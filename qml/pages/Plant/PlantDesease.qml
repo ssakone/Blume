@@ -202,7 +202,7 @@ BPage {
                                 Column {
                                     Layout.fillWidth: true
                                     Label {
-                                        text: qsTr("Vérifiez votre plante")
+                                        text: qsTr("Check your plant health status")
                                         color: $Colors.colorPrimary
                                         font {
                                             pixelSize: 16
@@ -212,14 +212,14 @@ BPage {
                                     Label {
                                         width: parent.width
                                         wrapMode: Text.Wrap
-                                        text: qsTr("Prenez des photos des parties malades de votre plante. Diagnostiquez et obtenez des")
+                                        text: qsTr("Take photos of the diseased parts of your plant, and get a diagnosis.")
                                         font {
                                             pixelSize: 16
                                         }
                                     }
 
                                     NiceButton {
-                                        text: qsTr("Lancer le diagnostic")
+                                        text: qsTr("Start diagnosis")
                                         width: parent.width
                                         height: 50
                                         anchors.topMargin: 10
@@ -257,7 +257,7 @@ BPage {
                                             anchors.horizontalCenter: parent.horizontalCenter
                                         }
                                         Label {
-                                            text: qsTr("Identifier un insecte")
+                                            text: qsTr("Identify an insect")
                                             color: $Colors.white
                                             width: parent.width
                                             font.pixelSize: 16
@@ -291,7 +291,7 @@ BPage {
                                             anchors.horizontalCenter: parent.horizontalCenter
                                         }
                                         Label {
-                                            text: qsTr("Encyclopedie des maladies")
+                                            text: qsTr("Encyclopedia of diseases")
                                             color: $Colors.colorPrimary
                                             width: parent.width
                                             font.pixelSize: 14
@@ -334,7 +334,7 @@ BPage {
                                             Column {
                                                 Layout.fillWidth: true
                                                 Label {
-                                                    text: qsTr("Demandez aux experts en plantes")
+                                                    text: qsTr("Ask our plant experts")
                                                     color: $Colors.colorPrimary
                                                     width: parent.width - 20
                                                     wrapMode: Text.Wrap
@@ -346,7 +346,7 @@ BPage {
                                                 Label {
                                                     width: parent.width - 20
                                                     wrapMode: Text.Wrap
-                                                    text: qsTr("Prenez des photos des parties malades de votre plante. Diagnostiquez et obtenez des")
+                                                    text: qsTr("Take photos of the diseased parts of your plant, and get a diagnosis.")
                                                     font {
                                                         pixelSize: 16
                                                     }
@@ -361,7 +361,7 @@ BPage {
                                             radius: height/2
                                             Text {
                                                 anchors.centerIn: parent
-                                                text: qsTr("Demander aux experts")
+                                                text: qsTr("Ask our plant experts")
                                                 color: $Colors.white
                                                 font {
                                                     pixelSize: 16
@@ -474,7 +474,7 @@ BPage {
                                     horizontalAlignment: Text.AlignHCenter
                                 }
                                 Label {
-                                    text: qsTr("Diagnostiquez la santé de vos plantes")
+                                    text: qsTr("Diagnose the health of your plants")
                                     opacity: .5
                                     color: $Colors.white
                                     font {

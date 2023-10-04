@@ -45,7 +45,7 @@ BPage {
             spacing: 10
 
             Label {
-                text: qsTr("No plant ! \n\n You should first create a room and associate plants")
+                text: qsTr("No plant !") + " \n\n " +("You should first create a room and associate plants")
                 color: Theme.colorSecondary
                 opacity: 0.8
                 width: parent.width
@@ -88,7 +88,7 @@ BPage {
             subtitle: plant.noms_communs[0]?.name ?? ""
             roomName: {
                 console.log("\n\n created_attt ", created_at, "\n\n")
-                return "Ajoutée le " + (new Date(created_at)).toLocaleDateString()
+                return qsTr("Created ") + (new Date(created_at)).toLocaleDateString()
             }
             imageSource: plant.images_plantes.length
                          > 0 ? "https://blume.mahoudev.com/assets/"

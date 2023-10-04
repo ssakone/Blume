@@ -64,7 +64,7 @@ Page {
                                 anchors.verticalCenter: parent.verticalCenter
                             }
                             Text {
-                                text: qsTr("Chercher un ami")
+                                text: qsTr("Search for a friend")
                                 color: Qaterial.Colors.gray600
                                 font.pixelSize: 16
                                 anchors.verticalCenter: parent.verticalCenter
@@ -197,7 +197,7 @@ Page {
                                             font.pixelSize: 14
                                         }
                                         Label {
-                                            text: "Il y a 10h"
+                                            text: "10h ago"
                                             color: $Colors.gray600
                                             font.pixelSize: 11
                                         }
@@ -225,7 +225,7 @@ Page {
                                         color: Qaterial.Colors.gray600
                                         width: parent.width
                                         wrapMode: Label.Wrap
-                                        text: "“Bonsoir à tous, j’espère que vous allez bien. Je vous présente mon nouveau jardin. Nous avons travailler sur l’aménagèrent de ce espace en 3 mois et 10 jours. je vous laisse admirer et laisser moi vos avis en commentaires."
+                                        text: qsTr("Good evening everyone, I hope you're well. I'd like to introduce you to my new garden. We worked on the layout of this space in 3 months and 10 days. I let you admire and leave me your opinions in comments.")
                                     }
                                     Qaterial.ClipRRect {
                                         width: parent.width
@@ -281,12 +281,12 @@ Page {
                                     }
                                     Label {
                                         color: $Colors.gray600
-                                        text: "1000 commentaires"
+                                        text: qsTr("1000 comments")
                                         Layout.fillWidth: true
                                     }
                                     Label {
                                         color: $Colors.gray600
-                                        text: "40 partages"
+                                        text: qsTr("40 shares")
                                         Layout.fillWidth: true
                                     }
                                 }

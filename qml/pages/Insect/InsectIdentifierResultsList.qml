@@ -36,7 +36,7 @@ BPage {
                     color: $Colors.colorPrimary
                     font.pixelSize: 24
                     font.weight: Font.DemiBold
-                    text: qsTr("Votre image")
+                    text: qsTr("Your image")
                 }
 
                 ClipRRect {
@@ -59,7 +59,7 @@ BPage {
                     color: $Colors.colorPrimary
                     font.pixelSize: 24
                     font.weight: Font.DemiBold
-                    text: qsTr("Insectes détectés")
+                    text: qsTr("Detected insects")
                 }
 
                 Flow {

@@ -30,7 +30,7 @@ Container {
 
     Row {
         Label {
-            text: qsTr("Salle : ")
+            text: qsTr("Room : ")
             font.pixelSize: 16
         }
         Label {

@@ -90,7 +90,6 @@
     <file alias="components/SpaceSearchPopup.qml">qml/components/SpaceSearchPopup.qml</file>
     <file alias="components/TableLine.qml">qml/components/TableLine.qml</file>
     <file alias="components/WeatherCard.qml">qml/components/WeatherCard.qml</file>
-    <file alias="components/qml.qml">qml/components/qml.qml</file>
     <file alias="components/qmldir">qml/components/qmldir</file>
     <file alias="components_generic/ActionMenuItem.qml">qml/components_generic/ActionMenuItem.qml</file>
     <file alias="components_generic/ActionMenu_bottom.qml">qml/components_generic/ActionMenu_bottom.qml</file>

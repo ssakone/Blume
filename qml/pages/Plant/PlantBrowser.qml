@@ -125,7 +125,7 @@ BPage {
                             horizontalAlignment: Text.AlignHCenter
                         }
                         Label {
-                            text: qsTr("Gérez les plantes de manière efficace")
+                            text: qsTr("Manage your plants efficiently")
                             opacity: .5
                             color: $Colors.white
                             font {
@@ -267,7 +267,7 @@ BPage {
                 topPadding: 20
                 spacing: 7
                 Label {
-                    text: qsTr("Mes favoris")
+                    text: qsTr("My favourites")
                     color: $Colors.colorPrimary
                     font {
                         pixelSize: 16
@@ -329,7 +329,7 @@ BPage {
                                 moreDetailsList: [{
                                         "iconSource": plant.toxicity
                                                       === null ? "" : Components.Icons.water,
-                                        "text": plant.toxicity === null ? "" : plant.toxicity === true ? "Toxique" : "Non toxique"
+                                        "text": plant.toxicity === null ? "" : plant.toxicity === true ? qsTr("Toxic") : qsTr("Non toxic")
                                     }, {
                                         "iconSource": Components.Icons.food,
                                         "text": plant.commestible ? "Commestible" : "Non commestible"

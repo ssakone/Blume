@@ -27,7 +27,7 @@ BPage {
                     anchors.topMargin: 50
                     anchors.bottomMargin: 50
                     Label {
-                        text: "Welcome !"
+                        text: qsTr("Welcome !")
                         color: $Colors.green700
                         font {
                             pixelSize: 24
@@ -72,7 +72,7 @@ BPage {
 
 
                         Label {
-                            text: "and detects the health status of your plants"
+                            text: qsTr("and detects the health status of your plants")
                             font {
                                 pixelSize: 16
                                 weight: Font.Light
@@ -447,7 +447,7 @@ BPage {
         }
 
         Label {
-            text: qsTr("Passer")
+            text: qsTr("Skip")
             color: $Colors.colorPrimary
             rightPadding: 20
             MouseArea {

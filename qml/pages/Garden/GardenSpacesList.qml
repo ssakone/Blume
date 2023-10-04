@@ -11,7 +11,7 @@ BPage {
     id: control
     header: AppBar {
         id: header
-        title: qsTr("Liste des salles")
+        title: qsTr("Rooms list")
         statusBarVisible: false
     }
 

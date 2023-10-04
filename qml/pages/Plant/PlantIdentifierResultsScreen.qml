@@ -39,7 +39,7 @@ BPage {
                         color: $Colors.colorPrimary
                         font.pixelSize: 24
                         font.weight: Font.DemiBold
-                        text: qsTr("Votre image")
+                        text: qsTr("Your image")
                     }
 
                     ClipRRect {
@@ -62,7 +62,7 @@ BPage {
                         color: $Colors.colorPrimary
                         font.pixelSize: 24
                         font.weight: Font.DemiBold
-                        text: qsTr("Plantes détectées")
+                        text: qsTr("Detected plants")
                         visible: isPlant
                     }
 
@@ -92,7 +92,7 @@ BPage {
                             }
 
                             Label {
-                                text: qsTr("Votre image n'est pas une plante")
+                                text: qsTr("Your image does not contain a plant")
                                 color: $Colors.red500
                                 width: parent.width / 2
                                 wrapMode: Text.Wrap
