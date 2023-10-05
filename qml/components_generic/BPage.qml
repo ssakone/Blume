@@ -8,7 +8,7 @@ Page {
         IconSvg {
             source: "qrc:/assets/img/bg_plant.svg"
             color: $Colors.colorPrimary
-            opacity: 0.7
+            opacity: 0.2
             anchors.fill: parent
         }
     }

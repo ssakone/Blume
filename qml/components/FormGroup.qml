@@ -43,7 +43,7 @@ Repeater {
                 source: modelData.group_icon || ""
                 width: 30
                 height: 30
-                color: Theme.colorPrimary
+                color: $Colors.colorPrimary
                 anchors.verticalCenter: parent.verticalCenter
             }
 
@@ -54,7 +54,7 @@ Repeater {
                     weight: Font.Bold
                     capitalization: Font.AllUppercase
                 }
-                color: Theme.colorPrimary
+                color: $Colors.colorPrimary
                 anchors.verticalCenter: parent.verticalCenter
                 width: parent.width
                 wrapMode: Text.Wrap

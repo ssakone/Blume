@@ -11,11 +11,8 @@ BPage {
     id: control
     header: AppBar {
         id: header
-        title: qsTr("Liste des salles")
+        title: qsTr("Rooms list")
         statusBarVisible: false
-        leading.icon: Icons.close
-        color: Qt.rgba(12, 200, 25, 0)
-        foregroundColor: $Colors.colorPrimary
     }
 
     SortFilterProxyModel {

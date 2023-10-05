@@ -58,6 +58,18 @@ Item {
     property var plantFrequenciesPage: Component {
         PlantFrequencies {}
     }
+    property var plantIdentifierResultsPage: Component {
+        PlantIdentifierResultsScreen {}
+    }
+    property var diseaseIdentifierResultsPage: Component {
+        DiseasIdentifierResultsScreen {}
+    }
+    property var insectIdentifier: Component {
+        InsectIdentifier {}
+    }
+    property var insectIdentifierResultsPage: Component {
+        InsectIdentifierResultsList {}
+    }
     property var insectDetailPage: Component {
         InsectDetailsScreen {}
     }

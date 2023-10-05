@@ -118,11 +118,11 @@ BPage {
                         spacing: 7
 
                         Label {
-                            text: qsTr("Nom")
+                            text: qsTr("Last name")
                         }
                         TextField {
                             id: lastName
-                            placeholderText: "Votre nom"
+                            placeholderText: qsTr("Your last name")
                             backgroundColor: Qaterial.Colors.white
                             horizontalAlignment: Text.AlignHCenter
                             font.pixelSize: 21
@@ -138,11 +138,11 @@ BPage {
                         spacing: 7
 
                         Label {
-                            text: qsTr("Prénoms")
+                            text: qsTr("First name")
                         }
                         TextField {
                             id: firstName
-                            placeholderText: "Vos prénoms"
+                            placeholderText: qsTr("Your first name")
                             backgroundColor: Qaterial.Colors.white
                             horizontalAlignment: Text.AlignHCenter
                             font.pixelSize: 21
@@ -158,11 +158,31 @@ BPage {
                         spacing: 7
 
                         Label {
-                            text: qsTr("Email or username")
+                            text: qsTr("Email or phone")
+                        }
+                        TextField {
+                            id: email
+                            placeholderText: qsTr("Email address or phone number")
+                            backgroundColor: Qaterial.Colors.white
+                            horizontalAlignment: Text.AlignHCenter
+                            font.pixelSize: 21
+                            radius: 15
+                            width: parent.width
+                            height: 50
+                            onTextChanged: errorLabel.visible = false
+                        }
+                    }
+
+                    Column {
+                        Layout.fillWidth: true
+                        spacing: 7
+
+                        Label {
+                            text: qsTr("Username *")
                         }
                         TextField {
                             id: username
-                            placeholderText: "Identifiant"
+                            placeholderText: qsTr("Your user ID")
                             backgroundColor: Qaterial.Colors.white
                             horizontalAlignment: Text.AlignHCenter
                             font.pixelSize: 21
@@ -178,11 +198,11 @@ BPage {
                         spacing: 7
 
                         Label {
-                            text: qsTr("Password")
+                            text: qsTr("Password *")
                         }
                         TextField {
                             id: password
-                            placeholderText: "Mot de passe"
+                            placeholderText: qsTr("Your password")
                             backgroundColor: Qaterial.Colors.white
                             horizontalAlignment: Text.AlignHCenter
                             font.pixelSize: 21
@@ -201,14 +221,14 @@ BPage {
                         id: errorLabel
                         visible: false
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Mot de passe incorrect"
+                        text: qsTr("Incorrect password")
                         color: "red"
                     }
 
                     Qaterial.ExtendedFabButton {
                         id: connectButton
                         property bool busy: false
-                        text: busy ? "" : "Creer / Connecter"
+                        text: busy ? "" : qsTr("Create my account")
                         width: 230
                         //enabled: !busy
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -238,7 +258,7 @@ BPage {
                                     if (data.status === "ok") {
                                         privateKey = data.privateKey
                                         publicKey = data.pubkey
-                                        view.push(feedPage)
+                                        view.push(previewPage)
                                         relay.active = false
                                         relay.active = true
                                         messagesRelay.active = false

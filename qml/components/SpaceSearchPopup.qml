@@ -36,7 +36,6 @@ Drawer {
             header: AppBar {
                 title: "Choose space"
                 statusBarVisible: false
-                leading.icon: Icons.close
                 leading.onClicked: {
                     control.close()
                 }

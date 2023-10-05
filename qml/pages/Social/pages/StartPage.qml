@@ -15,6 +15,8 @@ BPage {
         onBackButtonClicked: {
             page_view.pop()
         }
+        foregroundColor: $Colors.white
+        color: $Colors.colorPrimary
     }
 
     ColumnLayout {

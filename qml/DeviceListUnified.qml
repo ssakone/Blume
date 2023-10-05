@@ -66,7 +66,7 @@ Item {
         anchors.topMargin: singleColumn ? 0 : 8
         anchors.leftMargin: 6
         anchors.rightMargin: 6
-        anchors.bottomMargin: 70 + devicesView.cellHeight
+//        anchors.bottomMargin: 70 + devicesView.cellHeight
 
         property bool bigWidget: (!isHdpi || (isTablet && width >= 480))
 
@@ -81,7 +81,7 @@ Item {
                                             devicesView.width / cellWidthTarget)
 
         cellWidth: (devicesView.width / cellColumnsTarget)
-        cellHeight: (bigWidget ? 144 : 100)
+        cellHeight: (bigWidget ? 100 : 70)
 
         ScrollBar.vertical: ScrollBar {
             visible: false

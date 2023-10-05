@@ -29,18 +29,13 @@ Page {
         RowLayout {
             anchors.fill: parent
             spacing: 0
-            ButtonImage {
-                visible: false
-            }
-            Item {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Text {
-                    leftPadding: 10
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.weight: Font.Bold
-                    font.pixelSize: 20
-                    text: qsTr("Blume Social")
+            IconImage {
+                Layout.leftMargin: 15
+                source: Qaterial.Icons.close
+                color: $Colors.colorPrimary
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: page_view.pop()
                 }
             }
         }
@@ -74,7 +69,7 @@ Page {
                                 width: 100
                                 avatarSize: 80
                                 source: JSON.parse(modelData["profile"]
-                                                   || "{}").picture || ""
+                                                   || "{}").picture || Qaterial.Icons.faceManProfile
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 onClicked: {
                                     const data = JSON.parse(
@@ -163,7 +158,7 @@ Page {
                                                     _nameLabel.text = root.author[pubkey].name
                                                             || ""
                                                     _avatar.source = root.author[pubkey].picture
-                                                            || ""
+                                                            || Qaterial.Icons.faceProfile
                                                 }
                                             }, pubc)
                                         }
@@ -176,7 +171,7 @@ Page {
                                                             _nameLabel.text = info.name
                                                                     || ""
                                                             _avatar.source = info.picture
-                                                                    || ""
+                                                                    || Qaterial.Icons.faceProfile
                                                         }
                                                     })
                                     }

@@ -52,4 +52,3 @@ SensorDataMeasureLine 1.0 SensorDataMeasureLine.qml
 SpaceSearchPopup 1.0 SpaceSearchPopup.qml
 TableLine 1.0 TableLine.qml
 WeatherCard 1.0 WeatherCard.qml
-qml 1.0 qml.qml

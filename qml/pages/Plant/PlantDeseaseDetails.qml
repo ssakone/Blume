@@ -20,9 +20,12 @@ import "../../components_js/Http.js" as Http
 
 BPage {
     id: control
-    property variant desease_data
+    required property string diseaseName
+    property string mainURL
+
+    property var similarImages: []
+    property variant gptDetails: null
     property bool isBlumeDisease: false
-    property variant details: desease_data["disease_details"] ?? {}
     property bool header_hidden: false
     property bool fullScreen: false
     property bool isLoaded: false
@@ -36,63 +39,47 @@ BPage {
     }
 
     Component.onCompleted: {
-        if(!control.isBlumeDisease) {
-            control.isLoaded = true
-            return
-        }
-
-        const url = `https://public.blume.mahoudev.com/diseases/${control.desease_data.id}?fields=*.*`
-
+        const url = `http://34.41.96.172/get_disease_info?disease_name=${diseaseName}`
+        console.log("\n\n Fetching at ", url)
         let appLang = Qt.locale().name.slice(0, 2)
 
         Http.fetch({
-                method: "GET",
-                url: url,
-                headers: {
-                   "Accept": 'application/json',
-                   "Content-Type": 'application/json',
-                   "Content-Lang": appLang
-                },
-            }).then(function(response) {
-
-            const parsedResponse = JSON.parse(response)
-            const data = parsedResponse.data
-            if(!data) {
-                control.error = "Erreur inattendue"
-                control.isLoaded = true
-                return
+            method: "GET",
+            url: url,
+            headers: {
+               "Accept": 'application/json',
+               "Content-Type": 'application/json',
+               "Content-Lang": appLang
+            },
+        }).then(function(response) {
+            console.log("Got GPT resp ", typeof response)
+            let parsedResponse = {}
+            try {
+                parsedResponse = JSON.parse(response)
+            } catch (e) {
+                for(let i = 100; i < response.length ; i += 100) {
+                    console.log(response.slice(i-100, i))
+                }
             }
 
-            let formated = {}
-
-            let desease_details = {
-                "common_names": [],
-                "treatment": {
-                    "prevention": data.traitement_preventif || "",
-                    "chemical": data.traitement_chimique || "",
-                    "biological": data.traitement_biologique || ""
-                },
-                "description": data.description,
-                "cause": data.cause
+            if(parsedResponse.inconnu) {
+                control.error = parsedResponse.inconnu
             }
 
-            formated['name'] = data.nom_scientifique
-            formated['similar_images'] = []
+            control.gptDetails = {
+                    "common_names": parsedResponse?.inconnu || parsedResponse["other_names"],
+                    "description": parsedResponse["description"],
+                    "cause": parsedResponse["causes"],
+                    "symptoms": parsedResponse["symptoms"],
+                    "treatmentPreventive": parsedResponse["preventive_treatment"],
+                    "treatmentChimical": parsedResponse["chimical_traitment"],
+                    "treatmentBiological": parsedResponse["biological_traitment"]
+                }
 
-            for(let i=0; i<data.noms_communs.length; i++ ) {
-                desease_details["common_names"].push(data.noms_communs[i])
-            }
-
-            for(let j=0; j<data.images.length; j++ ) {
-                formated['similar_images'].push({"url": "https://blume.mahoudev.com/assets/" + data.images[j].directus_files_id})
-            }
-
-            formated['disease_details'] = desease_details
-
-            control.desease_data = formated
             control.isLoaded = true
 
         }).catch(function (err) {
+            console.log("NOPE NOPE")
             console.log(Object.keys(err))
             console.log(err?.content, err?.status)
             console.log(err?.message)
@@ -105,7 +92,9 @@ BPage {
     padding: 0
 
     header: AppBar {
-        title: desease_data.name ?? ""
+        title: gptDetails.name ?? ""
+        backgroundColor: $Colors.colorPrimary
+        foregroundColor: $Colors.white
     }
 
     FullScreenPopup {
@@ -113,119 +102,253 @@ BPage {
         onSwithMode: fullScreen = !fullScreen
     }
 
-    Loader {
-        active: control.isLoaded && !control.error
+    Flickable {
         anchors.fill: parent
-        sourceComponent:
-            Flickable {
-            anchors.fill: parent
-            contentHeight: _insideColumn.height
+        contentHeight: _insideColumn.height + 50
+        boundsBehavior: Flickable.StopAtBounds
 
-            Column {
-                id: _insideColumn
+        Column {
+            id: _insideColumn
+            width: parent.width
+            spacing: 10
+
+            Rectangle {
+                height: singleColumn ? 300 : control.height / 3
                 width: parent.width
-                spacing: 10
+                clip: true
+                color: "#f0f0f0"
 
-                Rectangle {
-                    height: singleColumn ? 300 : control.height / 3
-                    width: parent.width
-                    clip: true
-                    color: "#f0f0f0"
+                BusyIndicator {
+                    anchors.centerIn: parent
+                    width: 40
+                    height: width
+                    running: true
+                }
 
-                    SwipeView {
-                        id: imageSwipeView
+                Image {
+                    source: mainURL
+
+                    MouseArea {
                         anchors.fill: parent
-                        Repeater {
-                            model: desease_data['similar_images']
-                            delegate: Image {
-                                source: modelData.url || modelData || ""
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        fullScreenPop.source = source
-                                        fullScreen = !fullScreen
-                                    }
-                                }
-                            }
+                        onClicked: {
+                            fullScreenPop.source = source
+                            fullScreen = !fullScreen
                         }
                     }
+                }
+            }
 
-                    PageIndicator {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.bottom: parent.bottom
-                        anchors.bottomMargin: 10
-                        currentIndex: imageSwipeView.currentIndex
-                        count: desease_data['similar_images'].length || desease_data['similar_images'].count
+            Column {
+                width: parent.width
+
+
+
+                Label {
+                    text: control.error
+                    visible: text
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: $Colors.red400
+                    font {
+                        pixelSize: 16
+                        weight: Font.Light
                     }
                 }
 
                 Column {
-                    width: parent.width
-                    padding: 10
+                    width: parent.width - 40
+                    padding: 20
                     topPadding: 0
-                    spacing: 10
+                    spacing: 20
 
                     Column {
                         spacing: 3
                         width: parent.width
                         Label {
-                            text: desease_data['name']
+                            text: diseaseName
                             font.pixelSize: 32
                             font.weight: Font.Bold
                             width: parent.width
                             wrapMode: Text.Wrap
                         }
 
-                        RowLayout {
-                            width: parent.width
+                        Row {
                             Repeater {
-                                model: details['common_names']
+                                model: gptDetails?.common_names
                                 delegate: Label {
                                     required property int index
                                     required property variant modelData
 
-                                    text: (modelData?.name ?? modelData)
-                                          + (index < details['common_names'].length ? ", " : "")
+                                    text: (modelData)
+                                          + (index < gptDetails?.common_names?.length ? ", " : "")
                                 }
                             }
                         }
                     }
 
-                    Text {
-                        text: details['description']
-                        font.pixelSize: 14
-                        font.weight: Font.Light
-                        wrapMode: Text.Wrap
-                        width: parent.width - 10
-                    }
+                    Rectangle {
+                        width: parent.width
+                        height: detailsColumn.height
+                        color: $Colors.colorBgPrimary
+                        radius: 15
 
-                    Label {
-                        text: "Cause"
-                        color: $Colors.colorPrimary
-                        font.pixelSize: 24
-                        textFormat: Text.MarkdownText
-                    }
+
+                            Column {
+                                id: detailsColumn
+                                width: parent.width
+
+                                Flickable {
+                                    width: parent.width
+                                    height: insideRow.height
+                                    contentWidth: insideRow.width
+                                    boundsBehavior: Flickable.StopAtBounds
+
+                                    Rectangle {
+                                        width: parent.width
+                                        height: parent.height
+                                        radius: 10
+                                        color: "#DBF3ED"
+                                        clip: true
+                                        Row {
+                                            id: insideRow
+                                            height: 40
+                                            Repeater {
+                                                model: [qsTr("Description"), qsTr("Causes")]
+
+                                                Rectangle {
+                                                    height: parent.height
+                                                    width: detailsColumn.width / 2
+                                                    radius: 10
+                                                    color: detailsBar.currentIndex === index ? $Colors.colorPrimary : Qt.rgba(0,0,0,0)
+
+                                                    Label {
+                                                        anchors.centerIn: parent
+                                                        text: modelData
+                                                        color: detailsBar.currentIndex === index ? $Colors.white : $Colors.colorPrimary
+                                                        font {
+                                                            weight: Font.DemiBold
+                                                            pixelSize: 16
+                                                        }
+                                                    }
+
+                                                    MouseArea {
+                                                        anchors.fill: parent
+                                                        onClicked: detailsBar.currentIndex = index
+                                                    }
+
+                                                }
+
+                                            }
+
+                                        }
+                                    }
+                                }
+
+                                Item {
+                                    width: parent.width
+                                    height: 250
+
+                                    BusyIndicator {
+                                        running: control.gptDetails === null
+                                        width: 50
+                                        height: width
+                                        anchors.centerIn: parent
+                                    }
+
+                                    StackLayout {
+                                        id: detailsBar
+                                        anchors.fill: parent
+                                        currentIndex: 0
+
+                                        Item {
+                                            Flickable {
+                                                anchors.fill: parent
+                                                contentHeight: 500
+
+                                                Column {
+                                                    id: itemDescription
+                                                    width: parent.width
+                                                    Label {
+                                                        text: control.gptDetails?.description
+                                                        width: parent.width
+                                                        wrapMode: Label.Wrap
+                                                        padding: 10
+                                                        font {
+                                                            weight: Font.Light
+                                                            pixelSize: 14
+                                                        }
+                                                    }
+
+                                                }
+
+                                            }
+
+                                        }
+
+                                        Item {
+                                            Flickable {
+                                                anchors.fill: parent
+                                                contentHeight: 500
+
+                                                Column {
+                                                    id: itemCause
+                                                    width: parent.width
+
+                                                    Label {
+                                                        text: control.gptDetails?.cause
+                                                        width: parent.width
+                                                        wrapMode: Label.Wrap
+                                                        padding: 10
+                                                        font {
+                                                            weight: Font.Light
+                                                            pixelSize: 14
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+
+                                        }
+
+                                    }
+
+                                }
+                            }
+
+                        }
 
                     Rectangle {
-                        width: parent.width - 30
-                        height: text_cause.implicitHeight + 15
-                        color: "#f0f0f0"
+                        gradient: $Colors.gradientPrimary
+                        width: parent.width
+                        height: 40
                         radius: 10
-                        anchors.horizontalCenter: parent.horizontalCenter
-
-                        TextEdit {
-                            id: text_cause
-                            text: details['cause'] || "Inconnue"
-                            readOnly: true
-                            font.pixelSize: 14
-                            color: Material.color(Material.Grey, Material.Shade800)
-
-                            width: parent.width
-                            anchors.verticalCenter: parent.verticalCenter
-                            wrapMode: Text.Wrap
-                            textFormat: Text.MarkdownText
-                            textMargin: 10
+                        Row {
+                            anchors.centerIn: parent
+                            spacing: 10
+                            IconSvg {
+                                source: Icons.alertCircleOutline
+                                color: $Colors.white
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                            Text {
+                                text: qsTr("Blume AI")
+                                color: $Colors.white
+                                font {
+                                    pixelSize: 16
+                                    weight: Font.DemiBold
+                                }
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
                         }
+                    }
+
+                    Text {
+                        text: qsTr("Pour plus d'informations")
+                        color: $Colors.gray600
+                        font {
+                            pixelSize: 12
+                            weight: Font.Light
+                        }
+                        anchors.horizontalCenter: parent.horizontalCenter
                     }
 
                     Label {
@@ -235,28 +358,33 @@ BPage {
                     }
 
                     Column {
-                        width: parent.width - 20
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: parent.width
                         spacing: 10
                         Repeater {
                             model: [{
                                     "label": 'Traitement préventif',
-                                    "field": 'prevention'
+                                    "field": 'treatmentPreventive'
                                 }, {
                                     "label": 'Traitement chimique',
-                                    "field": 'chemical'
+                                    "field": 'treatmentChimical'
                                 }, {
                                     "label": 'Traitement biologique',
-                                    "field": 'biological'
+                                    "field": 'treatmentBiological'
                                 }]
 
                             Rectangle {
                                 required property variant modelData
                                 height: treat_prevention_col.height
-                                width: parent.width - 10
+                                width: parent.width
                                 radius: 10
                                 color: "#f0f0f0f0"
-                                anchors.horizontalCenter: parent.horizontalCenter
+
+                                BusyIndicator {
+                                    height: 30
+                                    width: height
+                                    running: control.gptDetails === null
+                                    anchors.centerIn: parent
+                                }
 
                                 Column {
                                     id: treat_prevention_col
@@ -281,9 +409,7 @@ BPage {
                                     }
 
                                     Label {
-                                        text: (details['treatment']
-                                               && typeof details['treatment'][modelData.field]
-                                               === 'string') ? details['treatment'][modelData.field] : ""
+                                        text: control.gptDetails[modelData.field]
                                         textFormat: Label.MarkdownText
                                         color: Material.color(Material.Grey,
                                                               Material.Shade900)
@@ -293,64 +419,110 @@ BPage {
                                         width: parent.width - 10
                                         padding: 10
                                     }
-
-                                    Column {
-                                        spacing: 2
-                                        width: parent.width
-                                        padding: 10
-                                        leftPadding: 0
-                                        visible: (details['treatment']
-                                                  && typeof details['treatment'][modelData.field])
-                                                 === 'object'
-                                        Repeater {
-                                            model: details['treatment'][modelData.field]
-                                            delegate: Label {
-                                                required property int index
-                                                required property variant modelData
-                                                text: qsTr(modelData)
-                                                color: Material.color(
-                                                           Material.Grey,
-                                                           Material.Shade900)
-                                                font.pixelSize: 14
-                                                font.weight: Font.Light
-                                                wrapMode: Text.Wrap
-                                                width: parent.width - 10
-                                            }
-                                        }
-                                    }
                                 }
                             }
                         }
                     }
 
-                    NiceButton {
-                        visible: details['url']
-                        text: qsTr("More informations on Wikipedia")
-                        icon.source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
-                        height: 55
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        onClicked: {
-                            Qt.openUrlExternally(details['url'])
+                    Rectangle {
+                        color: $Colors.colorBgPrimary
+                        radius: 15
+                        width: parent.width
+                        height: galeryColumn.height
+
+                        Column {
+                            id: galeryColumn
+                            width: parent.width
+                            spacing: 5
+
+                            Row {
+                                padding: 10
+                                spacing: 10
+
+                                IconSvg {
+                                    source: "qrc:/assets/icons_material/camera.svg"
+                                    width: 30
+                                    height: 30
+                                    color: $Colors.colorPrimary
+                                    anchors.verticalCenter: parent.verticalCenter
+                                }
+
+                                Label {
+                                    text: qsTr("Photo galery")
+                                    color: $Colors.colorPrimary
+                                    font.pixelSize: 24
+                                    anchors.verticalCenter: parent.verticalCenter
+                                }
+                            }
+
+                            Item {
+                                width: parent.width
+                                height: width * (9/16)
+
+                                SwipeView {
+                                    anchors.fill: parent
+                                    clip: true
+
+                                    Repeater {
+                                        model: similarImages
+                                        delegate: Item {
+                                            BusyIndicator {
+                                                width: 40
+                                                height: width
+                                                running: true
+                                                anchors.centerIn: parent
+                                            }
+
+                                            Image {
+                                                source: {
+                                                    return modelData
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                RowLayout {
+                                    height: 30
+                                    width: parent.width
+                                    anchors {
+                                        bottom: parent.bottom
+                                        bottomMargin: 10
+                                    }
+
+                                    Item {
+                                        Layout.fillWidth: true
+                                    }
+
+                                    Repeater {
+                                        model: similarImages.slice(0, 5)
+                                        delegate: Rectangle {
+                                            Layout.preferredHeight: 10
+                                            Layout.preferredWidth: 10
+                                            radius: 5
+                                            color: $Colors.colorSecondary
+                                        }
+                                    }
+
+                                    Item {
+                                        Layout.fillWidth: true
+                                    }
+                                }
+                            }
+
+
                         }
+
                     }
+
                 }
+
+
+
+
+                }
+
             }
-        }
-    }
 
-    BusyIndicator {
-        anchors.centerIn: parent
-        running: !control.isLoaded
-    }
-
-    Label {
-        text: control.error
-        visible: text
-        anchors.centerIn: parent
-        color: $Colors.red400
-        font {
-            pixelSize: 16
-            weight: Font.Light
-        }
     }
 }

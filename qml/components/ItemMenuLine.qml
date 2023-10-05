@@ -7,14 +7,16 @@ Item {
     signal clicked
     property int index: 1
     property string iconSource: ""
+    property int iconSize: 50
+    property alias icon: _icon
     property string title: ""
+    property alias background: _bg
+    property alias labelItem: bottomOptionTextItem
 
-
-    anchors.rightMargin: index === 1 ? 20 : 10
-    anchors.leftMargin: index === 1 ? 20 : 10
     Column {
         width: parent.width
         Rectangle {
+            id: _bg
             width: parent.width
             height: width
             radius: 15
@@ -26,8 +28,9 @@ Item {
             }
 
             IconSvg {
-                width: index === 1 ? 64 : 50
-                height: width
+                id: _icon
+                height: iconSize
+                width: height
                 visible: iconSource !== ""
                 anchors.centerIn: parent
 
@@ -48,7 +51,6 @@ Item {
             height: 28
             anchors.horizontalCenter: parent.horizontalCenter
             wrapMode: Label.Wrap
-            font.pixelSize: index === 1 ? 12 : 10
             font.weight: Font.Medium
             horizontalAlignment: Label.AlignHCenter
             verticalAlignment: Label.AlignVCenter

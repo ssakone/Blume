@@ -19,9 +19,6 @@ BPage {
     header: AppBar {
         title: ""
         statusBarVisible: false
-        leading.icon: Icons.close
-        color: Qt.rgba(12, 200, 25, 0)
-        foregroundColor: $Colors.colorPrimary
     }
 
     onFocusChanged: {

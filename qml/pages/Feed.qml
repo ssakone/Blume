@@ -50,7 +50,6 @@ BPage {
                     spacing: 0
                     AppBarButton {
                         foregroundColor: "black"
-                        icon: Icons.arrowLeft
                         onClicked: page_view.pop()
                     }
                     Item {
@@ -322,7 +321,6 @@ BPage {
                     height: 70
                     AppBarButton {
                         foregroundColor: "black"
-                        icon: Icons.arrowLeft
                         onClicked: view2.pop()
                     }
                     Avatar {
@@ -1042,7 +1040,6 @@ BPage {
         }
 
         AppBarButton {
-            icon: Icons.close
             foregroundColor: "white"
             onClicked: imageViewerWithZoom.close()
         }

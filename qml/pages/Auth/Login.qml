@@ -14,6 +14,8 @@ BPage {
     property string currentObj: ""
     header: AppBar {
         title: ""
+        foregroundColor: $Colors.white
+        color: $Colors.colorPrimary
     }
 
     ColumnLayout {

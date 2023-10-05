@@ -90,7 +90,6 @@
     <file alias="components/SpaceSearchPopup.qml">qml/components/SpaceSearchPopup.qml</file>
     <file alias="components/TableLine.qml">qml/components/TableLine.qml</file>
     <file alias="components/WeatherCard.qml">qml/components/WeatherCard.qml</file>
-    <file alias="components/qml.qml">qml/components/qml.qml</file>
     <file alias="components/qmldir">qml/components/qmldir</file>
     <file alias="components_generic/ActionMenuItem.qml">qml/components_generic/ActionMenuItem.qml</file>
     <file alias="components_generic/ActionMenu_bottom.qml">qml/components_generic/ActionMenu_bottom.qml</file>
@@ -201,8 +200,10 @@
     <file alias="pages/Garden/qmldir">qml/pages/Garden/qmldir</file>
     <file alias="pages/Insect/InsectDetailsScreen.qml">qml/pages/Insect/InsectDetailsScreen.qml</file>
     <file alias="pages/Insect/InsectIdentifier.qml">qml/pages/Insect/InsectIdentifier.qml</file>
+    <file alias="pages/Insect/InsectIdentifierResultsList.qml">qml/pages/Insect/InsectIdentifierResultsList.qml</file>
     <file alias="pages/Insect/qmldir">qml/pages/Insect/qmldir</file>
     <file alias="pages/Plant/DetailsLineScreen.qml">qml/pages/Plant/DetailsLineScreen.qml</file>
+    <file alias="pages/Plant/DiseasIdentifierResultsScreen.qml">qml/pages/Plant/DiseasIdentifierResultsScreen.qml</file>
     <file alias="pages/Plant/Plant.qml">qml/pages/Plant/Plant.qml</file>
     <file alias="pages/Plant/PlantBrowser.qml">qml/pages/Plant/PlantBrowser.qml</file>
     <file alias="pages/Plant/PlantDesease.qml">qml/pages/Plant/PlantDesease.qml</file>
@@ -212,6 +213,7 @@
     <file alias="pages/Plant/PlantFrequencies.qml">qml/pages/Plant/PlantFrequencies.qml</file>
     <file alias="pages/Plant/PlantIdentifier.qml">qml/pages/Plant/PlantIdentifier.qml</file>
     <file alias="pages/Plant/PlantIdentifierDetails.qml">qml/pages/Plant/PlantIdentifierDetails.qml</file>
+    <file alias="pages/Plant/PlantIdentifierResultsScreen.qml">qml/pages/Plant/PlantIdentifierResultsScreen.qml</file>
     <file alias="pages/Plant/PlantScreen.qml">qml/pages/Plant/PlantScreen.qml</file>
     <file alias="pages/Plant/PlantSearch.qml">qml/pages/Plant/PlantSearch.qml</file>
     <file alias="pages/Plant/PlantShortDescriptions.qml">qml/pages/Plant/PlantShortDescriptions.qml</file>
@@ -238,6 +240,7 @@
     <file alias="pages/Social/pages/PostEditPage.qml">qml/pages/Social/pages/PostEditPage.qml</file>
     <file alias="pages/Social/pages/ProfileEditPage.qml">qml/pages/Social/pages/ProfileEditPage.qml</file>
     <file alias="pages/Social/pages/Register.qml">qml/pages/Social/pages/Register.qml</file>
+    <file alias="pages/Social/pages/SocialPreview.qml">qml/pages/Social/pages/SocialPreview.qml</file>
     <file alias="pages/Social/pages/StartPage.qml">qml/pages/Social/pages/StartPage.qml</file>
     <file alias="pages/Social/pages/UserProfile.qml">qml/pages/Social/pages/UserProfile.qml</file>
     <file alias="pages/Social/pages/qmldir">qml/pages/Social/pages/qmldir</file>

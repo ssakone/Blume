@@ -21,74 +21,6 @@ BPage {
 
     objectName: "DeviceList"
 
-    //    header: Loader {
-    //        id: deviceListHeader
-    //        z: 10
-    //        sourceComponent: AppBar {
-    //            id: mobileDeviceHeader
-    //            title: qsTr("Appareils connectés")
-    //            noAutoPop: true
-    //            isHomeScreen: true
-    //            statusBarVisible: false
-    //            leading.visible: true
-    //            titleLabel.leftPadding: 15
-    //            color: Qt.rgba(12, 200, 25, 0)
-    //            foregroundColor: $Colors.white
-    //            actions: RowLayout {
-    //                width: parent.width
-    //                IconSvg {
-    //                    id: workingIndicator
-    //                    Layout.fillWidth: true
-    //                    height: 24;
-
-    //                    source: {
-    //                        if (deviceManager.scanning)
-    //                            return "qrc:/assets/icons_material/baseline-search-24px.svg"
-    //                        else if (deviceManager.syncing)
-    //                            return "qrc:/assets/icons_custom/duotone-date_all-24px.svg"
-    //                        else if (deviceManager.listening)
-    //                            return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
-    //                        else
-    //                            return "qrc:/assets/icons_material/baseline-autorenew-24px.svg"
-    //                    }
-    //                    color: Theme.colorHeaderContent
-    //                    opacity: 0
-    //                    Behavior on opacity { OpacityAnimator { duration: 333 } }
-
-    //                    NumberAnimation on rotation { // refreshAnimation (rotate)
-    //                        from: 0
-    //                        to: 360
-    //                        duration: 2000
-    //                        loops: Animation.Infinite
-    //                        easing.type: Easing.Linear
-    //                        running: (deviceManager.updating && !deviceManager.scanning && !deviceManager.syncing)
-    //                        alwaysRunToEnd: true
-    //                        onStarted: workingIndicator.opacity = 1
-    //                        onStopped: workingIndicator.opacity = 0
-    //                    }
-    //                    SequentialAnimation on opacity { // scanAnimation (fade)
-    //                        loops: Animation.Infinite
-    //                        running: (deviceManager.scanning || deviceManager.listening || deviceManager.syncing)
-    //                        onStopped: workingIndicator.opacity = 0
-    //                        PropertyAnimation { to: 1; duration: 750; }
-    //                        PropertyAnimation { to: 0.33; duration: 750; }
-    //                    }
-    //                }
-
-    //                IconSvg {
-    //                    source: "qrc:/assets/icons_material/baseline-more_vert-24px.svg"
-    //                    color: $Colors.colorPrimary
-    //                    Layout.preferredWidth: 30
-    //                    Layout.preferredHeight: Layout.preferredWidth
-    //                    MouseArea {
-    //                        anchors.fill: parent
-    //                        onClicked: actionMenuDevices.open()
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-
     ////////////////////////////////////////////////////////////////////////////
     Component.onCompleted: {
         if (Qt.platform.os === 'android' || Qt.platform.os === 'ios') {
@@ -142,10 +74,12 @@ BPage {
         }
 
         if (deviceManager.hasDevices) {
+            console.log("\n\n deviceManager.hasDevices ", deviceManager.hasDevices)
             // The sensor list is shown
             loaderStatus.source = ""
             loaderStatus.visible = false
             loaderDeviceList.visible = true
+            loadList()
 
             if (!deviceManager.bluetooth) {
                 rectangleBluetoothStatus.setBluetoothWarning()
@@ -159,11 +93,10 @@ BPage {
             loaderStatus.visible = true
             loaderDeviceList.visible = false
             rectangleBluetoothStatus.hide()
-
             if (!deviceManager.bluetooth) {
-                loaderStatus.source = "ItemNoBluetooth.qml"
+                loaderStatus.source = "components/ItemNoBluetooth.qml"
             } else {
-                loaderStatus.source = "ItemNoDevice.qml"
+                loaderStatus.source = "components/ItemNoDevice.qml"
             }
         }
     }
@@ -237,9 +170,10 @@ BPage {
     ////////////////////////////////////////////////////////////////////////////
     Rectangle {
         id: ellispis
+        z: 2
         anchors {
             bottom: parent.top
-            bottomMargin: -180
+            bottomMargin: appWindow.singleColumn ? -180 : 0
             horizontalCenter: parent.horizontalCenter
         }
 
@@ -250,8 +184,93 @@ BPage {
         gradient: $Colors.gradientPrimary
     }
 
+    RowLayout {
+        z: 3
+        width: parent.width - 50
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+            margins: 25
+            topMargin: appWindow.singleColumn ? 45 : 10
+        }
+
+        Rectangle {
+            Layout.preferredWidth: 30
+            Layout.preferredHeight: 30
+            radius: height / 2
+            color: $Colors.white
+
+            IconSvg {
+                width: parent.width - 4
+                height: width
+                anchors.centerIn: parent
+                source: "qrc:/assets/icons_material/baseline-menu-24px.svg"
+                color: $Colors.colorPrimary
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: appDrawer.open()
+                }
+            }
+        }
+
+        Column {
+            Layout.fillWidth: true
+            Label {
+                text: qsTr("Appareils connectés")
+                font {
+                    pixelSize: 24
+                    family: "Courrier"
+                    weight: Font.Bold
+                }
+                color: $Colors.white
+                width: parent.width
+                horizontalAlignment: Text.AlignHCenter
+            }
+            Label {
+                width: parent.width
+                text: qsTr("Connectez-vous pour connaitre l'état de vos plantes")
+                opacity: .5
+                color: $Colors.white
+                font {
+                    pixelSize: 14
+                    family: "Courrier"
+                    weight: Font.Bold
+                }
+                wrapMode: Text.Wrap
+                horizontalAlignment: Text.AlignHCenter
+            }
+        }
+        Rectangle {
+            Layout.preferredWidth: 30
+            Layout.preferredHeight: 30
+            radius: height / 2
+            color: $Colors.white
+
+            IconSvg {
+                width: parent.width - 4
+                height: width
+                anchors.centerIn: parent
+                source: "qrc:/assets/icons_material/baseline-more_vert-24px.svg"
+                color: $Colors.colorPrimary
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: actionMenuDevices.open()
+                }
+            }
+        }
+    }
+
+
     ColumnLayout {
-        anchors.fill: parent
+        z: 1
+        anchors {
+            top: ellispis.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            topMargin: 30
+        }
 
         Column {
             id: rowbar
@@ -449,77 +468,6 @@ BPage {
             }
         }
 
-        RowLayout {
-            Layout.fillWidth: true
-            Layout.margins: 25
-            Layout.topMargin: 45
-
-            Rectangle {
-                Layout.preferredWidth: 30
-                Layout.preferredHeight: Layout.preferredWidth
-                radius: Layout.preferredHeight / 2
-                color: $Colors.white
-
-                IconSvg {
-                    width: parent.width - 4
-                    height: width
-                    anchors.centerIn: parent
-                    source: "qrc:/assets/icons_material/baseline-menu-24px.svg"
-                    color: $Colors.colorPrimary
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: appDrawer.open()
-                    }
-                }
-            }
-
-            Column {
-                Layout.fillWidth: true
-                Label {
-                    text: qsTr("Appareils connectés")
-                    font {
-                        pixelSize: 24
-                        family: "Courrier"
-                        weight: Font.Bold
-                    }
-                    color: $Colors.white
-                    width: parent.width
-                    horizontalAlignment: Text.AlignHCenter
-                }
-                Label {
-                    width: parent.width
-                    text: qsTr("Connectez-vous pour connaitre l'état de vos plantes")
-                    opacity: .5
-                    color: $Colors.white
-                    font {
-                        pixelSize: 14
-                        family: "Courrier"
-                        weight: Font.Bold
-                    }
-                    wrapMode: Text.Wrap
-                    horizontalAlignment: Text.AlignHCenter
-                }
-            }
-            Rectangle {
-                Layout.preferredWidth: 30
-                Layout.preferredHeight: Layout.preferredWidth
-                radius: Layout.preferredHeight / 2
-                color: $Colors.white
-
-                IconSvg {
-                    width: parent.width - 4
-                    height: width
-                    anchors.centerIn: parent
-                    source: "qrc:/assets/icons_material/baseline-more_vert-24px.svg"
-                    color: $Colors.colorPrimary
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: actionMenuDevices.open()
-                    }
-                }
-            }
-        }
-
         Loader {
             id: loaderStatus
             Layout.fillHeight: true
@@ -533,6 +481,7 @@ BPage {
             Layout.fillHeight: true
             Layout.fillWidth: true
             asynchronous: false
+            sourceComponent: ItemNoDevice {}
         }
     }
 

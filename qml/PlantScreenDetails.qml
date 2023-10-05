@@ -25,10 +25,6 @@ Popup {
     property var plant: null
     property var imagesURL: []
 
-    Component.onCompleted: {
-        console.log("\n\n imagesURL ", imagesURL)
-    }
-
     property bool fullScreen: false
     property bool hideBaseHeader: false
 
@@ -320,12 +316,14 @@ Popup {
 
                                             RowLayout {
                                                 Layout.fillWidth: true
+                                                Layout.leftMargin: 15
+                                                Layout.rightMargin: 15
                                                 spacing: 15
 
                                                 Label {
                                                     text: plant?.name_scientific ?? ""
                                                     wrapMode: Text.Wrap
-                                                    font.pixelSize: 24
+                                                    font.pixelSize: 16
                                                     color: $Colors.colorPrimary
                                                     font.weight: Font.DemiBold
                                                     Layout.alignment: Qt.AlignHCenter
@@ -337,22 +335,27 @@ Popup {
                                                 }
 
                                                 Row {
-                                                    Layout.fillWidth: true
                                                     spacing: 12
                                                     IconSvg {
                                                         source: "qrc:/assets/icons_custom/share.svg"
                                                         color: $Colors.colorPrimary
                                                         anchors.verticalCenter: parent.verticalCenter
+                                                        width: 25
+                                                        height: width
                                                     }
                                                     IconSvg {
                                                         source: "qrc:/assets/icons_custom/blue-thumb.svg"
                                                         color: $Colors.colorPrimary
                                                         anchors.verticalCenter: parent.verticalCenter
+                                                        width: 25
+                                                        height: width
                                                     }
                                                     IconSvg {
                                                         source: Icons.heart
                                                         color: $Colors.colorPrimary
                                                         anchors.verticalCenter: parent.verticalCenter
+                                                        width: 25
+                                                        height: width
                                                     }
                                                 }
 
@@ -363,13 +366,13 @@ Popup {
                                                 spacing: 15
 
                                                 Label {
-                                                    text: plant["nom_botanique"] ?? ""
+                                                    text: (plant?.nom_botanique || barDetailsColumn.gptDetails?.nom_botanique) ?? ""
                                                     wrapMode: Text.Wrap
-                                                    font.pixelSize: 16
+                                                    font.pixelSize: 14
                                                     color: $Colors.colorPrimary
                                                     font.weight: Font.DemiBold
                                                     Layout.alignment: Qt.AlignHCenter
-                                                    Layout.fillWidth: true
+                                                    Layout.preferredWidth: 130
                                                 }
 
                                                 ButtonWireframe {
@@ -423,7 +426,7 @@ Popup {
                                                                             page_view.push(navigator.descriptionPage, {
                                                                                iconSource: "qrc:/assets/icons_custom/death-head.svg",
                                                                                text: qsTr("Toxicité"),
-                                                                               description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Commestible ?? qsTr("Inconnu") : '...'
+                                                                               description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_commestible ?? qsTr("Unknown") : '...'
                                                                             })
                                                                         }
                                                                     }
@@ -431,13 +434,13 @@ Popup {
                                                                 Column {
                                                                     Layout.fillWidth: true
                                                                     Label {
-                                                                        text: qsTr("Commestibilité")
+                                                                        text: qsTr("Commestibility")
                                                                         font.pixelSize: 14
                                                                     }
                                                                     Label {
                                                                         width: 120
                                                                         wrapMode: Text.Wrap
-                                                                        text:   barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Commestible ?? qsTr("Inconnu") : '...'
+                                                                        text:   barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_commestible ?? qsTr("Unknown") : '...'
                                                                     }
                                                                 }
                                                             }
@@ -452,8 +455,8 @@ Popup {
                                                                             plantScreenDetailsPopup.close()
                                                                             page_view.push(navigator.descriptionPage, {
                                                                                                       iconSource: "qrc:/assets/icons_custom/death-head.svg",
-                                                                                                      text: qsTr("Toxicité"),
-                                                                                                      description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Toxicité ?? qsTr("Inconnu") : '...'
+                                                                                                      text: qsTr("Toxicity"),
+                                                                                                      description: barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_toxique ?? qsTr("Unknown") : '...'
                                                                                                       })
                                                                         }
                                                                     }
@@ -463,12 +466,12 @@ Popup {
                                                                     Layout.fillWidth: true
                                                                     Label {
                                                                         wrapMode: Text.Wrap
-                                                                        text: qsTr("Toxicité")
+                                                                        text: qsTr("Toxicity")
                                                                         font.pixelSize: 14
                                                                     }
                                                                     Label {
                                                                         width: 120
-                                                                        text:  barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.Toxicité ?? qsTr("Inconnu") : '...'
+                                                                        text:  barDetailsColumn.gptDetails ? barDetailsColumn.gptDetails?.is_toxique ?? qsTr("Unknown") : '...'
                                                                     }
                                                                 }
                                                             }
@@ -483,8 +486,8 @@ Popup {
                                                                             plantScreenDetailsPopup.close()
                                                                             page_view.push(navigator.descriptionPage, {
                                                                                                       iconSource: "qrc:/assets/icons_custom/co2.svg",
-                                                                                                      text: qsTr("Absorption de CO2"),
-                                                                                                      description:  barDetailsColumn.gptDetails ? qsTr("Faible") : '...'
+                                                                                                      text: qsTr("CO2 absorption"),
+                                                                                                      description:  barDetailsColumn.gptDetails && barDetailsColumn.gptDetails?.description_taux_abs_co2 ? qsTr(barDetailsColumn.gptDetails?.description_taux_abs_co2) : '...'
                                                                                            })
                                                                         }
                                                                     }
@@ -494,13 +497,13 @@ Popup {
                                                                     Layout.fillWidth: true
                                                                     Label {
                                                                         wrapMode: Text.Wrap
-                                                                        text: qsTr("Absorption de CO2")
+                                                                        text: qsTr("CO2 absorption")
                                                                         font.pixelSize: 14
                                                                         width: parent.width
                                                                     }
                                                                     Label {
                                                                         width: 120
-                                                                        text:  barDetailsColumn.gptDetails ? qsTr("Faible") : '...'
+                                                                        text:  barDetailsColumn.gptDetails?.taux_abs_co2 ? qsTr(barDetailsColumn.gptDetails?.taux_abs_co2) : '...'
                                                                     }
                                                                 }
                                                             }
@@ -535,7 +538,19 @@ Popup {
                                                                 "method": "GET"
                                                                }).then(function(res) {
                                                                    barDetailsColumn.isGptDetailsRunning = false
-                                                                   barDetailsColumn.gptDetails = JSON.parse(res)
+                                                                   const parsed = JSON.parse(res)
+
+                                                                   barDetailsColumn.gptDetails = {
+                                                                       "nom_botanique": parsed['nom botanique'],
+                                                                       "noms_communs": parsed["nom commun"],
+                                                                       "description": parsed["Description"],
+                                                                       "usage": parsed["Usage"],
+                                                                       "is_commestible": parsed["Commestible"],
+                                                                       "is_toxique": parsed["Toxicité"],
+                                                                       "taux_abs_co2": parsed["co2_absorption"],
+                                                                       "description_taux_abs_co2": parsed["co2_absorption_desc"],
+                                                                       "blague": parsed["Blague"]
+                                                                   }
                                                                }).catch(function(err) {
                                                                    console.log("FETCH ERROR", err?.status, typeof err?.status)
                                                                    control.isGptDetailsRunning = false
@@ -546,37 +561,44 @@ Popup {
                                                         ColumnLayout {
                                                             width: parent.width
                                                             spacing: 10
-                                                            RowLayout {
-                                                                id: detailsBar
-                                                                Layout.fillWidth: true
-                                                                property int currentIndex: 0
-                                                                spacing: 0
-                                                                Repeater {
-                                                                    model: [qsTr("Description"), qsTr("Usage"), qsTr("Blague"), qsTr("Quizz")]
-                                                                    Label {
-                                                                        text: modelData
-                                                                        padding: 4
-                                                                        leftPadding: 10
-                                                                        rightPadding: 10
-                                                                        Layout.fillWidth: true
-                                                                        color: detailsBar.currentIndex === index ? "#9C7703" : "black"
-                                                                        font {
-                                                                            weight: Font.DemiBold
-                                                                            pixelSize: 16
-                                                                        }
 
-                                                                        background: Rectangle {
-                                                                            color: detailsBar.currentIndex === index ? "#FFE9A1" : $Colors.colorTertiary
-                                                                        }
-                                                                        MouseArea {
-                                                                            anchors.fill: parent
-                                                                            onClicked: {
-                                                                                if(detailsBar.currentIndex !== index) detailsBar.currentIndex = index
+                                                            Flickable {
+                                                                Layout.fillWidth: true
+                                                                Layout.preferredHeight: 40
+                                                                contentWidth: detailsBar.width
+                                                                flickableDirection: Flickable.HorizontalFlick
+
+                                                                Row {
+                                                                    id: detailsBar
+                                                                    property int currentIndex: 0
+                                                                    spacing: 0
+                                                                    Repeater {
+                                                                        model: [qsTr("Common names"), qsTr("Description"), qsTr("Usage"), qsTr("Joke"), qsTr("Quizz")]
+                                                                        Label {
+                                                                            text: modelData
+                                                                            padding: 5
+                                                                            color: detailsBar.currentIndex === index ? "#9C7703" : "black"
+                                                                            leftPadding: 10
+                                                                            rightPadding: 10
+                                                                            font {
+                                                                                weight: Font.DemiBold
+                                                                                pixelSize: 16
+                                                                            }
+
+                                                                            background: Rectangle {
+                                                                                color: detailsBar.currentIndex === index ? "#FFE9A1" : $Colors.colorTertiary
+                                                                            }
+                                                                            MouseArea {
+                                                                                anchors.fill: parent
+                                                                                onClicked: {
+                                                                                    if(detailsBar.currentIndex !== index) detailsBar.currentIndex = index
+                                                                                }
                                                                             }
                                                                         }
                                                                     }
                                                                 }
                                                             }
+
 
                                                             Item {
                                                                 Layout.fillWidth: true
@@ -585,48 +607,70 @@ Popup {
                                                                 StackLayout {
                                                                     currentIndex: detailsBar.currentIndex
                                                                     anchors.fill: parent
+
                                                                     Item {
                                                                         Layout.fillWidth: true
                                                                         Layout.fillHeight: true
                                                                         Label {
-                                                                            width: 360
+                                                                            width: parent.width - 20
+                                                                            leftPadding: 10
+                                                                            rightPadding: 10
                                                                             wrapMode: Text.Wrap
                                                                             font.pixelSize: 16
                                                                             font.weight: Font.Light
-                                                                            text: barDetailsColumn.gptDetails?.Description?? barDetailsColumn.gptDetails?.inconnu ?? ""
+                                                                            text: barDetailsColumn.gptDetails?.noms_communs?.join(", \n") ?? barDetailsColumn.gptDetails?.inconnu ?? ""
                                                                         }
                                                                     }
                                                                     Item {
                                                                         Layout.fillWidth: true
                                                                         Layout.fillHeight: true
                                                                         Label {
-                                                                            width: parent.width
+                                                                            width: parent.width - 20
+                                                                            leftPadding: 10
+                                                                            rightPadding: 10
                                                                             wrapMode: Text.Wrap
                                                                             font.pixelSize: 16
                                                                             font.weight: Font.Light
-                                                                            text: barDetailsColumn.gptDetails?.Usage?? ""
+                                                                            text: barDetailsColumn.gptDetails?.description?? barDetailsColumn.gptDetails?.inconnu ?? ""
                                                                         }
                                                                     }
                                                                     Item {
                                                                         Layout.fillWidth: true
                                                                         Layout.fillHeight: true
                                                                         Label {
-                                                                            width: parent.width
+                                                                            width: parent.width - 20
+                                                                            leftPadding: 10
+                                                                            rightPadding: 10
                                                                             wrapMode: Text.Wrap
                                                                             font.pixelSize: 16
                                                                             font.weight: Font.Light
-                                                                            text: barDetailsColumn.gptDetails?.Blague?? ""
+                                                                            text: barDetailsColumn.gptDetails?.usage?? ""
                                                                         }
                                                                     }
                                                                     Item {
                                                                         Layout.fillWidth: true
                                                                         Layout.fillHeight: true
                                                                         Label {
-                                                                            width: parent.width
+                                                                            width: parent.width - 20
+                                                                            leftPadding: 10
+                                                                            rightPadding: 10
                                                                             wrapMode: Text.Wrap
                                                                             font.pixelSize: 16
                                                                             font.weight: Font.Light
-                                                                            text: "Cette section sera disponible prochainement"
+                                                                            text: barDetailsColumn.gptDetails?.blague?? ""
+                                                                        }
+                                                                    }
+                                                                    Item {
+                                                                        Layout.fillWidth: true
+                                                                        Layout.fillHeight: true
+                                                                        Label {
+                                                                            width: parent.width - 20
+                                                                            leftPadding: 10
+                                                                            rightPadding: 10
+                                                                            wrapMode: Text.Wrap
+                                                                            font.pixelSize: 16
+                                                                            font.weight: Font.Light
+                                                                            text: qsTr("This section will be available soon")
                                                                         }
                                                                     }
                                                                 }
@@ -666,7 +710,7 @@ Popup {
                                                                 color: "white"
                                                             }
                                                             Label {
-                                                                text: qsTr("Soin")
+                                                                text: qsTr("Care")
                                                                 color: "white"
                                                                 anchors.verticalCenter: parent.verticalCenter
                                                             }
@@ -706,7 +750,7 @@ Popup {
                                                 RowLayout {
                                                     width: parent.width
                                                     Label {
-                                                        text: qsTr("Pour l'entretien")
+                                                        text: qsTr("For plant care")
                                                         color: "#505050"
                                                     }
                                                     Item {
@@ -714,7 +758,7 @@ Popup {
                                                     }
 
                                                     Label {
-                                                        text: qsTr("Pour plus d'informations")
+                                                        text: qsTr("More informations")
                                                         color: "#505050"
                                                     }
                                                 }
@@ -754,7 +798,7 @@ Popup {
                                                         }
 
                                                         Label {
-                                                            text: qsTr("Galerie de plantes")
+                                                            text: qsTr("Plant galery")
                                                             color: $Colors.colorPrimary
                                                             font.pixelSize: 24
                                                             anchors.verticalCenter: parent.verticalCenter

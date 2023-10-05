@@ -202,7 +202,7 @@ Item {
         property bool isLoading: true
 
         statusbarTheme: Theme.themeStatusbar
-        statusbarColor: isLoading ? "white" : Theme.colorStatusbar
+        statusbarColor: isLoading ? "white" : $Colors.colorPrimary
         navbarColor: {
             if (isLoading)
                 return "white"

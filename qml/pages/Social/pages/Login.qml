@@ -118,11 +118,11 @@ BPage {
                         spacing: 7
 
                         Label {
-                            text: qsTr("Email or username")
+                            text: qsTr("Username")
                         }
                         TextField {
                             id: username
-                            placeholderText: "Identifiant"
+                            placeholderText: qsTr("Your user id")
                             backgroundColor: Qaterial.Colors.white
                             horizontalAlignment: Text.AlignHCenter
                             font.pixelSize: 21
@@ -142,7 +142,7 @@ BPage {
                         }
                         TextField {
                             id: password
-                            placeholderText: "Mot de passe"
+                            placeholderText: qsTr("Your password")
                             backgroundColor: Qaterial.Colors.white
                             horizontalAlignment: Text.AlignHCenter
                             font.pixelSize: 21
@@ -161,14 +161,14 @@ BPage {
                         id: errorLabel
                         visible: false
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Mot de passe incorrect"
+                        text: qsTr("Incorrect password")
                         color: "red"
                     }
 
                     Qaterial.ExtendedFabButton {
                         id: connectButton
                         property bool busy: false
-                        text: busy ? "" : "Creer / Connecter"
+                        text: busy ? "" : qsTr("Creer / Connecter")
                         width: 230
                         //enabled: !busy
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -198,7 +198,7 @@ BPage {
                                     if (data.status === "ok") {
                                         privateKey = data.privateKey
                                         publicKey = data.pubkey
-                                        view.push(feedPage)
+                                        view.push(previewPage)
                                         relay.active = false
                                         relay.active = true
                                         messagesRelay.active = false

@@ -60,7 +60,7 @@ BPage {
 
     header: AppBar {
         width: parent.width
-        isHomeScreen: true
+        isHomeScreen: identifierLayoutView.currentIndex === 0
         title: {
             switch (identifierLayoutView.currentIndex) {
             case 0:
@@ -76,9 +76,6 @@ BPage {
         noAutoPop: true
         z: 10
         statusBarVisible: false
-        leading.icon: Icons.close
-        color: Qt.rgba(12, 200, 25, 0)
-        foregroundColor: $Colors.colorPrimary
         leading.onClicked: {
             if (identifierLayoutView.currentIndex === 0) {
                 planteDeseaseControl.StackView.view.pop()
@@ -89,21 +86,6 @@ BPage {
                 identifierLayoutView.currentIndex--
             }
         }
-    }
-
-    Component {
-        id: faqPage
-        Faq {}
-    }
-
-    Component {
-        id: askMore
-        AskHelp {}
-    }
-
-    Component {
-        id: insectIndentifier
-        InsectIdentifier {}
     }
 
     ColumnLayout {
@@ -205,24 +187,26 @@ BPage {
                                 Column {
                                     Layout.fillWidth: true
                                     Label {
-                                        text: qsTr("Vérifiez votre plante")
+                                        width: parent.width - 7
+                                        wrapMode: Label.Wrap
+                                        text: qsTr("Check your plant health status")
                                         color: $Colors.colorPrimary
                                         font {
-                                            pixelSize: 16
+                                            pixelSize: 15
                                             weight: Font.DemiBold
                                         }
                                     }
                                     Label {
                                         width: parent.width
                                         wrapMode: Text.Wrap
-                                        text: qsTr("Prenez des photos des parties malades de votre plante. Diagnostiquez et obtenez des")
+                                        text: qsTr("Take photos of the diseased parts of your plant, and get a diagnosis.")
                                         font {
-                                            pixelSize: 16
+                                            pixelSize: 14
                                         }
                                     }
 
                                     NiceButton {
-                                        text: qsTr("Lancer le diagnostic")
+                                        text: qsTr("Start diagnosis")
                                         width: parent.width
                                         height: 50
                                         anchors.topMargin: 10
@@ -260,7 +244,7 @@ BPage {
                                             anchors.horizontalCenter: parent.horizontalCenter
                                         }
                                         Label {
-                                            text: qsTr("Identifier un insecte")
+                                            text: qsTr("Identify an insect")
                                             color: $Colors.white
                                             width: parent.width
                                             font.pixelSize: 16
@@ -271,7 +255,7 @@ BPage {
                                     }
                                     MouseArea {
                                         anchors.fill: parent
-                                        onClicked: identifierLayoutView.currentIndex++
+                                        onClicked: page_view.push(navigator.insectIdentifier)
                                     }
                                 }
                                 Rectangle {
@@ -294,7 +278,7 @@ BPage {
                                             anchors.horizontalCenter: parent.horizontalCenter
                                         }
                                         Label {
-                                            text: qsTr("Encyclopedie des maladies")
+                                            text: qsTr("Encyclopedia of diseases")
                                             color: $Colors.colorPrimary
                                             width: parent.width
                                             font.pixelSize: 14
@@ -337,7 +321,7 @@ BPage {
                                             Column {
                                                 Layout.fillWidth: true
                                                 Label {
-                                                    text: qsTr("Demandez aux experts en plantes")
+                                                    text: qsTr("Ask our plant experts")
                                                     color: $Colors.colorPrimary
                                                     width: parent.width - 20
                                                     wrapMode: Text.Wrap
@@ -349,7 +333,7 @@ BPage {
                                                 Label {
                                                     width: parent.width - 20
                                                     wrapMode: Text.Wrap
-                                                    text: qsTr("Prenez des photos des parties malades de votre plante. Diagnostiquez et obtenez des")
+                                                    text: qsTr("Take photos of the diseased parts of your plant, and get a diagnosis.")
                                                     font {
                                                         pixelSize: 16
                                                     }
@@ -364,7 +348,7 @@ BPage {
                                             radius: height/2
                                             Text {
                                                 anchors.centerIn: parent
-                                                text: qsTr("Demander aux experts")
+                                                text: qsTr("Ask our plant experts")
                                                 color: $Colors.white
                                                 font {
                                                     pixelSize: 16
@@ -373,7 +357,7 @@ BPage {
                                             }
                                             MouseArea {
                                                 anchors.fill: parent
-                                                onClicked: page_view.push(faqPage)
+                                                onClicked: page_view.push(askMore)
                                             }
                                         }
                                     }
@@ -445,8 +429,8 @@ BPage {
 
                             Rectangle {
                                 Layout.preferredWidth: 30
-                                Layout.preferredHeight: Layout.preferredWidth
-                                radius: Layout.preferredHeight / 2
+                                Layout.preferredHeight: 30
+                                radius: height/2
                                 color: $Colors.white
 
 
@@ -477,7 +461,7 @@ BPage {
                                     horizontalAlignment: Text.AlignHCenter
                                 }
                                 Label {
-                                    text: qsTr("Diagnostiquez la santé de vos plantes")
+                                    text: qsTr("Diagnose the health of your plants")
                                     opacity: .5
                                     color: $Colors.white
                                     font {
@@ -492,8 +476,8 @@ BPage {
 
                             Rectangle {
                                 Layout.preferredWidth: 30
-                                Layout.preferredHeight: Layout.preferredWidth
-                                radius: Layout.preferredHeight / 2
+                                Layout.preferredHeight: 30
+                                radius: height / 2
                                 color: $Colors.white
 
 
@@ -589,14 +573,52 @@ BPage {
                     gradient: $Colors.gradientPrimary
                 }
 
-                IconSvg {
+                Image {
                     z: 3
                     width: 120
                     height: width
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: head.bottom
                     anchors.bottomMargin: -height / 2
-                    source: "qrc:/assets/img/bug-detect-insect.svg"
+                    source: "qrc:/assets/img/plant-with-insect.png"
+
+                    IconSvg {
+                        anchors.centerIn: parent
+                        source: "qrc:/assets/img/overlay-scan.svg"
+                        color: "white"
+                    }
+
+                    ClipRRect {
+                        visible: Qt.platform.os == 'ios'
+                                 || Qt.platform.os == 'android'
+                        width: 50
+                        height: width
+                        radius: height / 2
+
+                        anchors {
+                            horizontalCenter: parent.horizontalCenter
+                            bottom: parent.bottom
+                            bottomMargin: -height/2
+                        }
+
+                        ButtonWireframe {
+                            fullColor: true
+                            primaryColor: $Colors.colorPrimary
+                            anchors.fill: parent
+                            onClicked: {
+                                if (Qt.platform.os === 'ios') {
+                                    imgPicker.openCamera()
+                                } else {
+                                    androidToolsLoader.item.openCamera()
+                                }
+                            }
+                            IconSvg {
+                                anchors.centerIn: parent
+                                source: Icons.camera
+                                color: "white"
+                            }
+                        }
+                    }
                 }
 
                 ColumnLayout {
@@ -693,62 +715,6 @@ BPage {
                                     title: ""
                                     subtitle: qsTr("Be sure to take a clear, bright photo that includes only the sick part of the plant you want to identify")
                                     onClicked: tabView.chooseFile
-                                }
-                                Column {
-                                    width: 70
-                                    anchors {
-                                        bottom: parent.bottom
-                                        bottomMargin: 10
-
-                                        right: parent.right
-                                        rightMargin: 10
-                                    }
-                                    spacing: 7
-
-                                    ClipRRect {
-                                        visible: image.source.toString() !== ""
-                                        width: 60
-                                        height: width
-                                        radius: height / 2
-
-                                        ButtonWireframe {
-                                            fullColor: true
-                                            primaryColor: $Colors.colorPrimary
-                                            anchors.fill: parent
-                                            onClicked: tabView.chooseFile()
-                                            IconSvg {
-                                                anchors.centerIn: parent
-                                                source: Icons.image
-                                                color: "white"
-                                            }
-                                        }
-                                    }
-
-                                    ClipRRect {
-                                        visible: Qt.platform.os == 'ios'
-                                                 || Qt.platform.os == 'android'
-                                        width: 60
-                                        height: width
-                                        radius: height / 2
-
-                                        ButtonWireframe {
-                                            fullColor: true
-                                            primaryColor: $Colors.colorPrimary
-                                            anchors.fill: parent
-                                            onClicked: {
-                                                if (Qt.platform.os === 'ios') {
-                                                    imgPicker.openCamera()
-                                                } else {
-                                                    androidToolsLoader.item.openCamera()
-                                                }
-                                            }
-                                            IconSvg {
-                                                anchors.centerIn: parent
-                                                source: Icons.camera
-                                                color: "white"
-                                            }
-                                        }
-                                    }
                                 }
                             }
 
@@ -911,18 +877,14 @@ BPage {
                                                  "https://plant.id/api/v2/health_assessment",
                                                  data).then(function (r) {
                                                      let datas = JSON.parse(r)
-                                                     //                                                console.log(r)
                                                      planteDeseaseControl.analyseResults = datas
                                                      imgAnalysisSurface.loading = false
-                                                     identifierLayoutView.currentIndex = 2
-                                                     console.log(datas.health_assessment.diseases[0]['similar_images'])
-                                                     if (datas.is_plant
-                                                             && planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability < 0.7) {
-                                                         identifedPlantListView.model
-                                                                 = datas.health_assessment.diseases
-                                                     } else {
-                                                         identifedPlantListView.model = []
-                                                     }
+                                                     page_view.push(navigator.diseaseIdentifierResultsPage, {
+                                                        "resultsList": datas.health_assessment.diseases,
+                                                        "scanedImage": image.source.toString(),
+                                                        "isPlant": datas.is_plant,
+                                                        "healthyProbability": planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability
+                                                        })
                                                  }).catch(function (e) {
                                                      imgAnalysisSurface.loading = false
                                                      console.log(JSON.stringify(
@@ -949,102 +911,8 @@ BPage {
                     Image2Base64 {
                         id: imgTool
                     }
-
-                    //                    Item {
-                    //                        Layout.fillHeight: true
-                    //                        Layout.fillWidth: true
-                    //                    }
                 }
-            }
-            Item {
-                ListView {
-                    id: identifedPlantListView
-                    anchors.fill: parent
-                    model: 0
-                    spacing: 5
-                    clip: true
-                    header: Column {
-                        width: identifedPlantListView.width
-                        padding: 10
-                        spacing: 3
-                        Label {
-                            font.pixelSize: 24
-                            width: 300
-                            wrapMode: Label.Wrap
-                            horizontalAlignment: Label.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            verticalAlignment: Qt.AlignVCenter
-                            visible: planteDeseaseControl.analyseResults?.is_plant
-                                     ?? false
-                            text: qsTr(planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.7 ? "<font color='green'> Your plant seems healthy</font>" : (planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.4) ? "Healthy" : "<font color='red'>Sick plant</font>")
-                            //                            text: "Plante en bonne sante ? <b><font color='%1'>%2</font></b>".arg(
-                            //                                      planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "green" : "red").arg(
-                            //                                      planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "Oui" : "Non")
-                        }
-                        Label {
-                            font.pixelSize: 16
-                            font.weight: Font.Light
-                            width: 300
-                            wrapMode: Label.Wrap
-                            horizontalAlignment: Label.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            verticalAlignment: Qt.AlignVCenter
-                            visible: {
-                                if (planteDeseaseControl.analyseResults?.is_plant !== undefined) {
-                                    return planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability < 0.4
-                                }
-                                return false
-                            }
 
-                            text: qsTr("Detected diseases")
-                        }
-                        Label {
-                            font.pixelSize: 28
-                            width: 300
-                            wrapMode: Label.Wrap
-                            horizontalAlignment: Label.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            verticalAlignment: Qt.AlignVCenter
-                            visible: {
-                                if (planteDeseaseControl
-                                        ?? undefined !== undefined)
-                                    return !planteDeseaseControl.analyseResults?.is_plant
-                                else
-                                    return false
-                            }
-
-                            text: qsTr("No plant detected")
-                        }
-                    }
-
-                    delegate: ItemDelegate {
-                        text: modelData["name"]
-                        height: 60
-                        width: identifedPlantListView.width
-                        Rectangle {
-                            anchors.right: parent.right
-                            anchors.rightMargin: 10
-                            anchors.verticalCenter: parent.verticalCenter
-                            color: "teal"
-                            radius: width / 2
-                            width: 50
-                            height: width
-                            Label {
-                                anchors.centerIn: parent
-                                text: "%1%".arg(
-                                          (modelData["probability"] * 100).toFixed(
-                                              0))
-                                color: "white"
-                                font.weight: Font.Bold
-                            }
-                        }
-                        onClicked: {
-                            page_view.push(resultDeseaseDetailPage, {
-                                               "desease_data": modelData
-                                           })
-                        }
-                    }
-                }
             }
         }
     }

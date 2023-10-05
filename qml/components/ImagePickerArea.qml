@@ -43,7 +43,7 @@ ClipRRect {
             source: "qrc:/assets/icons_material/camera.svg"
             anchors.centerIn: parent
             anchors.margins: 7
-            color: Theme.colorPrimary
+            color: $Colors.colorPrimary
         }
 
         Image {

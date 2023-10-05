@@ -125,7 +125,7 @@ BPage {
                             horizontalAlignment: Text.AlignHCenter
                         }
                         Label {
-                            text: qsTr("Gérez les plantes de manière efficace")
+                            text: qsTr("Manage your plants efficiently")
                             opacity: .5
                             color: $Colors.white
                             font {
@@ -215,7 +215,7 @@ BPage {
                 RowLayout {
                     height: 120
 //                    anchors.horizontalCenter: parent.horizontalCenter
-                    spacing: 10
+                    spacing: 20
                     width: parent.width
                     Item {
                         Layout.fillWidth: true
@@ -228,13 +228,21 @@ BPage {
                             required property var model
                             property var modelData: plantOptionModel.get(index)
 
-                                width: index === 1 ? 120 : 90
-                                height: width + 20
+                                Layout.preferredWidth: index === 1 ? 110 : 70
+                                Layout.preferredHeight: 110
                                 title: modelData.name
                                 iconSource: modelData.icon
-                                onClicked: {
+                                iconSize: index === 1 ? 100 : 60
+                                icon {
+                                    color: index === 1 ? $Colors.colorPrimary : "white"
+                                }
+                                labelItem.font.pixelSize: index === 1 ? 10 : 9
 
-                                    console.log("CLick")
+                                background.color: index === 1 ? "#E3F9F2" : $Colors.colorPrimary
+                                background.height: index === 1 ? background.width : width + 20
+
+                                Layout.topMargin: index === 1 ? 0 : (110 - height) / 2
+                                onClicked: {
                                     if (modelData.action === "posometre") {
                                         page_view.push(
                                                     navigator.posometrePage)
@@ -259,7 +267,7 @@ BPage {
                 topPadding: 20
                 spacing: 7
                 Label {
-                    text: qsTr("Mes favoris")
+                    text: qsTr("My favourites")
                     color: $Colors.colorPrimary
                     font {
                         pixelSize: 16
@@ -321,7 +329,7 @@ BPage {
                                 moreDetailsList: [{
                                         "iconSource": plant.toxicity
                                                       === null ? "" : Components.Icons.water,
-                                        "text": plant.toxicity === null ? "" : plant.toxicity === true ? "Toxique" : "Non toxique"
+                                        "text": plant.toxicity === null ? "" : plant.toxicity === true ? qsTr("Toxic") : qsTr("Non toxic")
                                     }, {
                                         "iconSource": Components.Icons.food,
                                         "text": plant.commestible ? "Commestible" : "Non commestible"

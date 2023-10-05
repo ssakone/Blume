@@ -7430,6 +7430,14 @@
         <file>icons_custom/co2.svg</file>
         <file>img/bg-profile.png</file>
         <file>img/bg-profile.svg</file>
+        <file>img/flower-pot.png</file>
+        <file>img/OrangeBloss_wb.jpg</file>
+        <file>img/plant-sick.png</file>
+        <file>img/overlay-scan.svg</file>
+        <file>img/plant-sick.jpg</file>
+        <file>img/garden.png</file>
+        <file>icons_custom/three-dots-inline.svg</file>
+        <file>icons_custom/blume-circle-green.svg</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

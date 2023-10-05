@@ -1,3 +1,4 @@
+
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -161,8 +162,8 @@ BPage {
 
             Rectangle {
                 Layout.preferredWidth: 30
-                Layout.preferredHeight: Layout.preferredWidth
-                radius: Layout.preferredHeight / 2
+                Layout.preferredHeight: width
+                radius: width / 2
                 color: $Colors.white
 
 
@@ -205,8 +206,8 @@ BPage {
             }
             Rectangle {
                 Layout.preferredWidth: 30
-                Layout.preferredHeight: Layout.preferredWidth
-                radius: Layout.preferredHeight / 2
+                Layout.preferredHeight: width
+                radius: width / 2
                 color: $Colors.white
 
 
@@ -443,7 +444,7 @@ BPage {
                                     Layout.alignment: Qt.AlignHCenter
                                 }
                                 Label {
-                                    text: qsTr("Plantes")
+                                    text: qsTr("Plants")
                                     font.pixelSize: 14
                                     font.weight: Font.DemiBold
                                     color: $Colors.white
@@ -502,7 +503,7 @@ BPage {
                                         Layout.fillWidth: true
                                         Layout.alignment: Qt.AlignBottom
                                         color: $Colors.white
-                                        text: qsTr("Comment créer une salle ?")
+                                        text: qsTr("How to create a room ?")
                                         wrapMode: Text.Wrap
                                         font {
                                             weight: Font.Bold
@@ -726,7 +727,7 @@ BPage {
 
                                     Label {
                                         Layout.fillWidth: true
-                                        text: qsTr("Cultiver son puce vert et suivre son rythme").slice(0, 60)
+                                        text: qsTr("Cultivate your plant at your own pace").slice(0, 60)
                                         wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                                         font {
                                             pixelSize: 16
@@ -739,7 +740,7 @@ BPage {
                                     }
 
                                     Label {
-                                        text: qsTr("Publié le 13 Aout")
+                                        text: qsTr("Published August 13")
                                         font {
                                             pixelSize: 12
                                         }
@@ -824,7 +825,7 @@ BPage {
                     }
                     spacing: 10
                     Label {
-                        text: qsTr("Liste des tâches")
+                        text: qsTr("Tasks list")
                         color: $Colors.white
                         anchors.verticalCenter: parent.verticalCenter
                     }
@@ -862,12 +863,10 @@ BPage {
                     Column {
                         anchors.verticalCenter: parent.verticalCenter
                         Label {
-                            text: qsTr("Ajouter une nouvelle plante")
-                            color: $Colors.white
-                            anchors.right: parent.right
-                        }
-                        Label {
-                            text: qsTr("dans votre jardin")
+                            width: 150
+                            horizontalAlignment: Label.AlignRight
+                            wrapMode: Label.Wrap
+                            text: qsTr("Add new plant in your garden")
                             color: $Colors.white
                             anchors.right: parent.right
                         }
@@ -905,7 +904,7 @@ BPage {
                     }
                     spacing: 10
                     Label {
-                        text: qsTr("Ajouter une salle")
+                        text: qsTr("Add a room")
                         color: $Colors.white
                         anchors.verticalCenter: parent.verticalCenter
                     }

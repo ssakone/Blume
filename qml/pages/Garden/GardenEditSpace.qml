@@ -18,11 +18,7 @@ BPage {
 
     header: AppBar {
         id: header
-        title: shouldCreate ? qsTr("Créer une nouvelle salle") : qsTr("Modifier la salle")
-        statusBarVisible: false
-        leading.icon: Icons.close
-        color: Qt.rgba(12, 200, 25, 0)
-        foregroundColor: $Colors.colorPrimary
+        title: shouldCreate ? qsTr("Create new room") : qsTr("Update room")
 
         ButtonWireframeIcon {
             visible: spaceID
@@ -84,15 +80,15 @@ BPage {
                             iconName: "qrc:/assets/icons_custom/salon.svg"
                         },
                         {
-                            title: qsTr("Jardin"),
+                            title: qsTr("Garden"),
                             iconName: "qrc:/assets/icons_custom/garden.svg"
                         },
                         {
-                            title: qsTr("Chambre"),
+                            title: qsTr("Living room"),
                             iconName: "qrc:/assets/icons_custom/bed.svg"
                         },
                         {
-                            title: qsTr("Cuisine"),
+                            title: qsTr("Kitchen"),
                             iconName: Icons.scissorsCutting
                         }
                     ]
@@ -161,7 +157,7 @@ BPage {
                 }
 
                 Label {
-                    text: qsTr("Information sur la salle")
+                    text: qsTr("Room information")
                     opacity: .5
                 }
             }
@@ -178,7 +174,7 @@ BPage {
                     width: parent.width - 20
                     height: 50
                     font.pixelSize: 16
-                    placeholderText: qsTr("Entrez le nom de votre salle ici !")
+                    placeholderText: qsTr("Enter your room name here !")
                     verticalAlignment: Text.AlignVCenter
                     padding: 5
                     background: Rectangle {
@@ -208,7 +204,7 @@ BPage {
                         Text {
                             visible: descriptionArea.text === ""
                             opacity: .5
-                            text: qsTr("Description de la salle")
+                            text: qsTr("Room description")
                             font.pixelSize: 16
                             anchors {
                                 top: parent.top
@@ -275,7 +271,7 @@ BPage {
     }
 
     NiceButton {
-        text: shouldCreate ? qsTr("Continuer") : qsTr("Update")
+        text: shouldCreate ? qsTr("Continue") : qsTr("Update")
         height: 60
         radius: 30
         anchors {

@@ -80,7 +80,7 @@ android {
     defaultConfig {
         resConfig "en"
         minSdkVersion 28 //qtMinSdkVersion
-        targetSdkVersion 31 //qtTargetSdkVersion
+        targetSdkVersion 33 //qtTargetSdkVersion
         ndk.abiFilters = qtTargetAbiList.split(",")
     }
 }
