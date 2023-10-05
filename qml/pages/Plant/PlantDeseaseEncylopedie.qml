@@ -274,12 +274,37 @@ BPage {
                     onClicked: {
                         diseaseSearchBox.focus = false
 
-                        page_view.push(navigator.deseaseDetailsPage, {
-                                           "desease_data": {
-                                               "id": modelData.id
-                                           },
-                                           "isBlumeDisease": true
-                                       })
+//                        page_view.push(navigator.deseaseDetailsPage, {
+//                                           "desease_data": {
+//                                               "id": modelData.id
+//                                           },
+//                                           "isBlumeDisease": true
+//                                       })
+                        let mainURL = ""
+                        let fileID = modelData.images?.get(
+                                0)?.directus_files_id
+                            ?? modelData.images[0]?.directus_files_id
+                        if (fileID) {
+                            mainURL = "https://blume.mahoudev.com/assets/" + fileID
+                        }
+
+                        const otherURLs = []
+                        for(let i = 0; i < modelData.images.count ; i++) {
+                            console.log("\n\n Wanna otherURLs ", i)
+                            const item = modelData.images.get(i)
+                            console.log("-----> ", item?.directus_files_id)
+                            otherURLs.push("https://blume.mahoudev.com/assets/" + item?.directus_files_id)
+                        }
+
+                        const payload = {
+                            "diseaseName":  modelData.nom_scientifique,
+                            "common_names": modelData["disease_details"]?.common_names,
+                            "mainURL": mainURL,
+                            "similarImages": otherURLs
+                        }
+                        console.log("\n PAYLOAD ",JSON.stringify(payload))
+                        console.log("\n\n  modelData ", modelData.images)
+                        page_view.push(navigator.deseaseDetailsPage, payload)
                     }
                 }
             }

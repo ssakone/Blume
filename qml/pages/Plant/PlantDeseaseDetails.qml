@@ -118,8 +118,16 @@ BPage {
                 clip: true
                 color: "#f0f0f0"
 
+                BusyIndicator {
+                    anchors.centerIn: parent
+                    width: 40
+                    height: width
+                    running: true
+                }
+
                 Image {
                     source: mainURL
+
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
@@ -220,11 +228,11 @@ BPage {
                                                             weight: Font.DemiBold
                                                             pixelSize: 16
                                                         }
+                                                    }
 
-                                                        MouseArea {
-                                                            anchors.fill: parent
-                                                            onClicked: detailsBar.currentIndex = index
-                                                        }
+                                                    MouseArea {
+                                                        anchors.fill: parent
+                                                        onClicked: detailsBar.currentIndex = index
                                                     }
 
                                                 }
@@ -308,6 +316,41 @@ BPage {
 
                         }
 
+                    Rectangle {
+                        gradient: $Colors.gradientPrimary
+                        width: parent.width
+                        height: 40
+                        radius: 10
+                        Row {
+                            anchors.centerIn: parent
+                            spacing: 10
+                            IconSvg {
+                                source: Icons.alertCircleOutline
+                                color: $Colors.white
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                            Text {
+                                text: qsTr("Blume AI")
+                                color: $Colors.white
+                                font {
+                                    pixelSize: 16
+                                    weight: Font.DemiBold
+                                }
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                        }
+                    }
+
+                    Text {
+                        text: qsTr("Pour plus d'informations")
+                        color: $Colors.gray600
+                        font {
+                            pixelSize: 12
+                            weight: Font.Light
+                        }
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+
                     Label {
                         text: "Traitements"
                         font.pixelSize: 24
@@ -335,7 +378,6 @@ BPage {
                                 width: parent.width
                                 radius: 10
                                 color: "#f0f0f0f0"
-//                                anchors.horizontalCenter: parent.horizontalCenter
 
                                 BusyIndicator {
                                     height: 30
@@ -381,6 +423,98 @@ BPage {
                             }
                         }
                     }
+
+                    Rectangle {
+                        color: $Colors.colorBgPrimary
+                        radius: 15
+                        width: parent.width
+                        height: galeryColumn.height
+
+                        Column {
+                            id: galeryColumn
+                            width: parent.width
+                            spacing: 5
+
+                            Row {
+                                padding: 10
+                                spacing: 10
+
+                                IconSvg {
+                                    source: "qrc:/assets/icons_material/camera.svg"
+                                    width: 30
+                                    height: 30
+                                    color: $Colors.colorPrimary
+                                    anchors.verticalCenter: parent.verticalCenter
+                                }
+
+                                Label {
+                                    text: qsTr("Photo galery")
+                                    color: $Colors.colorPrimary
+                                    font.pixelSize: 24
+                                    anchors.verticalCenter: parent.verticalCenter
+                                }
+                            }
+
+                            Item {
+                                width: parent.width
+                                height: width * (9/16)
+
+                                SwipeView {
+                                    anchors.fill: parent
+                                    clip: true
+
+                                    Repeater {
+                                        model: similarImages
+                                        delegate: Item {
+                                            BusyIndicator {
+                                                width: 40
+                                                height: width
+                                                running: true
+                                                anchors.centerIn: parent
+                                            }
+
+                                            Image {
+                                                source: {
+                                                    return modelData
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                RowLayout {
+                                    height: 30
+                                    width: parent.width
+                                    anchors {
+                                        bottom: parent.bottom
+                                        bottomMargin: 10
+                                    }
+
+                                    Item {
+                                        Layout.fillWidth: true
+                                    }
+
+                                    Repeater {
+                                        model: similarImages.slice(0, 5)
+                                        delegate: Rectangle {
+                                            Layout.preferredHeight: 10
+                                            Layout.preferredWidth: 10
+                                            radius: 5
+                                            color: $Colors.colorSecondary
+                                        }
+                                    }
+
+                                    Item {
+                                        Layout.fillWidth: true
+                                    }
+                                }
+                            }
+
+
+                        }
+
+                    }
+
                 }
 
 

@@ -88,21 +88,6 @@ BPage {
         }
     }
 
-    Component {
-        id: faqPage
-        Faq {}
-    }
-
-    Component {
-        id: askMore
-        AskHelp {}
-    }
-
-    Component {
-        id: insectIndentifier
-        InsectIdentifier {}
-    }
-
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 0
@@ -892,10 +877,8 @@ BPage {
                                                  "https://plant.id/api/v2/health_assessment",
                                                  data).then(function (r) {
                                                      let datas = JSON.parse(r)
-                                                     //                                                console.log(r)
                                                      planteDeseaseControl.analyseResults = datas
                                                      imgAnalysisSurface.loading = false
-//                                                     identifierLayoutView.currentIndex = 2
                                                      page_view.push(navigator.diseaseIdentifierResultsPage, {
                                                         "resultsList": datas.health_assessment.diseases,
                                                         "scanedImage": image.source.toString(),
@@ -928,103 +911,8 @@ BPage {
                     Image2Base64 {
                         id: imgTool
                     }
-
-                    //                    Item {
-                    //                        Layout.fillHeight: true
-                    //                        Layout.fillWidth: true
-                    //                    }
                 }
 
-            }
-            Item {
-                ListView {
-                    id: identifedPlantListView
-                    anchors.fill: parent
-                    model: 0
-                    spacing: 5
-                    clip: true
-                    header: Column {
-                        width: identifedPlantListView.width
-                        padding: 10
-                        spacing: 3
-                        Label {
-                            font.pixelSize: 24
-                            width: 300
-                            wrapMode: Label.Wrap
-                            horizontalAlignment: Label.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            verticalAlignment: Qt.AlignVCenter
-                            visible: planteDeseaseControl.analyseResults?.is_plant
-                                     ?? false
-                            text: qsTr(planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.7 ? "<font color='green'> Your plant seems healthy</font>" : (planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.4) ? "Healthy" : "<font color='red'>Sick plant</font>")
-                            //                            text: "Plante en bonne sante ? <b><font color='%1'>%2</font></b>".arg(
-                            //                                      planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "green" : "red").arg(
-                            //                                      planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability > 0.6 ? "Oui" : "Non")
-                        }
-                        Label {
-                            font.pixelSize: 16
-                            font.weight: Font.Light
-                            width: 300
-                            wrapMode: Label.Wrap
-                            horizontalAlignment: Label.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            verticalAlignment: Qt.AlignVCenter
-                            visible: {
-                                if (planteDeseaseControl.analyseResults?.is_plant !== undefined) {
-                                    return planteDeseaseControl.analyseResults?.health_assessment.is_healthy_probability < 0.4
-                                }
-                                return false
-                            }
-
-                            text: qsTr("Detected diseases")
-                        }
-                        Label {
-                            font.pixelSize: 28
-                            width: 300
-                            wrapMode: Label.Wrap
-                            horizontalAlignment: Label.AlignHCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            verticalAlignment: Qt.AlignVCenter
-                            visible: {
-                                if (planteDeseaseControl
-                                        ?? undefined !== undefined)
-                                    return !planteDeseaseControl.analyseResults?.is_plant
-                                else
-                                    return false
-                            }
-
-                            text: qsTr("No plant detected")
-                        }
-                    }
-
-                    delegate: ItemDelegate {
-                        text: modelData["name"]
-                        height: 60
-                        width: identifedPlantListView.width
-                        Rectangle {
-                            anchors.right: parent.right
-                            anchors.rightMargin: 10
-                            anchors.verticalCenter: parent.verticalCenter
-                            color: "teal"
-                            radius: width / 2
-                            width: 50
-                            height: width
-                            Label {
-                                anchors.centerIn: parent
-                                text: "%1%".arg(
-                                          (modelData["probability"] * 100).toFixed(
-                                              0))
-                                color: "white"
-                                font.weight: Font.Bold
-                            }
-                        }
-                        onClicked: {
-                            page_view.push(resultDeseaseDetailPage, {
-                                               "desease_data": modelData
-                                           })
-                        }
-                    }
-                }
             }
         }
     }
