@@ -357,7 +357,7 @@ BPage {
                                             }
                                             MouseArea {
                                                 anchors.fill: parent
-                                                onClicked: page_view.push(askMore)
+                                                onClicked: page_view.push(navigator.askToExperts)
                                             }
                                         }
                                     }
