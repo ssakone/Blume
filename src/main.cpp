@@ -222,6 +222,7 @@ int main(int argc, char *argv[])
     qaterial::registerQmlTypes();
     qaterial::loadQmlResources();
 
+    engine_context->setContextProperty("notificationManagers", nm);
     engine_context->setContextProperty("deviceManager", dm);
     engine_context->setContextProperty("settingsManager", sm);
     engine_context->setContextProperty("systrayManager", st);
