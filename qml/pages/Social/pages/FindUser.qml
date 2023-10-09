@@ -194,12 +194,13 @@ Page {
                                     busy = true
                                     http.searchProfile(field.text).then(
                                                 function (res) {
+                                                    console.log(res)
                                                     searchContact.model = JSON.parse(
                                                                 res)
                                                     busy = false
                                                 }).catch(function (err) {
                                                     console.log(err)
-                                                }).finally(function () {
+                                                    console.log(JSON.stringify(err))
                                                     busy = false
                                                 })
                                 }
