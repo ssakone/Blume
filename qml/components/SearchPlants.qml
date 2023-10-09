@@ -313,8 +313,7 @@ Item {
                             anchors.horizontalCenter: parent.horizontalCenter
                         }
                         Label {
-                            text: modelData.noms_communs?.get(0)?.name
-                                  ?? modelData.noms_communs[0]?.name ?? ""
+                            text: modelData.noms_communs_str?.split(",")[0] ?? ""
                             color: $Colors.black
                             fontSizeMode: Text.Fit
                             font.pixelSize: 13

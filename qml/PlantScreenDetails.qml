@@ -534,26 +534,33 @@ Popup {
 
                                                         Component.onCompleted: {
                                                             Http.fetch({
-                                                               "url": "http://34.41.96.172/question_answering?botanical_plant_name=" + plant["name_scientific"],
+                                                               "url": "http://34.41.96.172/get_plant_info?botanical_plant_name=" + plant["name_scientific"],
                                                                 "method": "GET"
                                                                }).then(function(res) {
                                                                    barDetailsColumn.isGptDetailsRunning = false
-                                                                   const parsed = JSON.parse(res)
+                                                                   try {
+                                                                       const parsed = JSON.parse(res)
 
-                                                                   barDetailsColumn.gptDetails = {
-                                                                       "nom_botanique": parsed['nom botanique'],
-                                                                       "noms_communs": parsed["nom commun"],
-                                                                       "description": parsed["Description"],
-                                                                       "usage": parsed["Usage"],
-                                                                       "is_commestible": parsed["Commestible"],
-                                                                       "is_toxique": parsed["Toxicité"],
-                                                                       "taux_abs_co2": parsed["co2_absorption"],
-                                                                       "description_taux_abs_co2": parsed["co2_absorption_desc"],
-                                                                       "blague": parsed["Blague"]
+                                                                       barDetailsColumn.gptDetails = {
+                                                                           "nom_botanique": parsed['botanical_name'],
+                                                                           "noms_communs": parsed["common_name"],
+                                                                           "description": parsed["description"],
+                                                                           "usage": parsed["usage"],
+                                                                           "is_commestible": parsed["eatable"],
+                                                                           "is_toxique": parsed["toxicity"],
+                                                                           "taux_abs_co2": parsed["co2_absorption"],
+                                                                           "description_taux_abs_co2": parsed["co2_absorption_desc"],
+                                                                           "blague": parsed["joke"]
+                                                                       }
+
+                                                                   } catch (e) {
+                                                                       console.log(e)
+                                                                       console.log(JSON.stringify(e))
                                                                    }
+
                                                                }).catch(function(err) {
+                                                                   barDetailsColumn.isGptDetailsRunning = false
                                                                    console.log("FETCH ERROR", err?.status, typeof err?.status)
-                                                                   control.isGptDetailsRunning = false
                                                                })
 
                                                         }
