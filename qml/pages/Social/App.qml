@@ -4,6 +4,7 @@ import QtQuick.Layouts
 
 import Qaterial as Qaterial
 
+import Qt.labs.settings
 import QtCore
 import QtWebSockets
 import QtMultimedia
