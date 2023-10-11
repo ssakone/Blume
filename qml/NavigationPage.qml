@@ -25,6 +25,10 @@ Item {
     property var posometrePage: Component {
         Posometre {}
     }
+    property var askToExperts: Component {
+        AskHelp {}
+    }
+
     property var deseasePage: Component {
         PlantDesease {}
     }

@@ -108,12 +108,12 @@ void NotificationManager::updateNotificationAndroid()
     jint javaChannel = m_channel;
 
     QJniObject::callStaticMethod<void>(
-                    "com/emeric/watchflower/WatchFlowerAndroidNotifier",
+                    "com/mahoutech/blume/WatchFlowerAndroidNotifier",
                     "notify",
-                    "(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;I)V",
+                    "(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V",
                     QNativeInterface::QAndroidApplication::context(),
                     javaTitle.object<jstring>(),
-                    javaMessage.object<jstring>(),
-                    javaChannel);
+                    javaMessage.object<jstring>()
+                    );
 #endif
 }
