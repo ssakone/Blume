@@ -18,6 +18,7 @@ BPage {
     property var profile: ({})
     property string pubKey
     property bool isContact: false
+    property bool isMyProfile: false
 
     Component.onCompleted: {
         checkFollow()
@@ -80,15 +81,6 @@ BPage {
             Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Text {
-                    leftPadding: 10
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.weight: Font.Bold
-                    font.pixelSize: 20
-                    text: qsTr("Profil of %1").arg(page.profile.name
-                                                   || page.profile.pubkey.slice(
-                                                       0, 18) + "...")
-                }
             }
         }
     }
@@ -123,17 +115,27 @@ BPage {
                         topMargin: -height/2
                     }
 
-                    Rectangle {
+                    IconSvg {
                         anchors.fill: parent
-                        anchors.margins: 10
-                        color: $Colors.green300
-                        radius: height/2
-
-                        IconSvg {
-                            anchors.centerIn: parent
-                            source: page.profile.picture || Icons.account
-                        }
+                        source: page.profile.picture || Icons.account
+                        anchors.margins: 20
                     }
+
+//                    Item {
+//                        anchors.fill: parent
+//                        anchors.margins: 10
+
+//                        Rectangle {
+//                            color: $Colors.green300
+//                            radius: height/2
+//                            anchors.fill: parent
+//                        }
+
+//                        IconSvg {
+//                            anchors.fill: parent
+//                            source: page.profile.picture || Icons.account
+//                        }
+//                    }
                 }
 
             }
@@ -258,6 +260,7 @@ BPage {
                         Repeater {
                             id: favorisRepeater
                             Component.onCompleted: {
+                                if(page.profile.pubkey === publicKey) return
                                 const url = `https://blume.mahoudev.com/items/Plantes?offset=${Math.ceil(
                                               Math.random(
                                                   ) * 1000)}&limit=5&fields=*.*`
@@ -306,6 +309,8 @@ BPage {
                 }
 
                 Components.NiceButton {
+                    //visible: page.isMyProfile
+                    visible: page.profile.pubkey === publicKey
                     bgGradient: $Colors.gradientPrimary
                     text: qsTr("Edit my profile")
                     radius: 10

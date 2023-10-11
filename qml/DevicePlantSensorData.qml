@@ -451,7 +451,7 @@ Item {
 
                         Drawer {
                             id: plantBrowserPop
-                            parent: appWindow.contentItem
+                            parent: appContent
                             width: appWindow.width
                             height: appWindow.height
                             padding: 0

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.mahoutech.blume" android:installLocation="auto" android:versionCode="50" android:versionName="0.1">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.mahoutech.blume" android:installLocation="auto" android:versionCode="53" android:versionName="0.1">
 
     <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:smallScreens="true"/>
     <uses-sdk android:minSdkVersion="28" android:targetSdkVersion="31"/>
@@ -31,7 +31,7 @@
     <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
 
     <application android:name="org.qtproject.qt.android.bindings.QtApplication" android:label="Blume" android:hardwareAccelerated="true" android:extractNativeLibs="true" android:allowNativeHeapPointerTagging="false" android:theme="@style/AppTheme" android:roundIcon="@mipmap/ic_launcher_round" android:icon="@drawable/icon">
-        <activity android:exported="true" android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation|mcc|mnc|density" android:name="org.qtproject.qt.android.bindings.QtActivity" android:label="Blume" android:screenOrientation="unspecified" android:launchMode="singleTop" android:windowSoftInputMode="adjustResize" android:theme="@style/splashScreenTheme">
+        <activity android:exported="true" android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation|mcc|mnc|density" android:name="org.qtproject.qt.android.bindings.QtActivity" android:label="Blume" android:screenOrientation="unspecified" android:launchMode="singleTop" android:windowSoftInputMode="adjustPan" android:theme="@style/splashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

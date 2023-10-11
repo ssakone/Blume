@@ -325,7 +325,7 @@ BPage {
                                 width: 300
                                 height: 140
                                 title: plant.name_scientific
-                                subtitle: plant.noms_communs[0]?.name ?? ""
+                                subtitle: modelData.noms_communs_str ? modelData.noms_communs_str?.split(",")[0] : ""
                                 moreDetailsList: [{
                                         "iconSource": plant.toxicity
                                                       === null ? "" : Components.Icons.water,

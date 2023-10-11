@@ -36,10 +36,33 @@ Item {
     function fetchMore() {
         console.log("Gonna fetch_more...")
         isLoading = true
-        let query = `https://blume.mahoudev.com/items/Plantes?fields[]=*.*&limit=${plantSearchBox.displayText
-            !== "" ? 70 : pageLimit}&offset=${currentPage * pageLimit}${plantSearchBox.displayText
-                     === "" ? '' : "&filter[name_scientific][_contains]="
-                              + plantSearchBox.displayText}`
+        const q = plantSearchBox.displayText
+        let query = `https://blume.mahoudev.com/items/Plantes?fields=*.*&limit=${plantSearchBox.displayText
+            !== "" ? 70 : pageLimit}&offset=${currentPage * pageLimit}`
+
+        if(q) {
+            query +=
+                    `&filter={
+                        "_or":[
+                           {
+                              "name_scientific":{
+                                 "_contains": "${q}"
+                              }
+                           }, {
+                              "nom_botanique":{
+                                 "_contains": "${q}"
+                              }
+                           }, {
+                            "noms_communs_str":{
+                               "_contains": "${q}"
+                            }
+                         }
+                        ]
+                     }`
+        }
+
+
+        console.log("\n\n QUeryPP ", query)
 
         Http.fetch({
                        "method": 'GET',
@@ -78,6 +101,10 @@ Item {
 
                                isLoading = false
                            })
+        .catch(function(err) {
+            console.log(err, err?.statusText)
+            console.log(JSON.stringify(err))
+        })
     }
 
     onItemClicked: data => {
@@ -286,8 +313,7 @@ Item {
                             anchors.horizontalCenter: parent.horizontalCenter
                         }
                         Label {
-                            text: modelData.noms_communs?.get(0)?.name
-                                  ?? modelData.noms_communs[0]?.name ?? ""
+                            text: modelData.noms_communs_str?.split(",")[0] ?? ""
                             color: $Colors.black
                             fontSizeMode: Text.Fit
                             font.pixelSize: 13

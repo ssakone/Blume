@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Qaterial as Qaterial
+import QtWebSockets
+import QtMultimedia
 
 import "../components"
 
@@ -32,7 +34,8 @@ Page {
                     Avatar {
                         Layout.preferredHeight: parent.height
                         Layout.preferredWidth: height
-                        source: "qrc:/assets/img/jardinier.png"
+                        source: userInfo?.picture ??  Qaterial.Icons.faceManProfile
+
                         onClicked: {
                             let data = userInfo || {}
                             data["pubkey"] = publicKey
@@ -51,6 +54,11 @@ Page {
                         border {
                             width: 1
                             color: Qaterial.Colors.gray300
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: view.push(findUser)
                         }
 
                         Row {
@@ -77,6 +85,10 @@ Page {
                         Layout.preferredWidth: height
                         source: Qaterial.Icons.messageOutline
                         color: $Colors.colorPrimary
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: view.push(messageList)
+                        }
                     }
                 }
             }
@@ -92,7 +104,7 @@ Page {
                     spacing: 15
                     leftPadding: 15
                     Repeater {
-                        model: 5
+                        model: root.friendLists
 
 
                         Rectangle {
@@ -110,14 +122,15 @@ Page {
                                 radius: parent.radius
                                 Image {
                                     anchors.fill: parent
-                                    source: "qrc:/assets/img/garden.png"
+                                    source: "qrc:/assets/img/plant-with-insect.png"
                                 }
 
                             }
                             Label {
-                                text: "Jean le Duc"
+                                text: modelData["name"]?.slice(0, 15)
                                 padding: 4
                                 leftPadding: 30
+                                rightPadding: 7
                                 color: $Colors.colorPrimary
                                 background: Rectangle {
                                     color: $Colors.colorTertiary
@@ -139,7 +152,9 @@ Page {
                                     width: 20
                                     height: width
                                     avatarSize: height
-                                    source: "qrc:/assets/img/jardinier.png"
+                                    source: JSON.parse(modelData["profile"]
+                                                       || "{}").picture || Qaterial.Icons.faceManProfile
+
                                 }
                             }
                         }
@@ -154,14 +169,40 @@ Page {
                 width: parent.width
                 spacing: 20
                 Repeater {
-                    model: 4
+                    model: eventsProxy
                     Rectangle {
+                        id: rootPostRect
+                        function showProfile() {
+                            let data = root.author[pubkey]
+                            data["pubkey"] = pubkey
+                            view.push(userProfile, {
+                                          "profile": data
+                                      })
+                        }
+
                         width: postListColumn.width
                         height: postColumn.height
                         radius: 20
                         border {
                             width: 2
                             color: $Colors.gray300
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                currentProfile = {
+                                    "name": root.author[pubkey].name,
+                                    "picture": root.author[pubkey].picture,
+                                    "pubkey": pubkey
+                                }
+
+                                view.push(feedDetailsPage, {
+                                              "post": model,
+                                              "comments": comments,
+                                              "likes": likes
+                                          })
+                            }
                         }
 
                         Column {
@@ -176,28 +217,49 @@ Page {
                                     width: parent.width
                                     spacing: 10
                                     Avatar {
+                                        id: _avatar
                                         Layout.preferredHeight: 70
                                         Layout.preferredWidth: height
-                                        source: "qrc:/assets/img/jardinier.png"
-                                        onClicked: {
-                                            let data = userInfo || {}
-                                            data["pubkey"] = publicKey
-                                            view.push(userProfile, {
-                                                          "profile": data
-                                                      })
-                                        }
+                                        source: Qaterial.Icons.powerSocketIt
+                                        onClicked: rootPostRect.showProfile()
                                     }
 
                                     Column {
                                         Layout.fillWidth: true
                                         spacing: 4
                                         Label {
-                                            text: "Marry Clermont"
+                                            id: _nameLabel
                                             color: $Colors.colorPrimary
                                             font.pixelSize: 14
+
+                                            Connections {
+                                                target: root
+                                                function onAuthorAdded(pubc) {
+                                                    Qt.callLater(function (pubk) {
+                                                        if (pubkey === pubk) {
+                                                            _nameLabel.text = root.author[pubkey].name
+                                                                    || ""
+                                                            _avatar.source = root.author[pubkey].picture
+                                                                    || Qaterial.Icons.faceProfile
+                                                        }
+                                                    }, pubc)
+                                                }
+                                            }
+
+                                            Component.onCompleted: {
+                                                $Services.getPubKeyInfo(
+                                                            pubkey, function (info) {
+                                                                if (info !== undefined) {
+                                                                    _nameLabel.text = info.name
+                                                                            || ""
+                                                                    _avatar.source = info.picture
+                                                                            || Qaterial.Icons.faceProfile
+                                                                }
+                                                            })
+                                            }
                                         }
                                         Label {
-                                            text: "10h ago"
+                                            text: root.timeAgoOrDate(created_at)
                                             color: $Colors.gray600
                                             font.pixelSize: 11
                                         }
@@ -207,12 +269,12 @@ Page {
                                         spacing: 7
                                         IconImage {
                                             source: "qrc:/assets/icons_custom/three-dots-inline.svg"
-                                            color: $Colors.gra400
+                                            color: $Colors.gray400
                                             anchors.verticalCenter: parent.verticalCenter
                                         }
                                         IconImage {
                                             source: Qaterial.Icons.heartPlusOutline
-                                            color: $Colors.gra400
+                                            color: $Colors.gray400
                                             anchors.verticalCenter: parent.verticalCenter
                                         }
                                     }
@@ -225,40 +287,98 @@ Page {
                                         color: Qaterial.Colors.gray600
                                         width: parent.width
                                         wrapMode: Label.Wrap
-                                        text: qsTr("Good evening everyone, I hope you're well. I'd like to introduce you to my new garden. We worked on the layout of this space in 3 months and 10 days. I let you admire and leave me your opinions in comments.")
-                                    }
-                                    Qaterial.ClipRRect {
-                                        width: parent.width
-                                        height: width * (9/16)
-                                        Image {
-                                            anchors.fill: parent
-                                            source: "qrc:/assets/img/orchidee.jpg"
-                                        }
-                                    }
-                                    RowLayout {
-                                        width: parent.width
-                                        Item {
-                                            Layout.fillWidth: true
-                                        }
-
-                                        Repeater {
-                                            model: 3
-                                            Rectangle {
-                                                Layout.preferredHeight: 10
-                                                Layout.preferredWidth: height
-                                                radius: height/2
-                                                border {
-                                                    width: 1
-                                                    color: $Colors.colorPrimary
-                                                }
-                                                color: $Colors.gray200
+                                        maximumLineCount: 3
+                                        Component.onCompleted: {
+                                            console.log("\n\n\n GONNA CAPTURE LINKS")
+                                            const data = captureLinks(content)
+                                            console.log("CAPTURED ** ", data)
+                                            console.log(JSON.stringify(data))
+                                            text = data[0]?.slice(0, )
+                                            if (data[2].length > 0) {
+                                                _vid.source = data[2][0]
+                                                _vidArea.visible = true
+                                            } else if (data[1].length > 0) {
+                                                _im.source = data[1][0]
+                                                _imArea.visible = true
                                             }
                                         }
-
-                                        Item {
-                                            Layout.fillWidth: true
+                                    }
+                                    RadiusImage {
+                                        id: _imArea
+                                        width: parent.width
+                                        height: width * (9/16)
+                                        visible: false
+                                        Image {
+                                            id: _im
+                                            width: parent.width
+                                            asynchronous: false
+                                            cache: false
+                                            fillMode: Image.PreserveAspectFit
                                         }
                                     }
+
+                                    RadiusImage {
+                                        id: _vidArea
+                                        visible: false
+                                        width: parent.width
+                                        height: visible ? width * (9/16) : 0
+                                        Rectangle {
+                                            anchors.fill: parent
+                                            color: "black"
+                                        }
+
+                                        MediaPlayer {
+                                            id: _vid
+                                            //source: "https://www.w3schools.com/html/mov_bbb.mp4"
+                                            videoOutput: videoOutput
+                                        }
+
+                                        VideoOutput {
+                                            id: videoOutput
+                                            anchors.fill: parent
+                                        }
+
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onClicked: {
+                                                console.log(_vid.source)
+                                                _vid.play()
+                                            }
+                                        }
+                                    }
+
+//                                    Qaterial.ClipRRect {
+//                                        width: parent.width
+//                                        height: width * (9/16)
+//                                        Image {
+//                                            anchors.fill: parent
+//                                            source: "qrc:/assets/img/orchidee.jpg"
+//                                        }
+//                                    }
+//                                    RowLayout {
+//                                        width: parent.width
+//                                        Item {
+//                                            Layout.fillWidth: true
+//                                        }
+
+//                                        Repeater {
+//                                            model: 3
+//                                            Rectangle {
+//                                                Layout.preferredHeight: 10
+//                                                Layout.preferredWidth: height
+//                                                radius: height/2
+//                                                border {
+//                                                    width: 1
+//                                                    color: $Colors.colorPrimary
+//                                                }
+//                                                color: $Colors.gray200
+//                                            }
+//                                        }
+
+//                                        Item {
+//                                            Layout.fillWidth: true
+//                                        }
+//                                    }
                                 }
 
                                 RowLayout {
@@ -268,26 +388,27 @@ Page {
                                         Layout.fillWidth: true
                                         spacing: 5
                                         IconImage {
-                                            source: Qaterial.Icons.heart
+                                            source: Qaterial.Icons.heartOutline
                                             color: Qaterial.Colors.orange300
                                             width: 30
                                             height: width
                                         }
                                         Label {
                                             color: $Colors.gray600
-                                            text: "8.5k"
+                                            text: "%1 like".arg(likes.count)
                                             anchors.verticalCenter: parent.verticalCenter
                                         }
                                     }
                                     Label {
                                         color: $Colors.gray600
-                                        text: qsTr("1000 comments")
+                                        text: "%1 comments".arg(comments.count)
                                         Layout.fillWidth: true
                                     }
                                     Label {
                                         color: $Colors.gray600
                                         text: qsTr("40 shares")
                                         Layout.fillWidth: true
+                                        horizontalAlignment: Label.AlignRight
                                     }
                                 }
 
@@ -393,6 +514,7 @@ Page {
                 Layout.fillWidth: true
                 leftInset: 0
                 rightInset: 0
+                onClicked: view.push(postEditPage)
                 Qaterial.Icon {
                     anchors.centerIn: parent
                     width: parent.width - 20
@@ -433,6 +555,7 @@ Page {
                 Layout.fillWidth: true
                 leftInset: 0
                 rightInset: 0
+                onClicked: view.push(findUser)
                 Qaterial.Icon {
                     anchors.centerIn: parent
                     width: parent.width - 20
