@@ -43,6 +43,7 @@ set(ios_sources)
 if (IOS)
     set(ios_sources
         src/imagepicker.mm
+        src/imagepicker.h
     )
 endif()
 
@@ -109,7 +110,7 @@ qt_add_executable(Blume
     src/thirdparty/RC4/rc4.cpp src/thirdparty/RC4/rc4.h
     ${android_sources}
     ${ios_sources}
-    src/imagepicker.h
+    
     src/database/sqlplugin.cpp src/database/sqlplugin.h
     src/main.cpp
     src/posometrecamera.cpp src/posometrecamera.h
