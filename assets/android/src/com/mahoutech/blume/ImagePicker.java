@@ -32,7 +32,7 @@ public class ImagePicker extends Activity {
         photoFile = getPhotoFileUri(photoFileName);  
 
 
-        Uri fileProvider = FileProvider.getUriForFile(this, "com.mahoutech.blume.fileprovider", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(this, "org.mahoutech.blume.fileprovider", photoFile);
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);  
         
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);

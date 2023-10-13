@@ -69,7 +69,8 @@ Page {
                                 width: 100
                                 avatarSize: 80
                                 source: JSON.parse(modelData["profile"]
-                                                   || "{}").picture || Qaterial.Icons.faceManProfile
+                                                   || "{}").picture
+                                        || Qaterial.Icons.faceManProfile
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 onClicked: {
                                     const data = JSON.parse(
@@ -252,7 +253,6 @@ Page {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    console.log(_vid.source)
                                     _vid.play()
                                 }
                             }

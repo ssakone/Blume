@@ -149,6 +149,15 @@ Item {
     "REQ",
     "%1",
     {
+    "authors": ["%2"],
+    "kinds":[4]
+    }
+    ]`
+
+    property string discussionQuery2: `[
+    "REQ",
+    "%1",
+    {
     "#p": ["%2"],
     "kinds":[4]
     }
@@ -280,7 +289,6 @@ Item {
             found = false
             for (var i = 0; i < messages.count; i++) {
                 if (messages.get(i).removable) {
-                    console.log(messages.get(i).content, "removed")
                     messages.remove(i)
                     continue
                 }
@@ -308,20 +316,28 @@ Item {
         if (data[0] === "EVENT") {
             let event = data[2]
             let found = false
-
-            if (event.pubkey === publicKey) {
-                return
+            if (event.tags[0][1] !== event.pubkey) {
+                found = true
+            } else {
+                found = false
             }
-            if (true) {
-                discussions.append(event)
-                let combination = publicKey + ":" + event.pubkey
-                let mo = realDiscussions[combination]
+
+            if (found === true) {
+                let combination = publicKey
+                    + (publicKey === event.pubkey ? event.tags[0][1] : event.pubkey)
+                let mo
+                if (realDiscussions[combination] !== undefined)
+                    mo = realDiscussions[combination]
+                else
+                    mo = undefined
+
                 if (mo === undefined) {
                     let moModel = Qt.createQmlObject(
                             "import QtQuick; ListModel{}", root)
                     let info = {
                         "mostRecent": event.created_at,
                         "pubkey": event.pubkey,
+                        "locuter": publicKey === event.pubkey ? event.tags[0][1] : event.pubkey,
                         "model": moModel
                     }
                     mo = info
@@ -329,33 +345,18 @@ Item {
                     let moModel = mo.model
                     if (mo.mostRecent < event.created_at) {
                         mo.mostRecent = event.created_at
+                        mo.locuter = publicKey === event.pubkey ? event.tags[0][1] : event.pubkey
                     }
                     moModel.append(event)
                     mo = {
                         "mostRecent": mo.mostRecent,
                         "pubkey": mo.pubkey,
+                        "locuter": mo.locuter,
                         "model": moModel
                     }
                 }
                 realDiscussions[combination] = mo
             }
-
-            // check if pubkey is in discussion and if its created_at is the most recent
-            for (var i = 0; i < discussions.count; i++) {
-                if (discussions.get(i).pubkey === event.pubkey) {
-                    found = true
-                    if (discussions.get(i).created_at < event.created_at) {
-                        discussions.setProperty(i, event)
-                    }
-                    break
-                }
-            }
-            if (!found) {
-                discussions.append(event)
-            }
-        } else {
-
-            //console.log(JSON.stringify(data))
         }
     }
 
@@ -412,6 +413,7 @@ Item {
         let rid = Math.random().toString(36).substring(7)
         reqHandler[rid] = discussionHandler
         messagesRelay.sendTextMessage(discussionQuery.arg(rid).arg(publicKey))
+        messagesRelay.sendTextMessage(discussionQuery2.arg(rid).arg(publicKey))
     }
 
     function getComments(event) {
@@ -461,7 +463,6 @@ Item {
         subscribe("3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d")
         subscribe("32e1827635450ebb3c5a7d12c1f8e7b2b514439ac10a67eef3d9fd9c5c68e245")
         subscribe("817148c3690155401b494580871fb0564a5faafb9454813ef295f2706bc93359")
-        console.log(publicKey)
         subscribe(publicKey)
     }
 
