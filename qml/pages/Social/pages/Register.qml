@@ -63,51 +63,51 @@ BPage {
                 width: parent.width
                 spacing: 25
 
-                ButtonWireframeIcon {
-                    text: qsTr("Sign in with Google")
-                    source: Icons.google
-                    backgroundBorderWidth: 1
-                    primaryColor: $Colors.colorPrimary
-                    secondaryColor: root.shade
-                    height: 50
-                    width: parent.width
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
+//                ButtonWireframeIcon {
+//                    text: qsTr("Sign in with Google")
+//                    source: Icons.google
+//                    backgroundBorderWidth: 1
+//                    primaryColor: $Colors.colorPrimary
+//                    secondaryColor: root.shade
+//                    height: 50
+//                    width: parent.width
+//                    anchors.horizontalCenter: parent.horizontalCenter
+//                }
 
-                ButtonWireframeIcon {
-                    text: qsTr("Sign in with Apple")
-                    source: Icons.apple
-                    primaryColor: $Colors.colorPrimary
-                    secondaryColor: root.shade
-                    height: 50
-                    width: parent.width
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
+//                ButtonWireframeIcon {
+//                    text: qsTr("Sign in with Apple")
+//                    source: Icons.apple
+//                    primaryColor: $Colors.colorPrimary
+//                    secondaryColor: root.shade
+//                    height: 50
+//                    width: parent.width
+//                    anchors.horizontalCenter: parent.horizontalCenter
+//                }
 
-                RowLayout {
-                    width: parent.width
-                    anchors.topMargin: 25
-                    anchors.bottomMargin: 25
-                    Rectangle {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 1
-                        color: $Colors.gray500
-                        Layout.alignment: Qt.AlignVCenter
-                    }
+//                RowLayout {
+//                    width: parent.width
+//                    anchors.topMargin: 25
+//                    anchors.bottomMargin: 25
+//                    Rectangle {
+//                        Layout.fillWidth: true
+//                        Layout.preferredHeight: 1
+//                        color: $Colors.gray500
+//                        Layout.alignment: Qt.AlignVCenter
+//                    }
 
-                    Label {
-                        text: qsTr("OR")
-                        color: $Colors.gray500
-                        Layout.alignment: Qt.AlignVCenter
-                    }
+//                    Label {
+//                        text: qsTr("OR")
+//                        color: $Colors.gray500
+//                        Layout.alignment: Qt.AlignVCenter
+//                    }
 
-                    Rectangle {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 1
-                        color: $Colors.gray500
-                        Layout.alignment: Qt.AlignVCenter
-                    }
-                }
+//                    Rectangle {
+//                        Layout.fillWidth: true
+//                        Layout.preferredHeight: 1
+//                        color: $Colors.gray500
+//                        Layout.alignment: Qt.AlignVCenter
+//                    }
+//                }
 
                 ColumnLayout {
                     width: parent.width
@@ -217,20 +217,32 @@ BPage {
                         }
                     }
 
-                    Qaterial.Label {
-                        id: errorLabel
-                        visible: false
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: qsTr("Incorrect password")
-                        color: "red"
+                    Column {
+                        width: parent.width
+                        spacing: 5
+
+                        Qaterial.CheckButton {
+                            id: agreementCheck
+                            text: qsTr("J'accepte les conditions d'utilisation")
+                        }
+
+                        Qaterial.Label {
+                            text: "Lire les conditions d'utilisation"
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            font.underline: true
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: Qt.openUrlExternally("https://mahoudev.github.io/blume-politique-confidentialite")
+                            }
+                        }
                     }
+
 
                     Qaterial.ExtendedFabButton {
                         id: connectButton
                         property bool busy: false
                         text: busy ? "" : qsTr("Create my account")
                         width: 230
-                        //enabled: !busy
                         anchors.horizontalCenter: parent.horizontalCenter
                         icon.source: Qaterial.Icons.lock
 
@@ -242,7 +254,7 @@ BPage {
 
                         onClicked: {
                             Qt.callLater(function () {
-                                if (username.text === '' || password.text === '') {
+                                if (username.text === '' || password.text === '' || agreementCheck.checked === false) {
                                     errorLabel.visible = true
                                     return
                                 }
