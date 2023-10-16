@@ -19,7 +19,7 @@ Rectangle {
     property alias titleLabel: _label
     property alias actions: flowActions.children
     property bool noAutoPop: false
-    property bool statusBarVisible: true
+    property bool statusBarVisible: Qt.platform.os === 'ios'
 
     // You display a menu icon that opens drawer or back icon that go back inside current stack
     property bool isHomeScreen: false
