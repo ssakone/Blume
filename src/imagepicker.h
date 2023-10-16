@@ -6,11 +6,14 @@
 #include <QDateTime>
 #define DEBUG if(1) qDebug() << QDateTime::currentDateTime().toString("dd/MM/yyyy hh:mm:ss:zzz") <<  __PRETTY_FUNCTION__
 
+@class ImagePickerDelegate;
+
 class ImagePicker : public QQuickItem
 {
     Q_OBJECT
 public:
     explicit ImagePicker(QQuickItem *parent = 0);
+
     Q_INVOKABLE void openPicker();
     Q_INVOKABLE void openCamera();
     QString imagePath() const
@@ -22,7 +25,7 @@ signals:
     void capturedImage(QString imagePath);
 
 private:
-    void *m_delegate;
+    ImagePickerDelegate *m_delegate;
     QString m_imagePath;
 };
 

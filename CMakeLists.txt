@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.19)
 
 # On n'utilise plus la version 5.0 de WatchFlower
 # On recommence le projet à la version 0.1
-project(Blume VERSION 0.1 LANGUAGES CXX)
+project(Blume VERSION 1.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -11,6 +11,8 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Bluetooth Network Sql Multimedia Xml)
 find_package(Qt6 REQUIRED COMPONENTS Gui Qml Quick QuickControls2 Svg Widgets Charts)
+find_library(UIKIT_LIBRARY UIKit)
+find_library(MOBILE_CORE_SERVICES_LIBRARY MobileCoreServices)
 
 qt_standard_project_setup()
 
@@ -33,6 +35,15 @@ if (ANDROID)
         src/android_tools/QtAndroidTools.cpp
         src/android_tools/QAndroidAppPermissions.h
         src/android_tools/QtAndroidTools.h
+    )
+endif()
+
+set(ios_sources)
+
+if (IOS)
+    set(ios_sources
+        src/imagepicker.mm
+        src/imagepicker.h
     )
 endif()
 
@@ -98,6 +109,8 @@ qt_add_executable(Blume
     src/devices/device_wp6003.cpp src/devices/device_wp6003.h
     src/thirdparty/RC4/rc4.cpp src/thirdparty/RC4/rc4.h
     ${android_sources}
+    ${ios_sources}
+    
     src/database/sqlplugin.cpp src/database/sqlplugin.h
     src/main.cpp
     src/posometrecamera.cpp src/posometrecamera.h
@@ -144,12 +157,49 @@ if(APPLE AND NOT IOS)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.14")
 endif()
 
+macro(qt_ios_set_xcode_property TARGET XCODE_PROPERTY XCODE_VALUE XCODE_RELVERSION)
+  set(XCODE_RELVERSION_I "${XCODE_RELVERSION}")
+  if(XCODE_RELVERSION_I STREQUAL "All")
+    set_property(TARGET ${TARGET} PROPERTY XCODE_ATTRIBUTE_${XCODE_PROPERTY} "${XCODE_VALUE}")
+  else()
+    set_property(TARGET ${TARGET} PROPERTY XCODE_ATTRIBUTE_${XCODE_PROPERTY}[variant=${XCODE_RELVERSION_I}] "${XCODE_VALUE}")
+  endif()
+endmacro() # qt_ios_set_xcode_property
+
 ## iOS
 if(IOS)
-    target_link_libraries(QmlAppTemplate PRIVATE
+    set(asset_catalog_path "${CMAKE_CURRENT_SOURCE_DIR}/assets/ios/Images.xcassets")
+    target_sources(Blume PRIVATE "${asset_catalog_path}")
+    set_source_files_properties(
+        ${asset_catalog_path}
+        PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+    set(launchscreen_storyboard "${CMAKE_CURRENT_SOURCE_DIR}/assets/ios/AppLaunchScreen.storyboard")
+    target_sources(Blume PRIVATE ${launchscreen_storyboard})
+    set_source_files_properties(
+        ${launchscreen_storyboard}
+        PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    set_target_properties(Blume PROPERTIES
+        XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS
+        "${CMAKE_CURRENT_SOURCE_DIR}/assets/ios/blume.entitlements")
+
+    get_filename_component(STORYBOARD_FILE_NAME ${launchscreen_storyboard} NAME_WE)
+    set(MACOSX_BUNDLE_LAUNCHSCREEN_STORYBOARD ${STORYBOARD_FILE_NAME} PARENT_SCOPE)
+    set_target_properties(Blume
+            PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/assets/ios/Info.plist")
+    set_target_properties(Blume PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "com.mahoutech.blume")
+    set_target_properties(Blume PROPERTIES MACOSX_BUNDLE_IDENTIFIER "com.mahoutech.blume")
+    qt_ios_set_xcode_property("Blume" ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon" "All")
+
+    target_compile_options(Blume PRIVATE
+    -x objective-c++
+    -fobjc-arc)
+    target_link_libraries(Blume PRIVATE
         Qt::GuiPrivate
-        "-framework UIKit"
+        ${UIKIT_LIBRARY}
+        ${MOBILE_CORE_SERVICES_LIBRARY}
     )
+
 endif()
 
 ## Windows
