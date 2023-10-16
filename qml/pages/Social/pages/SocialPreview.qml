@@ -302,7 +302,7 @@ Page {
                                     RadiusImage {
                                         id: _imArea
                                         width: parent.width
-                                        height: width * (9 / 16)
+                                        height: _im.height //width * (9 / 16)
                                         visible: false
                                         Image {
                                             id: _im
