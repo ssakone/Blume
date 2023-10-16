@@ -66,7 +66,7 @@ public class GalleryPicker extends Activity {
                             photoFileName = UUID.randomUUID().toString() + ".jpg";
                             imageFile = getFileUri(photoFileName, Environment.DIRECTORY_PICTURES);
 
-                            Uri fileProvider = FileProvider.getUriForFile(GalleryPicker.this, "org.mahoutech.blume.fileprovider", imageFile);
+                            Uri fileProvider = FileProvider.getUriForFile(GalleryPicker.this, "com.mahoutech.blume.fileprovider", imageFile);
                             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
                             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -77,7 +77,7 @@ public class GalleryPicker extends Activity {
                            videoFileName = UUID.randomUUID().toString() + ".mp4";  // Create a unique name for the video file
                            videoFile = getFileUri(videoFileName, Environment.DIRECTORY_MOVIES);  // Create a new File for the video
 
-                           Uri videoFileProvider = FileProvider.getUriForFile(GalleryPicker.this, "org.mahoutech.blume.fileprovider", videoFile);
+                           Uri videoFileProvider = FileProvider.getUriForFile(GalleryPicker.this, "com.mahoutech.blume.fileprovider", videoFile);
                            captureVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoFileProvider);
 
                            startActivityForResult(captureVideoIntent, REQUEST_VIDEO_CAPTURE);
