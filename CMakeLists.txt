@@ -133,6 +133,8 @@ target_include_directories(Blume PRIVATE src/thirdparty/)
 if(ANDROID)
     #set(QT_ANDROID_ABIS "armeabi-v7a;arm64-v8a;x86;x86_64")
     #set(QT_ANDROID_BUILD_ALL_ABIS "ON")
+#    set(QT_ANDROID_ABIS "arm64-v8a;armeabi-v7a")
+#    set(QT_ANDROID_BUILD_ALL_ABIS "ON")
 
     set_target_properties(Blume PROPERTIES
         QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets/android"

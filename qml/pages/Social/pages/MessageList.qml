@@ -41,7 +41,7 @@ Page {
         model: Object.keys(realDiscussions)
         delegate: Rectangle {
             property var model: realDiscussions[modelData]
-            property string pubkey: model.pubkey
+            property string pubkey: model.locuter
             width: parent.width
             height: 80
             color: area.containsPress ? "#f2f2f2" : "white"
@@ -61,7 +61,7 @@ Page {
                     spacing: 5
                     Label {
                         id: _nameLabel
-                        text: pubkey.slice(0, 16) + "..."
+                        text: model.locuter.slice(0, 16) + "..."
                         font.pixelSize: 20
                         font.weight: Font.Bold
                         color: "black"
@@ -69,25 +69,27 @@ Page {
                             target: root
                             function onAuthorAdded(pubc) {
                                 Qt.callLater(function (pubk) {
-                                    if (pubkey === pubk) {
-                                        _nameLabel.text = root.author[pubkey].name
+                                    if (model.locuter === pubk) {
+                                        _nameLabel.text = root.author[pubk].name
                                                 || ""
-                                        if (root.author[pubkey].picture?.length
-                                                || 0 > 10)
-                                            _avatar.source = root.author[pubkey].picture
-                                                    || ""
+                                        _avatar.source = root.author[pubk].picture
+                                                || Qaterial.Icons.faceProfile
                                     }
                                 }, pubc)
                             }
                         }
 
                         Component.onCompleted: {
-                            $Services.getPubKeyInfo(pubkey, function (info) {
-                                if (info !== undefined) {
-                                    _nameLabel.text = info.name || ""
-                                    _avatar.source = info.picture || ""
-                                }
-                            })
+                            let author_pub = model.locuter
+                            $Services.getPubKeyInfo(model.locuter,
+                                                    function (info) {
+                                                        if (info !== undefined) {
+                                                            _nameLabel.text = info.name
+                                                                    || ""
+                                                            _avatar.source = info.picture
+                                                                    || ""
+                                                        }
+                                                    })
                         }
                     }
                     Label {
@@ -100,8 +102,6 @@ Page {
                         color: "#767676"
                         Component.onCompleted: {
                             for (var i = 0; i < model.model.count; i++) {
-                                console.log(model.model.get(i).created_at,
-                                            model.mostRecent)
                                 if (model.model.get(
                                             i).created_at === model.mostRecent) {
                                     lastMessageText = model.model.get(i).content
@@ -154,7 +154,7 @@ Page {
                 id: area
                 anchors.fill: parent
                 onClicked: {
-                    let friend = root.author[pubkey] || {}
+                    let friend = root.author[model.locuter] || {}
                     friend["pubkey"] = pubkey
 
                     view.push(messagePage, {

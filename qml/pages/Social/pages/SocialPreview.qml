@@ -25,16 +25,17 @@ Page {
                 rightPadding: 15
 
                 RowLayout {
-                   width: parent.width
-                   height: 50
-                   anchors.leftMargin: 15
-                   anchors.rightMargin: 15
-                   spacing: 10
+                    width: parent.width
+                    height: 50
+                    anchors.leftMargin: 15
+                    anchors.rightMargin: 15
+                    spacing: 10
 
                     Avatar {
                         Layout.preferredHeight: parent.height
                         Layout.preferredWidth: height
-                        source: userInfo?.picture ??  Qaterial.Icons.faceManProfile
+                        source: userInfo?.picture
+                                ?? Qaterial.Icons.faceManProfile
 
                         onClicked: {
                             let data = userInfo || {}
@@ -93,7 +94,6 @@ Page {
                 }
             }
 
-
             Flickable {
                 width: parent.width - 20
                 height: 120
@@ -105,7 +105,6 @@ Page {
                     leftPadding: 15
                     Repeater {
                         model: root.friendLists
-
 
                         Rectangle {
                             width: 200
@@ -124,7 +123,6 @@ Page {
                                     anchors.fill: parent
                                     source: "qrc:/assets/img/plant-with-insect.png"
                                 }
-
                             }
                             Label {
                                 text: modelData["name"]?.slice(0, 15)
@@ -153,13 +151,11 @@ Page {
                                     height: width
                                     avatarSize: height
                                     source: JSON.parse(modelData["profile"]
-                                                       || "{}").picture || Qaterial.Icons.faceManProfile
-
+                                                       || "{}").picture
+                                            || Qaterial.Icons.faceManProfile
                                 }
                             }
                         }
-
-
                     }
                 }
             }
@@ -237,9 +233,11 @@ Page {
                                                 function onAuthorAdded(pubc) {
                                                     Qt.callLater(function (pubk) {
                                                         if (pubkey === pubk) {
-                                                            _nameLabel.text = root.author[pubkey].name
+                                                            _nameLabel.text
+                                                                    = root.author[pubkey].name
                                                                     || ""
-                                                            _avatar.source = root.author[pubkey].picture
+                                                            _avatar.source
+                                                                    = root.author[pubkey].picture
                                                                     || Qaterial.Icons.faceProfile
                                                         }
                                                     }, pubc)
@@ -248,7 +246,8 @@ Page {
 
                                             Component.onCompleted: {
                                                 $Services.getPubKeyInfo(
-                                                            pubkey, function (info) {
+                                                            pubkey,
+                                                            function (info) {
                                                                 if (info !== undefined) {
                                                                     _nameLabel.text = info.name
                                                                             || ""
@@ -289,11 +288,8 @@ Page {
                                         wrapMode: Label.Wrap
                                         maximumLineCount: 3
                                         Component.onCompleted: {
-                                            console.log("\n\n\n GONNA CAPTURE LINKS")
                                             const data = captureLinks(content)
-                                            console.log("CAPTURED ** ", data)
-                                            console.log(JSON.stringify(data))
-                                            text = data[0]?.slice(0, )
+                                            text = data[0]?.slice(0)
                                             if (data[2].length > 0) {
                                                 _vid.source = data[2][0]
                                                 _vidArea.visible = true
@@ -306,7 +302,7 @@ Page {
                                     RadiusImage {
                                         id: _imArea
                                         width: parent.width
-                                        height: width * (9/16)
+                                        height: width * (9 / 16)
                                         visible: false
                                         Image {
                                             id: _im
@@ -321,7 +317,7 @@ Page {
                                         id: _vidArea
                                         visible: false
                                         width: parent.width
-                                        height: visible ? width * (9/16) : 0
+                                        height: visible ? width * (9 / 16) : 0
                                         Rectangle {
                                             anchors.fill: parent
                                             color: "black"
@@ -341,44 +337,43 @@ Page {
                                         MouseArea {
                                             anchors.fill: parent
                                             onClicked: {
-                                                console.log(_vid.source)
                                                 _vid.play()
                                             }
                                         }
                                     }
 
-//                                    Qaterial.ClipRRect {
-//                                        width: parent.width
-//                                        height: width * (9/16)
-//                                        Image {
-//                                            anchors.fill: parent
-//                                            source: "qrc:/assets/img/orchidee.jpg"
-//                                        }
-//                                    }
-//                                    RowLayout {
-//                                        width: parent.width
-//                                        Item {
-//                                            Layout.fillWidth: true
-//                                        }
+                                    //                                    Qaterial.ClipRRect {
+                                    //                                        width: parent.width
+                                    //                                        height: width * (9/16)
+                                    //                                        Image {
+                                    //                                            anchors.fill: parent
+                                    //                                            source: "qrc:/assets/img/orchidee.jpg"
+                                    //                                        }
+                                    //                                    }
+                                    //                                    RowLayout {
+                                    //                                        width: parent.width
+                                    //                                        Item {
+                                    //                                            Layout.fillWidth: true
+                                    //                                        }
 
-//                                        Repeater {
-//                                            model: 3
-//                                            Rectangle {
-//                                                Layout.preferredHeight: 10
-//                                                Layout.preferredWidth: height
-//                                                radius: height/2
-//                                                border {
-//                                                    width: 1
-//                                                    color: $Colors.colorPrimary
-//                                                }
-//                                                color: $Colors.gray200
-//                                            }
-//                                        }
+                                    //                                        Repeater {
+                                    //                                            model: 3
+                                    //                                            Rectangle {
+                                    //                                                Layout.preferredHeight: 10
+                                    //                                                Layout.preferredWidth: height
+                                    //                                                radius: height/2
+                                    //                                                border {
+                                    //                                                    width: 1
+                                    //                                                    color: $Colors.colorPrimary
+                                    //                                                }
+                                    //                                                color: $Colors.gray200
+                                    //                                            }
+                                    //                                        }
 
-//                                        Item {
-//                                            Layout.fillWidth: true
-//                                        }
-//                                    }
+                                    //                                        Item {
+                                    //                                            Layout.fillWidth: true
+                                    //                                        }
+                                    //                                    }
                                 }
 
                                 RowLayout {
@@ -440,7 +435,6 @@ Page {
                                                 Layout.preferredHeight: parent.height
                                                 width: 1
                                                 color: Qaterial.Colors.gray200
-
                                             }
 
                                             Item {
@@ -461,7 +455,6 @@ Page {
                                                 Layout.preferredHeight: parent.height
                                                 width: 1
                                                 color: Qaterial.Colors.gray200
-
                                             }
                                         }
                                         RowLayout {
@@ -480,10 +473,8 @@ Page {
                                     }
                                 }
                             }
-
                         }
                     }
-
                 }
             }
         }
@@ -546,7 +537,7 @@ Page {
                     anchors.centerIn: parent
                     width: parent.width - 20
                     height: width
-                    color:Qaterial.Colors.gray600
+                    color: Qaterial.Colors.gray600
                     icon: Qaterial.Icons.bellOutline
                 }
             }
@@ -571,5 +562,4 @@ Page {
             color: "#e0e0e0"
         }
     }
-
 }

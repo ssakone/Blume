@@ -133,6 +133,7 @@ void QAndroidAppPermissions::openCamera()
     QtAndroidPrivate::startActivity(activityIntent.handle(), 100, this);
 }
 
+
 void QAndroidAppPermissions::openGallery()
 {
     const QJniObject activity = QNativeInterface::QAndroidApplication::context();
@@ -146,6 +147,7 @@ void QAndroidAppPermissions::openGallery()
 
     QtAndroidPrivate::startActivity(activityIntent.handle(), 100, this);
 }
+
 
 void QAndroidAppPermissions::done(JNIEnv *env, jobject thiz, jstring path)
 {

@@ -18,13 +18,26 @@ import android.os.*;
 import java.io.*;
 import android.graphics.ImageDecoder;
 import java.nio.channels.*;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import java.util.UUID;
+
 
 
 public class GalleryPicker extends Activity {
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_PICK = 1;
+    private static final int REQUEST_VIDEO_PICK = 2;
+    private static final int REQUEST_IMAGE_CAPTURE = 3;
+    private static final int REQUEST_VIDEO_CAPTURE = 4;
+
     String imageFilePath;
+    String videoFilePath;
+
     public String photoFileName = "photo.jpg";
-    File photoFile;
+    public String videoFileName = "video.mp4";
+
+    public File imageFile;
+    public File videoFile;
 
     private static native void done(String path);
 
@@ -32,28 +45,67 @@ public class GalleryPicker extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent takePictureIntent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        String[] options = {"Choose photo in gallery", "Choose video in gallery", "Capture photo", "Capture video"};
 
-        photoFile = getPhotoFileUri(photoFileName);  
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choisissez une source")
+            .setItems(options, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case 0:
+                            // Choose photo from gallery
+                            startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI), REQUEST_IMAGE_PICK);
+                            break;
+                        case 1:
+                            // Choose video from gallery
+                            startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI), REQUEST_VIDEO_PICK);
+                            break;
+                        case 2:
+                            // Take new photo with camera
+                            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            photoFileName = UUID.randomUUID().toString() + ".jpg";
+                            imageFile = getFileUri(photoFileName, Environment.DIRECTORY_PICTURES);
 
+                            Uri fileProvider = FileProvider.getUriForFile(GalleryPicker.this, "com.mahoutech.blume.fileprovider", imageFile);
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
-        Uri fileProvider = FileProvider.getUriForFile(this, "com.mahoutech.blume.fileprovider", photoFile);
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);  
-        
-        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+                                break;
+                        case 3:
+                           Intent captureVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                           videoFileName = UUID.randomUUID().toString() + ".mp4";  // Create a unique name for the video file
+                           videoFile = getFileUri(videoFileName, Environment.DIRECTORY_MOVIES);  // Create a new File for the video
+
+                           Uri videoFileProvider = FileProvider.getUriForFile(GalleryPicker.this, "com.mahoutech.blume.fileprovider", videoFile);
+                           captureVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoFileProvider);
+
+                           startActivityForResult(captureVideoIntent, REQUEST_VIDEO_CAPTURE);
+                           break;
+                    }
+                }
+            });
+        builder.show();
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            System.out.println("finish");
-            Uri photoUri = data.getData();
-            final String path = getPathFromURI(photoUri);
-            System.out.println(photoUri);
+        if (resultCode == RESULT_OK) {
+            Uri uri;
+            String path = "";
+            if (requestCode == REQUEST_IMAGE_PICK) {
+                uri = data.getData();
+                path = getPathFromURI(uri);
+            } else if (requestCode == REQUEST_VIDEO_PICK) {
+                uri = data.getData();
+                path = getPathFromVideoURI(uri);
+            } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                path = imageFile.getAbsolutePath();
+            } else if (requestCode == REQUEST_VIDEO_CAPTURE) {
+                path = videoFile.getAbsolutePath();
+            }
             System.out.println(path);
-            
-            System.out.println(photoUri);
             done(path);
         }
         finish();
@@ -65,54 +117,27 @@ public class GalleryPicker extends Activity {
         Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
         if (cursor.moveToFirst()) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
             res = cursor.getString(column_index);
         }
         cursor.close();
         return res;
     }
 
-    public Bitmap loadFromUri(Uri photoUri) {
-        Bitmap image = null;
-        try {
-            // check version of Android on device
-            if(Build.VERSION.SDK_INT > 27){
-                // on newer versions of Android, use the new decodeBitmap method
-                ImageDecoder.Source source = ImageDecoder.createSource(this.getContentResolver(), photoUri);
-                image = ImageDecoder.decodeBitmap(source);
-            } else {
-                // support older versions of Android by using getBitmap
-                image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public String getPathFromVideoURI(Uri contentUri) {
+        String res = null;
+        String[] proj = {MediaStore.Video.Media.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        if (cursor.moveToFirst()) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+            res = cursor.getString(column_index);
         }
-        return image;
+        cursor.close();
+        return res;
     }
 
-    private void saveFile(Uri sourceUri, File destination){
-        try {
-            File source = new File(sourceUri.getPath());
-            FileChannel src = new FileInputStream(source).getChannel();
-            FileChannel dst = new FileOutputStream(destination).getChannel();
-            dst.transferFrom(src, 0, src.size());
-            src.close();
-            dst.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-    public String getFileUri(String fileName) {
-        File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Blume");
-
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
-           System.out.println("failed to create directory");
-        }
-
-        return mediaStorageDir.getPath() + File.separator + fileName;
-    }
-
-    public File getPhotoFileUri(String fileName) {
-        File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Blume");
+    public File getFileUri(String fileName, String env) {
+        File mediaStorageDir = new File(getExternalFilesDir(env), "Blume");
 
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
            System.out.println("failed to create directory");

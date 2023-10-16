@@ -3,7 +3,9 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import SortFilterProxyModel
 import QtWebSockets
+import QtMultimedia
 import Qaterial as Qaterial
+import QtAndroidTools
 import "../components"
 
 Page {
@@ -124,6 +126,60 @@ Page {
                             color: "black"
                             font.pixelSize: 16
                             font.weight: Font.Medium
+                            Component.onCompleted: {
+                                const data = captureLinks(content)
+                                text = root.formatLinks(data[0])
+                                if (data[2].length > 0) {
+                                    _vid.source = data[2][0]
+                                    _vidArea.visible = true
+                                } else if (data[1].length > 0) {
+                                    _im.source = data[1][0]
+                                    _imArea.visible = true
+                                }
+                            }
+                        }
+                    }
+                    RadiusImage {
+                        id: _imArea
+                        width: contentColumn.width
+                        height: 200
+                        visible: false
+                        Image {
+                            id: _im
+                            width: parent.width
+                            height: 200
+                            asynchronous: false
+                            cache: false
+                            fillMode: Image.PreserveAspectFit
+                        }
+                    }
+
+                    RadiusImage {
+                        id: _vidArea
+                        visible: false
+                        width: 200
+                        height: visible ? 200 : 0
+                        Rectangle {
+                            anchors.fill: parent
+                            color: "black"
+                        }
+
+                        MediaPlayer {
+                            id: _vid
+                            videoOutput: videoOutput
+                        }
+
+                        VideoOutput {
+                            id: videoOutput
+                            anchors.fill: parent
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                console.log(_vid.source)
+                                _vid.play()
+                            }
                         }
                     }
 
@@ -149,13 +205,48 @@ Page {
             MouseArea {
                 height: 50
                 width: 50
-                visible: false
+                visible: true
                 Rectangle {
                     width: 40
                     height: 40
                     anchors.centerIn: parent
                     radius: 30
                     color: "transparent"
+                    Connections {
+                        target: QtAndroidAppPermissions
+                        function onImageSelected(img) {
+                            const ext = img.split(".").pop()
+                            const data = imgToB64.getBase64(img)
+                            if (["png", "jpg"].indexOf(ext) !== -1) {
+                                const b64_imageUrl = "data:image/png;base64," + data
+                                //imageLoader.source = b64_imageUrl
+                            }
+
+                            http.uploadImage(ext, data).then(function (res) {
+                                console.log("http://34.28.201.80/get_file/" + res)
+                                let cdata = {
+                                    "id": "TEMP",
+                                    "content": "http://34.28.201.80/get_file/" + res,
+                                    "pubkey": publicKey,
+                                    "removable": true,
+                                    "created_at": new Date().getTime() / 1000
+                                }
+                                messages.append(cdata)
+                                Qt.callLater(function (content) {
+                                    http.sendMessage(privateKey,
+                                                     page.friend.pubkey,
+                                                     content).then(
+                                                function (rs) {}).catch(
+                                                function (err) {
+                                                    console.log(JSON.stringify(
+                                                                    err))
+                                                })
+                                }, "http://34.28.201.80/get_file/" + res)
+                            }).catch(function (err) {
+                                console.log(err)
+                            })
+                        }
+                    }
                     ColorImage {
                         anchors.centerIn: parent
                         width: 32
@@ -163,6 +254,9 @@ Page {
                         opacity: .8
                         source: `data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cg fill="%23676767" fill-rule="evenodd" clip-rule="evenodd"%3E%3Cpath d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12Zm10-8a8 8 0 1 0 0 16a8 8 0 0 0 0-16Z"%2F%3E%3Cpath d="M13 7a1 1 0 1 0-2 0v4H7a1 1 0 1 0 0 2h4v4a1 1 0 1 0 2 0v-4h4a1 1 0 1 0 0-2h-4V7Z"%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E`
                     }
+                }
+                onClicked: {
+                    QtAndroidAppPermissions.openGallery()
                 }
             }
             Item {
