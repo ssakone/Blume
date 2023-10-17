@@ -23,6 +23,7 @@ BPage {
     id: pageControl
     property var plant_results
     property var view: pageControl.StackView.view
+    property string actionTypeOnCompleted: ""
     padding: 0
     backgroundColor: "#F8FFFC"
     onVisibleChanged: {
@@ -34,16 +35,28 @@ BPage {
         }
     }
 
-    Component {
-        id: plantResultPage
-        PlantIdentifierDetails {}
+    Component.onCompleted: {
+        switch(actionTypeOnCompleted) {
+           case "openCamera": {
+               if (Qt.platform.os === 'ios') {
+                   imgPicker.openCamera()
+               } else {
+                   androidToolsLoader.item.openCamera()
+               }
+               break;
+           }
+           case "openGallery": {
+               if (Qt.platform.os === 'ios') {
+                   imgPicker.openPicker()
+               } else if (Qt.platform.os === 'android') {
+                   androidToolsLoader.item.openGallery()
+               } else
+                   fileDialog.open()
+               break
+           }
+        }
     }
 
-    PositionSource {
-        id: gps
-        active: true
-        preferredPositioningMethods: PositionSource.SatellitePositioningMethods
-    }
     header: AppBar {
         title: qsTr("Identifier une plante")
         z: 5
@@ -59,6 +72,17 @@ BPage {
                 identifierLayoutView.currentIndex--
             }
         }
+    }
+
+    Component {
+        id: plantResultPage
+        PlantIdentifierDetails {}
+    }
+
+    PositionSource {
+        id: gps
+        active: true
+        preferredPositioningMethods: PositionSource.SatellitePositioningMethods
     }
 
     Rectangle {
