@@ -192,7 +192,7 @@ BPage {
                     function openGallery() {
                         fromGalery = true
                         fromCamera = false
-                        QtAndroidAppPermissions.openGallery()
+                        QtAndroidAppPermissions.openImageGallery()
                     }
 
                     Connections {
@@ -226,7 +226,7 @@ BPage {
             Item {
                 ColumnLayout {
                     anchors.fill: parent
-                    spacing: 2
+                    //spacing: 2
                     TabBar {
                         id: tabBar
                         topPadding: 0
@@ -394,6 +394,13 @@ BPage {
                             anchors.centerIn: parent
                         }
 
+                        ImagePicker {
+                            id: imgPicker
+                            onCapturedImage: function (path) {
+                                image.source = "file://" + path
+                            }
+                        }
+
                         FileDialog {
                             id: fileDialog
                             nameFilters: ["Image file (*.png *.jpg *.jpeg *.gif)"]
@@ -409,99 +416,65 @@ BPage {
                         }
                     }
 
-                    RowLayout {
+                    NiceButton {
+                        id: analyserButton
+                        text: qsTr("Launch analysis")
+                        icon.source: Icons.magnify
                         Layout.fillWidth: true
                         Layout.preferredHeight: 60
-                        Layout.rightMargin: 10
-                        Layout.leftMargin: 5
-
-                        Item {
-                            Layout.fillWidth: true
-                        }
-
-                        ImagePicker {
-                            id: imgPicker
-                            onCapturedImage: function (path) {
-                                image.source = "file://" + path
-                            }
-                        }
-
-                        NiceButton {
-                            text: qsTr("New")
-                            Layout.preferredHeight: 60
-                            Layout.preferredWidth: 120
-                            visible: tabBar.currentIndex === 1
-                                     && accessCam.item?.image_view.visible === true
-                            height: 45
-                            onClicked: {
-                                if (accessCam.item.image_view.visible) {
-                                    accessCam.item.image_view.visible = false
-                                } else {
-                                    analyserButton.clicked()
+                        visible: image.source.toString() !== ""
+                                 || accessCam.active
+                        onClicked: {
+                            if (image.source.toString() !== "") {
+                                imgAnalysisSurface.loading = true
+                                let data = {
+                                    "images": [imgTool.getBase64(
+                                            image.source.toString().replace(
+                                                Qt.platform.os
+                                                === "windows" ? "file:///" : "file://",
+                                                ""))],
+                                    "modifiers": ["crops_fast", "similar_images"],
+                                    "language": Qt.locale().name.slice(0,
+                                                                       2),
+                                    "plant_details": ["common_names", "taxonomy", "url", "wiki_description", "wiki_image", "wiki_images", "edible_parts", "propagation_methods"],
+                                    "longitude": gps.position.coordinate.longitude,
+                                    "latitude": gps.position.coordinate.latitude
                                 }
-                            }
-                        }
+                                Http.request("POST",
+                                             "https://plant.id/api/v2/identify",
+                                             data).then(function (r) {
+                                                 let datas = JSON.parse(r)
+                                                 pageControl.plant_results = datas
+                                                 imgAnalysisSurface.loading = false
+                                                 page_view.push(navigator.plantIdentifierResultsPage, {
+                                                    "resultsList": datas.suggestions?.slice(0, 3),
+                                                    "scanedImage": image.source.toString(),
+                                                    "isPlant": datas.is_plant
+                                                    })
 
-                        NiceButton {
-                            id: analyserButton
-                            Layout.alignment: Qt.AlignHCenter
-                            text: qsTr("Analyse")
-                            icon.source: Icons.magnify
-                            Layout.preferredWidth: Qt.platform.os === 'ios' ? 120 : 180
-                            Layout.preferredHeight: 60
-                            visible: image.source.toString() !== ""
-                                     || accessCam.active
-                            onClicked: {
-                                if (image.source.toString() !== "") {
-                                    imgAnalysisSurface.loading = true
-                                    let data = {
-                                        "images": [imgTool.getBase64(
-                                                image.source.toString().replace(
-                                                    Qt.platform.os
-                                                    === "windows" ? "file:///" : "file://",
-                                                    ""))],
-                                        "modifiers": ["crops_fast", "similar_images"],
-                                        "language": Qt.locale().name.slice(0,
-                                                                           2),
-                                        "plant_details": ["common_names", "taxonomy", "url", "wiki_description", "wiki_image", "wiki_images", "edible_parts", "propagation_methods"],
-                                        "longitude": gps.position.coordinate.longitude,
-                                        "latitude": gps.position.coordinate.latitude
-                                    }
-                                    Http.request("POST",
-                                                 "https://plant.id/api/v2/identify",
-                                                 data).then(function (r) {
-                                                     let datas = JSON.parse(r)
-                                                     pageControl.plant_results = datas
-                                                     imgAnalysisSurface.loading = false
-                                                     page_view.push(navigator.plantIdentifierResultsPage, {
-                                                        "resultsList": datas.suggestions?.slice(0, 3),
-                                                        "scanedImage": image.source.toString(),
-                                                        "isPlant": datas.is_plant
-                                                        })
-
-                                                 }).catch(function (e) {
-                                                     imgAnalysisSurface.loading = false
-                                                     console.log('Erreur',
-                                                                 JSON.stringify(
-                                                                     e))
-                                                 })
-                                } else {
-                                    let path = StandardPaths.writableLocation(
-                                            StandardPaths.PicturesLocation).toString(
-                                            ).replace(
-                                            Qt.application.os
-                                            === "windows" ? "file:///" : "file://",
-                                            "")
-                                    let ln = (Math.random(
-                                                  ) % 10 * 100000).toFixed(0)
-                                    let filePath = path + "/" + ln + '.jpg'
-                                    imgAnalysisSurface.savedImagePath = filePath
-                                    accessCam.item.imgCapture.captureToFile(
-                                                filePath)
-                                }
+                                             }).catch(function (e) {
+                                                 imgAnalysisSurface.loading = false
+                                                 console.log('Erreur',
+                                                             JSON.stringify(
+                                                                 e))
+                                             })
+                            } else {
+                                let path = StandardPaths.writableLocation(
+                                        StandardPaths.PicturesLocation).toString(
+                                        ).replace(
+                                        Qt.application.os
+                                        === "windows" ? "file:///" : "file://",
+                                        "")
+                                let ln = (Math.random(
+                                              ) % 10 * 100000).toFixed(0)
+                                let filePath = path + "/" + ln + '.jpg'
+                                imgAnalysisSurface.savedImagePath = filePath
+                                accessCam.item.imgCapture.captureToFile(
+                                            filePath)
                             }
                         }
                     }
+
 
                     Image2Base64 {
                         id: imgTool

@@ -133,6 +133,19 @@ void QAndroidAppPermissions::openCamera()
     QtAndroidPrivate::startActivity(activityIntent.handle(), 100, this);
 }
 
+void QAndroidAppPermissions::openImageGallery()
+{
+    const QJniObject activity = QNativeInterface::QAndroidApplication::context();
+
+    QAndroidIntent activityIntent(activity.object(),
+                                  "com/mahoutech/blume/GalleryImagePicker");
+    const JNINativeMethod methods[] =
+        {{"done", "(Ljava/lang/String;)V", reinterpret_cast<void *>(&QAndroidAppPermissions::done)}};
+    QJniEnvironment env;
+    env.registerNativeMethods("com/mahoutech/blume/GalleryImagePicker", methods, 1);
+
+    QtAndroidPrivate::startActivity(activityIntent.handle(), 100, this);
+}
 
 void QAndroidAppPermissions::openGallery()
 {
