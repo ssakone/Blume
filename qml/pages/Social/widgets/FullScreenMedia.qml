@@ -4,9 +4,6 @@ import QtQuick.Controls
 import QtMultimedia
 import Qaterial as Qaterial
 
-import "../components_generic/"
-import "../components_themed/"
-
 Popup {
     id: control
 

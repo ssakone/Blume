@@ -158,6 +158,19 @@
     </message>
 </context>
 <context>
+    <name>ActionMenuUserAccount</name>
+    <message>
+        <location filename="../qml/pages/Social/widgets/ActionMenuUserAccount.qml" line="63"/>
+        <source>Logout</source>
+        <translation>Déconnexion</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/widgets/ActionMenuUserAccount.qml" line="84"/>
+        <source>Delete my account</source>
+        <translation>Supprimer mon compte</translation>
+    </message>
+</context>
+<context>
     <name>AlarmModel</name>
     <message>
         <location filename="../qml/models/AlarmModel.qml" line="125"/>
@@ -349,6 +362,35 @@
     <message>
         <location filename="../qml/components/ChartPlantDataAio.qml" line="422"/>
         <source>°C</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CloseMyAccountPage</name>
+    <message>
+        <location filename="../qml/pages/Social/pages/CloseMyAccountPage.qml" line="25"/>
+        <source>Close my account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/CloseMyAccountPage.qml" line="35"/>
+        <source>All the data related to your account will be erased. This action is irreversible</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/CloseMyAccountPage.qml" line="47"/>
+        <source>I understand what closing my account implies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/CloseMyAccountPage.qml" line="71"/>
+        <source>Confirm account closing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/CloseMyAccountPage.qml" line="91"/>
+        <location filename="../qml/pages/Social/pages/CloseMyAccountPage.qml" line="97"/>
+        <source>An error occured</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1914,14 +1956,28 @@
         <translation>Votre mot de passe</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Social/pages/Login.qml" line="164"/>
-        <source>Incorrect password</source>
-        <translation>Mot de passe incorrect</translation>
+        <location filename="../qml/pages/Social/pages/Login.qml" line="170"/>
+        <source>Login</source>
+        <translation>Se connecter</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Social/pages/Login.qml" line="171"/>
-        <source>Creer / Connecter</source>
-        <translation></translation>
+        <location filename="../qml/pages/Social/pages/Login.qml" line="185"/>
+        <source>Fill username and password</source>
+        <translation>Renseignez un mot de passe et un identifiant</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/Login.qml" line="220"/>
+        <source>An error occured</source>
+        <translation>Une erreur s&apos;est produite</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/Login.qml" line="222"/>
+        <source>Invalid credentials</source>
+        <translation>Informations incorrectes</translation>
+    </message>
+    <message>
+        <source>Incorrect password</source>
+        <translation type="vanished">Mot de passe incorrect</translation>
     </message>
     <message>
         <source>Log In</source>
@@ -1962,7 +2018,7 @@
 <context>
     <name>MobileApplication</name>
     <message>
-        <location filename="../qml/MobileApplication.qml" line="1306"/>
+        <location filename="../qml/MobileApplication.qml" line="1309"/>
         <source>Press one more time to exit...</source>
         <translation>Appuyez encore une fois pour quitter...</translation>
     </message>
@@ -2577,18 +2633,18 @@
 <context>
     <name>PlantIdentifier</name>
     <message>
-        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="242"/>
-        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="488"/>
+        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="264"/>
+        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="510"/>
         <source>File image</source>
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="245"/>
+        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="267"/>
         <source>Camera</source>
         <translation>Caméra</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="421"/>
+        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="443"/>
         <source>Launch analysis</source>
         <translation>Lancer l&apos;analyse</translation>
     </message>
@@ -2598,12 +2654,12 @@
     </message>
     <message>
         <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="61"/>
-        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="123"/>
+        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="145"/>
         <source>Identifier une plante</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="308"/>
+        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="330"/>
         <source>Be sure to take a clear, bright photo that includes only the plant you want to identify</source>
         <translation>Veillez à prendre une photo claire et lumineuse sur laquelle figure uniquement la plante que vous souhaitez identifier.</translation>
     </message>
@@ -3416,6 +3472,44 @@
     </message>
 </context>
 <context>
+    <name>PostActions</name>
+    <message>
+        <location filename="../qml/pages/Social/widgets/PostActions.qml" line="39"/>
+        <source>Your report have been submitted !</source>
+        <translation>Opération réussie</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/widgets/PostActions.qml" line="43"/>
+        <source>Close</source>
+        <translation>Fermer</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/widgets/PostActions.qml" line="98"/>
+        <source>Report this post</source>
+        <translation>Signaler cette publication</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/widgets/PostActions.qml" line="103"/>
+        <source>The author won&apos;t know who reported him</source>
+        <translation>L&apos;auteur ne saura pas qui l&apos;a signalé</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/widgets/PostActions.qml" line="150"/>
+        <source>Report</source>
+        <translation>Signaler</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/widgets/PostActions.qml" line="174"/>
+        <source>Violence</source>
+        <translation>Violence</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/widgets/PostActions.qml" line="192"/>
+        <source>Confirm</source>
+        <translation>Confirmer</translation>
+    </message>
+</context>
+<context>
     <name>PostEditPage</name>
     <message>
         <location filename="../qml/pages/Social/pages/PostEditPage.qml" line="42"/>
@@ -3454,7 +3548,7 @@
 <context>
     <name>Register</name>
     <message>
-        <location filename="../qml/pages/Social/pages/Register.qml" line="244"/>
+        <location filename="../qml/pages/Social/pages/Register.qml" line="250"/>
         <source>Create my account</source>
         <translation>Créer mon compte</translation>
     </message>
@@ -3552,6 +3646,21 @@
     <message>
         <location filename="../qml/pages/Social/pages/Register.qml" line="226"/>
         <source>J&apos;accepte les conditions d&apos;utilisation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/Register.qml" line="265"/>
+        <source>Fill all required fields</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/Register.qml" line="295"/>
+        <source>Username not available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/Register.qml" line="302"/>
+        <source>An error occured</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3909,7 +4018,7 @@
 <context>
     <name>SocialPreview</name>
     <message>
-        <location filename="../qml/pages/Social/pages/SocialPreview.qml" line="76"/>
+        <location filename="../qml/pages/Social/pages/SocialPreview.qml" line="92"/>
         <source>Search for a friend</source>
         <translation>Chercher un ami</translation>
     </message>
@@ -3922,7 +4031,7 @@
         <translation type="vanished">100 commentaires</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Social/pages/SocialPreview.qml" line="387"/>
+        <location filename="../qml/pages/Social/pages/SocialPreview.qml" line="412"/>
         <source>40 shares</source>
         <translation>40 partages</translation>
     </message>
@@ -4138,7 +4247,7 @@
         <translation type="vanished">Profil de %1</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Social/pages/UserProfile.qml" line="315"/>
+        <location filename="../qml/pages/Social/pages/UserProfile.qml" line="327"/>
         <source>Edit my profile</source>
         <translation>Modifier mon compte</translation>
     </message>

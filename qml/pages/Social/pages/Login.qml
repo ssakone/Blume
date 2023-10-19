@@ -167,7 +167,7 @@ BPage {
                     Qaterial.ExtendedFabButton {
                         id: connectButton
                         property bool busy: false
-                        text: busy ? "" : qsTr("Creer / Connecter")
+                        text: busy ? "" : qsTr("Login")
                         width: 230
                         //enabled: !busy
                         anchors.horizontalCenter: parent.horizontalCenter
