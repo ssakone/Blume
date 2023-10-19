@@ -66,6 +66,11 @@ Item {
     }
 
     Component {
+        id: closeAccountPage
+        CloseMyAccountPage {}
+    }
+
+    Component {
         id: startPage
         StartPage {}
     }
@@ -591,6 +596,22 @@ Item {
             }
         }
     }
+
+    function wipeAll() {
+        root.privateKey = ""
+        root.publicKey = ""
+        root.contacts = {}
+        root.userInfo = {}
+        root.realDiscussions = {}
+        root.friendLists = []
+        discussions.clear()
+        messages.clear()
+        events.clear()
+        root.subscribed = []
+        relay.active = false
+        messagesRelay.active = false
+    }
+
 
     function logout() {
         timer.start()

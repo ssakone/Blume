@@ -169,7 +169,7 @@ BPage {
                             radius: 15
                             width: parent.width
                             height: 50
-                            onTextChanged: errorLabel.visible = false
+                            onTextChanged: errorLabel.text = ""
                         }
                     }
 
@@ -189,7 +189,7 @@ BPage {
                             radius: 15
                             width: parent.width
                             height: 50
-                            onTextChanged: errorLabel.visible = false
+                            onTextChanged: errorLabel.text = ""
                         }
                     }
 
@@ -210,7 +210,7 @@ BPage {
                             width: parent.width
                             height: 50
                             echoMode: TextInput.Password
-                            onTextChanged: errorLabel.visible = false
+                            onTextChanged: errorLabel.text = ""
                             Keys.onReturnPressed: {
                                 connectButton.clicked()
                             }
@@ -237,6 +237,12 @@ BPage {
                         }
                     }
 
+                    Label {
+                        id: errorLabel
+                        color: "red"
+                        font.pixelSize: 14
+                    }
+
 
                     Qaterial.ExtendedFabButton {
                         id: connectButton
@@ -254,15 +260,17 @@ BPage {
 
                         onClicked: {
                             Qt.callLater(function () {
+                                errorLabel.text = ""
                                 if (username.text === '' || password.text === '' || agreementCheck.checked === false) {
-                                    errorLabel.visible = true
+                                    errorLabel.text = qsTr("Fill all required fields")
+
                                     return
                                 }
                                 if (busy === true) {
                                     return
                                 }
                                 busy = true
-                                http.auth(username.text, password.text).then(function (rs) {
+                                http.createAccount(username.text, password.text).then(function (rs) {
                                     const data = JSON.parse(rs)
 
                                     console.log(rs)
@@ -283,14 +291,16 @@ BPage {
                                             busy = false
                                         })
                                     } else {
-                                        if (data.status === "Error during authentication") {
-                                            errorLabel.visible = true
+                                        if (data.status === "USERNAME_NOT_AVAILABLE") {
+                                            errorLabel.text = qsTr("Username not available")
                                             busy = false
                                         }
                                     }
                                 }).catch(e => {
                                              console.log(JSON.stringify(e))
                                              busy = false
+                                             errorLabel.text = qsTr("An error occured")
+
                                          })
                             })
                         }

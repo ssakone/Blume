@@ -129,7 +129,7 @@ BPage {
                             radius: 15
                             width: parent.width
                             height: 50
-                            onTextChanged: errorLabel.visible = false
+                            onTextChanged: errorLabel.text = ""
                         }
                     }
 
@@ -150,7 +150,7 @@ BPage {
                             width: parent.width
                             height: 50
                             echoMode: TextInput.Password
-                            onTextChanged: errorLabel.visible = false
+                            onTextChanged: errorLabel.text = ""
                             Keys.onReturnPressed: {
                                 connectButton.clicked()
                             }
@@ -159,10 +159,9 @@ BPage {
 
                     Qaterial.Label {
                         id: errorLabel
-                        visible: false
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: qsTr("Incorrect password")
                         color: "red"
+                        font.pixelSize: 14
                     }
 
                     Qaterial.ExtendedFabButton {
@@ -183,7 +182,7 @@ BPage {
                         onClicked: {
                             Qt.callLater(function () {
                                 if (username.text === '' || password.text === '') {
-                                    errorLabel.visible = true
+                                    errorLabel.text = qsTr("Fill username and password")
                                     return
                                 }
                                 if (busy === true) {
@@ -211,14 +210,18 @@ BPage {
                                             busy = false
                                         })
                                     } else {
-                                        if (data.status === "Error during authentication") {
-                                            errorLabel.visible = true
-                                            busy = false
-                                        }
+                                        busy = false
+                                        errorLabel.text = data.status
+
                                     }
                                 }).catch(e => {
                                              console.log(JSON.stringify(e))
                                              busy = false
+                                             errorLabel.text = qsTr("An error occured")
+                                             if(e.status === 401) {
+                                                 errorLabel.text = qsTr("Invalid credentials")
+                                             }
+
                                          })
                             })
                         }

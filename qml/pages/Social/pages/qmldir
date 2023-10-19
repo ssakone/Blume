@@ -2,6 +2,7 @@
 
 module Blume.pages.Social.pages
 
+CloseMyAccountPage 1.0 CloseMyAccountPage.qml
 FeedDetailsPage 1.0 FeedDetailsPage.qml
 FeedPage 1.0 FeedPage.qml
 FindUser 1.0 FindUser.qml

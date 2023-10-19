@@ -12,13 +12,14 @@ import "../../../components_js/Http.js" as Http
 import "../../../components_generic"
 import "../../../components" as Components
 import "../components"
+import "../widgets"
 
 BPage {
     id: page
     property var profile: ({})
     property string pubKey
     property bool isContact: false
-    property bool isMyProfile: false
+    property bool isMyProfile: page.profile.pubkey === publicKey
 
     Component.onCompleted: {
         checkFollow()
@@ -68,6 +69,7 @@ BPage {
 
     palette.window: 'white'
     header: ToolBar {
+        id: toolbar
         contentHeight: 60
         height: 65
         background: Rectangle {}
@@ -82,7 +84,18 @@ BPage {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
             }
+            ToolBarButton {
+                visible: isMyProfile
+                icon.source: "qrc:/assets/icons_material/baseline-more_vert-24px.svg"
+                onClicked: actionMenuUserAccount.open()
+            }
         }
+    }
+
+    ActionMenuUserAccount {
+        id: actionMenuUserAccount
+        x: parent.width - actionMenuUserAccount.width - 12
+        y: screenPaddingStatusbar + screenPaddingNotch + toolbar.height
     }
 
     Flickable {
@@ -252,7 +265,7 @@ BPage {
                         spacing: 10
 
                         BusyIndicator {
-                            running: favorisRepeater.model?.length === 0
+                            running: favorisRepeater.model?.length === 0 && isMyProfile
                             visible: running
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -260,7 +273,7 @@ BPage {
                         Repeater {
                             id: favorisRepeater
                             Component.onCompleted: {
-                                if(page.profile.pubkey === publicKey) return
+                                if(!isMyProfile) return
                                 const url = `https://blume.mahoudev.com/items/Plantes?offset=${Math.ceil(
                                               Math.random(
                                                   ) * 1000)}&limit=5&fields=*.*`
@@ -308,9 +321,8 @@ BPage {
                     }
                 }
 
-                Components.NiceButton {
-                    //visible: page.isMyProfile
-                    visible: page.profile.pubkey === publicKey
+                NiceButton {
+                    visible: isMyProfile
                     bgGradient: $Colors.gradientPrimary
                     text: qsTr("Edit my profile")
                     radius: 10
@@ -379,36 +391,6 @@ BPage {
                     font.pixelSize: 18
                     horizontalAlignment: Text.AlignHCenter
                     color: "black"
-                }
-
-                Qaterial.RaisedButton {
-                    text: "Logout"
-                    height: 50
-                    width: parent.width
-                    font.pixelSize: 15
-                    font.bold: true
-                    padding: 15
-                    palette.buttonText: "white"
-                    visible: page.profile.pubkey === publicKey
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    backgroundColor: Qaterial.Colors.red
-                    onClicked: {
-                        root.privateKey = ""
-                        root.publicKey = ""
-                        root.contacts = {}
-                        root.userInfo = {}
-                        root.realDiscussions = {}
-                        root.friendLists = []
-                        discussions.clear()
-                        messages.clear()
-                        events.clear()
-                        root.subscribed = []
-                        relay.active = false
-                        messagesRelay.active = false
-                        root.logout()
-                        view.pop()
-                        view.pop()
-                    }
                 }
 
             }

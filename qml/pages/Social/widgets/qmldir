@@ -2,5 +2,6 @@
 
 module Blume.pages.Social.widgets
 
+ActionMenuUserAccount 1.0 ActionMenuUserAccount.qml
 FullScreenMedia 1.0 FullScreenMedia.qml
 PostActions 1.0 PostActions.qml
