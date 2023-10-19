@@ -74,6 +74,28 @@ BPage {
         }
     }
 
+    AndroidPermRequester {
+        id: androidPerms
+        seed: "PlantIdentifier"
+        permissionsNameList: ["android.permission.READ_MEDIA_IMAGES", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"]
+        onGrantedChanged: {
+            if(granted !== true) {
+                permTimer.start()
+            }
+        }
+
+        Timer {
+            id: permTimer
+            interval: 1000
+            onTriggered: {
+                console.log("\n CALLIBG PERM TIMER ")
+                for(let i in androidPerms.permissionsNameList) {
+                    QtAndroidAppPermissions.requestPermission(androidPerms.permissionsNameList[i])
+                }
+            }
+        }
+    }
+
     Component {
         id: plantResultPage
         PlantIdentifierDetails {}

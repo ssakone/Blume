@@ -123,7 +123,7 @@ Page {
                     function openGallery() {
                         fromGalery = true
                         fromCamera = false
-                        QtAndroidAppPermissions.openGallery()
+                        QtAndroidAppPermissions.openImageGallery()
                     }
 
                     Connections {

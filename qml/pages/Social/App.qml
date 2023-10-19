@@ -15,6 +15,7 @@ import ImageTools
 
 import QtAndroidTools
 
+import "widgets"
 import "components"
 import "pages"
 import "utils"
@@ -87,6 +88,11 @@ Item {
     Component {
         id: postEditPage
         PostEditPage {}
+    }
+
+
+    PostActions {
+        id: postActionsDrawer
     }
 
     property string privateKey: ""

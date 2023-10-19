@@ -44,6 +44,7 @@
     <file alias="components/ActionMenuFixed.qml">qml/components/ActionMenuFixed.qml</file>
     <file alias="components/ActionMenuFixedDevices.qml">qml/components/ActionMenuFixedDevices.qml</file>
     <file alias="components/AirQualityIndicator.qml">qml/components/AirQualityIndicator.qml</file>
+    <file alias="components/AndroidPermRequester.qml">qml/components/AndroidPermRequester.qml</file>
     <file alias="components/AppBar.qml">qml/components/AppBar.qml</file>
     <file alias="components/AppBarButton.qml">qml/components/AppBarButton.qml</file>
     <file alias="components/BottomTabBar.qml">qml/components/BottomTabBar.qml</file>
@@ -248,6 +249,9 @@
     <file alias="pages/Social/utils/Http.qml">qml/pages/Social/utils/Http.qml</file>
     <file alias="pages/Social/utils/Services.qml">qml/pages/Social/utils/Services.qml</file>
     <file alias="pages/Social/utils/qmldir">qml/pages/Social/utils/qmldir</file>
+    <file alias="pages/Social/widgets/FullScreenMedia.qml">qml/pages/Social/widgets/FullScreenMedia.qml</file>
+    <file alias="pages/Social/widgets/PostActions.qml">qml/pages/Social/widgets/PostActions.qml</file>
+    <file alias="pages/Social/widgets/qmldir">qml/pages/Social/widgets/qmldir</file>
     <file alias="pages/TutorialNew.qml">qml/pages/TutorialNew.qml</file>
     <file alias="pages/qmldir">qml/pages/qmldir</file>
     <file alias="popups/PopupBackgroundUpdates.qml">qml/popups/PopupBackgroundUpdates.qml</file>

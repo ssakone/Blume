@@ -6,6 +6,7 @@ Accordion 1.0 Accordion.qml
 ActionMenuFixed 1.0 ActionMenuFixed.qml
 ActionMenuFixedDevices 1.0 ActionMenuFixedDevices.qml
 AirQualityIndicator 1.0 AirQualityIndicator.qml
+AndroidPermRequester 1.0 AndroidPermRequester.qml
 AppBar 1.0 AppBar.qml
 AppBarButton 1.0 AppBarButton.qml
 BottomTabBar 1.0 BottomTabBar.qml
