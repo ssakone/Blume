@@ -61,6 +61,7 @@
 #include <QQuickStyle>
 #include <HotWatch.h>
 #include <Qaterial/Qaterial.hpp>
+#include <QtWebView>
 
 #if defined(Q_OS_ANDROID)
 #include "AndroidService.h"
@@ -212,6 +213,8 @@ int main(int argc, char *argv[])
     DeviceUtils::registerQML();
     JournalUtils::registerQML();
 
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+    QtWebView::initialize();
     // Then we start the UI
     QQmlApplicationEngine engine;
     engine.addImportPath("qrc:/qml/");

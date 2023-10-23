@@ -10,7 +10,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Bluetooth Network Sql Multimedia Xml)
-find_package(Qt6 REQUIRED COMPONENTS Gui Qml Quick QuickControls2 Svg Widgets Charts)
+find_package(Qt6 REQUIRED COMPONENTS Gui Qml Quick QuickControls2 Svg Widgets Charts WebView)
 find_library(UIKIT_LIBRARY UIKit)
 find_library(MOBILE_CORE_SERVICES_LIBRARY MobileCoreServices)
 
@@ -245,6 +245,7 @@ target_link_libraries(Blume PRIVATE
     Qt::Charts
     Qt::Multimedia
     Qt::Xml
+    Qt::WebView
     SortFilterProxyModel
     HotWatch
     HotWatchplugin

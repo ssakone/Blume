@@ -725,6 +725,11 @@ BPage {
                                         color: $Colors.gray200
                                     }
 
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: page_view.push(navigator.blogPage)
+                                    }
+
                                     RowLayout {
                                         anchors.fill: parent
                                         Rectangle {

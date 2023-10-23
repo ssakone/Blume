@@ -104,6 +104,9 @@ Item {
     property var gardenEditSpace: Component {
         GardenEditSpace {}
     }
+    property var blogPage: Component {
+        BlogScreen {}
+    }
 
     property var feedPage: Component {
         Feed {}

@@ -192,6 +192,7 @@
     <file alias="pages/Faq.qml">qml/pages/Faq.qml</file>
     <file alias="pages/Feed.qml">qml/pages/Feed.qml</file>
     <file alias="pages/Garden/AlarmsCalendar.qml">qml/pages/Garden/AlarmsCalendar.qml</file>
+    <file alias="pages/Garden/BlogScreen.qml">qml/pages/Garden/BlogScreen.qml</file>
     <file alias="pages/Garden/GardenEditSpace.qml">qml/pages/Garden/GardenEditSpace.qml</file>
     <file alias="pages/Garden/GardenPlantsList.qml">qml/pages/Garden/GardenPlantsList.qml</file>
     <file alias="pages/Garden/GardenScreen.qml">qml/pages/Garden/GardenScreen.qml</file>

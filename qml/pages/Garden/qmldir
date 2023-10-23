@@ -3,6 +3,7 @@
 module Blume.pages.Garden
 
 AlarmsCalendar 1.0 AlarmsCalendar.qml
+BlogScreen 1.0 BlogScreen.qml
 GardenEditSpace 1.0 GardenEditSpace.qml
 GardenPlantsList 1.0 GardenPlantsList.qml
 GardenScreen 1.0 GardenScreen.qml

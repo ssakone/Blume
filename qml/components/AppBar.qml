@@ -20,6 +20,7 @@ Rectangle {
     property alias actions: flowActions.children
     property bool noAutoPop: false
     property bool statusBarVisible: Qt.platform.os === 'ios'
+    property bool shouldPreventDefaultBackPress: false
 
     // You display a menu icon that opens drawer or back icon that go back inside current stack
     property bool isHomeScreen: false
@@ -31,8 +32,7 @@ Rectangle {
                                + 52 : screenPaddingNotch + 52
 
     onBackButtonClicked: {
-
-        console.log("IN PARENT APPBAR ", page_view.depth)
+        if(shouldPreventDefaultBackPress) return
         if (isHomeScreen)
             appDrawer.open()
         else if (!noAutoPop)
