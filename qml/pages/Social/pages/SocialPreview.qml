@@ -171,6 +171,16 @@ Page {
                                             || Qaterial.Icons.faceManProfile
                                 }
                             }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    if(modelData['is_pined']) {
+                                        view.push(messagePage, {
+                                         "friend": modelData
+                                         })
+                                    }
+                                }
+                            }
                         }
                     }
                 }

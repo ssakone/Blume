@@ -11,6 +11,9 @@ import "../components"
 Page {
     id: page
     property var friend: ({})
+    property bool isAIWritting: false
+    property int prevCount: 0
+
     background: Rectangle {
         color: "white"
     }
@@ -68,13 +71,33 @@ Page {
             Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Text {
-                    leftPadding: 10
+                Column {
                     anchors.verticalCenter: parent.verticalCenter
-                    font.weight: Font.Bold
-                    font.pixelSize: 20
-                    text: page.friend.name || friend.pubkey.slice(
-                              0, 18) + "..." || ""
+
+                    Text {
+                        leftPadding: 10
+                        font.weight: Font.Bold
+                        font.pixelSize: 20
+                        text: page.friend.name || friend.pubkey.slice(
+                                  0, 18) + "..." || ""
+                    }
+
+                    Text {
+                        visible: page.isAIWritting
+                        leftPadding: 10
+                        font.pixelSize: 12
+                        text: qsTr("is writting....")
+
+                        Connections {
+                            target: messageModel
+                            function onCountChanged(newCount) {
+                                if(newCount === page.prevCount + 2) {
+                                    page.isAIWritting = false
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
         }
@@ -83,7 +106,14 @@ Page {
         anchors.fill: parent
         ListView {
             id: chatView
-            anchors.fill: parent
+            anchors {
+                top: parent.top
+                bottom: lockText.top
+                left: parent.left
+                right: parent.right
+                //bottomMargin: page.isAIWritting ? lockText.height+25 : 10
+            }
+
             anchors.rightMargin: 5
             anchors.margins: 10
             spacing: 10
@@ -193,9 +223,24 @@ Page {
                     }
                 }
             }
+
+        }
+
+        Label {
+            id: lockText
+            anchors {
+                bottom: parent.bottom
+                bottomMargin: 10
+                horizontalCenter: parent.horizontalCenter
+            }
+            visible: page.isAIWritting
+            width: 250
+            wrapMode: Label.Wrap
+            text: qsTr("You will write a new message after is finish responding to the previous !")
         }
     }
     footer: ToolBar {
+        visible: !page.isAIWritting
         contentHeight: 60
         height: 65
         background: Rectangle {}
@@ -323,9 +368,13 @@ Page {
                     }
                     messages.append(cdata)
                     Qt.callLater(function (content) {
+                        page.isAIWritting = true
                         http.sendMessage(privateKey, page.friend.pubkey,
-                                         content).then(function (rs) {}).catch(
+                                         content).then(function (rs) {
+                                            page.isAIWritting = false
+                                         }).catch(
                                     function (err) {
+                                        page.isAIWritting = false
                                         console.log(JSON.stringify(err))
                                     })
                     }, inputField.text)

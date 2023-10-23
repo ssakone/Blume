@@ -164,6 +164,7 @@ QtObject {
                              "Content-Type": 'application/json'
                          },
                          "params": {
+                             "pubKey": publicKey,
                              "privateKey": privateKey,
                              "message": message,
                              "to": pubkey
