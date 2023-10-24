@@ -70,6 +70,21 @@ QtObject {
     function auth(username, password) {
         return fetch({
                          "method": "POST",
+                         "url": apihost + "login",
+                         "headers": {
+                             "Accept": 'application/json',
+                             "Content-Type": 'application/json'
+                         },
+                         "params": {
+                             "username": username,
+                             "password": password
+                         }
+                     })
+    }
+
+    function createAccount(username, password) {
+        return fetch({
+                         "method": "POST",
                          "url": apihost + "create_account",
                          "headers": {
                              "Accept": 'application/json',
@@ -78,6 +93,20 @@ QtObject {
                          "params": {
                              "username": username,
                              "password": password
+                         }
+                     })
+    }
+
+    function deleteMyAccount() {
+        return fetch({
+                         "method": "POST",
+                         "url": apihost + "close_account",
+                         "headers": {
+                             "Accept": 'application/json',
+                             "Content-Type": 'application/json'
+                         },
+                         "params": {
+                             "privateKey": privateKey
                          }
                      })
     }
@@ -135,6 +164,7 @@ QtObject {
                              "Content-Type": 'application/json'
                          },
                          "params": {
+                             "pubKey": publicKey,
                              "privateKey": privateKey,
                              "message": message,
                              "to": pubkey

@@ -6,8 +6,24 @@ import QtWebSockets
 import QtMultimedia
 
 import "../components"
+import "../widgets"
 
 Page {
+//    property bool isFullScreen: false
+//    onIsFullScreenChanged: {
+//        if (isFullScreen)
+//            fullScreenPop.close()
+
+//    }
+    FocusScope {
+        Keys.onBackPressed: console.log("BAAAAACK")
+        FullScreenMedia {
+            id: fullScreenPop
+            //onSwithMode: isFullScreen = !isFullScreen
+        }
+
+    }
+
     Flickable {
         anchors.fill: parent
         contentHeight: insideCol.height
@@ -155,6 +171,16 @@ Page {
                                             || Qaterial.Icons.faceManProfile
                                 }
                             }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    if(modelData['is_pined']) {
+                                        view.push(messagePage, {
+                                         "friend": modelData
+                                         })
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -182,23 +208,6 @@ Page {
                         border {
                             width: 2
                             color: $Colors.gray300
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                currentProfile = {
-                                    "name": root.author[pubkey].name,
-                                    "picture": root.author[pubkey].picture,
-                                    "pubkey": pubkey
-                                }
-
-                                view.push(feedDetailsPage, {
-                                              "post": model,
-                                              "comments": comments,
-                                              "likes": likes
-                                          })
-                            }
                         }
 
                         Column {
@@ -270,6 +279,11 @@ Page {
                                             source: "qrc:/assets/icons_custom/three-dots-inline.svg"
                                             color: $Colors.gray400
                                             anchors.verticalCenter: parent.verticalCenter
+
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                onClicked: postActionsDrawer.display()
+                                            }
                                         }
                                         IconImage {
                                             source: Qaterial.Icons.heartPlusOutline
@@ -302,14 +316,18 @@ Page {
                                     RadiusImage {
                                         id: _imArea
                                         width: parent.width
-                                        height: width * (9 / 16)
-                                        visible: false
+                                        height: _im.height //width * (9 / 16)
+                                        visible: _im.source.toString() !== ""
                                         Image {
                                             id: _im
                                             width: parent.width
                                             asynchronous: false
                                             cache: false
                                             fillMode: Image.PreserveAspectFit
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                onClicked: fullScreenPop.displayImage(parent.source)
+                                            }
                                         }
                                     }
 
@@ -445,6 +463,22 @@ Page {
                                                 source: Qaterial.Icons.messageOutline
                                                 color: Qaterial.Colors.gray600
                                                 Layout.alignment: Qt.AlignVCenter
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    onClicked: {
+                                                        currentProfile = {
+                                                            "name": root.author[pubkey].name,
+                                                            "picture": root.author[pubkey].picture,
+                                                            "pubkey": pubkey
+                                                        }
+
+                                                        view.push(feedDetailsPage, {
+                                                                      "post": model,
+                                                                      "comments": comments,
+                                                                      "likes": likes
+                                                                  })
+                                                    }
+                                                }
                                             }
 
                                             Item {

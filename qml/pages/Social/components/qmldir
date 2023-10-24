@@ -2,12 +2,14 @@
 
 module Blume.pages.Social.components
 
+ActionMenuItem 1.0 ActionMenuItem.qml
 Avatar 1.0 Avatar.qml
 BOutlineTextField 1.0 BOutlineTextField.qml
 ButtonImage 1.0 ButtonImage.qml
 ButtonImageWithText 1.0 ButtonImageWithText.qml
 InputField 1.0 InputField.qml
 NativeTextArea 1.0 NativeTextArea.qml
+NiceButton 1.0 NiceButton.qml
 RadiusImage 1.0 RadiusImage.qml
 TextArea 1.0 TextArea.qml
 TextField 1.0 TextField.qml

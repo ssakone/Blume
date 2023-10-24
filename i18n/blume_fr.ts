@@ -158,6 +158,19 @@
     </message>
 </context>
 <context>
+    <name>ActionMenuUserAccount</name>
+    <message>
+        <location filename="../qml/pages/Social/widgets/ActionMenuUserAccount.qml" line="63"/>
+        <source>Logout</source>
+        <translation>Déconnexion</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/widgets/ActionMenuUserAccount.qml" line="84"/>
+        <source>Delete my account</source>
+        <translation>Supprimer mon compte</translation>
+    </message>
+</context>
+<context>
     <name>AlarmModel</name>
     <message>
         <location filename="../qml/models/AlarmModel.qml" line="125"/>
@@ -349,6 +362,35 @@
     <message>
         <location filename="../qml/components/ChartPlantDataAio.qml" line="422"/>
         <source>°C</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CloseMyAccountPage</name>
+    <message>
+        <location filename="../qml/pages/Social/pages/CloseMyAccountPage.qml" line="25"/>
+        <source>Close my account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/CloseMyAccountPage.qml" line="35"/>
+        <source>All the data related to your account will be erased. This action is irreversible</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/CloseMyAccountPage.qml" line="47"/>
+        <source>I understand what closing my account implies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/CloseMyAccountPage.qml" line="71"/>
+        <source>Confirm account closing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/CloseMyAccountPage.qml" line="91"/>
+        <location filename="../qml/pages/Social/pages/CloseMyAccountPage.qml" line="97"/>
+        <source>An error occured</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -629,32 +671,32 @@
         <translation type="vanished">Appareils</translation>
     </message>
     <message>
-        <location filename="../qml/DeviceList.qml" line="310"/>
+        <location filename="../qml/DeviceList.qml" line="329"/>
         <source>Enable</source>
         <translation>Activer</translation>
     </message>
     <message>
-        <location filename="../qml/DeviceList.qml" line="312"/>
+        <location filename="../qml/DeviceList.qml" line="331"/>
         <source>About</source>
         <translation>A propos</translation>
     </message>
     <message>
-        <location filename="../qml/DeviceList.qml" line="314"/>
+        <location filename="../qml/DeviceList.qml" line="333"/>
         <source>Retry</source>
         <translation>Reéssayer</translation>
     </message>
     <message>
-        <location filename="../qml/DeviceList.qml" line="335"/>
+        <location filename="../qml/DeviceList.qml" line="354"/>
         <source>Bluetooth is disabled...</source>
         <translation>Le Bluetooth est désactivé...</translation>
     </message>
     <message>
-        <location filename="../qml/DeviceList.qml" line="339"/>
+        <location filename="../qml/DeviceList.qml" line="358"/>
         <source>Bluetooth permission is missing...</source>
         <translation>Les permissions de Bluetooth sont manquants...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/DeviceList.qml" line="391"/>
+        <location filename="../qml/DeviceList.qml" line="410"/>
         <source>%n device(s) selected</source>
         <translation>
             <numerusform>% capteur(s) sélectionnés</numerusform>
@@ -662,27 +704,27 @@
         </translation>
     </message>
     <message>
-        <location filename="../qml/DeviceList.qml" line="415"/>
+        <location filename="../qml/DeviceList.qml" line="434"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../qml/DeviceList.qml" line="430"/>
+        <location filename="../qml/DeviceList.qml" line="449"/>
         <source>Synchronize history</source>
         <translation>Synchoniser l&apos;historique</translation>
     </message>
     <message>
-        <location filename="../qml/DeviceList.qml" line="445"/>
+        <location filename="../qml/DeviceList.qml" line="464"/>
         <source>Refresh</source>
         <translation>Rafraîchir</translation>
     </message>
     <message>
-        <location filename="../qml/DeviceList.qml" line="479"/>
+        <location filename="../qml/DeviceList.qml" line="220"/>
         <source>Appareils connectés</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/DeviceList.qml" line="491"/>
+        <location filename="../qml/DeviceList.qml" line="232"/>
         <source>Connectez-vous pour connaitre l&apos;état de vos plantes</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1293,7 +1335,7 @@
         <translation type="vanished">Mes plantes</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="412"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="447"/>
         <source>Rooms</source>
         <translation>Salles</translation>
     </message>
@@ -1302,99 +1344,104 @@
         <translation type="vanished">Tâches</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="341"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="377"/>
         <source>Tasks</source>
         <translation>Tâches</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="447"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="482"/>
         <source>Plants</source>
         <translation>Plantes</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="526"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="561"/>
         <source>Lates</source>
         <translation>Retards</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="290"/>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="602"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="637"/>
         <source>Today</source>
         <translation>Aujourd&apos;hui</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="266"/>
         <source>Weather not loaded !</source>
-        <translation>Météo non disponible !</translation>
+        <translation type="vanished">Météo non disponible !</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="270"/>
         <source>Reload</source>
-        <translation>Recharger</translation>
+        <translation type="vanished">Recharger</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="291"/>
         <source>Tomorrow</source>
-        <translation>Demain</translation>
+        <translation type="vanished">Demain</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="292"/>
         <source>After tomorrow</source>
-        <translation>Après-demain</translation>
+        <translation type="vanished">Après-demain</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="506"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="267"/>
+        <source>Identify a plant</source>
+        <translation>Identifer une plante</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="321"/>
+        <source>Import photos</source>
+        <translation>Importer des photos</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="541"/>
         <source>How to create a room ?</source>
         <translation>Comment créer une salle ?</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="631"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="666"/>
         <source>Each</source>
         <translation>Chaque</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="671"/>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="709"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="706"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="744"/>
         <source>Tips and advices</source>
         <translation>Conseils et astuces</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="730"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="765"/>
         <source>Cultivate your plant at your own pace</source>
         <translation>Cultivez votre pouce vert et suivre son rythme</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="743"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="778"/>
         <source>Published August 13</source>
         <translation>Publié le 13 Août</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="828"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="868"/>
         <source>Tasks list</source>
         <translation>Liste des tâches</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="867"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="909"/>
         <source>Add new plant in your garden</source>
         <translation>Ajouter une nouvelle plante au jardin</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="905"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="947"/>
         <source>Add a room</source>
         <translation>Ajouter une salle</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="976"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="1018"/>
         <source>Remove this task ?</source>
         <translation>Supprimer cette tâche ?</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="983"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="1025"/>
         <source>Yes remove</source>
         <translation>Oui, supprimer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Garden/GardenScreen.qml" line="998"/>
+        <location filename="../qml/pages/Garden/GardenScreen.qml" line="1040"/>
         <source>No</source>
         <translation>Non</translation>
     </message>
@@ -1877,19 +1924,16 @@
         <translation type="vanished">Email</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Social/pages/Login.qml" line="67"/>
         <source>Sign in with Google</source>
-        <translation>Se connecter avec Google</translation>
+        <translation type="vanished">Se connecter avec Google</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Social/pages/Login.qml" line="78"/>
         <source>Sign in with Apple</source>
-        <translation>Se connecter avec Apple</translation>
+        <translation type="vanished">Se connecter avec Apple</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Social/pages/Login.qml" line="99"/>
         <source>OR</source>
-        <translation>OU</translation>
+        <translation type="vanished">OU</translation>
     </message>
     <message>
         <location filename="../qml/pages/Social/pages/Login.qml" line="121"/>
@@ -1912,14 +1956,28 @@
         <translation>Votre mot de passe</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Social/pages/Login.qml" line="164"/>
-        <source>Incorrect password</source>
-        <translation>Mot de passe incorrect</translation>
+        <location filename="../qml/pages/Social/pages/Login.qml" line="170"/>
+        <source>Login</source>
+        <translation>Se connecter</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Social/pages/Login.qml" line="171"/>
-        <source>Creer / Connecter</source>
-        <translation></translation>
+        <location filename="../qml/pages/Social/pages/Login.qml" line="185"/>
+        <source>Fill username and password</source>
+        <translation>Renseignez un mot de passe et un identifiant</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/Login.qml" line="220"/>
+        <source>An error occured</source>
+        <translation>Une erreur s&apos;est produite</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/Login.qml" line="222"/>
+        <source>Invalid credentials</source>
+        <translation>Informations incorrectes</translation>
+    </message>
+    <message>
+        <source>Incorrect password</source>
+        <translation type="vanished">Mot de passe incorrect</translation>
     </message>
     <message>
         <source>Log In</source>
@@ -1960,7 +2018,7 @@
 <context>
     <name>MobileApplication</name>
     <message>
-        <location filename="../qml/MobileApplication.qml" line="1306"/>
+        <location filename="../qml/MobileApplication.qml" line="1309"/>
         <source>Press one more time to exit...</source>
         <translation>Appuyez encore une fois pour quitter...</translation>
     </message>
@@ -2414,99 +2472,121 @@
         <translation type="vanished">Obtenir de l&apos;aide</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="388"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="375"/>
         <source>Some diseases</source>
         <translation>Quelques maladies</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="466"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="453"/>
         <source>Health menu</source>
         <translation>Santé</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="205"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="192"/>
         <source>Check your plant health status</source>
         <translation>Vérifier la santé de vos plantes</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="215"/>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="349"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="202"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="336"/>
         <source>Take photos of the diseased parts of your plant, and get a diagnosis.</source>
         <translation>Prenez des photos des parties malades de votre plante et obtenez un diagnostic.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="222"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="209"/>
         <source>Start diagnosis</source>
         <translation>Lancer le diagnostic</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="260"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="247"/>
         <source>Identify an insect</source>
         <translation>Identifier un insecte</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="294"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="281"/>
         <source>Encyclopedia of diseases</source>
         <translation>Encyclopédie des maladies</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="337"/>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="364"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="324"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="351"/>
         <source>Ask our plant experts</source>
         <translation>Demandez à nos experts</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="477"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="464"/>
         <source>Diagnose the health of your plants</source>
         <translation>Diagnostiquez l&apos;état de vos plantes</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="538"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="525"/>
         <source>Search for disease</source>
         <translation>Chercher une maladie</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="660"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="647"/>
         <source>File image</source>
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="664"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="651"/>
         <source>Camera</source>
         <translation>Caméra</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="729"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="716"/>
         <source>Be sure to take a clear, bright photo that includes only the sick part of the plant you want to identify</source>
         <translation>Veillez à prendre une photo claire et lumineuse qui n&apos;inclut que la partie malade de la plante que vous souhaitez identifier</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="850"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="837"/>
         <source>New</source>
         <translation>Nouveau</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="868"/>
+        <location filename="../qml/pages/Plant/PlantDesease.qml" line="855"/>
         <source>Analyse</source>
         <translation>Analyser</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="977"/>
         <source>Detected diseases</source>
-        <translation>Maladies détectées</translation>
+        <translation type="vanished">Maladies détectées</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDesease.qml" line="994"/>
         <source>No plant detected</source>
-        <translation>Pas de plante identifiée</translation>
+        <translation type="vanished">Pas de plante identifiée</translation>
     </message>
 </context>
 <context>
     <name>PlantDeseaseDetails</name>
     <message>
-        <location filename="../qml/pages/Plant/PlantDeseaseDetails.qml" line="328"/>
         <source>More informations on Wikipedia</source>
-        <translation>Plus d&apos;infos sur Wikipédia</translation>
+        <translation type="vanished">Plus d&apos;infos sur Wikipédia</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Plant/PlantDeseaseDetails.qml" line="215"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Plant/PlantDeseaseDetails.qml" line="215"/>
+        <source>Causes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Plant/PlantDeseaseDetails.qml" line="333"/>
+        <source>Blume AI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Plant/PlantDeseaseDetails.qml" line="345"/>
+        <source>Pour plus d&apos;informations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Plant/PlantDeseaseDetails.qml" line="451"/>
+        <source>Photo galery</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2517,7 +2597,7 @@
         <translation>Chercher des maladies</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantDeseaseEncylopedie.qml" line="289"/>
+        <location filename="../qml/pages/Plant/PlantDeseaseEncylopedie.qml" line="314"/>
         <source>No plants found. Please, try using camera !</source>
         <translation>Aucune plante n&apos;a été trouvée. Essayez d&apos;utiliser l&apos;appareil photo !</translation>
     </message>
@@ -2553,40 +2633,43 @@
 <context>
     <name>PlantIdentifier</name>
     <message>
-        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="218"/>
-        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="491"/>
+        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="264"/>
+        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="510"/>
         <source>File image</source>
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="221"/>
+        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="267"/>
         <source>Camera</source>
         <translation>Caméra</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="443"/>
+        <source>Launch analysis</source>
+        <translation>Lancer l&apos;analyse</translation>
     </message>
     <message>
         <source>Identify plant</source>
         <translation type="vanished">Identifier une plante</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="48"/>
-        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="99"/>
+        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="61"/>
+        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="145"/>
         <source>Identifier une plante</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="284"/>
+        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="330"/>
         <source>Be sure to take a clear, bright photo that includes only the plant you want to identify</source>
         <translation>Veillez à prendre une photo claire et lumineuse sur laquelle figure uniquement la plante que vous souhaitez identifier.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="406"/>
         <source>New</source>
-        <translation>Nouveau</translation>
+        <translation type="vanished">Nouveau</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Plant/PlantIdentifier.qml" line="424"/>
         <source>Analyse</source>
-        <translation>Analyser</translation>
+        <translation type="vanished">Analyser</translation>
     </message>
     <message>
         <source>One of these results should match your search</source>
@@ -2838,22 +2921,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/PlantScreenDetails.qml" line="576"/>
+        <location filename="../qml/PlantScreenDetails.qml" line="583"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/PlantScreenDetails.qml" line="576"/>
+        <location filename="../qml/PlantScreenDetails.qml" line="583"/>
         <source>Usage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/PlantScreenDetails.qml" line="576"/>
+        <location filename="../qml/PlantScreenDetails.qml" line="583"/>
         <source>Quizz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/PlantScreenDetails.qml" line="740"/>
+        <location filename="../qml/PlantScreenDetails.qml" line="747"/>
         <source>Blume AI</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2862,7 +2945,7 @@
         <translation type="vanished">Nom botanique</translation>
     </message>
     <message>
-        <location filename="../qml/PlantScreenDetails.qml" line="576"/>
+        <location filename="../qml/PlantScreenDetails.qml" line="583"/>
         <source>Common names</source>
         <translation>Noms communs</translation>
     </message>
@@ -2891,32 +2974,32 @@
         <translation>Absoption CO2</translation>
     </message>
     <message>
-        <location filename="../qml/PlantScreenDetails.qml" line="576"/>
+        <location filename="../qml/PlantScreenDetails.qml" line="583"/>
         <source>Joke</source>
         <translation>Blague</translation>
     </message>
     <message>
-        <location filename="../qml/PlantScreenDetails.qml" line="673"/>
+        <location filename="../qml/PlantScreenDetails.qml" line="680"/>
         <source>This section will be available soon</source>
         <translation>Cette section sera disponible bientôt</translation>
     </message>
     <message>
-        <location filename="../qml/PlantScreenDetails.qml" line="713"/>
+        <location filename="../qml/PlantScreenDetails.qml" line="720"/>
         <source>Care</source>
         <translation>Soin</translation>
     </message>
     <message>
-        <location filename="../qml/PlantScreenDetails.qml" line="753"/>
+        <location filename="../qml/PlantScreenDetails.qml" line="760"/>
         <source>For plant care</source>
         <translation>Pour les soins de plante</translation>
     </message>
     <message>
-        <location filename="../qml/PlantScreenDetails.qml" line="761"/>
+        <location filename="../qml/PlantScreenDetails.qml" line="768"/>
         <source>More informations</source>
         <translation>Pour plus d&apos;informations</translation>
     </message>
     <message>
-        <location filename="../qml/PlantScreenDetails.qml" line="801"/>
+        <location filename="../qml/PlantScreenDetails.qml" line="808"/>
         <source>Plant galery</source>
         <translation>Gallerie photos</translation>
     </message>
@@ -2983,7 +3066,7 @@
         <translation type="vanished">Fréquence de vaporisation</translation>
     </message>
     <message>
-        <location filename="../qml/PlantScreenDetails.qml" line="776"/>
+        <location filename="../qml/PlantScreenDetails.qml" line="783"/>
         <source>No image available</source>
         <translation>Pas d&apos;image</translation>
     </message>
@@ -3389,6 +3472,44 @@
     </message>
 </context>
 <context>
+    <name>PostActions</name>
+    <message>
+        <location filename="../qml/pages/Social/widgets/PostActions.qml" line="39"/>
+        <source>Your report have been submitted !</source>
+        <translation>Opération réussie</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/widgets/PostActions.qml" line="43"/>
+        <source>Close</source>
+        <translation>Fermer</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/widgets/PostActions.qml" line="98"/>
+        <source>Report this post</source>
+        <translation>Signaler cette publication</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/widgets/PostActions.qml" line="103"/>
+        <source>The author won&apos;t know who reported him</source>
+        <translation>L&apos;auteur ne saura pas qui l&apos;a signalé</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/widgets/PostActions.qml" line="150"/>
+        <source>Report</source>
+        <translation>Signaler</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/widgets/PostActions.qml" line="174"/>
+        <source>Violence</source>
+        <translation>Violence</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/widgets/PostActions.qml" line="192"/>
+        <source>Confirm</source>
+        <translation>Confirmer</translation>
+    </message>
+</context>
+<context>
     <name>PostEditPage</name>
     <message>
         <location filename="../qml/pages/Social/pages/PostEditPage.qml" line="42"/>
@@ -3427,7 +3548,7 @@
 <context>
     <name>Register</name>
     <message>
-        <location filename="../qml/pages/Social/pages/Register.qml" line="231"/>
+        <location filename="../qml/pages/Social/pages/Register.qml" line="250"/>
         <source>Create my account</source>
         <translation>Créer mon compte</translation>
     </message>
@@ -3437,19 +3558,16 @@
     </message>
     <message>
         <location filename="../qml/pages/Auth/Register.qml" line="67"/>
-        <location filename="../qml/pages/Social/pages/Register.qml" line="67"/>
         <source>Sign in with Google</source>
         <translation>S&apos;inscrire avec Google</translation>
     </message>
     <message>
         <location filename="../qml/pages/Auth/Register.qml" line="78"/>
-        <location filename="../qml/pages/Social/pages/Register.qml" line="78"/>
         <source>Sign in with Apple</source>
         <translation>S&apos;inscrire avec Apple</translation>
     </message>
     <message>
         <location filename="../qml/pages/Auth/Register.qml" line="99"/>
-        <location filename="../qml/pages/Social/pages/Register.qml" line="99"/>
         <source>OR</source>
         <translation>OU</translation>
     </message>
@@ -3526,15 +3644,34 @@
         <translation>Votre mot de passe</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Social/pages/Register.qml" line="224"/>
+        <location filename="../qml/pages/Social/pages/Register.qml" line="226"/>
+        <source>J&apos;accepte les conditions d&apos;utilisation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/Register.qml" line="265"/>
+        <source>Fill all required fields</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/Register.qml" line="295"/>
+        <source>Username not available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Social/pages/Register.qml" line="302"/>
+        <source>An error occured</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Incorrect password</source>
-        <translation>Mot de passe incorrect</translation>
+        <translation type="vanished">Mot de passe incorrect</translation>
     </message>
 </context>
 <context>
     <name>SearchPlants</name>
     <message>
-        <location filename="../qml/components/SearchPlants.qml" line="502"/>
+        <location filename="../qml/components/SearchPlants.qml" line="528"/>
         <source>No plants found. Please, try using camera !</source>
         <translation>Aucune plante n&apos;a été trouvée. Essayez d&apos;utiliser l&apos;appareil photo !</translation>
     </message>
@@ -3881,22 +4018,20 @@
 <context>
     <name>SocialPreview</name>
     <message>
-        <location filename="../qml/pages/Social/pages/SocialPreview.qml" line="67"/>
+        <location filename="../qml/pages/Social/pages/SocialPreview.qml" line="92"/>
         <source>Search for a friend</source>
         <translation>Chercher un ami</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Social/pages/SocialPreview.qml" line="228"/>
         <source>Good evening everyone, I hope you&apos;re well. I&apos;d like to introduce you to my new garden. We worked on the layout of this space in 3 months and 10 days. I let you admire and leave me your opinions in comments.</source>
-        <translation>Bonsoir à tous, j’espère que vous allez bien. Je vous présente mon nouveau jardin. Nous avons travailler sur l’aménagèrent de ce espace en 3 mois et 10 jours. je vous laisse admirer et laisser moi vos avis en commentaires.</translation>
+        <translation type="vanished">Bonsoir à tous, j’espère que vous allez bien. Je vous présente mon nouveau jardin. Nous avons travailler sur l’aménagèrent de ce espace en 3 mois et 10 jours. je vous laisse admirer et laisser moi vos avis en commentaires.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Social/pages/SocialPreview.qml" line="284"/>
         <source>1000 comments</source>
-        <translation>100 commentaires</translation>
+        <translation type="vanished">100 commentaires</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Social/pages/SocialPreview.qml" line="289"/>
+        <location filename="../qml/pages/Social/pages/SocialPreview.qml" line="412"/>
         <source>40 shares</source>
         <translation>40 partages</translation>
     </message>
@@ -4108,12 +4243,11 @@
 <context>
     <name>UserProfile</name>
     <message>
-        <location filename="../qml/pages/Social/pages/UserProfile.qml" line="88"/>
         <source>Profil of %1</source>
-        <translation>Profil de %1</translation>
+        <translation type="vanished">Profil de %1</translation>
     </message>
     <message>
-        <location filename="../qml/pages/Social/pages/UserProfile.qml" line="310"/>
+        <location filename="../qml/pages/Social/pages/UserProfile.qml" line="327"/>
         <source>Edit my profile</source>
         <translation>Modifier mon compte</translation>
     </message>

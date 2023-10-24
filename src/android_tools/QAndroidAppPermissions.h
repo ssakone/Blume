@@ -48,6 +48,7 @@ public:
     Q_INVOKABLE bool shouldShowRequestPermissionInfo(const QString &permissionName);
     Q_INVOKABLE bool isPermissionGranted(const QString &permissionName);
     Q_INVOKABLE void openCamera();
+    Q_INVOKABLE void openImageGallery();
     Q_INVOKABLE void openGallery();
     static void done(JNIEnv *env, jobject thiz, jstring path);
 

@@ -63,51 +63,51 @@ BPage {
                 width: parent.width
                 spacing: 25
 
-                ButtonWireframeIcon {
-                    text: qsTr("Sign in with Google")
-                    source: Icons.google
-                    backgroundBorderWidth: 1
-                    primaryColor: $Colors.colorPrimary
-                    secondaryColor: root.shade
-                    height: 50
-                    width: parent.width
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
+//                ButtonWireframeIcon {
+//                    text: qsTr("Sign in with Google")
+//                    source: Icons.google
+//                    backgroundBorderWidth: 1
+//                    primaryColor: $Colors.colorPrimary
+//                    secondaryColor: root.shade
+//                    height: 50
+//                    width: parent.width
+//                    anchors.horizontalCenter: parent.horizontalCenter
+//                }
 
-                ButtonWireframeIcon {
-                    text: qsTr("Sign in with Apple")
-                    source: Icons.apple
-                    primaryColor: $Colors.colorPrimary
-                    secondaryColor: root.shade
-                    height: 50
-                    width: parent.width
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
+//                ButtonWireframeIcon {
+//                    text: qsTr("Sign in with Apple")
+//                    source: Icons.apple
+//                    primaryColor: $Colors.colorPrimary
+//                    secondaryColor: root.shade
+//                    height: 50
+//                    width: parent.width
+//                    anchors.horizontalCenter: parent.horizontalCenter
+//                }
 
-                RowLayout {
-                    width: parent.width
-                    anchors.topMargin: 25
-                    anchors.bottomMargin: 25
-                    Rectangle {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 1
-                        color: $Colors.gray500
-                        Layout.alignment: Qt.AlignVCenter
-                    }
+//                RowLayout {
+//                    width: parent.width
+//                    anchors.topMargin: 25
+//                    anchors.bottomMargin: 25
+//                    Rectangle {
+//                        Layout.fillWidth: true
+//                        Layout.preferredHeight: 1
+//                        color: $Colors.gray500
+//                        Layout.alignment: Qt.AlignVCenter
+//                    }
 
-                    Label {
-                        text: qsTr("OR")
-                        color: $Colors.gray500
-                        Layout.alignment: Qt.AlignVCenter
-                    }
+//                    Label {
+//                        text: qsTr("OR")
+//                        color: $Colors.gray500
+//                        Layout.alignment: Qt.AlignVCenter
+//                    }
 
-                    Rectangle {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 1
-                        color: $Colors.gray500
-                        Layout.alignment: Qt.AlignVCenter
-                    }
-                }
+//                    Rectangle {
+//                        Layout.fillWidth: true
+//                        Layout.preferredHeight: 1
+//                        color: $Colors.gray500
+//                        Layout.alignment: Qt.AlignVCenter
+//                    }
+//                }
 
                 ColumnLayout {
                     width: parent.width
@@ -169,7 +169,7 @@ BPage {
                             radius: 15
                             width: parent.width
                             height: 50
-                            onTextChanged: errorLabel.visible = false
+                            onTextChanged: errorLabel.text = ""
                         }
                     }
 
@@ -189,7 +189,7 @@ BPage {
                             radius: 15
                             width: parent.width
                             height: 50
-                            onTextChanged: errorLabel.visible = false
+                            onTextChanged: errorLabel.text = ""
                         }
                     }
 
@@ -210,27 +210,45 @@ BPage {
                             width: parent.width
                             height: 50
                             echoMode: TextInput.Password
-                            onTextChanged: errorLabel.visible = false
+                            onTextChanged: errorLabel.text = ""
                             Keys.onReturnPressed: {
                                 connectButton.clicked()
                             }
                         }
                     }
 
-                    Qaterial.Label {
-                        id: errorLabel
-                        visible: false
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: qsTr("Incorrect password")
-                        color: "red"
+                    Column {
+                        width: parent.width
+                        spacing: 5
+
+                        Qaterial.CheckButton {
+                            id: agreementCheck
+                            text: qsTr("J'accepte les conditions d'utilisation")
+                        }
+
+                        Qaterial.Label {
+                            text: "Lire les conditions d'utilisation"
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            font.underline: true
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: Qt.openUrlExternally("https://mahoudev.github.io/blume-politique-confidentialite")
+                            }
+                        }
                     }
+
+                    Label {
+                        id: errorLabel
+                        color: "red"
+                        font.pixelSize: 14
+                    }
+
 
                     Qaterial.ExtendedFabButton {
                         id: connectButton
                         property bool busy: false
                         text: busy ? "" : qsTr("Create my account")
                         width: 230
-                        //enabled: !busy
                         anchors.horizontalCenter: parent.horizontalCenter
                         icon.source: Qaterial.Icons.lock
 
@@ -242,15 +260,17 @@ BPage {
 
                         onClicked: {
                             Qt.callLater(function () {
-                                if (username.text === '' || password.text === '') {
-                                    errorLabel.visible = true
+                                errorLabel.text = ""
+                                if (username.text === '' || password.text === '' || agreementCheck.checked === false) {
+                                    errorLabel.text = qsTr("Fill all required fields")
+
                                     return
                                 }
                                 if (busy === true) {
                                     return
                                 }
                                 busy = true
-                                http.auth(username.text, password.text).then(function (rs) {
+                                http.createAccount(username.text, password.text).then(function (rs) {
                                     const data = JSON.parse(rs)
 
                                     console.log(rs)
@@ -271,14 +291,16 @@ BPage {
                                             busy = false
                                         })
                                     } else {
-                                        if (data.status === "Error during authentication") {
-                                            errorLabel.visible = true
+                                        if (data.status === "USERNAME_NOT_AVAILABLE") {
+                                            errorLabel.text = qsTr("Username not available")
                                             busy = false
                                         }
                                     }
                                 }).catch(e => {
                                              console.log(JSON.stringify(e))
                                              busy = false
+                                             errorLabel.text = qsTr("An error occured")
+
                                          })
                             })
                         }

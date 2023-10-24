@@ -235,528 +235,573 @@ BPage {
             Column {
                 id: alarmsCol
                 width: parent.width
-                leftPadding: 10
-                rightPadding: 10
-                spacing: 10
-
-                Flickable {
-                    id: weatherFlickable
-                    width: parent.width - 20
-                    height: weartherRow.height
-                    contentWidth: weartherRow.width
-
-                    Row {
-                        id: weartherRow
-                        spacing: 10
-
-                        Item {
-                            width: weatherFlickable.width - 50
-                            height: 180
-                            visible: !weatherResponse
-                            BusyIndicator {
-                                visible: !isWeatherLoaded
-                                anchors.centerIn: parent
-                            }
-
-                            Column {
-                                anchors.centerIn: parent
-                                visible: isWeatherLoaded && weatherResponse === undefined
-
-                                Label {
-                                    text: qsTr("Weather not loaded !")
-                                }
-
-                                NiceButton {
-                                    text: qsTr("Reload")
-                                    onClicked: loadWeather()
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                }
-                            }
-
-
-                        }
-
-                        Repeater {
-                            model: weatherResponse?.forecast?.forecastday
-
-                            WeatherCard {
-                                required property variant modelData
-                                required property int index
-                                width: weatherFlickable.width - 20
-                                height: 180
-                                radius: 20
-                                dateText: {
-                                    switch(index) {
-                                    case 0: return qsTr("Today")
-                                    case 1: return qsTr("Tomorrow")
-                                    case 2: return qsTr("After tomorrow")
-                                    default: return (new Date(modelData.date)).toLocaleDateString()
-                                    }
-                                }
-
-                                weatherData: {
-                                    const today = new Date()
-                                    for(let i = modelData.hour.length - 1; i >= 0 ; i--) {
-                                        if(today >= new Date(modelData.hour[i].time)) {
-                                            return modelData.hour[i]
-                                        }
-                                    }
-                                    return modelData.hour[modelData.hour.length-1]
-                                }
-
-                                location: weatherResponse.location
-                            }
-                        }
-
-                    }
-                }
-
-
-                RowLayout {
-                    id: _insideControl
-                    property string foregroundColor: $Colors.colorPrimary
-
-                    width: parent.width - 20
-                    anchors.leftMargin: 15
-                    anchors.rightMargin: 20
-                    spacing: 20
-
-                    Rectangle {
-                            Layout.preferredHeight: 80
-                            Layout.preferredWidth: 80
-                            radius: 15
-                            gradient: $Colors.gradientPrimary
-                            ColumnLayout {
-                                anchors.centerIn: parent
-                                anchors.margins: 5
-                                spacing: 7
-
-                                IconSvg {
-                                    source: "qrc:/assets/icons_custom/tasks.svg"
-                                    Layout.preferredHeight: 30
-                                    Layout.preferredWidth: Layout.preferredHeight
-                                    Layout.alignment: Qt.AlignHCenter
-                                }
-                                Label {
-                                    text: qsTr("Tasks")
-                                    font.pixelSize: 16
-                                    font.weight: Font.DemiBold
-                                    color: $Colors.white
-                                    Layout.alignment: Qt.AlignHCenter
-                                }
-                            }
-                            MouseArea {
-                                id: _insideMouse
-                                hoverEnabled: true
-                                anchors.fill: parent
-                                cursorShape: "PointingHandCursor"
-                                onClicked: {
-                                    page_view.push(navigator.gardenAlarmsCalendar)
-                                }
-                            }
-                        }
-
-
-                    Rectangle {
-                            Layout.preferredHeight: 100
-                            Layout.preferredWidth: 120
-                            radius: 20
-                            color: $Colors.colorPrimary
-
-                            Timer {
-                                id: animationTimer
-                                property double min: 1.0
-                                property double max: 1.15
-                                property bool up: true
-                                interval: 50
-                                repeat: true
-                                running: $Model.space.count === 0
-                                onTriggered: {
-                                    if(up) {
-                                        if(parent.scale <= max) {
-                                            parent.scale += 0.01
-                                        } else {
-                                            up = false
-                                        }
-                                    } else {
-                                        if(parent.scale >= min) {
-                                            parent.scale -= 0.01
-                                        } else {
-                                            up = true
-                                        }
-                                    }
-
-                                }
-                            }
-
-                            Behavior on scale {
-                                NumberAnimation {
-                                    duration: 50
-                                    easing.type: Easing.InOutCubic
-                                }
-                            }
-
-                            ColumnLayout {
-                                anchors.fill: parent
-                                anchors.margins: 10
-
-                                IconSvg {
-                                    source: "qrc:/assets/icons_custom/house.svg"
-                                    color: _insideMouse.containsMouse
-                                           || _insideMouse.containsPress ? _insideControl.foregroundColor : $Colors.white
-                                    Layout.preferredHeight: 45
-                                    Layout.preferredWidth: Layout.preferredHeight
-                                    Layout.alignment: Qt.AlignHCenter
-                                }
-                                Label {
-                                    text: qsTr("Rooms")
-                                    font.pixelSize: 15
-                                    font.weight: Font.DemiBold
-                                    color: _insideMouse.containsMouse
-                                           || _insideMouse.containsPress ? _insideControl.foregroundColor : $Colors.white
-                                    Layout.alignment: Qt.AlignHCenter
-                                }
-                            }
-                            MouseArea {
-                                hoverEnabled: true
-                                anchors.fill: parent
-                                cursorShape: "PointingHandCursor"
-                                onClicked: {
-                                    page_view.push(navigator.gardenSpacesList)
-                                }
-                            }
-                        }
-
-                    Rectangle {
-                            Layout.preferredHeight: 80
-                            Layout.preferredWidth: 80
-                            radius: 15
-                            gradient: $Colors.gradientPrimary
-                            ColumnLayout {
-                                anchors.centerIn: parent
-                                anchors.margins: 5
-                                spacing: 7
-
-                                IconSvg {
-                                    source: "qrc:/assets/icons_custom/plant-leaves.svg"
-                                    Layout.preferredHeight: 30
-                                    Layout.preferredWidth: Layout.preferredHeight
-                                    Layout.alignment: Qt.AlignHCenter
-                                }
-                                Label {
-                                    text: qsTr("Plants")
-                                    font.pixelSize: 14
-                                    font.weight: Font.DemiBold
-                                    color: $Colors.white
-                                    Layout.alignment: Qt.AlignHCenter
-                                }
-                            }
-                            MouseArea {
-                                hoverEnabled: true
-                                anchors.fill: parent
-                                cursorShape: "PointingHandCursor"
-                                onClicked: {
-                                    page_view.push(navigator.gardenPlantsList)
-                                }
-                            }
-                        }
-
-                }
-
-                Flickable {
-                    width: parent.width - 20
-                    height: getStartedRow.height
-                    contentWidth: getStartedRow.width
-                    visible: $Model.alarm.count === 0
-
-                    RowLayout {
-                        id: getStartedRow
-                        spacing: 10
-
-                        Repeater {
-                            model: 4
-
-                            Rectangle {
-                                Layout.preferredWidth: 180
-                                Layout.preferredHeight: 100
-                                Image {
-                                    anchors.fill: parent
-                                    source: index % 2 === 0 ? "qrc:/assets/img/plant-in-pot-long-leaves.png" : "qrc:/assets/img/plant-with-insect.png"
-                                    opacity: 0.95
-                                }
-                                RowLayout {
-                                    anchors.bottom: parent.bottom
-                                    anchors.bottomMargin: 3
-                                    width: parent.width - 20
-                                    Layout.leftMargin: 10
-                                    Layout.rightMargin: 10
-                                    spacing: 5
-
-                                    IconSvg {
-                                        source: "qrc:/assets/icons_custom/plant-leaves.svg"
-                                        Layout.preferredWidth: 45
-                                        Layout.preferredHeight: Layout.preferredWidth
-                                        color: $Colors.white
-                                    }
-
-                                    Label {
-                                        Layout.fillWidth: true
-                                        Layout.alignment: Qt.AlignBottom
-                                        color: $Colors.white
-                                        text: qsTr("How to create a room ?")
-                                        wrapMode: Text.Wrap
-                                        font {
-                                            weight: Font.Bold
-                                            pixelSize: 14
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                }
 
                 Column {
-                    visible: alarmsLate.count > 0
                     width: parent.width
-                    spacing: 10
-
-                    Label {
-                        text: qsTr("Lates")
-                        width: parent.width
-                        horizontalAlignment: Text.AlignHCenter
-                        font {
-                            weight: Font.Light
-                            pixelSize: 16
-                        }
-                    }
-                    Repeater {
-                        model: alarmsLate
-                        GardenActivityLine {
-                            property var plantObj: JSON.parse(model.plant_json)
-                            property var lateDetails: ({})
-
-                            title: model.libelle || "NULL"
-                            plant_name: plantObj.name_scientific
-
-                            subtitle: {
-                                const today = new Date()
-                                const last_done = new Date(model.last_done.slice(1, -1))
-                                let diff = today - last_done
-                                let diffDays = Math.floor(diff/(1000*60*60*24))
-
-                                if(diffDays > model.frequence) {
-                                    const delay = diffDays - model.frequence
-                                    const formated = Utils.humanizeDayPeriod(delay)
-                                    lateDetails = formated
-                                    return `<font color='${$Colors.red500}'> ${lateDetails.freq < 10 ? '0'+lateDetails.freq : lateDetails.freq} ${lateDetails.period_label} ${qsTr("late")} </font>`
-                                }
-
-                                return `<font color='${$Colors.red500}'>${qsTr("Task late")} </font>`
-                            }
-                            isDone: {
-                                if(alarmsIdsToDownStatus.filter(x => x.id === model.id).length > 0 ) {
-                                    return false
-                                }
-                                return model.done === 1
-                            }
-
-                            onDeleteClicked: {
-                                removeAlarmPopup.show(model)
-                            }
-
-                            onChecked: newStatus => {
-                                           $Model.alarm.sqlUpdateTaskStatus(
-                                               model.id, newStatus).then(res => {
-                                                                             model.done =  model.done === 0 ? 1 : 0
-                                                                         }).catch(
-                                               console.warn)
-                                       }
-
-                            icon.source: model.type === 0 ? Icons.shovel : model.type === 1 ? Icons.waterOutline : model.type === 2 ? Icons.potMixOutline : Icons.flowerOutline
-                            image.source: {
-                                let value = plantObj.images_plantes[0] ? "https://blume.mahoudev.com/assets/" + plantObj.images_plantes[0].directus_files_id : ""
-                                return value
-                            }
-
-                            width: parent.width - 20
-                            height: 80
-                        }
-                    }
+                    leftPadding: 10
+                    rightPadding: 10
 
                     Rectangle {
                         width: parent.width - 20
-                        height: 5
-                        color: $Colors.gray200
-                    }
+                        height: _captureCol.height
+                        color: Qt.rgba(255, 255, 255, 0.95)
+                        radius: 10
 
-                }
-
-                Column {
-                    visible: alarmsTodoToday.count > 0
-                    width: parent.width
-                    spacing: 10
-
-                    Label {
-                        text: qsTr("Today")
-                        width: parent.width
-                        horizontalAlignment: Text.AlignHCenter
-                        font {
-                            weight: Font.Light
-                            pixelSize: 16
+                        QGE.DropShadow {
+                            anchors.fill: butterfly
+                            horizontalOffset: 10
+                            verticalOffset: 25
+                            radius: 12
+                            samples: 25
+                            color: "black"
+                            source: parent
                         }
-                    }
 
-                    Repeater {
-                        model: alarmsTodoToday
-                        GardenActivityLine {
-                            property var plantObj: JSON.parse(model.plant_json)
-
-                            title: (model.libelle[0]==="'" ? model.libelle.slice(1, -1): model.libelle) || "NULL"
-                            plant_name: plantObj.name_scientific
-
-                            subtitle: {
-                                $Model.space.sqlGet(model.space).then(function(res) {
-                                                                          subtitle = ""
-                                                                          + (res.libelle[0] === "'" ? res.libelle.slice(1, -1) : res.libelle)
-                                                                      }).catch(
-                                            console.warn)
-
-                                return ""
-                            }
-
-                            frequency: {
-                                const period = Utils.humanizeDayPeriod(model.frequence)
-                                qsTr("Each") + " " + period.freq + " " + period.period_label
-                            }
-
-                            hideDelete: true
-
-                            isDone: {
-                                if(alarmsIdsToDownStatus.filter(id => id === model.id).length > 0 ) {
-                                    return false
-                                }
-                                return model.done === 1
-                            }
-
-                            onDeleteClicked: {
-                                removeAlarmPopup.show(model)
-                            }
-
-                            onChecked: newStatus => {
-                                           $Model.alarm.sqlUpdateTaskStatus(
-                                               model.id, newStatus).then(res => {
-                                                                             model.done = model.done === 0 ? 1 : 0
-                                                                         }).catch(
-                                               console.warn)
-                                       }
-
-                            icon.source: model.type === 0 ? Icons.shovel : model.type === 1 ? Icons.waterOutline : model.type === 2 ? Icons.potMixOutline : Icons.flowerOutline
-                            image.source: {
-                                let value = plantObj.images_plantes[0] ? "https://blume.mahoudev.com/assets/" + plantObj.images_plantes[0].directus_files_id : ""
-                                return value
-                            }
-
-                            width: parent.width - 20
-                        }
-                    }
-                }
-
-                Column {
-                    id: tipsColum
-                    width: parent.width - 20
-                    spacing: 10
-                    Label {
-                        text: qsTr("Tips and advices")
-                        width: parent.width
-                        color: $Colors.colorPrimary
-                        font {
-                            weight: Font.DemiBold
-                            pixelSize: 16
-                        }
-                    }
-
-                    Repeater {
-                        model: 3
-                        delegate: Rectangle {
+                        Column {
+                            id: _captureCol
                             width: parent.width
-                            height: 120
-                            color: $Colors.colorTertiary
-                            radius: 10
-                            clip: true
-                            border {
-                                width: 1
+                            padding: 15
+                            spacing: 20
+
+                            Label {
+                                text: qsTr("Identify a plant")
+                                color: $Colors.colorPrimary
+                                font.pixelSize: 24
+                                font.weight: Font.Bold
+                                anchors.horizontalCenter: parent.horizontalCenter
+                            }
+
+                            Row {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                spacing: 30
+
+                                Rectangle {
+                                    width: 120
+                                    height: width
+                                    radius: 7
+                                    border {
+                                        width: 2
+                                        color: $Colors.white
+                                    }
+
+                                    IconSvg {
+                                        anchors.fill: parent
+                                        anchors.margins: 5
+                                        source: "qrc:/assets/img/flower-pot.png"
+                                    }
+                                }
+
+                                Rectangle {
+                                    width: 120
+                                    height: width
+                                    radius: 7
+                                    color: Qt.rgba(255, 255, 255, 0)
+                                    border {
+                                        width: 3
+                                        color: $Colors.colorPrimary
+                                    }
+
+                                    IconSvg {
+                                        anchors.fill: parent
+                                        anchors.margins: 15
+                                        source: Icons.camera
+                                        color: $Colors.colorPrimary
+                                    }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: page_view.push(navigator.plantIdentifierPage, {
+                                                                  "actionTypeOnCompleted": "openCamera"
+                                                                  })
+                                    }
+                                }
+                            }
+
+                            NiceButton {
+                                text: qsTr("Import photos")
+                                font.pixelSize: 18
+                                icon.source: "qrc:/assets/icons_custom/pictures-group.svg"
+                                icon.color: $Colors.white
+                                width: parent.width - 30
+                                height: 60
+                                radius: 10
+                                onClicked: page_view.push(navigator.plantIdentifierPage, {
+                                                          "actionTypeOnCompleted": "openGallery"
+                                                          })
+                            }
+                        }
+                    }
+                }
+
+
+                Container {
+                    width: parent.width
+                    topPadding: 10
+                    leftPadding: 10
+                    rightPadding: 10
+
+                    contentItem: Column {}
+                    background: Rectangle {
+                        color: $Colors.colorTertiary
+                    }
+
+                    Column {
+                        width: parent.width
+                        spacing: 20
+                        topPadding: 20
+
+                        Row {
+                            id: _insideControl
+                            property string foregroundColor: $Colors.colorPrimary
+
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            spacing: 20
+
+                            Rectangle {
+                                height: 80
+                                width: 80
+                                radius: 15
+                                gradient: $Colors.gradientPrimary
+                                ColumnLayout {
+                                    anchors.centerIn: parent
+                                    anchors.margins: 5
+                                    spacing: 7
+
+                                    IconSvg {
+                                        source: "qrc:/assets/icons_custom/tasks.svg"
+                                        Layout.preferredHeight: 30
+                                        Layout.preferredWidth: Layout.preferredHeight
+                                        Layout.alignment: Qt.AlignHCenter
+                                    }
+                                    Label {
+                                        text: qsTr("Tasks")
+                                        font.pixelSize: 16
+                                        font.weight: Font.DemiBold
+                                        color: $Colors.white
+                                        Layout.alignment: Qt.AlignHCenter
+                                    }
+                                }
+                                MouseArea {
+                                    id: _insideMouse
+                                    hoverEnabled: true
+                                    anchors.fill: parent
+                                    cursorShape: "PointingHandCursor"
+                                    onClicked: {
+                                        page_view.push(navigator.gardenAlarmsCalendar)
+                                    }
+                                }
+                            }
+
+                            Rectangle {
+                                height: 100
+                                width: 120
+                                radius: 20
+                                color: $Colors.colorPrimary
+
+                                Timer {
+                                    id: animationTimer
+                                    property double min: 1.0
+                                    property double max: 1.15
+                                    property bool up: true
+                                    interval: 50
+                                    repeat: true
+                                    running: $Model.space.count === 0
+                                    onTriggered: {
+                                        if(up) {
+                                            if(parent.scale <= max) {
+                                                parent.scale += 0.01
+                                            } else {
+                                                up = false
+                                            }
+                                        } else {
+                                            if(parent.scale >= min) {
+                                                parent.scale -= 0.01
+                                            } else {
+                                                up = true
+                                            }
+                                        }
+
+                                    }
+                                }
+
+                                Behavior on scale {
+                                    NumberAnimation {
+                                        duration: 50
+                                        easing.type: Easing.InOutCubic
+                                    }
+                                }
+
+                                ColumnLayout {
+                                    anchors.fill: parent
+                                    anchors.margins: 10
+
+                                    IconSvg {
+                                        source: "qrc:/assets/icons_custom/house.svg"
+                                        color: _insideMouse.containsMouse
+                                               || _insideMouse.containsPress ? _insideControl.foregroundColor : $Colors.white
+                                        Layout.preferredHeight: 45
+                                        Layout.preferredWidth: Layout.preferredHeight
+                                        Layout.alignment: Qt.AlignHCenter
+                                    }
+                                    Label {
+                                        text: qsTr("Rooms")
+                                        font.pixelSize: 15
+                                        font.weight: Font.DemiBold
+                                        color: _insideMouse.containsMouse
+                                               || _insideMouse.containsPress ? _insideControl.foregroundColor : $Colors.white
+                                        Layout.alignment: Qt.AlignHCenter
+                                    }
+                                }
+                                MouseArea {
+                                    hoverEnabled: true
+                                    anchors.fill: parent
+                                    cursorShape: "PointingHandCursor"
+                                    onClicked: {
+                                        page_view.push(navigator.gardenSpacesList)
+                                    }
+                                }
+                            }
+
+                            Rectangle {
+                                height: 80
+                                width: 80
+                                radius: 15
+                                gradient: $Colors.gradientPrimary
+                                ColumnLayout {
+                                    anchors.centerIn: parent
+                                    anchors.margins: 5
+                                    spacing: 7
+
+                                    IconSvg {
+                                        source: "qrc:/assets/icons_custom/plant-leaves.svg"
+                                        Layout.preferredHeight: 30
+                                        Layout.preferredWidth: Layout.preferredHeight
+                                        Layout.alignment: Qt.AlignHCenter
+                                    }
+                                    Label {
+                                        text: qsTr("Plants")
+                                        font.pixelSize: 14
+                                        font.weight: Font.DemiBold
+                                        color: $Colors.white
+                                        Layout.alignment: Qt.AlignHCenter
+                                    }
+                                }
+                                MouseArea {
+                                    hoverEnabled: true
+                                    anchors.fill: parent
+                                    cursorShape: "PointingHandCursor"
+                                    onClicked: {
+                                        page_view.push(navigator.gardenPlantsList)
+                                    }
+                                }
+                            }
+
+                        }
+
+                        Flickable {
+                            width: parent.width
+                            height: getStartedRow.height
+                            contentWidth: getStartedRow.width
+                            visible: $Model.alarm.count === 0
+
+                            RowLayout {
+                                id: getStartedRow
+                                spacing: 10
+
+                                Repeater {
+                                    model: 4
+
+                                    Rectangle {
+                                        Layout.preferredWidth: 180
+                                        Layout.preferredHeight: 100
+                                        Image {
+                                            anchors.fill: parent
+                                            source: index % 2 === 0 ? "qrc:/assets/img/plant-in-pot-long-leaves.png" : "qrc:/assets/img/plant-with-insect.png"
+                                            opacity: 0.95
+                                        }
+                                        RowLayout {
+                                            anchors.bottom: parent.bottom
+                                            anchors.bottomMargin: 3
+                                            width: parent.width - 20
+                                            Layout.leftMargin: 10
+                                            Layout.rightMargin: 10
+                                            spacing: 5
+
+                                            IconSvg {
+                                                source: "qrc:/assets/icons_custom/plant-leaves.svg"
+                                                Layout.preferredWidth: 45
+                                                Layout.preferredHeight: Layout.preferredWidth
+                                                color: $Colors.white
+                                            }
+
+                                            Label {
+                                                Layout.fillWidth: true
+                                                Layout.alignment: Qt.AlignBottom
+                                                color: $Colors.white
+                                                text: qsTr("How to create a room ?")
+                                                wrapMode: Text.Wrap
+                                                font {
+                                                    weight: Font.Bold
+                                                    pixelSize: 14
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+
+                        Column {
+                            visible: alarmsLate.count > 0
+                            width: parent.width
+                            spacing: 10
+
+                            Label {
+                                text: qsTr("Lates")
+                                width: parent.width
+                                horizontalAlignment: Text.AlignHCenter
+                                font {
+                                    weight: Font.Light
+                                    pixelSize: 16
+                                }
+                            }
+                            Repeater {
+                                model: alarmsLate
+                                GardenActivityLine {
+                                    property var plantObj: JSON.parse(model.plant_json)
+                                    property var lateDetails: ({})
+
+                                    title: model.libelle || "NULL"
+                                    plant_name: plantObj.name_scientific
+
+                                    subtitle: {
+                                        const today = new Date()
+                                        const last_done = new Date(model.last_done.slice(1, -1))
+                                        let diff = today - last_done
+                                        let diffDays = Math.floor(diff/(1000*60*60*24))
+
+                                        if(diffDays > model.frequence) {
+                                            const delay = diffDays - model.frequence
+                                            const formated = Utils.humanizeDayPeriod(delay)
+                                            lateDetails = formated
+                                            return `<font color='${$Colors.red500}'> ${lateDetails.freq < 10 ? '0'+lateDetails.freq : lateDetails.freq} ${lateDetails.period_label} ${qsTr("late")} </font>`
+                                        }
+
+                                        return `<font color='${$Colors.red500}'>${qsTr("Task late")} </font>`
+                                    }
+                                    isDone: {
+                                        if(alarmsIdsToDownStatus.filter(x => x.id === model.id).length > 0 ) {
+                                            return false
+                                        }
+                                        return model.done === 1
+                                    }
+
+                                    onDeleteClicked: {
+                                        removeAlarmPopup.show(model)
+                                    }
+
+                                    onChecked: newStatus => {
+                                                   $Model.alarm.sqlUpdateTaskStatus(
+                                                       model.id, newStatus).then(res => {
+                                                                                     model.done =  model.done === 0 ? 1 : 0
+                                                                                 }).catch(
+                                                       console.warn)
+                                               }
+
+                                    icon.source: model.type === 0 ? Icons.shovel : model.type === 1 ? Icons.waterOutline : model.type === 2 ? Icons.potMixOutline : Icons.flowerOutline
+                                    image.source: {
+                                        let value = plantObj.images_plantes[0] ? "https://blume.mahoudev.com/assets/" + plantObj.images_plantes[0].directus_files_id : ""
+                                        return value
+                                    }
+
+                                    width: parent.width - 20
+                                    height: 80
+                                }
+                            }
+
+                            Rectangle {
+                                width: parent.width - 20
+                                height: 5
                                 color: $Colors.gray200
                             }
 
-                            RowLayout {
-                                anchors.fill: parent
-                                Rectangle {
-                                    Layout.preferredWidth: 90
-                                    Layout.fillHeight: true
-                                    color: $Colors.pink200
+                        }
 
-                                    Image {
-                                        source: "qrc:/assets/icons_custom/tips_child.png"
-                                        anchors.fill: parent
-                                    }
+                        Column {
+                            visible: alarmsTodoToday.count > 0
+                            width: parent.width
+                            spacing: 10
+
+                            Label {
+                                text: qsTr("Today")
+                                width: parent.width
+                                horizontalAlignment: Text.AlignHCenter
+                                font {
+                                    weight: Font.Light
+                                    pixelSize: 16
                                 }
-                                ColumnLayout {
-                                    Layout.fillWidth: true
-                                    Layout.margins: 5
-                                    Label {
-                                        text: qsTr("Tips and advices")
-                                        font {
-                                            pixelSize: 14
-                                            weight: Font.DemiBold
-                                        }
-                                        color: $Colors.white
-                                        padding: 5
-                                        topPadding: 2
-                                        bottomPadding: 2
-                                        background: Rectangle {
-                                            color: $Colors.colorPrimary
-                                            radius: 5
-                                        }
+                            }
+
+                            Repeater {
+                                model: alarmsTodoToday
+                                GardenActivityLine {
+                                    property var plantObj: JSON.parse(model.plant_json)
+
+                                    title: (model.libelle[0]==="'" ? model.libelle.slice(1, -1): model.libelle) || "NULL"
+                                    plant_name: plantObj.name_scientific
+
+                                    subtitle: {
+                                        $Model.space.sqlGet(model.space).then(function(res) {
+                                                                                  subtitle = ""
+                                                                                  + (res.libelle[0] === "'" ? res.libelle.slice(1, -1) : res.libelle)
+                                                                              }).catch(
+                                                    console.warn)
+
+                                        return ""
                                     }
 
-                                    Item {
-                                        Layout.fillHeight: true
+                                    frequency: {
+                                        const period = Utils.humanizeDayPeriod(model.frequence)
+                                        qsTr("Each") + " " + period.freq + " " + period.period_label
                                     }
 
-                                    Label {
-                                        Layout.fillWidth: true
-                                        text: qsTr("Cultivate your plant at your own pace").slice(0, 60)
-                                        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                                        font {
-                                            pixelSize: 16
-                                            weight: Font.DemiBold
+                                    hideDelete: true
+
+                                    isDone: {
+                                        if(alarmsIdsToDownStatus.filter(id => id === model.id).length > 0 ) {
+                                            return false
                                         }
+                                        return model.done === 1
                                     }
 
-                                    Item {
-                                        Layout.fillHeight: true
+                                    onDeleteClicked: {
+                                        removeAlarmPopup.show(model)
                                     }
 
-                                    Label {
-                                        text: qsTr("Published August 13")
-                                        font {
-                                            pixelSize: 12
+                                    onChecked: newStatus => {
+                                                   $Model.alarm.sqlUpdateTaskStatus(
+                                                       model.id, newStatus).then(res => {
+                                                                                     model.done = model.done === 0 ? 1 : 0
+                                                                                 }).catch(
+                                                       console.warn)
+                                               }
+
+                                    icon.source: model.type === 0 ? Icons.shovel : model.type === 1 ? Icons.waterOutline : model.type === 2 ? Icons.potMixOutline : Icons.flowerOutline
+                                    image.source: {
+                                        let value = plantObj.images_plantes[0] ? "https://blume.mahoudev.com/assets/" + plantObj.images_plantes[0].directus_files_id : ""
+                                        return value
+                                    }
+
+                                    width: parent.width - 20
+                                }
+                            }
+                        }
+
+                        Column {
+                            id: tipsColum
+                            width: parent.width
+                            spacing: 10
+                            Label {
+                                text: qsTr("Tips and advices")
+                                width: parent.width
+                                color: $Colors.colorPrimary
+                                font {
+                                    weight: Font.DemiBold
+                                    pixelSize: 16
+                                }
+                            }
+
+                            Repeater {
+                                model: 3
+                                delegate: Rectangle {
+                                    width: parent.width
+                                    height: 120
+                                    color: $Colors.colorTertiary
+                                    radius: 10
+                                    clip: true
+                                    border {
+                                        width: 1
+                                        color: $Colors.gray200
+                                    }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: page_view.push(navigator.blogPage)
+                                    }
+
+                                    RowLayout {
+                                        anchors.fill: parent
+                                        Rectangle {
+                                            Layout.preferredWidth: 90
+                                            Layout.fillHeight: true
+                                            color: $Colors.pink200
+
+                                            Image {
+                                                source: "qrc:/assets/icons_custom/tips_child.png"
+                                                anchors.fill: parent
+                                            }
                                         }
-                                        background: Rectangle {
-                                            color: $Colors.gray200
-                                            radius: 2
+                                        ColumnLayout {
+                                            Layout.fillWidth: true
+                                            Layout.margins: 5
+                                            Label {
+                                                text: qsTr("Tips and advices")
+                                                font {
+                                                    pixelSize: 14
+                                                    weight: Font.DemiBold
+                                                }
+                                                color: $Colors.white
+                                                padding: 5
+                                                topPadding: 2
+                                                bottomPadding: 2
+                                                background: Rectangle {
+                                                    color: $Colors.colorPrimary
+                                                    radius: 5
+                                                }
+                                            }
+
+                                            Item {
+                                                Layout.fillHeight: true
+                                            }
+
+                                            Label {
+                                                Layout.fillWidth: true
+                                                text: qsTr("Cultivate your plant at your own pace").slice(0, 60)
+                                                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                                                font {
+                                                    pixelSize: 16
+                                                    weight: Font.DemiBold
+                                                }
+                                            }
+
+                                            Item {
+                                                Layout.fillHeight: true
+                                            }
+
+                                            Label {
+                                                text: qsTr("Published August 13")
+                                                font {
+                                                    pixelSize: 12
+                                                }
+                                                background: Rectangle {
+                                                    color: $Colors.gray200
+                                                    radius: 2
+                                                }
+                                                padding: 10
+                                                topPadding: 2
+                                                bottomPadding: 2
+                                            }
                                         }
-                                        padding: 10
-                                        topPadding: 2
-                                        bottomPadding: 2
                                     }
                                 }
                             }
                         }
+
                     }
+
                 }
+
 
                 Item {
                     width: parent.width

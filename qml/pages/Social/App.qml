@@ -15,6 +15,7 @@ import ImageTools
 
 import QtAndroidTools
 
+import "widgets"
 import "components"
 import "pages"
 import "utils"
@@ -65,6 +66,11 @@ Item {
     }
 
     Component {
+        id: closeAccountPage
+        CloseMyAccountPage {}
+    }
+
+    Component {
         id: startPage
         StartPage {}
     }
@@ -87,6 +93,11 @@ Item {
     Component {
         id: postEditPage
         PostEditPage {}
+    }
+
+
+    PostActions {
+        id: postActionsDrawer
     }
 
     property string privateKey: ""
@@ -585,6 +596,22 @@ Item {
             }
         }
     }
+
+    function wipeAll() {
+        root.privateKey = ""
+        root.publicKey = ""
+        root.contacts = {}
+        root.userInfo = {}
+        root.realDiscussions = {}
+        root.friendLists = []
+        discussions.clear()
+        messages.clear()
+        events.clear()
+        root.subscribed = []
+        relay.active = false
+        messagesRelay.active = false
+    }
+
 
     function logout() {
         timer.start()

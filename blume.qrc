@@ -44,6 +44,7 @@
     <file alias="components/ActionMenuFixed.qml">qml/components/ActionMenuFixed.qml</file>
     <file alias="components/ActionMenuFixedDevices.qml">qml/components/ActionMenuFixedDevices.qml</file>
     <file alias="components/AirQualityIndicator.qml">qml/components/AirQualityIndicator.qml</file>
+    <file alias="components/AndroidPermRequester.qml">qml/components/AndroidPermRequester.qml</file>
     <file alias="components/AppBar.qml">qml/components/AppBar.qml</file>
     <file alias="components/AppBarButton.qml">qml/components/AppBarButton.qml</file>
     <file alias="components/BottomTabBar.qml">qml/components/BottomTabBar.qml</file>
@@ -191,6 +192,7 @@
     <file alias="pages/Faq.qml">qml/pages/Faq.qml</file>
     <file alias="pages/Feed.qml">qml/pages/Feed.qml</file>
     <file alias="pages/Garden/AlarmsCalendar.qml">qml/pages/Garden/AlarmsCalendar.qml</file>
+    <file alias="pages/Garden/BlogScreen.qml">qml/pages/Garden/BlogScreen.qml</file>
     <file alias="pages/Garden/GardenEditSpace.qml">qml/pages/Garden/GardenEditSpace.qml</file>
     <file alias="pages/Garden/GardenPlantsList.qml">qml/pages/Garden/GardenPlantsList.qml</file>
     <file alias="pages/Garden/GardenScreen.qml">qml/pages/Garden/GardenScreen.qml</file>
@@ -220,17 +222,20 @@
     <file alias="pages/Plant/qmldir">qml/pages/Plant/qmldir</file>
     <file alias="pages/Posometre.qml">qml/pages/Posometre.qml</file>
     <file alias="pages/Social/App.qml">qml/pages/Social/App.qml</file>
+    <file alias="pages/Social/components/ActionMenuItem.qml">qml/pages/Social/components/ActionMenuItem.qml</file>
     <file alias="pages/Social/components/Avatar.qml">qml/pages/Social/components/Avatar.qml</file>
     <file alias="pages/Social/components/BOutlineTextField.qml">qml/pages/Social/components/BOutlineTextField.qml</file>
     <file alias="pages/Social/components/ButtonImage.qml">qml/pages/Social/components/ButtonImage.qml</file>
     <file alias="pages/Social/components/ButtonImageWithText.qml">qml/pages/Social/components/ButtonImageWithText.qml</file>
     <file alias="pages/Social/components/InputField.qml">qml/pages/Social/components/InputField.qml</file>
     <file alias="pages/Social/components/NativeTextArea.qml">qml/pages/Social/components/NativeTextArea.qml</file>
+    <file alias="pages/Social/components/NiceButton.qml">qml/pages/Social/components/NiceButton.qml</file>
     <file alias="pages/Social/components/RadiusImage.qml">qml/pages/Social/components/RadiusImage.qml</file>
     <file alias="pages/Social/components/TextArea.qml">qml/pages/Social/components/TextArea.qml</file>
     <file alias="pages/Social/components/TextField.qml">qml/pages/Social/components/TextField.qml</file>
     <file alias="pages/Social/components/ToolBarButton.qml">qml/pages/Social/components/ToolBarButton.qml</file>
     <file alias="pages/Social/components/qmldir">qml/pages/Social/components/qmldir</file>
+    <file alias="pages/Social/pages/CloseMyAccountPage.qml">qml/pages/Social/pages/CloseMyAccountPage.qml</file>
     <file alias="pages/Social/pages/FeedDetailsPage.qml">qml/pages/Social/pages/FeedDetailsPage.qml</file>
     <file alias="pages/Social/pages/FeedPage.qml">qml/pages/Social/pages/FeedPage.qml</file>
     <file alias="pages/Social/pages/FindUser.qml">qml/pages/Social/pages/FindUser.qml</file>
@@ -248,6 +253,10 @@
     <file alias="pages/Social/utils/Http.qml">qml/pages/Social/utils/Http.qml</file>
     <file alias="pages/Social/utils/Services.qml">qml/pages/Social/utils/Services.qml</file>
     <file alias="pages/Social/utils/qmldir">qml/pages/Social/utils/qmldir</file>
+    <file alias="pages/Social/widgets/ActionMenuUserAccount.qml">qml/pages/Social/widgets/ActionMenuUserAccount.qml</file>
+    <file alias="pages/Social/widgets/FullScreenMedia.qml">qml/pages/Social/widgets/FullScreenMedia.qml</file>
+    <file alias="pages/Social/widgets/PostActions.qml">qml/pages/Social/widgets/PostActions.qml</file>
+    <file alias="pages/Social/widgets/qmldir">qml/pages/Social/widgets/qmldir</file>
     <file alias="pages/TutorialNew.qml">qml/pages/TutorialNew.qml</file>
     <file alias="pages/qmldir">qml/pages/qmldir</file>
     <file alias="popups/PopupBackgroundUpdates.qml">qml/popups/PopupBackgroundUpdates.qml</file>

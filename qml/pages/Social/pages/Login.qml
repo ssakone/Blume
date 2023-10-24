@@ -63,51 +63,51 @@ BPage {
                 width: parent.width
                 spacing: 25
 
-                ButtonWireframeIcon {
-                    text: qsTr("Sign in with Google")
-                    source: Icons.google
-                    backgroundBorderWidth: 1
-                    primaryColor: $Colors.colorPrimary
-                    secondaryColor: root.shade
-                    height: 50
-                    width: parent.width
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
+//                ButtonWireframeIcon {
+//                    text: qsTr("Sign in with Google")
+//                    source: Icons.google
+//                    backgroundBorderWidth: 1
+//                    primaryColor: $Colors.colorPrimary
+//                    secondaryColor: root.shade
+//                    height: 50
+//                    width: parent.width
+//                    anchors.horizontalCenter: parent.horizontalCenter
+//                }
 
-                ButtonWireframeIcon {
-                    text: qsTr("Sign in with Apple")
-                    source: Icons.apple
-                    primaryColor: $Colors.colorPrimary
-                    secondaryColor: root.shade
-                    height: 50
-                    width: parent.width
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
+//                ButtonWireframeIcon {
+//                    text: qsTr("Sign in with Apple")
+//                    source: Icons.apple
+//                    primaryColor: $Colors.colorPrimary
+//                    secondaryColor: root.shade
+//                    height: 50
+//                    width: parent.width
+//                    anchors.horizontalCenter: parent.horizontalCenter
+//                }
 
-                RowLayout {
-                    width: parent.width
-                    anchors.topMargin: 25
-                    anchors.bottomMargin: 25
-                    Rectangle {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 1
-                        color: $Colors.gray500
-                        Layout.alignment: Qt.AlignVCenter
-                    }
+//                RowLayout {
+//                    width: parent.width
+//                    anchors.topMargin: 25
+//                    anchors.bottomMargin: 25
+//                    Rectangle {
+//                        Layout.fillWidth: true
+//                        Layout.preferredHeight: 1
+//                        color: $Colors.gray500
+//                        Layout.alignment: Qt.AlignVCenter
+//                    }
 
-                    Label {
-                        text: qsTr("OR")
-                        color: $Colors.gray500
-                        Layout.alignment: Qt.AlignVCenter
-                    }
+//                    Label {
+//                        text: qsTr("OR")
+//                        color: $Colors.gray500
+//                        Layout.alignment: Qt.AlignVCenter
+//                    }
 
-                    Rectangle {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 1
-                        color: $Colors.gray500
-                        Layout.alignment: Qt.AlignVCenter
-                    }
-                }
+//                    Rectangle {
+//                        Layout.fillWidth: true
+//                        Layout.preferredHeight: 1
+//                        color: $Colors.gray500
+//                        Layout.alignment: Qt.AlignVCenter
+//                    }
+//                }
 
                 ColumnLayout {
                     width: parent.width
@@ -129,7 +129,7 @@ BPage {
                             radius: 15
                             width: parent.width
                             height: 50
-                            onTextChanged: errorLabel.visible = false
+                            onTextChanged: errorLabel.text = ""
                         }
                     }
 
@@ -150,7 +150,7 @@ BPage {
                             width: parent.width
                             height: 50
                             echoMode: TextInput.Password
-                            onTextChanged: errorLabel.visible = false
+                            onTextChanged: errorLabel.text = ""
                             Keys.onReturnPressed: {
                                 connectButton.clicked()
                             }
@@ -159,16 +159,15 @@ BPage {
 
                     Qaterial.Label {
                         id: errorLabel
-                        visible: false
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: qsTr("Incorrect password")
                         color: "red"
+                        font.pixelSize: 14
                     }
 
                     Qaterial.ExtendedFabButton {
                         id: connectButton
                         property bool busy: false
-                        text: busy ? "" : qsTr("Creer / Connecter")
+                        text: busy ? "" : qsTr("Login")
                         width: 230
                         //enabled: !busy
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -183,7 +182,7 @@ BPage {
                         onClicked: {
                             Qt.callLater(function () {
                                 if (username.text === '' || password.text === '') {
-                                    errorLabel.visible = true
+                                    errorLabel.text = qsTr("Fill username and password")
                                     return
                                 }
                                 if (busy === true) {
@@ -211,14 +210,18 @@ BPage {
                                             busy = false
                                         })
                                     } else {
-                                        if (data.status === "Error during authentication") {
-                                            errorLabel.visible = true
-                                            busy = false
-                                        }
+                                        busy = false
+                                        errorLabel.text = data.status
+
                                     }
                                 }).catch(e => {
                                              console.log(JSON.stringify(e))
                                              busy = false
+                                             errorLabel.text = qsTr("An error occured")
+                                             if(e.status === 401) {
+                                                 errorLabel.text = qsTr("Invalid credentials")
+                                             }
+
                                          })
                             })
                         }

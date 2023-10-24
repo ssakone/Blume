@@ -41,30 +41,33 @@ Item {
     property var $Http: HTTP
     property alias $Constants: __constants__
 
-    readonly property var permissionsNameList: ["android.permission.READ_MEDIA_IMAGES", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.CAMERA", "android.permission.INTERNET", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.BLUETOOTH_ADMIN", "android.permission.BLUETOOTH"]
-    Loader {
-        active: Qt.platform.os === "android"
-        sourceComponent: Component {
-            Item {
-                Connections {
-                    target: QtAndroidAppPermissions
-                    function onRequestPermissionsResults(results) {
-                        for (var i = 0; i < results.length; i++) {
-                            if (results[i].granted === true) {
-                                console.log(results[i].name, true)
-                            } else {
-                                if (QtAndroidAppPermissions.shouldShowRequestPermissionInfo(
-                                            results[i].name) !== true) {
-                                    console.log(results[i].name, false)
-                                }
-                            }
-                        }
-                    }
-                }
-                Component.onCompleted: QtAndroidAppPermissions.requestPermissions(
-                                           permissionsNameList)
-            }
-        }
+//    readonly property var permissionsNameList: /*["android.permission.READ_MEDIA_IMAGES", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.CAMERA", "android.permission.INTERNET", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.BLUETOOTH_ADMIN", "android.permission.BLUETOOTH"]*/
+//    Loader {
+//        active: Qt.platform.os === "android"
+//        sourceComponent: Component {
+//            Item {
+//                Connections {
+//                    target: QtAndroidAppPermissions
+//                    function onRequestPermissionsResults(results) {
+//                        for (var i = 0; i < results.length; i++) {
+//                            if (results[i].granted === true) {
+//                                console.log(results[i].name, true)
+//                            } else {
+//                                if (QtAndroidAppPermissions.shouldShowRequestPermissionInfo(
+//                                            results[i].name) !== true) {
+//                                    console.log(results[i].name, false)
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//                Component.onCompleted: QtAndroidAppPermissions.requestPermissions(
+//                                           permissionsNameList)
+//            }
+//        }
+//    }
+    AndroidPermRequester {
+        permissionsNameList: ["android.permission.READ_MEDIA_IMAGES", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.CAMERA", "android.permission.INTERNET", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.BLUETOOTH_ADMIN", "android.permission.BLUETOOTH"]
     }
 
     property bool isHdpi: (utilsScreen.screenDpi > 128)
