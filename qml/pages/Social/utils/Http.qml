@@ -1,9 +1,9 @@
 import QtQuick 2.15
 
 QtObject {
-    property string apihost: "http://34.28.201.80/"
+    //property string apihost: "http://34.28.201.80/"
     //property string apihost: "http://localhost:5000/"
-    //property string apihost: "http://10.0.2.2:5000/"
+    property string apihost: "http://10.0.2.2/"
     //property string apihost: "http://192.168.1.97:5000/"
     function fetch(opts) {
         return new Promise(function (resolve, reject) {
@@ -227,6 +227,23 @@ QtObject {
                              "Content-Type": 'application/json'
                          },
                          "params": {}
+                     })
+    }
+
+    function reactToEvent(react, event, pubkey, privateKey) {
+        return fetch({
+                         "method": "POST",
+                         "url": apihost + "react",
+                         "headers": {
+                             "Accept": 'application/json',
+                             "Content-Type": 'application/json'
+                         },
+                         "params": {
+                             "react": react,
+                             "event": event,
+                             "pubkey": pubkey,
+                             "privateKey": privateKey
+                         }
                      })
     }
 }

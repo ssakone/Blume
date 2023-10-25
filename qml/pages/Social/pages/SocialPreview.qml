@@ -9,19 +9,18 @@ import "../components"
 import "../widgets"
 
 Page {
-//    property bool isFullScreen: false
-//    onIsFullScreenChanged: {
-//        if (isFullScreen)
-//            fullScreenPop.close()
+    //    property bool isFullScreen: false
+    //    onIsFullScreenChanged: {
+    //        if (isFullScreen)
+    //            fullScreenPop.close()
 
-//    }
+    //    }
     FocusScope {
         Keys.onBackPressed: console.log("BAAAAACK")
         FullScreenMedia {
             id: fullScreenPop
             //onSwithMode: isFullScreen = !isFullScreen
         }
-
     }
 
     Flickable {
@@ -174,10 +173,10 @@ Page {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    if(modelData['is_pined']) {
+                                    if (modelData['is_pined']) {
                                         view.push(messagePage, {
-                                         "friend": modelData
-                                         })
+                                                      "friend": modelData
+                                                  })
                                     }
                                 }
                             }
@@ -326,7 +325,8 @@ Page {
                                             fillMode: Image.PreserveAspectFit
                                             MouseArea {
                                                 anchors.fill: parent
-                                                onClicked: fullScreenPop.displayImage(parent.source)
+                                                onClicked: fullScreenPop.displayImage(
+                                                               parent.source)
                                             }
                                         }
                                     }
@@ -401,14 +401,16 @@ Page {
                                         Layout.fillWidth: true
                                         spacing: 5
                                         IconImage {
-                                            source: Qaterial.Icons.heartOutline
+                                            source: lastReaction === true ? Qaterial.Icons.heart : Qaterial.Icons.heartOutline
                                             color: Qaterial.Colors.orange300
                                             width: 30
                                             height: width
                                         }
                                         Label {
                                             color: $Colors.gray600
-                                            text: "%1 like".arg(likes.count)
+                                            text: "%1 like".arg(
+                                                      reactionCount
+                                                      + (lastReaction === true ? 1 : 0))
                                             anchors.verticalCenter: parent.verticalCenter
                                         }
                                     }
@@ -441,9 +443,22 @@ Page {
                                             Layout.fillWidth: true
                                             Layout.fillHeight: true
                                             IconImage {
-                                                source: Qaterial.Icons.heartOutline
+                                                source: lastReaction === false ? Qaterial.Icons.heartOutline : Qaterial.Icons.heart
                                                 color: Qaterial.Colors.gray600
                                                 anchors.verticalCenter: parent.verticalCenter
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    onClicked: {
+                                                        const typeR = lastReaction
+                                                                    === true ? "-" : "+"
+                                                        http.reactToEvent(
+                                                                    lastReaction
+                                                                    === true ? "-" : "+",
+                                                                    id, pubkey,
+                                                                    privateKey).then(
+                                                                    function () {})
+                                                    }
+                                                }
                                             }
                                         }
                                         RowLayout {
@@ -472,7 +487,8 @@ Page {
                                                             "pubkey": pubkey
                                                         }
 
-                                                        view.push(feedDetailsPage, {
+                                                        view.push(feedDetailsPage,
+                                                                  {
                                                                       "post": model,
                                                                       "comments": comments,
                                                                       "likes": likes
