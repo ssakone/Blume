@@ -12,6 +12,7 @@ Page {
     id: page
     property var friend: ({})
     property bool isAIWritting: false
+    property bool isBotMode: friend?.is_pined
     property int prevCount: 0
 
     background: Rectangle {
@@ -102,6 +103,7 @@ Page {
             }
         }
     }
+
     Item {
         anchors.fill: parent
         ListView {
@@ -239,6 +241,7 @@ Page {
             text: qsTr("You will write a new message after is finish responding to the previous !")
         }
     }
+
     footer: ToolBar {
         visible: !page.isAIWritting
         contentHeight: 60
@@ -366,9 +369,12 @@ Page {
                         "removable": true,
                         "created_at": new Date().getTime() / 1000
                     }
-                    messages.append(cdata)
+                    messages.append(cdata)()
                     Qt.callLater(function (content) {
-                        page.isAIWritting = true
+                        if(page.isBotMode) {
+                            page.isAIWritting = true
+                        }
+
                         http.sendMessage(privateKey, page.friend.pubkey,
                                          content).then(function (rs) {
                                             page.isAIWritting = false

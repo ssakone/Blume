@@ -570,6 +570,11 @@ Item {
 
     property var realDiscussions: ({})
 
+    ListModel {
+        id: _friendsListModel
+    }
+
+    property alias friendsListModel: _friendsListModel
     Settings {
         id: setting
         property alias privateKey: root.privateKey
@@ -662,6 +667,14 @@ Item {
             http.getContacts().then(function (rs) {
                 friendLists = JSON.parse(rs)
                 root.friendListUpdated()
+
+                console.log("UPDATE CONTACT ", 0)
+                friendsListModel.clear()
+                console.log("UPDATE CONTACT ", friendLists.length)
+                for(let i = 0; i<friendLists.length; i++) {
+                    friendsListModel.append(friendLists[i])
+                    console.log("append")
+                }
             }).catch(function (e) {
                 console.log(JSON.stringify(e))
             })

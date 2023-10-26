@@ -176,7 +176,8 @@ Page {
                                 onClicked: {
                                     if(modelData['is_pined']) {
                                         view.push(messagePage, {
-                                         "friend": modelData
+                                            "friend": modelData,
+                                            "isBotMode": true
                                          })
                                     }
                                 }
