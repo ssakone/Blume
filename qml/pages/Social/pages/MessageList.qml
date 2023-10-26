@@ -296,6 +296,7 @@ Page {
         }
         MouseArea {
             anchors.fill: parent
+            onClicked: view.push(contacPickPage)
         }
     }
 }

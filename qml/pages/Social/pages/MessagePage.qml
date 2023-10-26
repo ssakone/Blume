@@ -305,7 +305,10 @@ Page {
                 MouseArea {
                     width: parent.width
                     height: rowPickCamera.height
-                    onClicked: QtAndroidAppPermissions.openGallery()
+                    onClicked: {
+                        QtAndroidAppPermissions.openGallery()
+                        mediaDrawer.close()
+                    }
 
                     Row {
                         id: rowPickCamera

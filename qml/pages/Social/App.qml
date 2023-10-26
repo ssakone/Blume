@@ -95,6 +95,11 @@ Item {
         PostEditPage {}
     }
 
+    Component {
+        id: contacPickPage
+        ContactPickerPage {}
+    }
+
 
     PostActions {
         id: postActionsDrawer

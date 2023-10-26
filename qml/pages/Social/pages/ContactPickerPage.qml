@@ -179,137 +179,64 @@ Page {
                     }
                 }
             }
-
         }
 
         Item {
-            Layout.fillWidth: true
             Layout.fillHeight: true
-
-            Flickable {
-                anchors.fill: parent
-                contentHeight: insideCol.height
-                clip: true
-
-                Column {
-                    id: insideCol
-                    width: parent.width
-                    padding: 10
-
-                    Flow {
-                        id: grid
-                        width: parent.width - 20
-                        spacing: 10
-
-                        Repeater {
-                            id: contactListView
-                            delegate: Rectangle {
-                                required property var modelData
-                                width: grid.width / 2.1
-                                height: insideDelegateColumn.height
-                                radius: 5
-                                color: Qt.rgba(0,0,0,0)
-                                border {
-                                    width: 1
-                                    color: Qaterial.Colors.gray200
-                                }
-                                anchors.bottomMargin: 20
-                                Column {
-                                    id: insideDelegateColumn
-                                    spacing: 5
-                                    width: parent.width - 10
-
-                                    Qaterial.ClipRRect {
-                                        width: parent.width
-                                        height: width * (9/16)
-                                        radius: 5
-
-                                        Image {
-                                            anchors.centerIn: parent
-                                            anchors.fill: parent
-                                            fillMode: Image.PreserveAspectCrop
-                                            source: JSON.parse(modelData["profile"]
-                                                               || "{}").picture
-                                                    || Qaterial.Icons.faceManProfile
-                                        }
-                                    }
-
-                                    Column {
-                                        spacing: 5
-                                        width: parent.width
-                                        padding: 7
-
-                                        Label {
-                                            text: modelData.name || modelData.username
-                                            width: parent.width
-                                            elide: Label.ElideRight
-                                            color: $Colors.colorPrimary
-                                            font {
-                                                pixelSize: 16
-                                                weight: Font.DemiBold
-                                            }
-                                        }
-                                        RowLayout {
-                                            spacing: 5
-                                            IconImage {
-                                                source: Qaterial.Icons.mapMarker
-                                                color: Qaterial.Colors.blue800
-                                            }
-
-                                            Label {
-                                                text: "France, Paris"
-                                                Layout.fillWidth: true
-                                                wrapMode: Label.Wrap
-                                                color: Qaterial.Colors.gray400
-                                                font {
-                                                    pixelSize: 12
-                                                    weight: Font.Light
-                                                }
-                                            }
-                                        }
-                                        RowLayout {
-                                            width: parent.width - 10
-                                            spacing: 10
-                                            NiceButton {
-                                                Layout.fillWidth: true
-                                                text: qsTr("Add")
-                                                radius: 5
-                                                padding: 5
-                                                backgroundColor: $Colors.colorPrimary
-                                                foregroundColor: "white"
-                                            }
-                                            NiceButton {
-                                                Layout.fillWidth: true
-                                                text: qsTr("Delete")
-                                                radius: 5
-                                                padding: 5
-                                                backgroundColor: Qt.rgba(0,0,0,0)
-                                                foregroundColor: $Colors.colorPrimary
-                                                backgroundBorderWidth: 1
-                                                backgroundBorderColor: $Colors.colorPrimary
-                                            }
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
+            Layout.fillWidth: true
 
             MouseArea {
                 id: mouseContext
                 enabled: false
                 anchors.fill: parent
                 onClicked: {
-                    console.log("CLICKKP ")
                     searchInput.focus = false
                     enabled = false
                 }
             }
 
+            Column {
+                id: insideCol
+                width: parent.width
+                spacing: 25
+                padding: 10
+
+                ListView {
+                    id: contactListView
+                    width: parent.width - 20
+                    height: page.height - (categoriesColumn.height + headerColumn.height)
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    clip: true
+                    anchors.topMargin: 15
+                    delegate: Column {
+                        required property var modelData
+
+                        width: contactListView.width
+                        spacing: 10
+                        anchors.topMargin: 5
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+                            Avatar {
+                                source: JSON.parse(modelData["profile"]
+                                                   || "{}").picture
+                                        || Qaterial.Icons.faceManProfile
+                            }
+                            Label  {
+                                text: modelData.name ?? modelData.username
+                                font.weight: Font.DemiBold
+                                Layout.fillWidth: true
+                                horizontalAlignment: Label.AlignLeft
+                            }
+                        }
+                        Rectangle {
+                            height: 2
+                            width: parent.width
+                            color: Qaterial.Colors.gray200
+                        }
+                    }
+                }
+            }
         }
     }
 }
