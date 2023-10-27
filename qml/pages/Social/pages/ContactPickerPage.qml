@@ -7,6 +7,19 @@ import "../components"
 
 Page {
     id: page
+//    Component.onCompleted: {
+//        http.searchProfile(" ").then(
+//            function (res) {
+//                contactListView.model = JSON.parse(
+//                            res)
+//                searchInput.busy = false
+//            }).catch(function (err) {
+//                console.log(err)
+//                console.log(JSON.stringify(err))
+//                searchInput.busy = false
+//            })
+//    }
+
     ColumnLayout {
         anchors.fill: parent
         Column {
@@ -44,7 +57,7 @@ Page {
                     }
 
                     Label {
-                        text: qsTr("Search for friend")
+                        text: qsTr("Search")
                         font.pixelSize: 18
                         color: Qaterial.Colors.gray600
                         anchors.verticalCenter: parent.verticalCenter
@@ -84,7 +97,7 @@ Page {
                     padding: 5
                     leftPadding: 10
                     rightPadding: 10
-                    placeholderText: qsTr("Search for a friend")
+                    placeholderText: qsTr("Search")
                     background: Rectangle {
                         color: Qaterial.Colors.gray100
                         radius: 15
@@ -142,6 +155,7 @@ Page {
             Column {
                 id: categoriesColumn
                 width: parent.width
+                spacing: 10
                 leftPadding: 10
                 rightPadding: 10
                 Label {
@@ -203,36 +217,47 @@ Page {
 
                 ListView {
                     id: contactListView
+                    model: friendLists.filter(f => f.is_pined !== true && f.pubkey !== publicKey)
                     width: parent.width - 20
                     height: page.height - (categoriesColumn.height + headerColumn.height)
                     anchors.horizontalCenter: parent.horizontalCenter
                     clip: true
                     anchors.topMargin: 15
-                    delegate: Column {
+                    delegate: Item {
                         required property var modelData
-
                         width: contactListView.width
-                        spacing: 10
-                        anchors.topMargin: 5
-                        RowLayout {
+                        height: delegateInsideCol.height
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: view.replace(messagePage, {"friend": modelData})
+                        }
+
+                        Column {
+                            id: delegateInsideCol
                             width: parent.width
                             spacing: 10
-                            Avatar {
-                                source: JSON.parse(modelData["profile"]
-                                                   || "{}").picture
-                                        || Qaterial.Icons.faceManProfile
+                            anchors.topMargin: 5
+                            RowLayout {
+                                width: parent.width
+                                spacing: 10
+                                Avatar {
+                                    source: JSON.parse(modelData["profile"]
+                                                       || "{}").picture
+                                            || Qaterial.Icons.faceManProfile
+                                }
+                                Label  {
+                                    text: modelData.name ?? modelData.username
+                                    font.weight: Font.DemiBold
+                                    Layout.fillWidth: true
+                                    horizontalAlignment: Label.AlignLeft
+                                }
                             }
-                            Label  {
-                                text: modelData.name ?? modelData.username
-                                font.weight: Font.DemiBold
-                                Layout.fillWidth: true
-                                horizontalAlignment: Label.AlignLeft
+                            Rectangle {
+                                height: 2
+                                width: parent.width
+                                color: Qaterial.Colors.gray200
                             }
-                        }
-                        Rectangle {
-                            height: 2
-                            width: parent.width
-                            color: Qaterial.Colors.gray200
                         }
                     }
                 }

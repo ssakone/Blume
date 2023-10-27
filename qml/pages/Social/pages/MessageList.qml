@@ -66,7 +66,7 @@ Page {
                     Layout.preferredHeight: width
                     source: Qaterial.Icons.chevronLeftCircleOutline
                     color: $Colors.white
-                    anchors.verticalCenter: parent.verticalCenter
+                    Layout.alignment: Qt.AlignVCenter
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
@@ -83,7 +83,7 @@ Page {
                     font.pixelSize: 20
                     elide: Label.ElideRight
                     color: Qaterial.Colors.gray100
-                    anchors.verticalCenter: parent.verticalCenter
+                    Layout.alignment: Qt.AlignVCenter
                 }
 
             }
@@ -121,10 +121,12 @@ Page {
                 padding: 5
                 leftPadding: 10
                 rightPadding: 10
+                color: "white"
                 placeholderText: qsTr("Search")
+                placeholderTextColor: "white"
                 background: Rectangle {
-                    color: Qaterial.Colors.gray100
-                    radius: 15
+                    gradient: $Colors.gradientPrimary
+                    radius: 25
                 }
 
                 BusyIndicator {

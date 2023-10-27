@@ -7,6 +7,114 @@ import "../components"
 
 Page {
     id: page
+
+    property string filterBy: "all"
+    function checkFollow(pubkey) {
+        if (pubkey !== publicKey) {
+            if (root.contacts[publicKey] === undefined) {
+                root.contacts[publicKey] = []
+            }
+            for(let i = 0; i<root.contacts[publicKey].length; i++) {
+                if (root.contacts[publicKey][i][1] === pubkey) {
+                    return true
+                }
+            }
+        }
+
+        return false
+    }
+
+    function follow(pubkey) {
+        return new Promise(function (resolve, reject) {
+            http.addContact(privateKey, contacts[publicKey] || [], pubkey).then(
+            function (rs) {
+                console.log(rs)
+                if (rs === "ok") {
+                    resolve()
+                    getContact(publicKey)
+                } else {
+                    reject(rs)
+                }
+            }).catch(function (err) {
+                console.log(JSON.stringify(err))
+                reject(err)
+            })
+
+        })
+    }
+
+    function search(query) {
+
+    }
+
+    state: filterBy
+
+    ListModel {
+        id: localFriendsModel
+        Component.onCompleted: {
+            const dataset = friendLists.filter(f => f.is_pined !== true && f.pubkey !== publicKey)
+            const size = dataset.length
+            for(let i = 0; i<size; i++) {
+                append(dataset[i])
+            }
+        }
+    }
+
+    SortFilterProxyModel {
+        id: filteredFriendsModel
+        sourceModel: localFriendsModel
+        filters: ExpressionFilter {
+            expression: {
+                console.log("\n Expressing ")
+                return filterBy === "friends" ? page.checkFollow(pubkey) : true
+            }
+        }
+    }
+
+    states: [
+        State {
+            name: "all"
+            PropertyChanges {
+                target: textFilterAll
+                color: "white"
+                background {
+                    color: $Colors.colorPrimary
+                }
+            }
+            PropertyChanges {
+                target: textFilterFriends
+                color: $Colors.gray600
+                background {
+                    border {
+                        width: 1
+                        color: $Colors.colorPrimary
+                    }
+                }
+            }
+        },
+        State {
+            name: "friends"
+            PropertyChanges {
+                target: textFilterAll
+                color: $Colors.gray600
+                background {
+                    border {
+                        width: 1
+                        color: $Colors.colorPrimary
+                    }
+                }
+            }
+            PropertyChanges {
+                target: textFilterFriends
+                color: "white"
+                background {
+                    color: $Colors.colorPrimary
+                }
+            }
+        }
+    ]
+
+
     ColumnLayout {
         anchors.fill: parent
         Column {
@@ -24,16 +132,16 @@ Page {
                 anchors.rightMargin: 15
                 spacing: 10
 
-                Row {
+                RowLayout {
                     id: globalBackBtn
                     Layout.fillWidth: true
 
                     IconImage {
-                        width: 60
-                        height: width
+                        Layout.preferredWidth: 60
+                        Layout.preferredHeight: width
+                        Layout.alignment: Qt.AlignVCenter
                         source: Qaterial.Icons.chevronLeftCircleOutline
                         color: $Colors.colorPrimary
-                        anchors.verticalCenter: parent.verticalCenter
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
@@ -44,10 +152,12 @@ Page {
                     }
 
                     Label {
-                        text: qsTr("Search for friend")
+                        text: searchInput.text.length === 0 ? qsTr("Search") : qsTr("Results for '%1").arg(searchInput.text)
                         font.pixelSize: 18
                         color: Qaterial.Colors.gray600
-                        anchors.verticalCenter: parent.verticalCenter
+                        Layout.fillWidth: true
+                        elide: Label.ElideRight
+                        Layout.alignment: Qt.AlignVCenter
                     }
 
                 }
@@ -84,17 +194,24 @@ Page {
                     padding: 5
                     leftPadding: 10
                     rightPadding: 10
-                    placeholderText: qsTr("Search for a friend")
+                    color: "white"
+                    placeholderText: qsTr("Search")
+                    placeholderTextColor: "white"
                     background: Rectangle {
-                        color: Qaterial.Colors.gray100
-                        radius: 15
+                        gradient: $Colors.gradientPrimary
+                        radius: 25
                     }
                     onTextChanged: {
                         searchInput.busy = true
                         http.searchProfile(text).then(
                                     function (res) {
-                                        contactListView.model = JSON.parse(
+                                        localFriendsModel.clear()
+                                        const data = JSON.parse(
                                                     res)
+                                        for(let i = 0; i<data.length; i++) {
+                                            localFriendsModel.append(data[i])
+                                        }
+
                                         searchInput.busy = false
                                     }).catch(function (err) {
                                         console.log(err)
@@ -133,7 +250,7 @@ Page {
                         inputBackBtn.visible = true
                         searchInput.visible = true
                         searchInput.focus = true
-                        searchInput.text = ""
+                        //searchInput.text = ""
                         mouseContext.enabled = true
                     }
                 }
@@ -142,6 +259,7 @@ Page {
             Column {
                 id: categoriesColumn
                 width: parent.width
+                spacing: 10
                 leftPadding: 10
                 rightPadding: 10
                 Label {
@@ -154,9 +272,14 @@ Page {
                 Row {
                     spacing: 10
                     Label {
+                        id: textFilterAll
                         text: qsTr("All")
                         color: $Colors.gray600
                         padding: 5
+                        width: 80
+                        height: 40
+                        horizontalAlignment: Label.AlignHCenter
+                        verticalAlignment: Label.AlignVCenter
                         background: Rectangle {
                             radius: 5
                             border {
@@ -164,16 +287,33 @@ Page {
                                 color: $Colors.colorPrimary
                             }
                         }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                page.filterBy = "all"
+                            }
+                        }
                     }
                     Label {
+                        id: textFilterFriends
                         text: qsTr("Friends")
                         color: $Colors.gray600
                         padding: 5
+                        width: 80
+                        height: 40
+                        horizontalAlignment: Label.AlignHCenter
+                        verticalAlignment: Label.AlignVCenter
                         background: Rectangle {
                             radius: 5
                             border {
                                 width: 1
                                 color: $Colors.colorPrimary
+                            }
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                page.filterBy = "friends"
                             }
                         }
                     }
@@ -203,8 +343,14 @@ Page {
 
                         Repeater {
                             id: contactListView
+                            model: filteredFriendsModel
                             delegate: Rectangle {
-                                required property var modelData
+                                id: delegateItem
+                                required property int index
+                                required property var model
+                                property var modelData: filteredFriendsModel.get(index)
+                                property bool isFollowed: page.checkFollow(modelData.pubkey)
+
                                 width: grid.width / 2.1
                                 height: insideDelegateColumn.height
                                 radius: 5
@@ -214,6 +360,7 @@ Page {
                                     color: Qaterial.Colors.gray200
                                 }
                                 anchors.bottomMargin: 20
+
                                 Column {
                                     id: insideDelegateColumn
                                     spacing: 5
@@ -231,6 +378,11 @@ Page {
                                             source: JSON.parse(modelData["profile"]
                                                                || "{}").picture
                                                     || Qaterial.Icons.faceManProfile
+                                        }
+
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onClicked: view.push(userProfile, {"profile": modelData})
                                         }
                                     }
 
@@ -272,21 +424,49 @@ Page {
                                             spacing: 10
                                             NiceButton {
                                                 Layout.fillWidth: true
-                                                text: qsTr("Add")
+                                                text: qsTr("Write")
                                                 radius: 5
                                                 padding: 5
+                                                icon {
+                                                    source: Qaterial.Icons.messageOutline
+                                                    color: Qaterial.Colors.white
+                                                }
                                                 backgroundColor: $Colors.colorPrimary
                                                 foregroundColor: "white"
+                                                onClicked: view.push(messagePage, {"friend": modelData})
                                             }
                                             NiceButton {
+                                                id: followBtn
+                                                property bool isFollowing: false
                                                 Layout.fillWidth: true
-                                                text: qsTr("Delete")
+                                                enabled: !isFollowing
+                                                text: delegateItem.isFollowed ? qsTr("Remove") : qsTr("Add")
                                                 radius: 5
                                                 padding: 5
                                                 backgroundColor: Qt.rgba(0,0,0,0)
-                                                foregroundColor: $Colors.colorPrimary
+                                                foregroundColor: delegateItem.isFollowed ? $Colors.red400 : $Colors.colorPrimary
                                                 backgroundBorderWidth: 1
-                                                backgroundBorderColor: $Colors.colorPrimary
+                                                backgroundBorderColor: delegateItem.isFollowed ? $Colors.red400 : $Colors.colorPrimary
+                                                onClicked: {
+                                                    if(!delegateItem.isFollowed) {
+                                                        followBtn.isFollowing = true
+                                                        page.follow(modelData.pubkey)
+                                                        .then(function () {
+                                                            followBtn.isFollowing = false
+                                                            delegateItem.isFollowed = true
+                                                        })
+                                                        .catch(function () {
+                                                            followBtn.isFollowing = false
+                                                        })
+                                                    }
+                                                }
+
+                                                BusyIndicator {
+                                                    running: followBtn.isFollowing
+                                                    anchors.centerIn: parent
+                                                    width: 40
+                                                    height: width
+                                                }
                                             }
                                         }
 
