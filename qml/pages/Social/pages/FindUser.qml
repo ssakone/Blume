@@ -43,21 +43,20 @@ Page {
         })
     }
 
-    function search(query) {
-
+    function reloadDefaultFriendsList() {
+        localFriendsModel.clear()
+        const dataset = friendLists.filter(f => f.is_pined !== true && f.pubkey !== publicKey)
+        const size = dataset.length
+        for(let i = 0; i<size; i++) {
+            localFriendsModel.append(dataset[i])
+        }
     }
 
     state: filterBy
 
     ListModel {
         id: localFriendsModel
-        Component.onCompleted: {
-            const dataset = friendLists.filter(f => f.is_pined !== true && f.pubkey !== publicKey)
-            const size = dataset.length
-            for(let i = 0; i<size; i++) {
-                append(dataset[i])
-            }
-        }
+        Component.onCompleted: reloadDefaultFriendsList()
     }
 
     SortFilterProxyModel {
@@ -202,6 +201,11 @@ Page {
                         radius: 25
                     }
                     onTextChanged: {
+                        if(text === "") {
+                            reloadDefaultFriendsList()
+                            return
+                        }
+
                         searchInput.busy = true
                         http.searchProfile(text).then(
                                     function (res) {

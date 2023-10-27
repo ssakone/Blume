@@ -89,7 +89,7 @@ Page {
                                 anchors.verticalCenter: parent.verticalCenter
                             }
                             Text {
-                                text: qsTr("Search for a friend")
+                                text: qsTr("Search")
                                 color: Qaterial.Colors.gray600
                                 font.pixelSize: 16
                                 anchors.verticalCenter: parent.verticalCenter
