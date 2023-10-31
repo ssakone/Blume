@@ -307,26 +307,30 @@ Page {
                                                 _vid.source = data[2][0]
                                                 _vidArea.visible = true
                                             } else if (data[1].length > 0) {
-                                                _im.source = data[1][0]
-                                                _imArea.visible = true
+                                                _imModel.model = data[1]
                                             }
                                         }
                                     }
-                                    RadiusImage {
-                                        id: _imArea
-                                        width: parent.width
-                                        height: _im.height //width * (9 / 16)
-                                        visible: _im.source.toString() !== ""
-                                        Image {
-                                            id: _im
+                                    Repeater {
+                                        id: _imModel
+                                        RadiusImage {
+                                            id: _imArea
                                             width: parent.width
-                                            asynchronous: false
-                                            cache: false
-                                            fillMode: Image.PreserveAspectFit
-                                            MouseArea {
-                                                anchors.fill: parent
-                                                onClicked: fullScreenPop.displayImage(
-                                                               parent.source)
+                                            height: _im.height //width * (9 / 16)
+                                            visible: _im.source.toString(
+                                                         ) !== ""
+                                            Image {
+                                                id: _im
+                                                width: parent.width
+                                                asynchronous: false
+                                                cache: false
+                                                source: modelData
+                                                fillMode: Image.PreserveAspectFit
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    onClicked: fullScreenPop.displayImage(
+                                                                   parent.source)
+                                                }
                                             }
                                         }
                                     }

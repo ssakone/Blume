@@ -408,7 +408,12 @@ Item {
                                     const like = data[2]
                                     ev.likes.append(data[2])
                                     if (like.pubkey !== publicKey) {
-                                        ev.reactionCount++
+                                        if (like.content === "+")
+                                            ev.reactionCount++
+                                        else if (like.content === "-")
+                                            ev.reactionCount--
+                                        else
+                                            ev.reactionCount++
                                         return
                                     }
                                     let reactions = ev.reactions

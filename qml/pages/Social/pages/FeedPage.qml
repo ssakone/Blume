@@ -209,23 +209,27 @@ Page {
                                     _vid.source = data[2][0]
                                     _vidArea.visible = true
                                 } else if (data[1].length > 0) {
-                                    _im.source = data[1][0]
+                                    _imModel.model = data[1]
+                                    console.log(JSON.stringify(data[1]))
                                     _imArea.visible = true
                                 }
                             }
                         }
-
-                        RadiusImage {
-                            id: _imArea
-                            width: _insideColumn.width - 20
-                            height: _im.height
-                            visible: false
-                            Image {
-                                id: _im
-                                width: parent.width
-                                asynchronous: false
-                                cache: false
-                                fillMode: Image.PreserveAspectFit
+                        Repeater {
+                            id: _imModel
+                            RadiusImage {
+                                id: _imArea
+                                width: _insideColumn.width - 20
+                                height: _im.height
+                                visible: true
+                                Image {
+                                    id: _im
+                                    source: modelData
+                                    width: parent.width
+                                    asynchronous: false
+                                    cache: false
+                                    fillMode: Image.PreserveAspectFit
+                                }
                             }
                         }
 
