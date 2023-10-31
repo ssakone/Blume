@@ -304,8 +304,7 @@ Page {
                                             const data = captureLinks(content)
                                             text = data[0]?.slice(0)
                                             if (data[2].length > 0) {
-                                                _vid.source = data[2][0]
-                                                _vidArea.visible = true
+                                                _imVideoModel.model = data[2]
                                             } else if (data[1].length > 0) {
                                                 _imModel.model = data[1]
                                             }
@@ -335,31 +334,33 @@ Page {
                                         }
                                     }
 
-                                    RadiusImage {
-                                        id: _vidArea
-                                        visible: false
-                                        width: parent.width
-                                        height: visible ? width * (9 / 16) : 0
-                                        Rectangle {
-                                            anchors.fill: parent
-                                            color: "black"
-                                        }
+                                    Repeater {
+                                        id: _imVideoModel
+                                        RadiusImage {
+                                            width: parent.width
+                                            height: visible ? width * (9 / 16) : 0
+                                            Rectangle {
+                                                anchors.fill: parent
+                                                color: "black"
+                                            }
 
-                                        MediaPlayer {
-                                            id: _vid
-                                            //source: "https://www.w3schools.com/html/mov_bbb.mp4"
-                                            videoOutput: videoOutput
-                                        }
+                                            MediaPlayer {
+                                                id: _vid
+                                                //source: "https://www.w3schools.com/html/mov_bbb.mp4"
+                                                videoOutput: videoOutput
+                                                source: modelData
+                                            }
 
-                                        VideoOutput {
-                                            id: videoOutput
-                                            anchors.fill: parent
-                                        }
+                                            VideoOutput {
+                                                id: videoOutput
+                                                anchors.fill: parent
+                                            }
 
-                                        MouseArea {
-                                            anchors.fill: parent
-                                            onClicked: {
-                                                _vid.play()
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                onClicked: {
+                                                    _vid.play()
+                                                }
                                             }
                                         }
                                     }
