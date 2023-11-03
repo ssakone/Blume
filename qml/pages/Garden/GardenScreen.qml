@@ -31,7 +31,7 @@ BPage {
     property variant weatherResponse: undefined
 
     Component.onCompleted: {
-        loadWeather()
+        // loadWeather()
     }
 
     function loadWeather () {
@@ -325,9 +325,7 @@ BPage {
                                 width: parent.width - 30
                                 height: 60
                                 radius: 10
-                                onClicked: page_view.push(navigator.plantIdentifierPage, {
-                                                          "actionTypeOnCompleted": "openGallery"
-                                                          })
+                                onClicked: popupReqIOSPerms.open()
                             }
                         }
                     }

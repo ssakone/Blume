@@ -405,13 +405,11 @@ BPage {
             Item {}
 
             onCurrentIndexChanged: {
-                console.log("\n\n Passer ", currentIndex, count - 1 )
-                console.log("Current state ", appContent.state)
                 if (currentIndex < 0) {
                     currentIndex = 0
                 }
                 else if (currentIndex >= count - 1) {
-                    appContent.state = "Navigator"
+                    pesistedAppSettings.didTutorialOpen = true
                 }
             }
         }

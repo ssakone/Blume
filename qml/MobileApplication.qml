@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Window
 import QtQuick.Layouts
+import Qt.labs.settings as QtSettings
 
 import ThemeEngine 1.0
 import MobileUI 1.0
@@ -117,6 +118,18 @@ Item {
         onTriggered: handleNotches()
     }
 
+    Timer {
+        id: handleIOSPerms
+        interval: 1500
+        repeat: false
+        onTriggered: {
+            console.log("pesistedAppSettings == ", pesistedAppSettings.didAccepIOSPersm, typeof pesistedAppSettings.didAccepIOSPersm)
+            if(!pesistedAppSettings.didAccepIOSPersm) {
+                popupReqIOSPerms.open()
+            }
+        }
+    }
+
     function handleNotches() {
 
 
@@ -230,10 +243,17 @@ Item {
         interactive: (appContent.state !== "Tutorial")
     }
 
+    QtSettings.Settings {
+        id: pesistedAppSettings
+        property bool didAccepIOSPersm
+        property bool didTutorialOpen
+    }
+
     // Events handling /////////////////////////////////////////////////////////
     Component.onCompleted: {
         handleNotchesTimer.restart()
         mobileUI.isLoading = false
+        handleIOSPerms.start()
     }
 
     function fetch(opts) {
@@ -442,6 +462,10 @@ Item {
     PopupDeleteData {
         id: popupDeleteData
     }
+    PopupRequestIosPerms {
+        id: popupReqIOSPerms
+        onConfirmed: pesistedAppSettings.didAccepIOSPersm = true
+    }
 
     FocusScope {
         id: appContent
@@ -629,7 +653,7 @@ Item {
         }
 
         // Initial state
-        state: "Tutorial"
+        state: pesistedAppSettings.didTutorialOpen ? "Navigator" : "Tutorial"
 
         onStateChanged: {
 

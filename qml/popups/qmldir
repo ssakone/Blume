@@ -10,3 +10,4 @@ PopupDeleteData 1.0 PopupDeleteData.qml
 PopupDeleteDevice 1.0 PopupDeleteDevice.qml
 PopupLocationNotification 1.0 PopupLocationNotification.qml
 PopupMacAddress 1.0 PopupMacAddress.qml
+PopupRequestIosPerms 1.0 PopupRequestIosPerms.qml
