@@ -100,7 +100,6 @@ Item {
         ContactPickerPage {}
     }
 
-
     PostActions {
         id: postActionsDrawer
     }
@@ -293,6 +292,12 @@ Item {
                         "import QtQuick; ListModel{}", root)
             event["likes"] = Qt.createQmlObject("import QtQuick; ListModel{}",
                                                 root)
+            event["reactions"] = {
+                "lastReaction": false,
+                "reactions": []
+            }
+            event["reactionCount"] = 0
+            event["lastReaction"] = false
             events.append(event)
         }
     }
@@ -385,7 +390,6 @@ Item {
                     try {
                         let ev = events.get(i)
 
-                        // check if id already exist in comments or like
                         let found = false
 
                         if (data[0] === "EVENT") {
@@ -399,15 +403,58 @@ Item {
                                 if (!found)
                                     ev.comments.append(data[2])
                             } else {
-                                let found = false
                                 for (var j = 0; j < ev.likes.count; j++) {
                                     if (ev.likes.get(j).id === data[2].id) {
                                         found = true
                                         break
                                     }
                                 }
-                                if (!found)
+                                if (!found) {
+                                    const like = data[2]
                                     ev.likes.append(data[2])
+                                    if (like.pubkey !== publicKey) {
+                                        if (like.content === "+")
+                                            ev.reactionCount++
+                                        else if (like.content === "-")
+                                            ev.reactionCount--
+                                        else
+                                            ev.reactionCount++
+                                        return
+                                    }
+                                    let reactions = ev.reactions
+                                    if (reactions.reactions.length === 0) {
+                                        reactions.reactions = [like]
+                                        if (like.content === "+")
+                                            ev.lastReaction = true
+                                        else
+                                            ev.lastReaction = false
+                                    } else {
+                                        let likes = reactions.reactions
+                                        likes.push(like)
+                                        let lastAction = {
+                                            "content": like.content,
+                                            "created_at": like.created_at
+                                        }
+                                        let last = ev.lastReaction
+                                        for (var k = 0; k < likes.length; k++) {
+                                            if (likes[k].created_at <= lastAction.created_at) {
+                                                if (lastAction.content === "+") {
+                                                    last = true
+                                                } else {
+                                                    last = false
+                                                }
+                                            } else {
+                                                lastAction = likes[k]
+                                                k = 0
+                                                continue
+                                            }
+                                        }
+                                        ev.lastReaction = last
+                                        reactions.reactions = likes
+                                    }
+
+                                    ev.reactions = reactions
+                                }
                             }
                         }
                     } catch (e) {
@@ -616,7 +663,6 @@ Item {
         relay.active = false
         messagesRelay.active = false
     }
-
 
     function logout() {
         timer.start()

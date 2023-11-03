@@ -9,19 +9,18 @@ import "../components"
 import "../widgets"
 
 Page {
-//    property bool isFullScreen: false
-//    onIsFullScreenChanged: {
-//        if (isFullScreen)
-//            fullScreenPop.close()
+    //    property bool isFullScreen: false
+    //    onIsFullScreenChanged: {
+    //        if (isFullScreen)
+    //            fullScreenPop.close()
 
-//    }
+    //    }
     FocusScope {
         Keys.onBackPressed: console.log("BAAAAACK")
         FullScreenMedia {
             id: fullScreenPop
             //onSwithMode: isFullScreen = !isFullScreen
         }
-
     }
 
     Flickable {
@@ -174,7 +173,7 @@ Page {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    if(modelData['is_pined']) {
+                                    if (modelData['is_pined']) {
                                         view.push(messagePage, {
                                             "friend": modelData,
                                             "isBotMode": true
@@ -306,57 +305,63 @@ Page {
                                             const data = captureLinks(content)
                                             text = data[0]?.slice(0)
                                             if (data[2].length > 0) {
-                                                _vid.source = data[2][0]
-                                                _vidArea.visible = true
+                                                _imVideoModel.model = data[2]
                                             } else if (data[1].length > 0) {
-                                                _im.source = data[1][0]
-                                                _imArea.visible = true
+                                                _imModel.model = data[1]
                                             }
                                         }
                                     }
-                                    RadiusImage {
-                                        id: _imArea
-                                        width: parent.width
-                                        height: _im.height //width * (9 / 16)
-                                        visible: _im.source.toString() !== ""
-                                        Image {
-                                            id: _im
+                                    Repeater {
+                                        id: _imModel
+                                        RadiusImage {
+                                            id: _imArea
                                             width: parent.width
-                                            asynchronous: false
-                                            cache: false
-                                            fillMode: Image.PreserveAspectFit
+                                            height: _im.height //width * (9 / 16)
+                                            visible: _im.source.toString(
+                                                         ) !== ""
+                                            Image {
+                                                id: _im
+                                                width: parent.width
+                                                asynchronous: false
+                                                cache: false
+                                                source: modelData
+                                                fillMode: Image.PreserveAspectFit
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    onClicked: fullScreenPop.displayImage(
+                                                                   parent.source)
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    Repeater {
+                                        id: _imVideoModel
+                                        RadiusImage {
+                                            width: parent.width
+                                            height: visible ? width * (9 / 16) : 0
+                                            Rectangle {
+                                                anchors.fill: parent
+                                                color: "black"
+                                            }
+
+                                            MediaPlayer {
+                                                id: _vid
+                                                //source: "https://www.w3schools.com/html/mov_bbb.mp4"
+                                                videoOutput: videoOutput
+                                                source: modelData
+                                            }
+
+                                            VideoOutput {
+                                                id: videoOutput
+                                                anchors.fill: parent
+                                            }
+
                                             MouseArea {
                                                 anchors.fill: parent
-                                                onClicked: fullScreenPop.displayImage(parent.source)
-                                            }
-                                        }
-                                    }
-
-                                    RadiusImage {
-                                        id: _vidArea
-                                        visible: false
-                                        width: parent.width
-                                        height: visible ? width * (9 / 16) : 0
-                                        Rectangle {
-                                            anchors.fill: parent
-                                            color: "black"
-                                        }
-
-                                        MediaPlayer {
-                                            id: _vid
-                                            //source: "https://www.w3schools.com/html/mov_bbb.mp4"
-                                            videoOutput: videoOutput
-                                        }
-
-                                        VideoOutput {
-                                            id: videoOutput
-                                            anchors.fill: parent
-                                        }
-
-                                        MouseArea {
-                                            anchors.fill: parent
-                                            onClicked: {
-                                                _vid.play()
+                                                onClicked: {
+                                                    _vid.play()
+                                                }
                                             }
                                         }
                                     }
@@ -402,14 +407,16 @@ Page {
                                         Layout.fillWidth: true
                                         spacing: 5
                                         IconImage {
-                                            source: Qaterial.Icons.heartOutline
+                                            source: lastReaction === true ? Qaterial.Icons.heart : Qaterial.Icons.heartOutline
                                             color: Qaterial.Colors.orange300
                                             width: 30
                                             height: width
                                         }
                                         Label {
                                             color: $Colors.gray600
-                                            text: "%1 like".arg(likes.count)
+                                            text: "%1 like".arg(
+                                                      reactionCount
+                                                      + (lastReaction === true ? 1 : 0))
                                             anchors.verticalCenter: parent.verticalCenter
                                         }
                                     }
@@ -442,9 +449,22 @@ Page {
                                             Layout.fillWidth: true
                                             Layout.fillHeight: true
                                             IconImage {
-                                                source: Qaterial.Icons.heartOutline
+                                                source: lastReaction === false ? Qaterial.Icons.heartOutline : Qaterial.Icons.heart
                                                 color: Qaterial.Colors.gray600
                                                 anchors.verticalCenter: parent.verticalCenter
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    onClicked: {
+                                                        const typeR = lastReaction
+                                                                    === true ? "-" : "+"
+                                                        http.reactToEvent(
+                                                                    lastReaction
+                                                                    === true ? "-" : "+",
+                                                                    id, pubkey,
+                                                                    privateKey).then(
+                                                                    function () {})
+                                                    }
+                                                }
                                             }
                                         }
                                         RowLayout {
@@ -473,7 +493,8 @@ Page {
                                                             "pubkey": pubkey
                                                         }
 
-                                                        view.push(feedDetailsPage, {
+                                                        view.push(feedDetailsPage,
+                                                                  {
                                                                       "post": model,
                                                                       "comments": comments,
                                                                       "likes": likes
