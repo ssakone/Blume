@@ -1,296 +1,499 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-
-import Qaterial as Qaterial
-import QtWebSockets
-import QtMultimedia
-
 import SortFilterProxyModel
-
+import Qaterial as Qaterial
 import "../components"
 
 Page {
-    palette.window: 'white'
-    header: ToolBar {
-        contentHeight: 60
-        height: 65
-        background: Rectangle {}
-        RowLayout {
-            anchors.fill: parent
-            spacing: 0
-            ToolBarButton {
-                icon.source: Qaterial.Icons.arrowLeft
-                onClicked: view.pop()
+    id: page
+
+    property string filterBy: "all"
+    function checkFollow(pubkey) {
+        if (pubkey !== publicKey) {
+            if (root.contacts[publicKey] === undefined) {
+                root.contacts[publicKey] = []
             }
-            Item {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Text {
-                    leftPadding: 10
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.weight: Font.Bold
-                    font.pixelSize: 20
-                    text: qsTr("Relation")
+            for(let i = 0; i<root.contacts[publicKey].length; i++) {
+                if (root.contacts[publicKey][i][1] === pubkey) {
+                    return true
                 }
+            }
+        }
+
+        return false
+    }
+
+    function follow(pubkey) {
+        return new Promise(function (resolve, reject) {
+            http.addContact(privateKey, contacts[publicKey] || [], pubkey).then(
+            function (rs) {
+                console.log(rs)
+                if (rs === "ok") {
+                    resolve()
+                    getContact(publicKey)
+                } else {
+                    reject(rs)
+                }
+            }).catch(function (err) {
+                console.log(JSON.stringify(err))
+                reject(err)
+            })
+
+        })
+    }
+
+    function reloadDefaultFriendsList() {
+        localFriendsModel.clear()
+        const dataset = friendLists.filter(f => f.is_pined !== true && f.pubkey !== publicKey)
+        const size = dataset.length
+        for(let i = 0; i<size; i++) {
+            localFriendsModel.append(dataset[i])
+        }
+    }
+
+    state: filterBy
+
+    ListModel {
+        id: localFriendsModel
+        Component.onCompleted: reloadDefaultFriendsList()
+    }
+
+    SortFilterProxyModel {
+        id: filteredFriendsModel
+        sourceModel: localFriendsModel
+        filters: ExpressionFilter {
+            expression: {
+                console.log("\n Expressing ")
+                return filterBy === "friends" ? page.checkFollow(pubkey) : true
             }
         }
     }
-    ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 20
-        anchors.topMargin: 0
-        Qaterial.LatoTabBar {
-            id: tabBar
-            Layout.fillWidth: true
-            Layout.preferredHeight: 50
-            Qaterial.LatoTabButton {
-                text: "Abonnements"
+
+    states: [
+        State {
+            name: "all"
+            PropertyChanges {
+                target: textFilterAll
+                color: "white"
+                background {
+                    color: $Colors.colorPrimary
+                }
             }
-            Qaterial.LatoTabButton {
-                text: "Chercher"
+            PropertyChanges {
+                target: textFilterFriends
+                color: $Colors.gray600
+                background {
+                    border {
+                        width: 1
+                        color: $Colors.colorPrimary
+                    }
+                }
+            }
+        },
+        State {
+            name: "friends"
+            PropertyChanges {
+                target: textFilterAll
+                color: $Colors.gray600
+                background {
+                    border {
+                        width: 1
+                        color: $Colors.colorPrimary
+                    }
+                }
+            }
+            PropertyChanges {
+                target: textFilterFriends
+                color: "white"
+                background {
+                    color: $Colors.colorPrimary
+                }
             }
         }
+    ]
 
-        SwipeView {
-            currentIndex: tabBar.currentIndex
-            interactive: false
-            Layout.fillHeight: true
+
+    ColumnLayout {
+        anchors.fill: parent
+        Column {
+            id: headerColumn
             Layout.fillWidth: true
-            clip: true
+            leftPadding: 5
+            rightPadding: 5
+            topPadding: 10
+            bottomPadding: 25
+            spacing: 20
+            RowLayout {
+                width: parent.width - 30
+                height: 60
+                anchors.leftMargin: 15
+                anchors.rightMargin: 15
+                spacing: 10
 
-            Item {
-                ListView {
-                    id: friendListView
-                    anchors.fill: parent
-                    header: Item {
-                        width: parent.width
-                        height: 0
-                        visible: false
-                        RowLayout {
-                            anchors.fill: parent
-                            ButtonImage {
-                                visible: false
-                                source: `data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="48" height="48" viewBox="0 0 48 48"%3E%3Cg fill="none" stroke="gray" stroke-linejoin="round" stroke-width="4"%3E%3Cpath d="M21 38c9.389 0 17-7.611 17-17S30.389 4 21 4S4 11.611 4 21s7.611 17 17 17Z"%2F%3E%3Cpath stroke-linecap="round" d="M26.657 14.343A7.975 7.975 0 0 0 21 12a7.975 7.975 0 0 0-5.657 2.343m17.879 18.879l8.485 8.485"%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E`
-                            }
+                RowLayout {
+                    id: globalBackBtn
+                    Layout.fillWidth: true
 
-                            InputField {
-                                Layout.fillWidth: true
-                                height: 45
-                                font.pixelSize: 16
-                                field.placeholderText: "Rechercher..."
-                                field.placeholderTextColor: "#bfbfbf"
-                            }
-                        }
-                    }
-
-                    Connections {
-                        target: root
-                        function onFriendListUpdated() {
-                            friendListView.model = []
-                            friendListView.model = contacts[publicKey]
-                        }
-                    }
-
-                    model: contacts[publicKey]
-                    delegate: Rectangle {
-                        width: parent.width
-                        height: 70
-                        radius: 10
-                        color: area.containsMouse
-                               || area.containsPress ? "#f2f2f2" : "white"
-
+                    IconImage {
+                        Layout.preferredWidth: 60
+                        Layout.preferredHeight: width
+                        Layout.alignment: Qt.AlignVCenter
+                        source: Qaterial.Icons.chevronLeftCircleOutline
+                        color: $Colors.colorPrimary
                         MouseArea {
-                            id: area
-                            hoverEnabled: true
                             anchors.fill: parent
                             onClicked: {
-                                let data = root.author[modelData[1]] || {}
-                                data["pubkey"] = modelData[1]
-                                view.push(userProfile, {
-                                              "profile": data
-                                          })
+                                view.pop()
                             }
                         }
 
-                        RowLayout {
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            spacing: 10
-                            Avatar {
-                                id: _avatar
-                                height: 50
-                                width: 50
-                                avatarSize: 40
-                            }
-                            ColumnLayout {
-                                spacing: 1
-                                Label {
-                                    id: _nameLabel
-                                    text: modelData[1].slice(0, 18) + "..."
-                                    font.pixelSize: 18
-                                    font.weight: Font.Bold
-                                    color: "black"
-                                    Connections {
-                                        target: root
-                                        function onAuthorAdded(pubc) {
-                                            Qt.callLater(function (pubk) {
-                                                if (modelData[1] === pubk) {
-                                                    _nameLabel.text = root.author[modelData[1]].name
-                                                            || ""
-                                                    _avatar.source
-                                                            = root.author[modelData[1]].picture
-                                                            || ""
-                                                }
-                                            }, pubc)
-                                        }
-                                    }
+                    }
 
-                                    Component.onCompleted: {
-                                        $Services.getPubKeyInfo(
-                                                    modelData[1],
-                                                    function (info) {
-                                                        if (info !== undefined) {
-                                                            _nameLabel.text = info.name
-                                                                    || ""
-                                                            _avatar.source = info.picture
-                                                                    || ""
-                                                        }
-                                                    })
-                                    }
-                                }
+                    Label {
+                        text: searchInput.text.length === 0 ? qsTr("Search") : qsTr("Results for '%1").arg(searchInput.text)
+                        font.pixelSize: 18
+                        color: Qaterial.Colors.gray600
+                        Layout.fillWidth: true
+                        elide: Label.ElideRight
+                        Layout.alignment: Qt.AlignVCenter
+                    }
+
+                }
+
+
+                ToolBarButton {
+                    id: inputBackBtn
+                    visible: false
+                    Layout.preferredHeight: 45
+                    Layout.preferredWidth: 45
+                    icon {
+                        source: Qaterial.Icons.chevronLeft
+                        color: $Colors.colorPrimary
+                    }
+                    onClicked: {
+                        visible = false
+                        spacer.visible = true
+                        globalBackBtn.visible = true
+                        searchBtn.visible = true
+                        searchInput.visible = false
+                        searchInput.focus = false
+                    }
+                }
+
+
+
+                TextField {
+                    id: searchInput
+                    property bool busy: false
+                    visible: false
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 45
+                    font.pixelSize: 16
+                    padding: 5
+                    leftPadding: 10
+                    rightPadding: 10
+                    color: "white"
+                    placeholderText: qsTr("Search")
+                    placeholderTextColor: "white"
+                    background: Rectangle {
+                        gradient: $Colors.gradientPrimary
+                        radius: 25
+                    }
+                    onTextChanged: {
+                        if(text === "") {
+                            reloadDefaultFriendsList()
+                            return
+                        }
+
+                        searchInput.busy = true
+                        http.searchProfile(text).then(
+                                    function (res) {
+                                        localFriendsModel.clear()
+                                        const data = JSON.parse(
+                                                    res)
+                                        for(let i = 0; i<data.length; i++) {
+                                            localFriendsModel.append(data[i])
+                                        }
+
+                                        searchInput.busy = false
+                                    }).catch(function (err) {
+                                        console.log(err)
+                                        console.log(JSON.stringify(err))
+                                        searchInput.busy = false
+                                    })
+                    }
+                    BusyIndicator {
+                        running: searchInput.busy
+                        width: 30
+                        height: width
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            right: parent.right
+                            rightMargin: 15
+                        }
+                    }
+                }
+
+                Item {
+                    id: spacer
+                    visible: true
+                    Layout.fillWidth: true
+                }
+
+                ToolBarButton {
+                    id: searchBtn
+                    visible: true
+                    Layout.preferredHeight: 30
+                    Layout.preferredWidth: 30
+                    icon.source: Qaterial.Icons.magnify
+                    onClicked: {
+                        visible = false
+                        spacer.visible = false
+                        globalBackBtn.visible = false
+                        inputBackBtn.visible = true
+                        searchInput.visible = true
+                        searchInput.focus = true
+                        //searchInput.text = ""
+                        mouseContext.enabled = true
+                    }
+                }
+            }
+
+            Column {
+                id: categoriesColumn
+                width: parent.width
+                spacing: 10
+                leftPadding: 10
+                rightPadding: 10
+                Label {
+                    text: qsTr("Categories")
+                    font {
+                        weight: Font.DemiBold
+                        pixelSize: 16
+                    }
+                }
+                Row {
+                    spacing: 10
+                    Label {
+                        id: textFilterAll
+                        text: qsTr("All")
+                        color: $Colors.gray600
+                        padding: 5
+                        width: 80
+                        height: 40
+                        horizontalAlignment: Label.AlignHCenter
+                        verticalAlignment: Label.AlignVCenter
+                        background: Rectangle {
+                            radius: 5
+                            border {
+                                width: 1
+                                color: $Colors.colorPrimary
                             }
-                            Item {
-                                Layout.fillWidth: true
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                page.filterBy = "all"
+                            }
+                        }
+                    }
+                    Label {
+                        id: textFilterFriends
+                        text: qsTr("Friends")
+                        color: $Colors.gray600
+                        padding: 5
+                        width: 80
+                        height: 40
+                        horizontalAlignment: Label.AlignHCenter
+                        verticalAlignment: Label.AlignVCenter
+                        background: Rectangle {
+                            radius: 5
+                            border {
+                                width: 1
+                                color: $Colors.colorPrimary
+                            }
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                page.filterBy = "friends"
                             }
                         }
                     }
                 }
             }
 
-            Item {
-                ListView {
-                    id: searchContact
-                    anchors.fill: parent
-                    header: Item {
-                        width: parent.width
-                        height: 50
-                        visible: true
-                        RowLayout {
-                            anchors.fill: parent
-                            ButtonImage {
-                                visible: false
-                                source: `data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="48" height="48" viewBox="0 0 48 48"%3E%3Cg fill="none" stroke="gray" stroke-linejoin="round" stroke-width="4"%3E%3Cpath d="M21 38c9.389 0 17-7.611 17-17S30.389 4 21 4S4 11.611 4 21s7.611 17 17 17Z"%2F%3E%3Cpath stroke-linecap="round" d="M26.657 14.343A7.975 7.975 0 0 0 21 12a7.975 7.975 0 0 0-5.657 2.343m17.879 18.879l8.485 8.485"%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E`
-                            }
+        }
 
-                            InputField {
-                                property bool busy: false
-                                Layout.fillWidth: true
-                                height: 45
-                                font.pixelSize: 16
-                                field.placeholderText: "Rechercher..."
-                                field.placeholderTextColor: "#bfbfbf"
-                                field.onTextChanged: {
-                                    busy = true
-                                    http.searchProfile(field.text).then(
-                                                function (res) {
-                                                    console.log(res)
-                                                    searchContact.model = JSON.parse(
-                                                                res)
-                                                    busy = false
-                                                }).catch(function (err) {
-                                                    console.log(err)
-                                                    console.log(JSON.stringify(err))
-                                                    busy = false
-                                                })
+        Item {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            Flickable {
+                anchors.fill: parent
+                contentHeight: insideCol.height
+                clip: true
+
+                Column {
+                    id: insideCol
+                    width: parent.width
+                    padding: 10
+
+                    Flow {
+                        id: grid
+                        width: parent.width - 20
+                        spacing: 10
+
+                        Repeater {
+                            id: contactListView
+                            model: filteredFriendsModel
+                            delegate: Rectangle {
+                                id: delegateItem
+                                required property int index
+                                required property var model
+                                property var modelData: filteredFriendsModel.get(index)
+                                property bool isFollowed: page.checkFollow(modelData.pubkey)
+
+                                width: grid.width / 2.1
+                                height: insideDelegateColumn.height
+                                radius: 5
+                                color: Qt.rgba(0,0,0,0)
+                                border {
+                                    width: 1
+                                    color: Qaterial.Colors.gray200
                                 }
+                                anchors.bottomMargin: 20
 
-                                BusyIndicator {
-                                    anchors.right: parent.right
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    anchors.rightMargin: 10
-                                    width: 20
-                                    running: parent.busy
-                                }
-                            }
-                        }
-                    }
-                    delegate: Rectangle {
-                        width: parent.width
-                        height: 70
-                        radius: 10
-                        color: area2.containsMouse
-                               || area2.containsPress ? "#f2f2f2" : "white"
+                                Column {
+                                    id: insideDelegateColumn
+                                    spacing: 5
+                                    width: parent.width - 10
 
-                        MouseArea {
-                            id: area2
-                            hoverEnabled: true
-                            anchors.fill: parent
-                            onClicked: {
-                                let data = root.author[modelData["pubkey"]]
-                                    || {}
-                                data["pubkey"] = modelData["pubkey"]
-                                view.push(userProfile, {
-                                              "profile": data
-                                          })
-                            }
-                        }
+                                    Qaterial.ClipRRect {
+                                        width: parent.width
+                                        height: width * (9/16)
+                                        radius: 5
 
-                        RowLayout {
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            spacing: 10
-                            Avatar {
-                                id: _avatar2
-                                height: 50
-                                width: 50
-                                avatarSize: 40
-                            }
-                            ColumnLayout {
-                                spacing: 1
-                                Label {
-                                    id: _nameLabel2
-                                    text: modelData["pubkey"].slice(0,
-                                                                    18) + "..."
-                                    font.pixelSize: 18
-                                    font.weight: Font.Bold
-                                    color: "black"
-                                    Connections {
-                                        target: root
-                                        function onAuthorAdded(pubc) {
-                                            Qt.callLater(function (pubk) {
-                                                if (modelData[1] === pubk) {
-                                                    _nameLabel2.text
-                                                            = root.author[modelData["pubkey"]].name
-                                                            || ""
-                                                    _avatar2.source = root.author[modelData["pubkey"]].picture
-                                                            || ""
-                                                }
-                                            }, pubc)
+                                        Image {
+                                            anchors.centerIn: parent
+                                            anchors.fill: parent
+                                            fillMode: Image.PreserveAspectCrop
+                                            source: JSON.parse(modelData["profile"]
+                                                               || "{}").picture
+                                                    || Qaterial.Icons.faceManProfile
+                                        }
+
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onClicked: view.push(userProfile, {"profile": modelData})
                                         }
                                     }
 
-                                    Component.onCompleted: {
-                                        $Services.getPubKeyInfo(
-                                                    modelData["pubkey"],
-                                                    function (info) {
-                                                        if (info !== undefined) {
-                                                            _nameLabel2.text = info.name
-                                                                    || ""
-                                                            _avatar2.source = info.picture
-                                                                    || ""
-                                                        }
-                                                    })
+                                    Column {
+                                        spacing: 5
+                                        width: parent.width
+                                        padding: 7
+
+                                        Label {
+                                            text: modelData.name || modelData.username
+                                            width: parent.width
+                                            elide: Label.ElideRight
+                                            color: $Colors.colorPrimary
+                                            font {
+                                                pixelSize: 16
+                                                weight: Font.DemiBold
+                                            }
+                                        }
+                                        RowLayout {
+                                            spacing: 5
+                                            IconImage {
+                                                source: Qaterial.Icons.mapMarker
+                                                color: Qaterial.Colors.blue800
+                                            }
+
+                                            Label {
+                                                text: "France, Paris"
+                                                Layout.fillWidth: true
+                                                wrapMode: Label.Wrap
+                                                color: Qaterial.Colors.gray400
+                                                font {
+                                                    pixelSize: 12
+                                                    weight: Font.Light
+                                                }
+                                            }
+                                        }
+                                        RowLayout {
+                                            width: parent.width - 10
+                                            spacing: 10
+                                            NiceButton {
+                                                Layout.fillWidth: true
+                                                text: qsTr("Write")
+                                                radius: 5
+                                                padding: 5
+                                                icon {
+                                                    source: Qaterial.Icons.messageOutline
+                                                    color: Qaterial.Colors.white
+                                                }
+                                                backgroundColor: $Colors.colorPrimary
+                                                foregroundColor: "white"
+                                                onClicked: view.push(messagePage, {"friend": modelData})
+                                            }
+                                            NiceButton {
+                                                id: followBtn
+                                                property bool isFollowing: false
+                                                Layout.fillWidth: true
+                                                enabled: !isFollowing
+                                                text: delegateItem.isFollowed ? qsTr("Remove") : qsTr("Add")
+                                                radius: 5
+                                                padding: 5
+                                                backgroundColor: Qt.rgba(0,0,0,0)
+                                                foregroundColor: delegateItem.isFollowed ? $Colors.red400 : $Colors.colorPrimary
+                                                backgroundBorderWidth: 1
+                                                backgroundBorderColor: delegateItem.isFollowed ? $Colors.red400 : $Colors.colorPrimary
+                                                onClicked: {
+                                                    if(!delegateItem.isFollowed) {
+                                                        followBtn.isFollowing = true
+                                                        page.follow(modelData.pubkey)
+                                                        .then(function () {
+                                                            followBtn.isFollowing = false
+                                                            delegateItem.isFollowed = true
+                                                        })
+                                                        .catch(function () {
+                                                            followBtn.isFollowing = false
+                                                        })
+                                                    }
+                                                }
+
+                                                BusyIndicator {
+                                                    running: followBtn.isFollowing
+                                                    anchors.centerIn: parent
+                                                    width: 40
+                                                    height: width
+                                                }
+                                            }
+                                        }
+
                                     }
                                 }
-                            }
-                            Item {
-                                Layout.fillWidth: true
+
                             }
                         }
                     }
                 }
             }
+
+            MouseArea {
+                id: mouseContext
+                enabled: false
+                anchors.fill: parent
+                onClicked: {
+                    console.log("CLICKKP ")
+                    searchInput.focus = false
+                    enabled = false
+                }
+            }
+
         }
     }
 }

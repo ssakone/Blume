@@ -95,6 +95,11 @@ Item {
         PostEditPage {}
     }
 
+    Component {
+        id: contacPickPage
+        ContactPickerPage {}
+    }
+
     PostActions {
         id: postActionsDrawer
     }
@@ -724,10 +729,6 @@ Item {
     StackView {
         id: view
         anchors.fill: parent
-        onFocusChanged: {
-            console.log("StackView focus changed ", focus)
-        }
-
         Component.onCompleted: {
             page_view.indepthStacksList.push(view.pop)
             Qaterial.Style.theme = Qaterial.Style.Theme.Light

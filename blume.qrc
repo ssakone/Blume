@@ -236,6 +236,7 @@
     <file alias="pages/Social/components/ToolBarButton.qml">qml/pages/Social/components/ToolBarButton.qml</file>
     <file alias="pages/Social/components/qmldir">qml/pages/Social/components/qmldir</file>
     <file alias="pages/Social/pages/CloseMyAccountPage.qml">qml/pages/Social/pages/CloseMyAccountPage.qml</file>
+    <file alias="pages/Social/pages/ContactPickerPage.qml">qml/pages/Social/pages/ContactPickerPage.qml</file>
     <file alias="pages/Social/pages/FeedDetailsPage.qml">qml/pages/Social/pages/FeedDetailsPage.qml</file>
     <file alias="pages/Social/pages/FeedPage.qml">qml/pages/Social/pages/FeedPage.qml</file>
     <file alias="pages/Social/pages/FindUser.qml">qml/pages/Social/pages/FindUser.qml</file>
