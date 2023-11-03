@@ -15,6 +15,8 @@ import "../utils"
 Page {
     id: page
     property bool uploadingImage: false
+    property ListModel mediaModel: ListModel {}
+
     property bool haveImage: false
     property string media_name: ""
     background: Rectangle {
@@ -48,24 +50,34 @@ Page {
                     QtAndroidAppPermissions.openGallery()
                 }
 
-
                 Connections {
                     target: QtAndroidAppPermissions
                     function onImageSelected(img) {
                         const ext = img.split(".").pop()
                         const data = imgToB64.getBase64(img)
+                        let b64_imageUrl
                         if (["png", "jpg"].indexOf(ext) !== -1) {
-                            const b64_imageUrl = "data:image/png;base64," + data
-                            imageLoader.source = b64_imageUrl
+                            b64_imageUrl = "data:image/png;base64," + data
                         }
-                        haveImage = true
-                        uploadingImage = true
 
-                        http.uploadImage(ext, data).then(function(res) {
+                        mediaModel.append({
+                                              "path": b64_imageUrl,
+                                              "done": false,
+                                              "name": ""
+                                          })
+                        console.log("image selected", ext)
+                        var element = mediaModel.get(mediaModel.count - 1)
+                        uploadingImage = true
+                        http.uploadImage(ext, data).then(function (res) {
+                            console.log(res)
                             media_name = res
+                            element.done = true
+                            element.name = res
                             uploadingImage = false
-                        }).catch(function(err) {
+                        }).catch(function (err) {
                             console.log(err)
+                            element.done = false
+                            mediaModel.remove(mediaModel.count - 1)
                             haveImage = false
                             uploadingImage = false
                         })
@@ -96,39 +108,48 @@ Page {
                 textArea.textFormat: TextEdit.PlainText
             }
         }
-        Rectangle {
-            color:  Qaterial.Colors.gray900
-            width: 160
-            height: 160
-            radius: 8
-            border.color: "transparent"
-            visible: haveImage
-            Qaterial.ClipRRect {
-                anchors.fill: parent
-                radius: parent.radius
-                Image {
-                    id: imageLoader
+        ListView {
+            model: mediaModel
+            width: parent.width
+            height: 120
+            orientation: Qt.Horizontal
+            spacing: 10
+            visible: mediaModel.count > 0
+            delegate: Rectangle {
+                color: Qaterial.Colors.gray900
+                width: 120
+                height: 120
+                radius: 8
+                border.color: "transparent"
+                Qaterial.ClipRRect {
                     anchors.fill: parent
-                }
+                    radius: parent.radius
+                    Image {
+                        anchors.fill: parent
+                        source: path
+                    }
 
-                BusyIndicator {
-                    running: uploadingImage
-                    anchors.centerIn: parent
-                }
+                    BusyIndicator {
+                        running: !done
+                        anchors.centerIn: parent
+                    }
 
-                Qaterial.Icon {
-                    anchors.right: parent.right
-                    anchors.rightMargin: 10
-                    y: 10
-                    icon: Qaterial.Icons.checkCircle
-                    color: Qaterial.Colors.lightGreen
+                    Qaterial.Icon {
+                        anchors.right: parent.right
+                        anchors.rightMargin: 10
+                        visible: done
+                        y: 10
+                        icon: Qaterial.Icons.checkCircle
+                        color: Qaterial.Colors.lightGreen
+                    }
                 }
             }
         }
     }
     Qaterial.FabButton {
         property bool busy: false
-        property bool enable: (!busy && postField.text !== "") && (!haveImage || media_name !== "")
+        property bool enable: (!busy && postField.text !== "")
+                              && (!haveImage || media_name !== "")
         opacity: enable ? 1 : .7
         //icon.source: Qaterial.Icons.postOutline
         Qaterial.Icon {
@@ -151,25 +172,31 @@ Page {
         }
 
         onClicked: {
-            if (busy || !enable) return
+            if (busy || !enable)
+                return
             busy = true
             Qt.callLater(function () {
                 let content = postField.textArea.text
-                if (haveImage && media_name !== "") {
-                    content += "\n%1/get_file/".arg(http.apihost) + media_name
+                if (mediaModel.count > 0) {
+                    for (var i = 0; i < mediaModel.count; i++) {
+                        let element = mediaModel.get(i)
+                        if (element.done) {
+                            content += "\n%1/get_file/".arg(
+                                        http.apihost) + element.name
+                        }
+                    }
                 }
                 console.log("finale", content, media_name)
-                http.sendPost(privateKey, content).then(
-                            function (rs) {
-                                if (rs === "ok") {
-                                    postField.text = ""
-                                    view.pop()
-                                } else {
-                                    console.log(rs)
-                                }
-                            }).catch(function (err) {
-                                console.log(JSON.stringify(err))
-                            })
+                http.sendPost(privateKey, content).then(function (rs) {
+                    if (rs === "ok") {
+                        postField.text = ""
+                        view.pop()
+                    } else {
+                        console.log(rs)
+                    }
+                }).catch(function (err) {
+                    console.log(JSON.stringify(err))
+                })
             })
         }
     }
