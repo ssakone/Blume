@@ -1,9 +1,7 @@
 name: iOS CI Build
 
-on:
-  push:
-    branches:
-      - main
+on: workflow_dispatch
+  
 
 jobs:
   build-ios:
