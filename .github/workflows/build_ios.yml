@@ -1,0 +1,18 @@
+name: Build CI IOS
+
+on:
+  workflow_call:
+    
+jobs:
+  triage:
+    runs-on: macos-latest
+    steps:
+    - uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        version: '6.5.3'
+        host: 'mac'
+        target: 'ios'
+        arch: 'ios'
+        modules: 'qtcharts qtconnectivity qtimageformats qtlocation qtmultimedia qtnetworkauth qtpositioning qtsensors qtwebchannel qtwebsockets qtwebview qt5compat qtshadertools'
+        dir: '${{ github.workspace }}/example_ios/'
