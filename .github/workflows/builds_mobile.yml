@@ -3,107 +3,36 @@
 #-------------------------------------------------------------------------------
 
 name: "Mobile CI builds"
-on:
-  push:
-    branches:
-      - main
-      - dev
 
-  pull_request:
-    branches:
-      - dev
-      - main
-#-------------------------------------------------------------------------------
-# Define application name & version
-#-------------------------------------------------------------------------------
-
-env:
-  APPLICATION: "Blume"
-  APPLICATION_VERSION: "5.0"
-  QT_VERSION: "6.4.2"
-
-#-------------------------------------------------------------------------------
-# Workflow jobs
-#-------------------------------------------------------------------------------
-
+on: workflow_dispatch
+  
 jobs:
-  ## Android build #############################################################
-  build-android:
-    name: "Android CI build"
-    runs-on: ubuntu-20.04
-    steps:
-      # Checkout the repository
-      - name: Checkout repository and submodules
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
-
-      # Java environment (already installed in 'ubuntu-20.04')
-      #- name: Install JDK environment
-      #  uses: actions/setup-java@v2
-      #  with:
-      #    distribution: 'zulu'
-      #    java-version: '11'
-
-      # Android environment (already installed in 'ubuntu-20.04')
-      #- name: Setup Android SDK
-      #  uses: android-actions/setup-android@v2
-      #- name: Install Android SDK / NDK / tools
-      #  run: |
-      #       sdkmanager "platforms;android-32"
-      #       sdkmanager "ndk;23.1.7779620"
-      #       sdkmanager "build-tools;30.0.3"
-
-      # Install Qt (Android & desktop)
-      - name: Install Qt (Android & desktop)
-        uses: jurplel/install-qt-action@v3
-        with:
-          version: ${{env.QT_VERSION}}
-          host: 'linux'
-          target: 'android'
-          arch: 'android_arm64_v8a'
-          modules: qtconnectivity qtcharts qtshadertools qt5compat qtmultimedia
-          aqtversion: '==3.1.*'
-          py7zrversion: '==0.20.*'
-          extra: '--autodesktop'
-
-      # Build application
-      - name: Build application
-        run: |
-             export PATH=$Qt6_DIR/bin:$PATH
-             qmake --version
-             qmake ${{env.APPLICATION}}.pro CONFIG+=release
-             make -j$(nproc)
-
-  ## iOS build #################################################################
   build-ios:
-    name: "iOS CI build"
-    runs-on: macos-11
+    runs-on: macos-latest
+
     steps:
-      # Checkout the repository
-      - name: Checkout repository and submodules
+      - name: (4) Check out code
         uses: actions/checkout@v3
+
+      - name: (5) Set up Xcode environment
+        uses: maxim-lobanov/setup-xcode@latest-stable
         with:
-          submodules: recursive
+          xcode-version: 'latest'
 
-      # Install Qt (iOS & desktop)
-      - name: Install Qt (iOS & desktop)
-        uses: jurplel/install-qt-action@v3
-        with:
-          version: ${{env.QT_VERSION}}
-          host: 'mac'
-          target: 'ios'
-          modules: qtconnectivity qtcharts qtshadertools qt5compat qtmultimedia
-          aqtversion: '==3.1.*'
-          py7zrversion: '==0.20.*'
-          extra: '--autodesktop'
+      - name: (6) Create build directory
+        run: mkdir ${RUNNER_TEMP}/build
 
-
-      # Build application
-      - name: Build application
+      - name: (7) Build with Xcode
+        working-directory: ${RUNNER_TEMP}/build
         run: |
-             export PATH=$Qt6_DIR/bin:$PATH
-             ln -s /Users/runner/work/${{env.APPLICATION}}/Qt/${{env.QT_VERSION}}/macos /Users/runner/work/${{env.APPLICATION}}/Qt/${{env.QT_VERSION}}/clang_64
-             qmake --version
-             qmake ${{env.APPLICATION}}.pro CONFIG+=release
-             make -j$(nproc)
+          xcodebuild -project ${GITHUB_WORKSPACE}/Blume.xcodeproj -scheme Blume -sdk iphoneos -configuration Release clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+
+      - name: (8) Zip the build
+        working-directory: ${RUNNER_TEMP}
+        run: zip -r Blume-build.zip build/*
+
+      - name: (9) Save build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Blume-Artifact
+          path: ${RUNNER_TEMP}/Blume-build.zip
