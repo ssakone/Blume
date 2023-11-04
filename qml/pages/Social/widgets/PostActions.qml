@@ -88,32 +88,28 @@ Qaterial.ClipRRect {
                             padding: 10
                             spacing: 25
 
-                            Item {
-                                width: parent.width
-                                height: rowReportUser.height
-
-                                RowLayout {
-                                    id: rowReportUser
-                                    width: parent.width - 20
-                                    spacing: 10
-                                    IconImage {
-                                        source: Qaterial.Icons.commentAlert
+                            RowLayout {
+                                id: rowReportUser
+                                width: parent.width - 20
+                                spacing: 10
+                                IconImage {
+                                    source: Qaterial.Icons.commentAlert
+                                }
+                                Column {
+                                    Layout.fillWidth: true
+                                    Label {
+                                        text: qsTr("Report this post")
+                                        font.weight: Font.DemiBold
+                                        font.pixelSize: 16
                                     }
-                                    Column {
-                                        Layout.fillWidth: true
-                                        Label {
-                                            text: qsTr("Report this post")
-                                            font.weight: Font.DemiBold
-                                            font.pixelSize: 16
-                                        }
-                                        Label {
-                                            text: qsTr("The author won't know who reported him")
-                                            width: parent.width
-                                            wrapMode: Label.Wrap
-                                        }
+                                    Label {
+                                        text: qsTr("The author won't know who reported him")
+                                        width: parent.width
+                                        wrapMode: Label.Wrap
                                     }
                                 }
                             }
+
                         }
                     }
                 }
@@ -123,7 +119,7 @@ Qaterial.ClipRRect {
                     Rectangle {
                         radius: 5
                         width: parent.width
-                        height: _insideCol1.height
+                        height: _insideCol2.height
                         color: "white"
 
                         MouseArea {
@@ -140,32 +136,28 @@ Qaterial.ClipRRect {
                             padding: 10
                             spacing: 25
 
-                            Item {
-                                width: parent.width
-                                height: rowReportUser.height
-
-                                RowLayout {
-                                    id: rowBloackUserPosts
-                                    width: parent.width - 20
-                                    spacing: 10
-                                    IconImage {
-                                        source: Qaterial.Icons.commentAlert
+                            RowLayout {
+                                id: rowBloackUserPosts
+                                width: parent.width - 20
+                                spacing: 10
+                                IconImage {
+                                    source: Qaterial.Icons.commentAlert
+                                }
+                                Column {
+                                    Layout.fillWidth: true
+                                    Label {
+                                        text:  qsTr("Block this user posts")
+                                        font.weight: Font.DemiBold
+                                        font.pixelSize: 16
                                     }
-                                    Column {
-                                        Layout.fillWidth: true
-                                        Label {
-                                            text:  qsTr("Block this user posts")
-                                            font.weight: Font.DemiBold
-                                            font.pixelSize: 16
-                                        }
-                                        Label {
-                                            text: qsTr("You will no longer receive any post from this user")
-                                            width: parent.width
-                                            wrapMode: Label.Wrap
-                                        }
+                                    Label {
+                                        text: qsTr("You will no longer receive any post from this user")
+                                        width: parent.width
+                                        wrapMode: Label.Wrap
                                     }
                                 }
                             }
+
                         }
                     }
                 }
@@ -175,7 +167,7 @@ Qaterial.ClipRRect {
                     Rectangle {
                         radius: 5
                         width: parent.width
-                        height: _insideCol1.height
+                        height: _insideCol3.height
                         color: "white"
 
                         MouseArea {
@@ -193,32 +185,28 @@ Qaterial.ClipRRect {
                             padding: 10
                             spacing: 25
 
-                            Item {
-                                width: parent.width
-                                height: rowReportUser.height
-
-                                RowLayout {
-                                    id: rowBloackUserAllActions
-                                    width: parent.width - 20
-                                    spacing: 10
-                                    IconImage {
-                                        source: Qaterial.Icons.commentAlert
+                            RowLayout {
+                                id: rowBloackUserAllActions
+                                width: parent.width - 20
+                                spacing: 10
+                                IconImage {
+                                    source: Qaterial.Icons.commentAlert
+                                }
+                                Column {
+                                    Layout.fillWidth: true
+                                    Label {
+                                        text: qsTr("Block this user")
+                                        font.weight: Font.DemiBold
+                                        font.pixelSize: 16
                                     }
-                                    Column {
-                                        Layout.fillWidth: true
-                                        Label {
-                                            text: qsTr("Block this user")
-                                            font.weight: Font.DemiBold
-                                            font.pixelSize: 16
-                                        }
-                                        Label {
-                                            text: qsTr("You will no longer see this user in the app")
-                                            width: parent.width
-                                            wrapMode: Label.Wrap
-                                        }
+                                    Label {
+                                        text: qsTr("You will no longer see this user in the app")
+                                        width: parent.width
+                                        wrapMode: Label.Wrap
                                     }
                                 }
                             }
+
                         }
                     }
                 }
