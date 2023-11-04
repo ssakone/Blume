@@ -9,9 +9,9 @@ on: workflow_dispatch
 jobs:
   build-ios:
     runs-on: macos-latest
-    defaults: 
-      run:
-        working-directory: blume-build
+    # defaults: 
+    #   run:
+    #     working-directory: blume-build
 
     steps:
       - name: (4) Check out code
