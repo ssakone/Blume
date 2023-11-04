@@ -9,6 +9,9 @@ on: workflow_dispatch
 jobs:
   build-ios:
     runs-on: macos-latest
+    defaults: 
+      run:
+        working-directory: ./blume-build
 
     steps:
       - name: (4) Check out code
@@ -20,19 +23,23 @@ jobs:
           xcode-version: 'latest'
 
       - name: (6) Create build directory
-        run: mkdir ${RUNNER_TEMP}/build
+        run: mkdir build
+        # run: mkdir ${RUNNER_TEMP}/build
 
       - name: (7) Build with Xcode
-        working-directory: ${RUNNER_TEMP}/build
+        working-directory: build
+        # working-directory: ${RUNNER_TEMP}/build
         run: |
           xcodebuild -project ${GITHUB_WORKSPACE}/Blume.xcodeproj -scheme Blume -sdk iphoneos -configuration Release clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
 
       - name: (8) Zip the build
-        working-directory: ${RUNNER_TEMP}
+        # working-directory: .
+        # working-directory: ${RUNNER_TEMP}
         run: zip -r Blume-build.zip build/*
 
       - name: (9) Save build artifact
         uses: actions/upload-artifact@v3
         with:
           name: Blume-Artifact
-          path: ${RUNNER_TEMP}/Blume-build.zip
+          path: build/Blume-build.zip
+          # path: ${RUNNER_TEMP}/Blume-build.zip
