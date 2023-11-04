@@ -1,7 +1,7 @@
 name: Build CI IOS
 
 on:
-  workflow_call:
+  push:
     
 jobs:
   triage:
