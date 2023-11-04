@@ -61,6 +61,11 @@ Item {
     }
 
     Component {
+        id: listBlockedUsersPage
+        ListBlockedUsers {}
+    }
+
+    Component {
         id: userProfile
         UserProfile {}
     }
@@ -253,7 +258,6 @@ Item {
             if (publicKey === data[2].pubkey) {
                 userInfo = author
             }
-
             authorAdded(data[2].pubkey)
 
             // console.log("Fetched", data[2].pubkey, author.name)
@@ -508,6 +512,77 @@ Item {
         messagesRelay.sendTextMessage(contactFetchQuery)
     }
 
+    function blockUserPosts(pubkey) {
+        if(!root.blockedUsers[pubkey]) {
+            console.log("Already found")
+            root.blockedUsers[pubkey] = {
+                "posts": true
+            }
+        } else {
+            console.log("New to list")
+            root.blockedUsers[pubkey]["posts"] = true
+        }
+        root.blockedUsers = root.blockedUsers
+    }
+
+    function unblockUserPosts(pubkey) {
+        if(!root.blockedUsers[pubkey]) return
+        root.blockedUsers[pubkey]["posts"] = false
+
+        const fields = Object.keys(root.blockedUsers[pubkey])
+        let hasAnotherBlockField = false
+
+        for(let i = 0; i < fields.length ; i++) {
+            const key = fields[i]
+            console.log(key, " --> ", root.blockedUsers[pubkey][key])
+            if(root.blockedUsers[pubkey][key] !== false) {
+                hasAnotherBlockField  = true
+                break
+            }
+        }
+
+        if(!hasAnotherBlockField) {
+            delete root.blockedUsers[pubkey]
+        }
+
+        root.blockedUsers = root.blockedUsers
+    }
+
+    function blockUserDiscussion(pubkey) {
+        if(!root.blockedUsers[pubkey]) {
+            root.blockedUsers[pubkey] = {
+                "discussion": true
+            }
+        } else {
+            root.blockedUsers[pubkey]["discussion"] = true
+        }
+        root.blockedUsers = root.blockedUsers
+    }
+
+    function unblockUserDiscussion(pubkey) {
+        if(!root.blockedUsers[pubkey]) return
+        root.blockedUsers[pubkey]["discussion"] = false
+        const fields = Object.keys(root.blockedUsers[pubkey])
+
+        let hasAnotherBlockField = false
+
+        for(let i = 0; i < fields.length ; i++) {
+            const key = fields[i]
+            console.log(key, " --> ", root.blockedUsers[pubkey][key])
+            if(root.blockedUsers[pubkey][key] !== false) {
+                hasAnotherBlockField  = true
+                break
+            }
+        }
+        if(!hasAnotherBlockField) {
+            delete root.blockedUsers[pubkey]
+        }
+
+        root.blockedUsers = root.blockedUsers
+    }
+
+
+
     function subscribe(pubkey) {
         if (subscribed.indexOf(pubkey) !== -1)
             return
@@ -581,6 +656,7 @@ Item {
     property var contactRequested: ([])
     property var subscribed: ([])
     property string currentDiscussionPubkey: ""
+    property var blockedUsers: ({})
 
     ListModel {
         id: discussions
@@ -588,6 +664,23 @@ Item {
 
     ListModel {
         id: events
+        /*
+            STRUCTURE OF CONTENT
+            {
+                id: string,
+                kind: int,
+                sig: string,
+                pubkey: string,
+                content: string,
+                lastReact: bool,
+                commentsCount: int,
+                reactionCount: int,
+                reactions: object,
+                likes: ListModel {},
+                comments: ListModel {},
+                tags: ListModel {}
+            }
+        */
     }
 
     ListModel {
@@ -611,13 +704,60 @@ Item {
             name: "commentsCount"
             expression: comments.count
         }
+
+        filters: [
+            ExpressionFilter {
+                expression: !(blockedUsers[pubkey] && blockedUsers[pubkey]["posts"])
+            }
+
+        ]
     }
 
+    /*
+    {
+        [pubkey: string]: {
+            // Knowed fields
+            name: string,
+            display_name: staring,
+            email: string,
+            website: string,
+            lud06: string,
+            banner: url,
+            picture: url,
+            created_at: timestamp,
+            updated_at: timestamp,
+            ...// field depends on the users sent to relay
+        }
+    }
+    */
     property var author: ({})
 
     property var userInfo: ({})
+
+    /*
+    {
+        [pubkey: string]: [
+            ["p", pubkey, relayURL],
+            ...
+        ]
+    }
+    */
     property var contacts: ({})
 
+
+    /*
+    [
+        {
+            id: string,
+            "username": string,
+            "name": string,
+            "profile": {
+                "picture": url,
+                is_pined: boolean
+            }
+        }
+    ]
+    */
     property var friendLists: ([])
 
     property var realDiscussions: ({})
@@ -629,6 +769,7 @@ Item {
         property alias userInfo: root.userInfo
         property alias contacts: root.contacts
         property alias author: root.author
+        property alias blockedUsers: root.blockedUsers
     }
 
     Timer {

@@ -14,6 +14,7 @@ Page {
     property bool isAIWritting: false
     property bool isBotMode: Boolean(friend?.is_pined)
     property int prevCount: 0
+    property bool areDiscussionsBlocked: root.blockedUsers[friend.pubkey]["discussion"]
 
     background: Rectangle {
         color: "white"
@@ -248,6 +249,19 @@ Page {
             width: 250
             wrapMode: Label.Wrap
             text: qsTr("You will write a new message after is finish responding to the previous !")
+        }
+
+        Label {
+            id: blockText
+            anchors {
+                bottom: parent.bottom
+                bottomMargin: 10
+                horizontalCenter: parent.horizontalCenter
+            }
+            visible: page.areDiscussionsBlocked
+            width: 250
+            wrapMode: Label.Wrap
+            text: qsTr("You blocked discussions with this user")
         }
     }
 
@@ -493,7 +507,8 @@ Page {
 
     footer: ToolBar {
         id: footerToolbar
-        visible: !page.isAIWritting
+        visible: !page.isAIWritting && !page.areDiscussionsBlocked
+        enabled: !page.areDiscussionsBlocked
         height: 50
         background: Rectangle {}
         RowLayout {

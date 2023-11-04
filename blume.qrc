@@ -240,6 +240,7 @@
     <file alias="pages/Social/pages/FeedDetailsPage.qml">qml/pages/Social/pages/FeedDetailsPage.qml</file>
     <file alias="pages/Social/pages/FeedPage.qml">qml/pages/Social/pages/FeedPage.qml</file>
     <file alias="pages/Social/pages/FindUser.qml">qml/pages/Social/pages/FindUser.qml</file>
+    <file alias="pages/Social/pages/ListBlockedUsers.qml">qml/pages/Social/pages/ListBlockedUsers.qml</file>
     <file alias="pages/Social/pages/Login.qml">qml/pages/Social/pages/Login.qml</file>
     <file alias="pages/Social/pages/MessageList.qml">qml/pages/Social/pages/MessageList.qml</file>
     <file alias="pages/Social/pages/MessagePage.qml">qml/pages/Social/pages/MessagePage.qml</file>

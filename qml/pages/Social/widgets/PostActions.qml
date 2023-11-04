@@ -9,16 +9,16 @@ Qaterial.ClipRRect {
     height: parent.height - 70
     radius: 30
     z: 100
-    //visible: false
 
-    function display () {
+    property var postEvent: null
+
+    function display (post) {
+        control.postEvent = post
         drawer.open()
-        //drawerLoader.active = true
     }
 
     function close () {
         drawer.close()
-        //drawerLoader.active = false
     }
 
     Component {
@@ -67,6 +67,7 @@ Qaterial.ClipRRect {
                 width: parent.width
                 leftPadding: 10
                 rightPadding: 10
+                spacing: 15
 
                 Column {
                     width: parent.width - 20
@@ -85,32 +86,143 @@ Qaterial.ClipRRect {
                             id: _insideCol1
                             width: parent.width
                             padding: 10
+                            spacing: 25
 
-                            RowLayout {
-                                width: parent.width - 20
-                                spacing: 10
-                                IconImage {
-                                    source: Qaterial.Icons.commentAlert
-                                }
-                                Column {
-                                    Layout.fillWidth: true
-                                    Label {
-                                        text: qsTr("Report this post")
-                                        font.weight: Font.DemiBold
-                                        font.pixelSize: 16
+                            Item {
+                                width: parent.width
+                                height: rowReportUser.height
+
+                                RowLayout {
+                                    id: rowReportUser
+                                    width: parent.width - 20
+                                    spacing: 10
+                                    IconImage {
+                                        source: Qaterial.Icons.commentAlert
                                     }
-                                    Label {
-                                        text: qsTr("The author won't know who reported him")
-                                        width: parent.width
-                                        wrapMode: Label.Wrap
+                                    Column {
+                                        Layout.fillWidth: true
+                                        Label {
+                                            text: qsTr("Report this post")
+                                            font.weight: Font.DemiBold
+                                            font.pixelSize: 16
+                                        }
+                                        Label {
+                                            text: qsTr("The author won't know who reported him")
+                                            width: parent.width
+                                            wrapMode: Label.Wrap
+                                        }
                                     }
                                 }
                             }
-
                         }
-
                     }
                 }
+
+                Column {
+                    width: parent.width - 20
+                    Rectangle {
+                        radius: 5
+                        width: parent.width
+                        height: _insideCol1.height
+                        color: "white"
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                root.blockUserPosts(control.postEvent.pubkey)
+                                drawer.close()
+                            }
+                        }
+
+                        Column {
+                            id: _insideCol2
+                            width: parent.width
+                            padding: 10
+                            spacing: 25
+
+                            Item {
+                                width: parent.width
+                                height: rowReportUser.height
+
+                                RowLayout {
+                                    id: rowBloackUserPosts
+                                    width: parent.width - 20
+                                    spacing: 10
+                                    IconImage {
+                                        source: Qaterial.Icons.commentAlert
+                                    }
+                                    Column {
+                                        Layout.fillWidth: true
+                                        Label {
+                                            text:  qsTr("Block this user posts")
+                                            font.weight: Font.DemiBold
+                                            font.pixelSize: 16
+                                        }
+                                        Label {
+                                            text: qsTr("You will no longer receive any post from this user")
+                                            width: parent.width
+                                            wrapMode: Label.Wrap
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Column {
+                    width: parent.width - 20
+                    Rectangle {
+                        radius: 5
+                        width: parent.width
+                        height: _insideCol1.height
+                        color: "white"
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                root.blockUserDiscussion(control.postEvent.pubkey)
+                                root.blockUserPosts(control.postEvent.pubkey)
+                                drawer.close()
+                            }
+                        }
+
+                        Column {
+                            id: _insideCol3
+                            width: parent.width
+                            padding: 10
+                            spacing: 25
+
+                            Item {
+                                width: parent.width
+                                height: rowReportUser.height
+
+                                RowLayout {
+                                    id: rowBloackUserAllActions
+                                    width: parent.width - 20
+                                    spacing: 10
+                                    IconImage {
+                                        source: Qaterial.Icons.commentAlert
+                                    }
+                                    Column {
+                                        Layout.fillWidth: true
+                                        Label {
+                                            text: qsTr("Block this user")
+                                            font.weight: Font.DemiBold
+                                            font.pixelSize: 16
+                                        }
+                                        Label {
+                                            text: qsTr("You will no longer see this user in the app")
+                                            width: parent.width
+                                            wrapMode: Label.Wrap
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
         }
     }
@@ -209,50 +321,62 @@ Qaterial.ClipRRect {
     }
 
 
-    FocusScope {
-        anchors.fill: parent
-        Keys.onBackPressed: console.log("Back back")
-        Drawer {
-                id: drawer
-                width: parent.width
-                height: parent.height
-                edge: Qt.BottomEdge
-                dim: false
-                modal: true
-                interactive: true
 
-                background: Rectangle {
-                    color: Qaterial.Colors.lightBlue50
+    Drawer {
+        id: drawer
+        width: parent.width
+        height: parent.height
+        edge: Qt.BottomEdge
+        dim: false
+        modal: true
+        interactive: true
+
+        background: Rectangle {
+            color: Qaterial.Colors.lightBlue50
+        }
+
+        onOpened: {
+            if(!control.postEvent) close()
+
+            focusScope.forceActiveFocus()
+
+            if(postOptionsView.depth === 0) {
+                postOptionsView.push(mainPage)
+            }
+        }
+
+        onClosed: {
+            control.postEvent = null
+            postOptionsView.clear()
+        }
+
+        FocusScope {
+            id: focusScope
+            anchors.fill: parent
+            Keys.onBackPressed: drawer.close()
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 20
+
+                Rectangle {
+                    width: 80
+                    height: 7
+                    color: Qaterial.Colors.gray400
+                    radius: 2
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.topMargin: 15
                 }
 
-                onClosed: {
-                    postOptionsView.clear()
-                }
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    spacing: 20
-
-                    Rectangle {
-                        width: 80
-                        height: 7
-                        color: Qaterial.Colors.gray400
-                        radius: 2
-                        Layout.alignment: Qt.AlignHCenter
-                        Layout.topMargin: 15
-                    }
-
-                    StackView {
-                        id: postOptionsView
-                        initialItem: mainPage
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                    }
+                StackView {
+                    id: postOptionsView
+                    initialItem: mainPage
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
                 }
             }
 
-
-
+        }
     }
 
 }

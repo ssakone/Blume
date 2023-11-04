@@ -57,6 +57,23 @@ Popup {
 
         ////////
         ActionMenuItem {
+            id: actionListBloackedUsers
+
+            index: 0
+            text: qsTr("List blocked users")
+            source: Qaterial.Icons.accountAlertOutline
+            layoutDirection: actionMenu.layoutDirection
+            onClicked: view.replace(listBlockedUsersPage)
+        }
+
+        Rectangle {
+            width: parent.width
+            height: 1
+            color: Qaterial.Colors.gray100
+        }
+
+        ////////
+        ActionMenuItem {
             id: actionLogout
 
             index: 0

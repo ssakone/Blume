@@ -7439,6 +7439,7 @@
         <file>icons_custom/three-dots-inline.svg</file>
         <file>icons_custom/blume-circle-green.svg</file>
         <file>icons_custom/blumai.svg</file>
+        <file>icons_custom/default-profile.svg</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

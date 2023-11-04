@@ -9,18 +9,15 @@ import "../components"
 import "../widgets"
 
 Page {
-    //    property bool isFullScreen: false
-    //    onIsFullScreenChanged: {
-    //        if (isFullScreen)
-    //            fullScreenPop.close()
-
-    //    }
     FocusScope {
-        Keys.onBackPressed: console.log("BAAAAACK")
         FullScreenMedia {
             id: fullScreenPop
-            //onSwithMode: isFullScreen = !isFullScreen
         }
+    }
+
+    BusyIndicator {
+        running: eventsProxy.count === 0
+        anchors.centerIn: parent
     }
 
     Flickable {
@@ -275,16 +272,19 @@ Page {
 
                                     Row {
                                         spacing: 7
-                                        IconImage {
-                                            source: "qrc:/assets/icons_custom/three-dots-inline.svg"
-                                            color: $Colors.gray400
+                                        NiceButton {
                                             anchors.verticalCenter: parent.verticalCenter
-
-                                            MouseArea {
-                                                anchors.fill: parent
-                                                onClicked: postActionsDrawer.display()
+                                            height: 30
+                                            width: 40
+                                            onClicked: postActionsDrawer.display(model)
+                                            backgroundColor: Qt.rgba(0,0,0,0)
+                                            radius: height/2
+                                            icon {
+                                                source: "qrc:/assets/icons_custom/three-dots-inline.svg"
+                                                color: $Colors.gray400
                                             }
                                         }
+
                                         IconImage {
                                             source: Qaterial.Icons.heartPlusOutline
                                             color: $Colors.gray400
@@ -365,39 +365,6 @@ Page {
                                             }
                                         }
                                     }
-
-                                    //                                    Qaterial.ClipRRect {
-                                    //                                        width: parent.width
-                                    //                                        height: width * (9/16)
-                                    //                                        Image {
-                                    //                                            anchors.fill: parent
-                                    //                                            source: "qrc:/assets/img/orchidee.jpg"
-                                    //                                        }
-                                    //                                    }
-                                    //                                    RowLayout {
-                                    //                                        width: parent.width
-                                    //                                        Item {
-                                    //                                            Layout.fillWidth: true
-                                    //                                        }
-
-                                    //                                        Repeater {
-                                    //                                            model: 3
-                                    //                                            Rectangle {
-                                    //                                                Layout.preferredHeight: 10
-                                    //                                                Layout.preferredWidth: height
-                                    //                                                radius: height/2
-                                    //                                                border {
-                                    //                                                    width: 1
-                                    //                                                    color: $Colors.colorPrimary
-                                    //                                                }
-                                    //                                                color: $Colors.gray200
-                                    //                                            }
-                                    //                                        }
-
-                                    //                                        Item {
-                                    //                                            Layout.fillWidth: true
-                                    //                                        }
-                                    //                                    }
                                 }
 
                                 RowLayout {
@@ -455,14 +422,24 @@ Page {
                                                 MouseArea {
                                                     anchors.fill: parent
                                                     onClicked: {
-                                                        const typeR = lastReaction
-                                                                    === true ? "-" : "+"
-                                                        http.reactToEvent(
-                                                                    lastReaction
-                                                                    === true ? "-" : "+",
-                                                                    id, pubkey,
-                                                                    privateKey).then(
-                                                                    function () {})
+//                                                        const val = eventsProxy.get(index)
+//                                                        const keys = Object.keys(val)
+
+//                                                        console.log("TYPES ", val, typeof val, typeof keys)
+//                                                        console.log("KEYS ", keys)
+//                                                        for(let i = 0; i < keys.length; i++) {
+//                                                            console.log("ONE KEY :::: ", keys[i], " --> ", typeof val[keys[i]], val[keys[i]])
+//                                                        }
+
+
+                                                         const typeR = lastReaction
+                                                                     === true ? "-" : "+"
+                                                         http.reactToEvent(
+                                                                     lastReaction
+                                                                     === true ? "-" : "+",
+                                                                     id, pubkey,
+                                                                     privateKey).then(
+                                                                     function () {})
                                                     }
                                                 }
                                             }

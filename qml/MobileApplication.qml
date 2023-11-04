@@ -411,7 +411,7 @@ Item {
                 //console.log("Qt.ApplicationActive")
 
                 // Check if we need an 'automatic' theme change
-                Theme.loadTheme(settingsManager.appTheme)
+                //Theme.loadTheme(settingsManager.appTheme)
 
                 if (appContent.state === "DeviceBrowser") {
                     // Restart the device browser
