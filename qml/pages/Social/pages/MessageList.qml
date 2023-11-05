@@ -10,6 +10,7 @@ import "../components"
 Page {
     id: page
     property string blumePubkey: "a679fc5649038435d17f1ce17e38249ccee1dc3faad47d5c7795d27de942de42"
+    property string botanistPubkey: "5ba9e7d4ca123a656845c0a6883d79652c71440d22d3636ef2f39c806de7b48c"
 
     onFocusChanged: {
         if(focus) {
@@ -25,7 +26,7 @@ Page {
     ListModel {
         id: localMessagesModel
         Component.onCompleted: {
-            const listMessages = Object.keys(realDiscussions).filter(key => realDiscussions[key].locuter !== blumePubkey)
+            const listMessages = Object.keys(realDiscussions).filter(key => realDiscussions[key].locuter !== blumePubkey && realDiscussions[key].locuter !== botanistPubkey)
             const size = listMessages.length
             for(let i = 0; i<size; i++) {
                 const key = listMessages[i]
@@ -214,26 +215,29 @@ Page {
                             {
                                 "is_pined": true,
                                 "name": "Blume AI",
-                                "profile": {
-                                    "name": "Blume AI",
-                                    "picture": "qrc:/assets/icons_custom/blumai.svg"
-                                },
+                                "picture": "qrc:/assets/icons_custom/blumai.svg",
                                 "pubkey": blumePubkey,
                                 "username": "blumeai"
+                            },
+                            {
+                                "is_pined": true,
+                                "name": "Mon botaniste",
+                                "picture": "qrc:/assets/icons_custom/my-botanist.png",
+                                "pubkey": botanistPubkey,
+                                "username": "botanist"
                             }
                         ]
 
                         Column {
 
-                            Rectangle {
+                            Item {
                                 width: 60
                                 height: width
-                                radius: height/2
+                                //radius: height/2
 
-                                IconImage {
+                                Avatar {
                                     anchors.fill: parent
-                                    source: Qaterial.Icons.robot
-                                    color: $Colors.colorPrimary
+                                    source: modelData.picture
                                 }
 
                                 MouseArea {

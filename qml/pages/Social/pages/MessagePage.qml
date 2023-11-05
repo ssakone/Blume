@@ -155,7 +155,7 @@ Page {
                     width: parent.width
                     height: 200
                     visible: false
-                    anchors.right: control.current ? parent.right : null
+                    //anchors.right: control.current ? parent.right : null
                     Image {
                         id: _im
                         width: parent.width
@@ -171,7 +171,7 @@ Page {
                     visible: false
                     width: 200
                     height: visible ? 200 : 0
-                    anchors.right: control.current ? parent.right : null
+                    //anchors.right: control.current ? parent.right : null
                     Rectangle {
                         anchors.fill: parent
                         color: "black"
@@ -201,7 +201,7 @@ Page {
                     padding: 10
                     text: content
                     visible: Boolean(text)
-                    anchors.right: control.current ? parent.right : null
+                    //anchors.right: control.current ? parent.right : null
 
                     horizontalAlignment: current ? Text.AlignRight : Text.AlignLeft
                     width: implicitWidth > parent.width ? parent.width : implicitWidth

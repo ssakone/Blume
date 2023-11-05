@@ -7440,6 +7440,8 @@
         <file>icons_custom/blume-circle-green.svg</file>
         <file>icons_custom/blumai.svg</file>
         <file>icons_custom/default-profile.svg</file>
+        <file>icons_custom/my-botanist.png</file>
+        <file>icons_custom/blumeai.jpg</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
