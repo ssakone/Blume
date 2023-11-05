@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Qaterial as Qaterial
 import QtWebSockets
 import QtMultimedia
+import ImagePicker
 
 import SortFilterProxyModel
 import QtAndroidTools
@@ -45,43 +46,61 @@ Page {
                 }
             }
             Control.ToolBarButton {
+                function handleUploadImage(img) {
+                    const ext = img.split(".").pop()
+                    const data = imgToB64.getBase64(img)
+                    let b64_imageUrl
+                    if (["png", "jpg"].indexOf(ext) !== -1) {
+                        b64_imageUrl = "data:image/png;base64," + data
+                    }
+
+                    mediaModel.append({
+                                          "path": b64_imageUrl,
+                                          "done": false,
+                                          "name": ""
+                                      })
+                    console.log("image selected", ext)
+                    var element = mediaModel.get(mediaModel.count - 1)
+                    uploadingImage = true
+                    http.uploadImage(ext, data).then(function (res) {
+                        console.log(res)
+                        media_name = res
+                        element.done = true
+                        element.name = res
+                        uploadingImage = false
+                    }).catch(function (err) {
+                        console.log(err)
+                        element.done = false
+                        mediaModel.remove(mediaModel.count - 1)
+                        haveImage = false
+                        uploadingImage = false
+                    })
+                }
+
                 icon.source: Qaterial.Icons.attachment
                 onClicked: {
-                    QtAndroidAppPermissions.openGallery()
+                    if (Qt.platform.os === 'ios') {
+                        iosPermRequester.grantOrRunCamera(function () {
+                            imgPicker.openPicker()
+                        })
+                    } else if (Qt.platform.os === 'android') {
+                        QtAndroidAppPermissions.openGallery()
+                    }
+                }
+
+                ImagePicker {
+                    id: imgPicker
+                    onCapturedImage: function (path) {
+                        handleUploadImage("file://" + path)
+                    }
                 }
 
                 Connections {
                     target: QtAndroidAppPermissions
                     function onImageSelected(img) {
-                        const ext = img.split(".").pop()
-                        const data = imgToB64.getBase64(img)
-                        let b64_imageUrl
-                        if (["png", "jpg"].indexOf(ext) !== -1) {
-                            b64_imageUrl = "data:image/png;base64," + data
-                        }
-
-                        mediaModel.append({
-                                              "path": b64_imageUrl,
-                                              "done": false,
-                                              "name": ""
-                                          })
-                        console.log("image selected", ext)
-                        var element = mediaModel.get(mediaModel.count - 1)
-                        uploadingImage = true
-                        http.uploadImage(ext, data).then(function (res) {
-                            console.log(res)
-                            media_name = res
-                            element.done = true
-                            element.name = res
-                            uploadingImage = false
-                        }).catch(function (err) {
-                            console.log(err)
-                            element.done = false
-                            mediaModel.remove(mediaModel.count - 1)
-                            haveImage = false
-                            uploadingImage = false
-                        })
+                        handleUploadImage(img)
                     }
+
                 }
             }
         }

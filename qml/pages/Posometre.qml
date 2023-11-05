@@ -38,9 +38,13 @@ BPage {
             als.start()
             break
         case "ios":
-            cameraLoader.active = true
-            cameraLoader.item.camera.start()
-            posometreTimer.start()
+            iosPermRequester.grantOrRunCamera(function () {
+                cameraLoader.active = true
+                cameraLoader.item.camera.start()
+                posometreTimer.start()
+            }, function () {
+                page_view.pop()
+            })
             break
         default:
             als.start()

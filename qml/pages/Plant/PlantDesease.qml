@@ -607,7 +607,9 @@ BPage {
                             anchors.fill: parent
                             onClicked: {
                                 if (Qt.platform.os === 'ios') {
-                                    imgPicker.openCamera()
+                                    iosPermRequester.grantOrRunCamera(function () {
+                                        imgPicker.openCamera()
+                                    })
                                 } else {
                                     androidToolsLoader.item.openCamera()
                                 }
@@ -678,7 +680,9 @@ BPage {
 
                             function chooseFile() {
                                 if (Qt.platform.os === 'ios') {
-                                    imgPicker.openPicker()
+                                    iosPermRequester.grantOrRunCamera(function () {
+                                        imgPicker.openPicker()
+                                    })
                                 } else if (Qt.platform.os === 'android') {
                                     androidToolsLoader.item.openGallery()
                                 } else

@@ -6,6 +6,8 @@ import QtWebSockets
 import QtMultimedia
 import Qaterial as Qaterial
 import QtAndroidTools
+import ImageTools
+import ImagePicker
 import "../components"
 
 Page {
@@ -320,7 +322,14 @@ Page {
                     width: parent.width
                     height: rowPickCamera.height
                     onClicked: {
-                        QtAndroidAppPermissions.openGallery()
+                        if (Qt.platform.os === 'ios') {
+                            iosPermRequester.grantOrRunCamera(function () {
+                                imgPicker.openPicker()
+                            })
+                        } else if (Qt.platform.os === 'android') {
+                            QtAndroidAppPermissions.openGallery()
+                        }
+
                         mediaDrawer.close()
                     }
 
@@ -448,7 +457,7 @@ Page {
                             }
                         }
                         Label {
-                            text: qsTr("Sahre a contact")
+                            text: qsTr("Share a contact")
                             color: $Colors.colorPrimary
                             font {
                                 pixelSize: 12
@@ -520,45 +529,58 @@ Page {
                 width: 50
                 Layout.alignment: Qt.AlignVCenter
                 Rectangle {
+                    id: imgRect
+                    function handleUploadImage(img, onSuccess = function () {}) {
+                        const ext = img.split(".").pop()
+                        const data = imgToB64.getBase64(img)
+                        if (["png", "jpg"].indexOf(ext) !== -1) {
+                            const b64_imageUrl = "data:image/png;base64," + data
+                            //imageLoader.source = b64_imageUrl
+                        }
+
+                        http.uploadImage(ext, data).then(function (res) {
+                            console.log("http://34.28.201.80/get_file/" + res)
+                            let cdata = {
+                                "id": "TEMP",
+                                "content": "http://34.28.201.80/get_file/" + res,
+                                "pubkey": publicKey,
+                                "removable": true,
+                                "created_at": new Date().getTime() / 1000
+                            }
+                            messages.append(cdata)
+                            Qt.callLater(function (content) {
+                                http.sendMessage(privateKey,
+                                                 page.friend.pubkey,
+                                                 content).then(
+                                            function (rs) {}).catch(
+                                            function (err) {
+                                                console.log(JSON.stringify(
+                                                                err))
+                                            })
+                            }, "http://34.28.201.80/get_file/" + res)
+                        }).catch(function (err) {
+                            console.log(err)
+                        })
+                    }
+
                     //visible: inputField.text.length === 0
                     width: 40
                     height: 40
                     anchors.centerIn: parent
                     radius: 30
                     color: "transparent"
+
+                    ImagePicker {
+                        id: imgPicker
+                        onCapturedImage: function (path) {
+                            imgRect.handleUploadImage("file://" + path)
+                        }
+                    }
+
                     Connections {
                         target: QtAndroidAppPermissions
                         function onImageSelected(img) {
-                            const ext = img.split(".").pop()
-                            const data = imgToB64.getBase64(img)
-                            if (["png", "jpg"].indexOf(ext) !== -1) {
-                                const b64_imageUrl = "data:image/png;base64," + data
-                                //imageLoader.source = b64_imageUrl
-                            }
-
-                            http.uploadImage(ext, data).then(function (res) {
-                                console.log("http://34.28.201.80/get_file/" + res)
-                                let cdata = {
-                                    "id": "TEMP",
-                                    "content": "http://34.28.201.80/get_file/" + res,
-                                    "pubkey": publicKey,
-                                    "removable": true,
-                                    "created_at": new Date().getTime() / 1000
-                                }
-                                messages.append(cdata)
-                                Qt.callLater(function (content) {
-                                    http.sendMessage(privateKey,
-                                                     page.friend.pubkey,
-                                                     content).then(
-                                                function (rs) {}).catch(
-                                                function (err) {
-                                                    console.log(JSON.stringify(
-                                                                    err))
-                                                })
-                                }, "http://34.28.201.80/get_file/" + res)
-                            }).catch(function (err) {
-                                console.log(err)
-                            })
+                            imgRect.handleUploadImage(img)
                         }
                     }
                     ColorImage {

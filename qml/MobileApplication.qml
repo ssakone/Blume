@@ -118,18 +118,6 @@ Item {
         onTriggered: handleNotches()
     }
 
-    Timer {
-        id: handleIOSPerms
-        interval: 1500
-        repeat: false
-        onTriggered: {
-            console.log("pesistedAppSettings == ", pesistedAppSettings.didAccepIOSPersm, typeof pesistedAppSettings.didAccepIOSPersm)
-            if(!pesistedAppSettings.didAccepIOSPersm) {
-                popupReqIOSPerms.open()
-            }
-        }
-    }
-
     function handleNotches() {
 
 
@@ -253,7 +241,6 @@ Item {
     Component.onCompleted: {
         handleNotchesTimer.restart()
         mobileUI.isLoading = false
-        handleIOSPerms.start()
     }
 
     function fetch(opts) {
@@ -463,8 +450,8 @@ Item {
         id: popupDeleteData
     }
     PopupRequestIosPerms {
-        id: popupReqIOSPerms
-        onConfirmed: pesistedAppSettings.didAccepIOSPersm = true
+        id: iosPermRequester
+        onConfirmed: if(!pesistedAppSettings.didAccepIOSPersm) pesistedAppSettings.didAccepIOSPersm = true
     }
 
     FocusScope {

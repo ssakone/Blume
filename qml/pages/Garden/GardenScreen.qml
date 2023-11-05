@@ -310,9 +310,19 @@ BPage {
 
                                     MouseArea {
                                         anchors.fill: parent
-                                        onClicked: page_view.push(navigator.plantIdentifierPage, {
-                                                                  "actionTypeOnCompleted": "openCamera"
-                                                                  })
+                                        onClicked: {
+                                            if(Qt.platform.os === "ios") {
+                                                iosPermRequester.grantOrRunCamera(function () {
+                                                    page_view.push(navigator.plantIdentifierPage, {
+                                                                                                  "actionTypeOnCompleted": "openCamera"
+                                                                                                  })
+                                                })
+                                            } else {
+                                                page_view.push(navigator.plantIdentifierPage, {
+                                                                                              "actionTypeOnCompleted": "openCamera"
+                                                                                              })
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -325,7 +335,19 @@ BPage {
                                 width: parent.width - 30
                                 height: 60
                                 radius: 10
-                                onClicked: popupReqIOSPerms.open()
+                                onClicked: {
+                                    if(Qt.platform.os === "ios") {
+                                        iosPermRequester.grantOrRunCamera(function () {
+                                            page_view.push(navigator.plantIdentifierPage, {
+                                                                                          "actionTypeOnCompleted": "openGallery"
+                                                                                          })
+                                        })
+                                    } else {
+                                        page_view.push(navigator.plantIdentifierPage, {
+                                                                                      "actionTypeOnCompleted": "openGallery"
+                                                                                      })
+                                    }
+                                }
                             }
                         }
                     }

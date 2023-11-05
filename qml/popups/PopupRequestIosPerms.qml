@@ -21,7 +21,34 @@ Popup {
     focus: true
     closePolicy: Popup.NoAutoClose
 
+    property var callbackSuccess
+    property var callbackError
+
     signal confirmed
+    signal rejected
+
+    function grantOrRunCamera(onSuccess = function () {}, onError = function () {}) {
+        console.log("callbackFunc ", onSuccess)
+        callbackSuccess = onSuccess
+        callbackError = onError
+        if(!pesistedAppSettings.didAccepIOSPersm) {
+            pop.open()
+        } else confirmed()
+    }
+
+    onConfirmed: {
+        if(callbackSuccess) callbackSuccess()
+    }
+
+    onRejected: {
+        if(callbackError) callbackError()
+    }
+
+    onClosed: {
+        console.log("ON CLOSED")
+        callbackSuccess = undefined
+        callbackError = undefined
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     background: Rectangle {
@@ -88,11 +115,14 @@ Popup {
                 ButtonWireframe {
                     width: parent.btnSize
 
-                    text: qsTr("Fermer l'application")
+                    text: qsTr("Refuser")
                     primaryColor: $Colors.red400
                     fullColor: true
 
-                    onClicked: Qt.quit()
+                    onClicked: {
+                        rejected()
+                        pop.close()
+                    }
                 }
             }
         }
