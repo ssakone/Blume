@@ -123,7 +123,7 @@ Page {
                         spacing: 15
                         leftPadding: 15
                         Repeater {
-                            model: root.friendLists
+                            model: root.friendLists.slice(0, 10)
 
                             Rectangle {
                                 width: 200
@@ -316,7 +316,7 @@ Page {
                                                     mediaVideosFlick.currentIndex = Math.ceil(_imVideoModel.model.length / 2)
                                                 } else if (data[1].length > 0) {
                                                     _imModel.model = data[1]
-                                                    mediaImagesFlick.currentIndex =Math.ceil(_imModel.model.length / 2) + 1
+                                                    mediaImagesFlick.currentIndex =Math.ceil(_imModel.model.length / 2)
                                                 }
                                             }
                                         }

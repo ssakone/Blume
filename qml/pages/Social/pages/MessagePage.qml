@@ -70,7 +70,9 @@ Page {
             Avatar {
                 height: 60
                 width: 60
-                source: page.friend.picture || ""
+                source: JSON.parse(page.friend["profile"]
+                                   || "{}").picture
+                        || Qaterial.Icons.faceManProfile
             }
             Item {
                 Layout.fillWidth: true
