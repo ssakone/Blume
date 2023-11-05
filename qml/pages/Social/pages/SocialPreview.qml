@@ -1,7 +1,7 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 import Qaterial as Qaterial
+import QtQuick.Controls
 import QtWebSockets
 import QtMultimedia
 
@@ -144,7 +144,7 @@ Page {
                                     }
                                 }
                                 Label {
-                                    text: modelData["name"]?.slice(0, 15)
+                                    text: modelData["name"]?.slice(0, 15) ?? ""
                                     padding: 4
                                     leftPadding: 30
                                     rightPadding: 7
@@ -313,65 +313,123 @@ Page {
                                                 text = data[0]?.slice(0)
                                                 if (data[2].length > 0) {
                                                     _imVideoModel.model = data[2]
+                                                    mediaVideosFlick.currentIndex = Math.ceil(_imVideoModel.model.length / 2)
                                                 } else if (data[1].length > 0) {
                                                     _imModel.model = data[1]
+                                                    mediaImagesFlick.currentIndex =Math.ceil(_imModel.model.length / 2) + 1
                                                 }
                                             }
                                         }
-                                        Repeater {
-                                            id: _imModel
-                                            RadiusImage {
-                                                id: _imArea
+
+                                        Item {
+                                            width: parent.width
+                                            height: mediaImagesFlick.height
+
+                                            SwipeView {
+                                                id: mediaImagesFlick
                                                 width: parent.width
-                                                height: _im.height //width * (9 / 16)
-                                                visible: _im.source.toString(
-                                                             ) !== ""
-                                                Image {
-                                                    id: _im
-                                                    width: parent.width
-                                                    asynchronous: false
-                                                    cache: false
-                                                    source: modelData
-                                                    fillMode: Image.PreserveAspectFit
-                                                    MouseArea {
-                                                        anchors.fill: parent
-                                                        onClicked: fullScreenPop.displayImage(
-                                                                       parent.source)
+                                                height: currentItem?.height || 0
+                                                visible: _imModel.model?.length > 0
+                                                clip: true
+
+                                                Repeater {
+                                                    id: _imModel
+                                                    visible: _imModel.model?.length > 0
+                                                    RadiusImage {
+                                                        id: _imArea
+                                                        anchors.verticalCenter: parent.verticalCenter
+                                                        width: mediaImagesFlick.width
+                                                        height: _im.height //width * (9 / 16)
+                                                        visible: _im.source.toString(
+                                                                     ) !== ""
+                                                        Image {
+                                                            id: _im
+                                                            width: parent.width
+                                                            asynchronous: false
+                                                            cache: false
+                                                            source: modelData
+                                                            fillMode: Image.PreserveAspectFit
+                                                            MouseArea {
+                                                                anchors.fill: parent
+                                                                onClicked: fullScreenPop.displayImage(
+                                                                               parent.source)
+                                                            }
+                                                        }
                                                     }
                                                 }
+
+                                            }
+
+                                            PageIndicator {
+                                                visible: mediaImagesFlick.visible
+                                                count: mediaImagesFlick.count
+                                                currentIndex: mediaImagesFlick.currentIndex
+                                                anchors {
+                                                    bottom: parent.bottom
+                                                    bottomMargin: 7
+                                                    horizontalCenter: parent.horizontalCenter
+                                                }
                                             }
                                         }
 
-                                        Repeater {
-                                            id: _imVideoModel
-                                            RadiusImage {
+                                        Item {
+                                            width: parent.width
+                                            height: mediaVideosFlick.height
+
+                                            SwipeView {
+                                                id: mediaVideosFlick
                                                 width: parent.width
-                                                height: visible ? width * (9 / 16) : 0
-                                                Rectangle {
-                                                    anchors.fill: parent
-                                                    color: "black"
-                                                }
+                                                height: currentItem?.height || 0
+                                                visible: _imModel.model?.length > 0
+                                                clip: true
 
-                                                MediaPlayer {
-                                                    id: _vid
-                                                    //source: "https://www.w3schools.com/html/mov_bbb.mp4"
-                                                    videoOutput: videoOutput
-                                                    source: modelData
-                                                }
+                                                Repeater {
+                                                    id: _imVideoModel
+                                                    visible: _imVideoModel.model?.length > 0
+                                                    RadiusImage {
+                                                        width: mediaVideosFlick.width
+                                                        height: visible ? width * (9 / 16) : 0
+                                                        Rectangle {
+                                                            anchors.fill: parent
+                                                            color: "black"
+                                                        }
 
-                                                VideoOutput {
-                                                    id: videoOutput
-                                                    anchors.fill: parent
-                                                }
+                                                        MediaPlayer {
+                                                            id: _vid
+                                                            //source: "https://www.w3schools.com/html/mov_bbb.mp4"
+                                                            videoOutput: videoOutput
+                                                            source: modelData
+                                                        }
 
-                                                MouseArea {
-                                                    anchors.fill: parent
-                                                    onClicked: {
-                                                        _vid.play()
+                                                        VideoOutput {
+                                                            id: videoOutput
+                                                            anchors.fill: parent
+                                                        }
+
+                                                        MouseArea {
+                                                            anchors.fill: parent
+                                                            onClicked: {
+                                                                _vid.play()
+                                                            }
+                                                        }
                                                     }
                                                 }
+
+                                            }
+
+                                            PageIndicator {
+                                                visible: mediaVideosFlick.visible
+                                                count: mediaVideosFlick.count
+                                                currentIndex: mediaVideosFlick.currentIndex
+                                                anchors {
+                                                    bottom: parent.bottom
+                                                    bottomMargin: 7
+                                                    horizontalCenter: parent.horizontalCenter
+                                                }
                                             }
                                         }
+
+
                                     }
 
                                     RowLayout {
