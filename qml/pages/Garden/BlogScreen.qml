@@ -40,7 +40,7 @@ BPage {
 
         WebView {
             id: webView
-            url: "https://mahoufarm.bio"
+            url: "https://blume.mahoufarm.bio"
             anchors.fill: parent
 
             onLoadingChanged: function(loadRequest) {

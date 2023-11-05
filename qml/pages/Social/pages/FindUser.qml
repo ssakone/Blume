@@ -15,7 +15,6 @@ Page {
                 root.contacts[publicKey] = []
             }
             for(let i = 0; i<root.contacts[publicKey].length; i++) {
-                console.log("CEHECKO FOLLOW ", JSON.stringify(root.contacts[publicKey]))
                 if (root.contacts[publicKey][i][1] === pubkey) {
                     return true
                 }
