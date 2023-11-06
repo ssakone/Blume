@@ -65,7 +65,7 @@ jobs:
           dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
           cache-key-prefix: 'install-qt-action'
           tools: 'tools_cmake'
-           modules: "qtshadertools"
+          modules: "qtshadertools"
 
       - uses: OlivierLDff/import-codesign-certs@v1
         with:
