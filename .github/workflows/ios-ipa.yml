@@ -77,15 +77,19 @@ jobs:
           api-private-key: ${{ secrets.IOS_APPSTORE_PRIVATE_KEY }}
       - name: 🔧 Configure
         run: |
-          mkdir -p build
+          echo "clang"
+          ls -la ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/clang_64
+          echo "ios"
+          ls -la ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios/
+          ls -laR ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios/lib/cmake
+          mkdir -p build 
           export QT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/clang_64
           ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/Tools/CMake/CMake.app/Contents/bin/cmake \
             -G "Xcode" \
             -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios/lib/cmake/Qt6/qt.toolchain.cmake \
             -DCMAKE_CONFIGURATION_TYPES="Release" \
             -DDEPLOYMENT_TARGET=${{ matrix.deployment-target }} \
-            -DQT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios \
-            -DQT_HOST_PATH_CMAKE_DIR=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios/lib/cmake \
+            -DQT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/c \
             -DENABLE_VISIBILITY=FALSE \
             -DQt6_DIR=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios/lib/cmake/Qt6
             -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios \
