@@ -72,12 +72,12 @@ jobs:
             -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/ios-toolchain/ios.toolchain.cmake \
             -DCMAKE_CONFIGURATION_TYPES="Release" \
             -DDEPLOYMENT_TARGET=${{ matrix.deployment-target }} \
-	    -DQT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-ver    sion }}/macos \
-	    -DQT_HOST_PATH_CMAKE_DIR=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-ver    sion }}/macos/lib/cmake \
+            -DQT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/macos \
+            -DQT_HOST_PATH_CMAKE_DIR=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/macos/lib/cmake \
             -DPLATFORM=${{ matrix.platform }} \
             -DENABLE_VISIBILITY=FALSE \
             -DENABLE_BITCODE=${{ matrix.bitcode }} \
-	    -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios \
+            -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios \
             -DENABLE_ARC=TRUE \
             -DQT_IOS_TEAM_ID=${{ secrets.IOS_TEAM_ID }} \
             -DQT_IOS_CODE_SIGN_IDENTITY=${{ secrets.IOS_CODE_SIGN_IDENTITY }} \
