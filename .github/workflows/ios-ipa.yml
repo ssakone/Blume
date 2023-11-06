@@ -49,6 +49,7 @@ jobs:
           aqtversion: "==3.1.*"
           version: ${{ matrix.qt-version }}
           target: 'ios'
+          cache: true
           host: 'mac'
           dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
           cache-key-prefix: 'install-qt-action'
