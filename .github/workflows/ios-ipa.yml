@@ -59,7 +59,6 @@ jobs:
           aqtversion: "==3.1.*"
           version: ${{ matrix.qt-version }}
           target: 'desktop'
-          tools-only: 'true'
           host: 'mac'
           arch: 'clang_64'
           dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
@@ -81,11 +80,11 @@ jobs:
           mkdir -p build
           ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/Tools/CMake/CMake.app/Contents/bin/cmake \
             -G "Xcode" \
-            -Tbuildsystem=${{ matrix.build-system }} \
             -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios/lib/cmake/Qt6/qt.toolchain.cmake \
             -DCMAKE_CONFIGURATION_TYPES="Release" \
             -DDEPLOYMENT_TARGET=${{ matrix.deployment-target }} \
-            -DQT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios \
+            -DQT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/clang_64 \
+            -DQT_HOST_PATH_CMAKE_DIR=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/clang_64/lib/cmake \
             -DPLATFORM=${{ matrix.platform }} \
             -DENABLE_VISIBILITY=FALSE \
             -DENABLE_BITCODE=${{ matrix.bitcode }} \
