@@ -70,11 +70,10 @@ jobs:
           cmake \
             -G "Xcode" \
             -Tbuildsystem=${{ matrix.build-system }} \
-            -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/ios-toolchain/ios.toolchain.cmake \
+            -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios/lib/cmake/Qt6/qt.toolchain.cmake \
             -DCMAKE_CONFIGURATION_TYPES="Release" \
             -DDEPLOYMENT_TARGET=${{ matrix.deployment-target }} \
-            -DQT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/mac \
-            -DQT_HOST_PATH_CMAKE_DIR=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios/lib/cmake \
+            -DQT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios \
             -DPLATFORM=${{ matrix.platform }} \
             -DENABLE_VISIBILITY=FALSE \
             -DENABLE_BITCODE=${{ matrix.bitcode }} \
