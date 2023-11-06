@@ -3,7 +3,6 @@ name: 👷 iOs CI
 on:
   push:
     branches:
-      - master
       - ios_cmake_refix
 
   release:
