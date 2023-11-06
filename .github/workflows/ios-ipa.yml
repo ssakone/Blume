@@ -49,7 +49,7 @@ jobs:
         with:
           aqtversion: "==3.1.*"
           version: ${{ matrix.qt-version }}
-          target: ios
+          target: 'ios macos'
           dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
           cached: ${{ steps.cache-qt-ios.outputs.cache-hit }}
           modules: "qtconnectivity qtimageformats qtmultimedia qtnetworkauth qtpositioning qtsensors qtvirtualkeyboard qtwebsockets qtwebview qt5compat"
