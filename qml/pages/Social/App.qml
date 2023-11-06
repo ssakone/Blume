@@ -744,6 +744,30 @@ Item {
     */
     property var contacts: ({})
 
+    function doesUserFollowAnother(sourcePubkey, targetPubkey) {
+        if ( sourcePubkey && targetPubkey && (sourcePubkey !== targetPubkey)) {
+            if (! root.contacts[sourcePubkey]) {
+                root.contacts[sourcePubkey] = []
+            }
+            for(let i = 0; i<root.contacts[sourcePubkey].length; i++) {
+                if (root.contacts[sourcePubkey][i][1] === targetPubkey) {
+                    return true
+                }
+            }
+        }
+
+        return false
+    }
+
+    SortFilterProxyModel {
+        id: followedContactsModel
+        sourceModel: friendListsModel
+        filters: ExpressionFilter {
+            expression: {
+                return model.is_pined || root.doesUserFollowAnother(publicKey, model.pubkey)
+            }
+        }
+    }
 
     /*
     [
@@ -759,7 +783,28 @@ Item {
     ]
     */
     property var friendLists: ([])
+    ListModel {
+        id: friendListsModel
+    }
 
+    onFriendListUpdated: {
+        friendListsModel.clear()
+        const size = friendLists.length
+        for(let i = 0 ; i<size; i++) {
+            friendListsModel.append(friendLists[i])
+        }
+    }
+
+    /*
+    {
+        [pubkey: string]: {
+            mostRecent: timestamp,
+            model: ModelItem,
+            pubkey: string,
+            locuter: string
+        }
+    }
+    */
     property var realDiscussions: ({})
 
     Settings {

@@ -123,9 +123,13 @@ Page {
                         spacing: 15
                         leftPadding: 15
                         Repeater {
-                            model: root.friendLists.slice(0, 10)
+                            model: followedContactsModel //root.friendLists.slice(0, 10)
 
                             Rectangle {
+                                required property var model
+                                required property int index
+
+                                property var modelData: followedContactsModel.get(index)
                                 width: 200
                                 height: 120
                                 radius: 10
@@ -144,7 +148,7 @@ Page {
                                     }
                                 }
                                 Label {
-                                    text: modelData["name"]?.slice(0, 15) ?? ""
+                                    text: (modelData["name"] || modelData["username"])?.slice(0, 15) ?? ""
                                     padding: 4
                                     leftPadding: 30
                                     rightPadding: 7
