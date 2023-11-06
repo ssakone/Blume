@@ -55,6 +55,18 @@ jobs:
           cache-key-prefix: 'install-qt-action'
           tools: 'tools_cmake'
           modules: "qtconnectivity qtimageformats qtmultimedia qtnetworkauth qtpositioning qtsensors qtvirtualkeyboard qtwebsockets qtwebview qt5compat"
+      - name: ⬆ Install Qt Macos
+        uses: jurplel/install-qt-action@v3
+        with:
+          aqtversion: "==3.1.*"
+          version: ${{ matrix.qt-version }}
+          target: 'desktop'
+          cache: 'true'
+          host: 'mac'
+          arch: 'clang_64'
+          dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
+          cache-key-prefix: 'install-qt-action'
+          tools: 'tools_cmake'
 
       - uses: OlivierLDff/import-codesign-certs@v1
         with:
