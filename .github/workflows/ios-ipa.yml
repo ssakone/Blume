@@ -48,7 +48,8 @@ jobs:
         with:
           aqtversion: "==3.1.*"
           version: ${{ matrix.qt-version }}
-          target: 'ios macos'
+          target: 'ios'
+          host: 'mac'
           dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
           cached: ${{ steps.cache-qt-ios.outputs.cache-hit }}
           modules: "qtconnectivity qtimageformats qtmultimedia qtnetworkauth qtpositioning qtsensors qtvirtualkeyboard qtwebsockets qtwebview qt5compat"
@@ -72,8 +73,8 @@ jobs:
             -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/ios-toolchain/ios.toolchain.cmake \
             -DCMAKE_CONFIGURATION_TYPES="Release" \
             -DDEPLOYMENT_TARGET=${{ matrix.deployment-target }} \
-            -DQT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/macos \
-            -DQT_HOST_PATH_CMAKE_DIR=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/macos/lib/cmake \
+            -DQT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/mac \
+            -DQT_HOST_PATH_CMAKE_DIR=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios/lib/cmake \
             -DPLATFORM=${{ matrix.platform }} \
             -DENABLE_VISIBILITY=FALSE \
             -DENABLE_BITCODE=${{ matrix.bitcode }} \
