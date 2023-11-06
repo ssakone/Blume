@@ -53,7 +53,7 @@ jobs:
           host: 'mac'
           dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
           cache-key-prefix: 'install-qt-action'
-          modules: "qtconnectivity qtimageformats qtmultimedia qtnetworkauth qtpositioning qtsensors qtvirtualkeyboard qtwebsockets qtwebview qt5compat qtcharts"
+          modules: "qtconnectivity qtimageformats qtmultimedia qtnetworkauth qtpositioning qtsensors qtvirtualkeyboard qtwebsockets qtwebview qt5compat qtcharts qtshadertools"
       - name: ⬆ Install Qt Macos 2
         uses: jurplel/install-qt-action@v3
         with:
