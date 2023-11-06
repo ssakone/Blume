@@ -96,7 +96,7 @@ jobs:
       # - name: 🔨 Build Blume
       #   run: cmake --build build --target Blume --config "${{ matrix.build-type }}"
       - name: 🔨 Build Blume Archive
-        run: xcodebuild -project Blume.xcodeproj build -target BlumeArchive PROVISiONING_PROFILE="076bf1f8-d34e-4d49-a4ed-4b3bf1e49cb4" #cmake --build build --target BlumeArchive --config "${{ matrix.build-type }}"
+        run: xcodebuild -project Blume.xcodeproj build -target BlumeArchive PROVISiONING_PROFILE="70484ff9-ed73-4910-8c3a-b229dd3a3210" #cmake --build build --target BlumeArchive --config "${{ matrix.build-type }}"
       # - name: 🚀 Deploy Blume Ipa
       #   run: cmake --build build --target BlumeIpa --config "${{ matrix.build-type }}"
       # - name: 📦 Upload Blume App
