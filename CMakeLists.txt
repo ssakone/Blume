@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
+set(BLUME_PROJECT "Blume" CACHE STRING "Blume Project")
+
 
 find_package(Qt6 REQUIRED COMPONENTS Core Bluetooth Network Sql Multimedia Xml)
 find_package(Qt6 REQUIRED COMPONENTS Gui Qml Quick QuickControls2 Svg Widgets Charts WebView)
@@ -133,8 +135,8 @@ target_include_directories(Blume PRIVATE src/thirdparty/)
 if(ANDROID)
     #set(QT_ANDROID_ABIS "armeabi-v7a;arm64-v8a;x86;x86_64")
     #set(QT_ANDROID_BUILD_ALL_ABIS "ON")
-#    set(QT_ANDROID_ABIS "arm64-v8a;armeabi-v7a")
-#    set(QT_ANDROID_BUILD_ALL_ABIS "ON")
+    set(QT_ANDROID_ABIS "arm64-v8a;armeabi-v7a")
+    set(QT_ANDROID_BUILD_ALL_ABIS "ON")
 
     set_target_properties(Blume PROPERTIES
         QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets/android"
@@ -157,6 +159,20 @@ endif()
 if(APPLE AND NOT IOS)
     set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64")
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.14")
+
+    set(BLUNE_VERSION_MAJOR 1)
+    set(BLUNE_VERSION_MINOR 2)
+    if(NOT BLUNE_VERSION_TAG)
+        set(BLUNE_VERSION_TAG 0520000)
+    endif()
+    set(BLUNE_VERSION_TAG_HEX 0x${BLUNE_VERSION_TAG})
+    set(BLUNE_VERSION_TAG ${BLUNE_VERSION_TAG} CACHE STRING "Git Tag of Qaterial")
+    set(BLUNE_VERSION ${BLUNE_VERSION_MAJOR}.${BLUNE_VERSION_MINOR})
+
+    set(BLUNE_TARGET ${BLUME_PROJECT} CACHE STRING "Qaterial Gallery Target Name")
+
+    set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 endif()
 
 macro(qt_ios_set_xcode_property TARGET XCODE_PROPERTY XCODE_VALUE XCODE_RELVERSION)
