@@ -49,7 +49,7 @@ jobs:
           aqtversion: "==3.1.*"
           version: ${{ matrix.qt-version }}
           target: 'ios'
-          cache: true
+          cache: false
           host: 'mac'
           dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
           cache-key-prefix: 'install-qt-action'
@@ -65,6 +65,7 @@ jobs:
           dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
           cache-key-prefix: 'install-qt-action'
           tools: 'tools_cmake'
+           modules: "qtshadertools"
 
       - uses: OlivierLDff/import-codesign-certs@v1
         with:
