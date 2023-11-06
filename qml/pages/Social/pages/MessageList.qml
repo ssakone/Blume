@@ -12,6 +12,15 @@ Page {
     property string blumePubkey: "a679fc5649038435d17f1ce17e38249ccee1dc3faad47d5c7795d27de942de42"
     property string botanistPubkey: "5ba9e7d4ca123a656845c0a6883d79652c71440d22d3636ef2f39c806de7b48c"
 
+    function reloadDiscussions() {
+        localMessagesModel.clear()
+        const listMessages = Object.keys(realDiscussions).filter(key => realDiscussions[key].locuter !== blumePubkey && realDiscussions[key].locuter !== botanistPubkey)
+        const size = listMessages.length
+        for(let i = 0; i<size; i++) {
+            const key = listMessages[i]
+            localMessagesModel.append(realDiscussions[key])
+        }
+    }
     onFocusChanged: {
         if(focus) {
             searchInput.text = ""
@@ -23,15 +32,19 @@ Page {
         color: $Colors.colorPrimary
     }
 
+    Timer {
+        id: timerReload
+        interval: 3000
+        repeat: true
+        onTriggered: reloadDiscussions()
+
+    }
+
     ListModel {
         id: localMessagesModel
         Component.onCompleted: {
-            const listMessages = Object.keys(realDiscussions).filter(key => realDiscussions[key].locuter !== blumePubkey && realDiscussions[key].locuter !== botanistPubkey)
-            const size = listMessages.length
-            for(let i = 0; i<size; i++) {
-                const key = listMessages[i]
-                append(realDiscussions[key])
-            }
+            reloadDiscussions()
+            timerReload.start()
         }
     }
 
@@ -42,6 +55,10 @@ Page {
             expression: {
                 return searchInput.text ? Boolean((root.author[locuter]?.name?.toLowerCase()?.includes(searchInput.text.toLowerCase()) || root.author[locuter]?.username?.toLowerCase()?.includes(searchInput.text))) : true
             }
+        }
+        sorters: StringSorter {
+            roleName: "mostRecent"
+            sortOrder: Qt.DescendingOrder
         }
     }
 
@@ -215,7 +232,7 @@ Page {
                             {
                                 "is_pined": true,
                                 "name": "Blume AI",
-                                "picture": "qrc:/assets/icons_custom/blumai.svg",
+                                "picture": "http://34.28.201.80//get_file/68d2f1dd-4c41-437e-85a8-77f77f66b256.jpg",
                                 "pubkey": blumePubkey,
                                 "username": "blumeai"
                             },
@@ -283,15 +300,16 @@ Page {
                         }
 
                         ListView {
+                            id: listView
                            Layout.fillWidth: true
                            Layout.fillHeight: true
                             model: filterMessagesModel
                             delegate: Rectangle {
                                 required property var model
                                 required property int index
-                                property var modelData: localMessagesModel.get(index)
+                                property var modelData: filterMessagesModel.get(index)
                                 property string pubkey: modelData.locuter
-                                width: parent.width
+                                width: listView.width
                                 height: insideCol.height
                                 color: area.containsPress ? "#f2f2f2" : "white"
 

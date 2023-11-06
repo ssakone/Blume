@@ -70,7 +70,7 @@ Page {
             Avatar {
                 height: 60
                 width: 60
-                source: JSON.parse(page.friend["profile"]
+                source: page.friend?.picture || JSON.parse(page.friend["profile"]
                                    || "{}").picture
                         || Qaterial.Icons.faceManProfile
             }
@@ -157,7 +157,7 @@ Page {
                     width: parent.width
                     height: 200
                     visible: false
-                    //anchors.right: control.current ? parent.right : null
+                    anchors.right: control.current ? parent.right : null
                     Image {
                         id: _im
                         width: parent.width
@@ -173,7 +173,7 @@ Page {
                     visible: false
                     width: 200
                     height: visible ? 200 : 0
-                    //anchors.right: control.current ? parent.right : null
+                    anchors.right: control.current ? parent.right : null
                     Rectangle {
                         anchors.fill: parent
                         color: "black"
@@ -203,7 +203,7 @@ Page {
                     padding: 10
                     text: content
                     visible: Boolean(text)
-                    //anchors.right: control.current ? parent.right : null
+                    anchors.right: control.current ? parent.right : null
 
                     horizontalAlignment: current ? Text.AlignRight : Text.AlignLeft
                     width: implicitWidth > parent.width ? parent.width : implicitWidth
@@ -653,7 +653,7 @@ Page {
                         "removable": true,
                         "created_at": new Date().getTime() / 1000
                     }
-                    messages.append(cdata)()
+                    messages.append(cdata)
                     Qt.callLater(function (content) {
                         if(page.isBotMode) {
                             page.isAIWritting = true
