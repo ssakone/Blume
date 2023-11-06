@@ -16,7 +16,6 @@ find_package(Qt6 REQUIRED COMPONENTS Gui Qml Quick QuickControls2 Svg Widgets Ch
 find_library(UIKIT_LIBRARY UIKit)
 find_library(MOBILE_CORE_SERVICES_LIBRARY MobileCoreServices)
 
-qt_standard_project_setup()
 
 ################################################################################
 include(FetchContent)
@@ -160,17 +159,6 @@ if(APPLE AND NOT IOS)
     set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64")
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.14")
 
-    set(BLUNE_VERSION_MAJOR 1)
-    set(BLUNE_VERSION_MINOR 2)
-    if(NOT BLUNE_VERSION_TAG)
-        set(BLUNE_VERSION_TAG 0520000)
-    endif()
-    set(BLUNE_VERSION_TAG_HEX 0x${BLUNE_VERSION_TAG})
-    set(BLUNE_VERSION_TAG ${BLUNE_VERSION_TAG} CACHE STRING "Git Tag of Qaterial")
-    set(BLUNE_VERSION ${BLUNE_VERSION_MAJOR}.${BLUNE_VERSION_MINOR})
-
-    set(BLUNE_TARGET ${BLUME_PROJECT} CACHE STRING "Qaterial Gallery Target Name")
-
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 endif()
@@ -186,25 +174,37 @@ endmacro() # qt_ios_set_xcode_property
 
 ## iOS
 if(IOS)
-    set(asset_catalog_path "${CMAKE_CURRENT_SOURCE_DIR}/assets/ios/Images.xcassets")
+    set(BLUNE_VERSION_MAJOR 1)
+    set(BLUNE_VERSION_MINOR 2)
+    if(NOT BLUNE_VERSION_TAG)
+        set(BLUNE_VERSION_TAG 0520000)
+    endif()
+    set(BLUME_TARGET "Blume")
+    set(BLUME_PLATFORMS_DIR ${PROJECT_SOURCE_DIR}/platforms)
+    set(BLUNE_VERSION_TAG_HEX 0x${BLUNE_VERSION_TAG})
+    set(BLUNE_VERSION_TAG ${BLUNE_VERSION_TAG} CACHE STRING "Git Tag of Qaterial")
+    set(BLUNE_VERSION ${BLUNE_VERSION_MAJOR}.${BLUNE_VERSION_MINOR})
+
+    set(BLUNE_TARGET ${BLUME_PROJECT} CACHE STRING "Qaterial Gallery Target Name")
+    set(asset_catalog_path "${BLUME_PLATFORMS_DIR}/ios/Images.xcassets")
     target_sources(Blume PRIVATE "${asset_catalog_path}")
     set_source_files_properties(
         ${asset_catalog_path}
         PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-    set(launchscreen_storyboard "${CMAKE_CURRENT_SOURCE_DIR}/assets/ios/AppLaunchScreen.storyboard")
+    set(launchscreen_storyboard "${BLUME_PLATFORMS_DIR}/ios/AppLaunchScreen.storyboard")
     target_sources(Blume PRIVATE ${launchscreen_storyboard})
     set_source_files_properties(
         ${launchscreen_storyboard}
         PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
     set_target_properties(Blume PROPERTIES
         XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS
-        "${CMAKE_CURRENT_SOURCE_DIR}/assets/ios/blume.entitlements")
+        "${BLUME_PLATFORMS_DIR}/ios/blume.entitlements")
 
     get_filename_component(STORYBOARD_FILE_NAME ${launchscreen_storyboard} NAME_WE)
     set(MACOSX_BUNDLE_LAUNCHSCREEN_STORYBOARD ${STORYBOARD_FILE_NAME} PARENT_SCOPE)
     set_target_properties(Blume
-            PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/assets/ios/Info.plist")
+            PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${BLUME_PLATFORMS_DIR}/ios/Info.plist")
     set_target_properties(Blume PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "com.mahoutech.blume")
     set_target_properties(Blume PROPERTIES MACOSX_BUNDLE_IDENTIFIER "com.mahoutech.blume")
     qt_ios_set_xcode_property("Blume" ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon" "All")
@@ -317,3 +317,13 @@ message(STATUS "[DEFINE] SOURCE_DIR                    = ${CMAKE_CURRENT_SOURCE_
 message(STATUS "[DEFINE] BUILD_TYPE                    = ${CMAKE_BUILD_TYPE}")
 message(STATUS "[SYSTEM] HOST SYSTEM NAME              = ${CMAKE_HOST_SYSTEM_NAME}")
 message(STATUS "[SYSTEM] (TARGET) SYSTEM NAME          = ${CMAKE_SYSTEM_NAME}")
+
+
+if(IOS)
+    include(platforms/Deploy.cmake)
+endif()
+
+
+
+
+

@@ -15,15 +15,13 @@ FetchContent_MakeAvailable(QtIosCMake)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "iOS")
 
-  include(${PROJECT_SOURCE_DIR}/cmake/FetchQtIosCMake.cmake)
-
-  add_qt_ios_app(${BLUME_TARGET}
-    NAME "Qaterial"
-    BUNDLE_IDENTIFIER "com.qaterial.gallery"
-    LONG_VERSION ${QATERIALGALLERY_VERSION}.${QATERIALGALLERY_VERSION_TAG}
-    COPYRIGHT "Copyright Mahoudev 2012-2023"
-    ASSET_DIR "${BLUME_PLATFORMS_DIR}/ios/Assets.xcassets"
-    LAUNCHSCREEN_STORYBOARD "${BLUME_PLATFORMS_DIR}/ios/LaunchScreen.storyboard"
+  add_qt_ios_app(Blume
+    Blume
+    BUNDLE_IDENTIFIER "com.mahoutech.blume"
+    LONG_VERSION ${BLUME_VERSION}.${BLUME_VERSION_TAG}
+    COPYRIGHT "Copyright Mahoudev 2022-2023"
+    ASSET_DIR "${BLUME_PLATFORMS_DIR}/ios/Images.xcassets"
+    LAUNCHSCREEN_STORYBOARD "${BLUME_PLATFORMS_DIR}/ios/AppLaunchScreen.storyboard"
     ORIENTATION_PORTRAIT
     ORIENTATION_PORTRAIT_UPDOWN
     ORIENTATION_LANDSCAPE_LEFT
