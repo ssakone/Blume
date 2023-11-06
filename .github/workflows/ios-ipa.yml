@@ -76,9 +76,9 @@ jobs:
           api-key-id: ${{ secrets.IOS_APPSTORE_KEY_ID }}
           api-private-key: ${{ secrets.IOS_APPSTORE_PRIVATE_KEY }}
       - name: 🔧 Configure
-        run: export QT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/clang_64
         run: |
           mkdir -p build
+          export QT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/clang_64
           ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/Tools/CMake/CMake.app/Contents/bin/cmake \
             -G "Xcode" \
             -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios/lib/cmake/Qt6/qt.toolchain.cmake \

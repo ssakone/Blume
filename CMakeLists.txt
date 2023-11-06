@@ -11,8 +11,8 @@ set(CMAKE_AUTORCC ON)
 set(BLUME_PROJECT "Blume" CACHE STRING "Blume Project")
 
 
-find_package(Qt6 REQUIRED COMPONENTS Core Bluetooth Network Sql Multimedia Xml)
-find_package(Qt6 REQUIRED COMPONENTS Gui Qml Quick QuickControls2 Svg Widgets Charts WebView)
+find_package(Qt6 COMPONENTS Core Bluetooth Network Sql Multimedia Xml REQUIRED)
+find_package(Qt6 COMPONENTS Gui Qml Quick QuickControls2 Svg Widgets Charts WebView REQUIRED)
 find_library(UIKIT_LIBRARY UIKit)
 find_library(MOBILE_CORE_SERVICES_LIBRARY MobileCoreServices)
 
