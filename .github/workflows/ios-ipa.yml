@@ -92,6 +92,17 @@ jobs:
           # cp $PP_PATH_4 ~/Library/MobileDevice/Provisioning\ Profiles
           ls ~/Library/MobileDevice/Provisioning\ Profiles
 
+      - uses: OlivierLDff/import-codesign-certs@v1
+        with:
+          p12-file-base64: ${{ secrets.IOS_CERTIFICATES_FILE_BASE64 }}
+          p12-password: ${{ secrets.IOS_CERTIFICATES_PASSWORD }}
+      - uses: OlivierLDff/download-provisioning-profiles@v1
+        with:
+          bundle-id: com.mahoutech.blume
+          issuer-id: ${{ secrets.IOS_APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.IOS_APPSTORE_KEY_ID }}
+          api-private-key: ${{ secrets.IOS_APPSTORE_PRIVATE_KEY }}
+
       - name: ⬆ Install Qt
         uses: jurplel/install-qt-action@v3
         with:
@@ -116,16 +127,6 @@ jobs:
           tools: 'tools_cmake'
           modules: "qtshadertools"
 
-      - uses: OlivierLDff/import-codesign-certs@v1
-        with:
-          p12-file-base64: ${{ secrets.IOS_CERTIFICATES_FILE_BASE64 }}
-          p12-password: ${{ secrets.IOS_CERTIFICATES_PASSWORD }}
-      - uses: OlivierLDff/download-provisioning-profiles@v1
-        with:
-          bundle-id: com.mahoutech.blume
-          issuer-id: ${{ secrets.IOS_APPSTORE_ISSUER_ID }}
-          api-key-id: ${{ secrets.IOS_APPSTORE_KEY_ID }}
-          api-private-key: ${{ secrets.IOS_APPSTORE_PRIVATE_KEY }}
       # - uses: nickwph/apple-provisioning-profile-action@v1
       #   with:
       #     profile-base64: ${{ secrets.PROFILE_BASE64 }}
