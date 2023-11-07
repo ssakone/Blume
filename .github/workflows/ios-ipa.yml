@@ -97,7 +97,7 @@ jobs:
       # - name: 🔨 Build Blume
       #   run: cmake --build build --target Blume --config "${{ matrix.build-type }}"
       - name: 🔨 Build Blume Archive
-        run: cmake --build build --target BlumeArchive --config "${{ matrix.build-type }}"
+        run: cmake --build build --target BlumeArchive --config "${{ matrix.build-type }}" -- -allowProvisioningUpdates
       # - name: 🚀 Deploy Blume Ipa
       #   run: cmake --build build --target BlumeIpa --config "${{ matrix.build-type }}"
       # - name: 📦 Upload Blume App
