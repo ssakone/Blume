@@ -34,7 +34,7 @@ jobs:
       - uses: actions/checkout@v4
         name: ⬆ Install toolchain
         with:
-          repository: OlivierLDff/IosCMakeToolchain
+          repository: leetal/ios-cmake
           path: ios-toolchain
       - name: Cache Qt
         id: cache-qt-ios
@@ -90,6 +90,7 @@ jobs:
           # cp $PP_PATH_2 ~/Library/MobileDevice/Provisioning\ Profiles
           # cp $PP_PATH_3 ~/Library/MobileDevice/Provisioning\ Profiles
           # cp $PP_PATH_4 ~/Library/MobileDevice/Provisioning\ Profiles
+          ls ~/Library/MobileDevice/Provisioning\ Profiles
 
       - name: ⬆ Install Qt
         uses: jurplel/install-qt-action@v3
@@ -115,17 +116,16 @@ jobs:
           tools: 'tools_cmake'
           modules: "qtshadertools"
 
-      # - uses: OlivierLDff/import-codesign-certs@v1
-      #   with:
-      #     p12-file-base64: ${{ secrets.IOS_CERTIFICATES_FILE_BASE64 }}
-      #     p12-password: ${{ secrets.IOS_CERTIFICATES_PASSWORD }}
-      # - uses: OlivierLDff/download-provisioning-profiles@v1
-      #   with:
-      #     bundle-id: 'com.mahoutech.blume'
-      #     profile-type: 'Development'
-      #     issuer-id: ${{ secrets.IOS_APPSTORE_ISSUER_ID }}
-      #     api-key-id: ${{ secrets.IOS_APPSTORE_KEY_ID }}
-      #     api-private-key: ${{ secrets.IOS_APPSTORE_PRIVATE_KEY }}
+      - uses: OlivierLDff/import-codesign-certs@v1
+        with:
+          p12-file-base64: ${{ secrets.IOS_CERTIFICATES_FILE_BASE64 }}
+          p12-password: ${{ secrets.IOS_CERTIFICATES_PASSWORD }}
+      - uses: OlivierLDff/download-provisioning-profiles@v1
+        with:
+          bundle-id: 'com.mahoutech.blume'
+          issuer-id: ${{ secrets.IOS_APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.IOS_APPSTORE_KEY_ID }}
+          api-private-key: ${{ secrets.IOS_APPSTORE_PRIVATE_KEY }}
       # - uses: nickwph/apple-provisioning-profile-action@v1
       #   with:
       #     profile-base64: ${{ secrets.PROFILE_BASE64 }}
@@ -137,9 +137,11 @@ jobs:
           export QT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/macos
           ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/Tools/CMake/CMake.app/Contents/bin/cmake \
             -G "Xcode" \
-            -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios/lib/cmake/Qt6/qt.toolchain.cmake \
+            -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/ios-toolchain/ios.toolchain.cmake \
             -DCMAKE_CONFIGURATION_TYPES="Release" \
             -DDEPLOYMENT_TARGET=${{ matrix.deployment-target }} \
+            -DQT_IOS_CODE_SIGN_IDENTITY=${{ secrets.IOS_CODE_SIGN_IDENTITY }} \
+            -DQT_IOS_PROVISIONING_PROFILE_SPECIFIER=${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }} \
             -DQT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/macos \
             -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios \
             -DQT_IOS_TEAM_ID=${{ secrets.IOS_TEAM_ID }} \
@@ -147,7 +149,8 @@ jobs:
       # - name: 🔨 Build Blume
       #   run: cmake --build build --target Blume --config "${{ matrix.build-type }}"
       - name: 🔨 Build Blume Archive
-        run: cmake --build build --target BlumeArchive --config "${{ matrix.build-type }}" -- -allowProvisioningUpdates
+        run: |
+          cmake --build build --target BlumeArchive --config "${{ matrix.build-type }}"
       # - name: 🚀 Deploy Blume Ipa
       #   run: cmake --build build --target BlumeIpa --config "${{ matrix.build-type }}"
       # - name: 📦 Upload Blume App
