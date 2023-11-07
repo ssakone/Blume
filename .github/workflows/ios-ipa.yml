@@ -122,7 +122,7 @@ jobs:
           p12-password: ${{ secrets.IOS_CERTIFICATES_PASSWORD }}
       - uses: OlivierLDff/download-provisioning-profiles@v1
         with:
-          bundle-id: 'com.mahoutech.blume'
+          bundle-id: com.mahoutech.blume
           issuer-id: ${{ secrets.IOS_APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.IOS_APPSTORE_KEY_ID }}
           api-private-key: ${{ secrets.IOS_APPSTORE_PRIVATE_KEY }}
