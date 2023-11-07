@@ -43,48 +43,11 @@ jobs:
           path: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
           key: ${{ runner.os }}-QtCache-${{ matrix.qt-version }}-ios
 
-      - name: ⬆ Install Qt
-        uses: jurplel/install-qt-action@v3
-        with:
-          aqtversion: "==3.1.*"
-          version: ${{ matrix.qt-version }}
-          target: 'ios'
-          cache: false
-          host: 'mac'
-          dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
-          cache-key-prefix: 'install-qt-action'
-          modules: "qtconnectivity qtimageformats qtmultimedia qtnetworkauth qtpositioning qtsensors qtvirtualkeyboard qtwebsockets qtwebview qt5compat qtcharts qtshadertools"
-      - name: ⬆ Install Qt Macos 2
-        uses: jurplel/install-qt-action@v3
-        with:
-          aqtversion: "==3.1.*"
-          version: ${{ matrix.qt-version }}
-          target: 'desktop'
-          host: 'mac'
-          arch: 'clang_64'
-          dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
-          cache-key-prefix: 'install-qt-action'
-          tools: 'tools_cmake'
-          modules: "qtshadertools"
-
-      # - uses: OlivierLDff/import-codesign-certs@v1
-      #   with:
-      #     p12-file-base64: ${{ secrets.IOS_CERTIFICATES_FILE_BASE64 }}
-      #     p12-password: ${{ secrets.IOS_CERTIFICATES_PASSWORD }}
-      # - uses: OlivierLDff/download-provisioning-profiles@v1
-      #   with:
-      #     bundle-id: 'com.mahoutech.blume'
-      #     profile-type: 'Development'
-      #     issuer-id: ${{ secrets.IOS_APPSTORE_ISSUER_ID }}
-      #     api-key-id: ${{ secrets.IOS_APPSTORE_KEY_ID }}
-      #     api-private-key: ${{ secrets.IOS_APPSTORE_PRIVATE_KEY }}
-      # - uses: nickwph/apple-provisioning-profile-action@v1
-      #   with:
-      #     profile-base64: ${{ secrets.PROFILE_BASE64 }}
       - name: Authenticate with Apple API Key 
         run: |
           APPLE_API_KEY=${{ secrets.APPLE_API_KEY }}
           xcode-select --print-path > /tmp/xcode_path && echo $APPLE_API_KEY | base64 --decode > /tmp/AuthKey_$APPLE_ID.p8 && sudo security import /tmp/AuthKey_$APPLE_ID.p8 -k ~/Library/Keychains/login.keychain -P "$APPLE_API_KEY" && security set-key-partition-list -S apple-tool:,apple: -k "" ~/Library/Keychains/login.keychain
+      
       - name: Install the Apple certificate and provisioning profile
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATES_FILE_BASE64 }}
@@ -125,6 +88,47 @@ jobs:
           cp $PP_PATH_2 ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH_3 ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH_4 ~/Library/MobileDevice/Provisioning\ Profiles
+
+      - name: ⬆ Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          aqtversion: "==3.1.*"
+          version: ${{ matrix.qt-version }}
+          target: 'ios'
+          cache: false
+          host: 'mac'
+          dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
+          cache-key-prefix: 'install-qt-action'
+          modules: "qtconnectivity qtimageformats qtmultimedia qtnetworkauth qtpositioning qtsensors qtvirtualkeyboard qtwebsockets qtwebview qt5compat qtcharts qtshadertools"
+      - name: ⬆ Install Qt Macos 2
+        uses: jurplel/install-qt-action@v3
+        with:
+          aqtversion: "==3.1.*"
+          version: ${{ matrix.qt-version }}
+          target: 'desktop'
+          host: 'mac'
+          arch: 'clang_64'
+          dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
+          cache-key-prefix: 'install-qt-action'
+          tools: 'tools_cmake'
+          modules: "qtshadertools"
+
+      # - uses: OlivierLDff/import-codesign-certs@v1
+      #   with:
+      #     p12-file-base64: ${{ secrets.IOS_CERTIFICATES_FILE_BASE64 }}
+      #     p12-password: ${{ secrets.IOS_CERTIFICATES_PASSWORD }}
+      # - uses: OlivierLDff/download-provisioning-profiles@v1
+      #   with:
+      #     bundle-id: 'com.mahoutech.blume'
+      #     profile-type: 'Development'
+      #     issuer-id: ${{ secrets.IOS_APPSTORE_ISSUER_ID }}
+      #     api-key-id: ${{ secrets.IOS_APPSTORE_KEY_ID }}
+      #     api-private-key: ${{ secrets.IOS_APPSTORE_PRIVATE_KEY }}
+      # - uses: nickwph/apple-provisioning-profile-action@v1
+      #   with:
+      #     profile-base64: ${{ secrets.PROFILE_BASE64 }}
+      
+      
       - name: 🔧 Configure
         run: |
           mkdir -p build 
