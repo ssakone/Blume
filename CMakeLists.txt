@@ -23,7 +23,7 @@ set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 FetchContent_Declare(
   Qaterial
   GIT_REPOSITORY https://github.com/ssakone/Qaterial.git
-  GIT_TAG        qt6_update
+  GIT_TAG        no_qolm
 )
 FetchContent_MakeAvailable(Qaterial)
 
@@ -174,18 +174,18 @@ endmacro() # qt_ios_set_xcode_property
 
 ## iOS
 if(IOS)
-    set(BLUNE_VERSION_MAJOR 1)
-    set(BLUNE_VERSION_MINOR 2)
-    if(NOT BLUNE_VERSION_TAG)
-        set(BLUNE_VERSION_TAG 0520000)
+    set(BLUME_VERSION_MAJOR 1)
+    set(BLUME_VERSION_MINOR 2)
+    if(NOT BLUME_VERSION_TAG)
+        set(BLUME_VERSION_TAG 0520000)
     endif()
     set(BLUME_TARGET "Blume")
     set(BLUME_PLATFORMS_DIR ${PROJECT_SOURCE_DIR}/platforms)
-    set(BLUNE_VERSION_TAG_HEX 0x${BLUNE_VERSION_TAG})
-    set(BLUNE_VERSION_TAG ${BLUNE_VERSION_TAG} CACHE STRING "Git Tag of Qaterial")
-    set(BLUNE_VERSION ${BLUNE_VERSION_MAJOR}.${BLUNE_VERSION_MINOR})
+    set(BLUME_VERSION_TAG_HEX 0x${BLUME_VERSION_TAG})
+    set(BLUME_VERSION_TAG ${BLUME_VERSION_TAG} CACHE STRING "Blume")
+    set(BLUME_VERSION ${BLUME_VERSION_MAJOR}.${BLUME_VERSION_MINOR})
 
-    set(BLUNE_TARGET ${BLUME_PROJECT} CACHE STRING "Qaterial Gallery Target Name")
+    set(BLUME_TARGET ${BLUME_PROJECT} CACHE STRING "Blume")
     set(asset_catalog_path "${BLUME_PLATFORMS_DIR}/ios/Images.xcassets")
     target_sources(Blume PRIVATE "${asset_catalog_path}")
     set_source_files_properties(
