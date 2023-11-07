@@ -153,13 +153,13 @@ jobs:
             -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=${{ secrets.IOS_TEAM_ID }} \
             -B ./build/ -S .
 
-      # - name: 🔨 Build Blume
-      #   run: cmake --build build --target Blume --config "${{ matrix.build-type }}"
+      - name: 🔨 Build Blume
+        run: cmake --build build --target Blume --config Release -- PROVISIONING_PROFILE="${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }}" CODE_SIGN_STYLE=Manual
+      - name: 🚀 Deploy Blume Ipa
+        run: cmake --build build --target BlumeIpa --config Release -- PROVISIONING_PROFILE="${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }}" CODE_SIGN_STYLE=Manual
       - name: 🔨 Build Blume Archive
         run: |
           cmake --build build --target BlumeArchive --config Release -- PROVISIONING_PROFILE="${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }}" CODE_SIGN_STYLE=Manual
-      # - name: 🚀 Deploy Blume Ipa
-      #   run: cmake --build build --target BlumeIpa --config "${{ matrix.build-type }}"
       # - name: 📦 Upload Blume App
       #   uses: actions/upload-artifact@v2
       #   with:
