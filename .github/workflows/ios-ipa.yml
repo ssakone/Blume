@@ -145,18 +145,15 @@ jobs:
             -DENABLE_VISIBILITY=FALSE \
             -DENABLE_BITCODE=${{ matrix.bitcode }} \
             -DENABLE_ARC=TRUE \
-            -DQT_IOS_CODE_SIGN_IDENTITY="${{ secrets.IOS_CODE_SIGN_IDENTITY }}" \
-            -DQT_IOS_PROVISIONING_PROFILE_SPECIFIER=${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }} \
             -DQT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/macos \
             -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios \
-            -DQT_IOS_TEAM_ID=${{ secrets.IOS_TEAM_ID }} \
             -B ./build/ -S .
 
       # - name: 🔨 Build Blume
       #   run: cmake --build build --target Blume --config "${{ matrix.build-type }}"
       - name: 🔨 Build Blume Archive
         run: |
-          cmake --build build --target BlumeArchive --config "${{ matrix.build-type }}" -- PROVISIONING_PROFILE="com.mahoutech.blume" CODE_SIGN_STYLE=Manual
+          cmake --build build --target BlumeArchive --config "${{ matrix.build-type }}" -- CODE_SIGN_STYLE=Manual
       # - name: 🚀 Deploy Blume Ipa
       #   run: cmake --build build --target BlumeIpa --config "${{ matrix.build-type }}"
       # - name: 📦 Upload Blume App
