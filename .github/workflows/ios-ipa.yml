@@ -131,11 +131,9 @@ jobs:
       #   with:
       #     profile-base64: ${{ secrets.PROFILE_BASE64 }}
       
-      
       - name: 🔧 Configure
         run: |
           mkdir -p build 
-          export QT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/macos
           ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/Tools/CMake/CMake.app/Contents/bin/cmake \
             -G "Xcode" \
             -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/ios-toolchain/ios.toolchain.cmake \
@@ -147,6 +145,7 @@ jobs:
             -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios \
             -DQT_IOS_TEAM_ID=${{ secrets.IOS_TEAM_ID }} \
             -B ./build/ -S .
+            
       # - name: 🔨 Build Blume
       #   run: cmake --build build --target Blume --config "${{ matrix.build-type }}"
       - name: 🔨 Build Blume Archive
