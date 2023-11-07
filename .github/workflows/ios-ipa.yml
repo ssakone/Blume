@@ -71,13 +71,16 @@ jobs:
         with:
           p12-file-base64: ${{ secrets.IOS_CERTIFICATES_FILE_BASE64 }}
           p12-password: ${{ secrets.IOS_CERTIFICATES_PASSWORD }}
-      - uses: OlivierLDff/download-provisioning-profiles@v1
+      # - uses: OlivierLDff/download-provisioning-profiles@v1
+      #   with:
+      #     bundle-id: 'com.mahoutech.blume'
+      #     profile-type: 'Development'
+      #     issuer-id: ${{ secrets.IOS_APPSTORE_ISSUER_ID }}
+      #     api-key-id: ${{ secrets.IOS_APPSTORE_KEY_ID }}
+      #     api-private-key: ${{ secrets.IOS_APPSTORE_PRIVATE_KEY }}
+      - uses: nickwph/apple-provisioning-profile-action@v1
         with:
-          bundle-id: 'com.mahoutech.blume'
-          profile-type: 'Development'
-          issuer-id: ${{ secrets.IOS_APPSTORE_ISSUER_ID }}
-          api-key-id: ${{ secrets.IOS_APPSTORE_KEY_ID }}
-          api-private-key: ${{ secrets.IOS_APPSTORE_PRIVATE_KEY }}
+          profile-base64: ${{ secrets.PROFILE_BASE64 }}
       - name: 🔧 Configure
         run: |
           mkdir -p build 
