@@ -48,9 +48,9 @@ jobs:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATES_FILE_BASE64 }}
           P12_PASSWORD: ${{ secrets.IOS_CERTIFICATES_PASSWORD }}
           BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
-          BUILD_PROVISION_PROFILE_BASE64_2: ${{ secrets.PROVISIONING_PROFILE_BASE64_2 }}
-          BUILD_PROVISION_PROFILE_BASE64_3: ${{ secrets.PROVISIONING_PROFILE_BASE64_3 }}
-          BUILD_PROVISION_PROFILE_BASE64_4: ${{ secrets.PROVISIONING_PROFILE_BASE64_4 }}
+          # BUILD_PROVISION_PROFILE_BASE64_2: ${{ secrets.PROVISIONING_PROFILE_BASE64_2 }}
+          # BUILD_PROVISION_PROFILE_BASE64_3: ${{ secrets.PROVISIONING_PROFILE_BASE64_3 }}
+          # BUILD_PROVISION_PROFILE_BASE64_4: ${{ secrets.PROVISIONING_PROFILE_BASE64_4 }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
           APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
           APPLE_ID: ${{ secrets.APPLE_ID }} 
@@ -58,27 +58,27 @@ jobs:
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
-          PP_PATH_2=$RUNNER_TEMP/build_pp_2.mobileprovision
-          PP_PATH_3=$RUNNER_TEMP/build_pp_3.mobileprovision
-          PP_PATH_4=$RUNNER_TEMP/build_pp_4.mobileprovision
+          # PP_PATH_2=$RUNNER_TEMP/build_pp_2.mobileprovision
+          # PP_PATH_3=$RUNNER_TEMP/build_pp_3.mobileprovision
+          # PP_PATH_4=$RUNNER_TEMP/build_pp_4.mobileprovision
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
           echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
-          echo -n "$BUILD_PROVISION_PROFILE_BASE64_2" | base64 --decode -o $PP_PATH_2
-          echo -n "$BUILD_PROVISION_PROFILE_BASE64_3" | base64 --decode -o $PP_PATH_3
-          echo -n "$BUILD_PROVISION_PROFILE_BASE64_4" | base64 --decode -o $PP_PATH_4
+          # echo -n "$BUILD_PROVISION_PROFILE_BASE64_2" | base64 --decode -o $PP_PATH_2
+          # echo -n "$BUILD_PROVISION_PROFILE_BASE64_3" | base64 --decode -o $PP_PATH_3
+          # echo -n "$BUILD_PROVISION_PROFILE_BASE64_4" | base64 --decode -o $PP_PATH_4
 
           # create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
-          echo $APPLE_API_KEY | base64 --decode > /tmp/api_key.p8
-          #xcode-select --print-path > /tmp/xcode_path && echo $APPLE_API_KEY | base64 --decode > /tmp/AuthKey_$APPLE_ID.p8 && 
-          sudo security import /tmp/api_key.p8 -k ~/Library/Keychains/login.keychain -P "$APPLE_API_KEY" && security set-key-partition-list -S apple-tool:,apple: -k "" ~/Library/Keychains/login.keychain
-          xcode-select --print-path
+          # echo $APPLE_API_KEY | base64 --decode > /tmp/api_key.p8
+          # #xcode-select --print-path > /tmp/xcode_path && echo $APPLE_API_KEY | base64 --decode > /tmp/AuthKey_$APPLE_ID.p8 && 
+          # sudo security import /tmp/api_key.p8 -k ~/Library/Keychains/login.keychain -P "$APPLE_API_KEY" && security set-key-partition-list -S apple-tool:,apple: -k "" ~/Library/Keychains/login.keychain
+          # xcode-select --print-path
 
           # import certificate to keychain
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
@@ -87,9 +87,9 @@ jobs:
           # apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH_2 ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH_3 ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH_4 ~/Library/MobileDevice/Provisioning\ Profiles
+          # cp $PP_PATH_2 ~/Library/MobileDevice/Provisioning\ Profiles
+          # cp $PP_PATH_3 ~/Library/MobileDevice/Provisioning\ Profiles
+          # cp $PP_PATH_4 ~/Library/MobileDevice/Provisioning\ Profiles
 
       - name: ⬆ Install Qt
         uses: jurplel/install-qt-action@v3
