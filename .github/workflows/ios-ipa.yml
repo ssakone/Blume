@@ -156,7 +156,7 @@ jobs:
       #   run: cmake --build build --target Blume --config "${{ matrix.build-type }}"
       - name: 🔨 Build Blume Archive
         run: |
-          cmake --build build --target BlumeArchive --config "${{ matrix.build-type }}" -- PROVISIONING_PROFILE="com.mahoutech.blume"
+          cmake --build build --target BlumeArchive --config "${{ matrix.build-type }}" -- PROVISIONING_PROFILE="com.mahoutech.blume" CODE_SIGN_STYLE=Manual
       # - name: 🚀 Deploy Blume Ipa
       #   run: cmake --build build --target BlumeIpa --config "${{ matrix.build-type }}"
       # - name: 📦 Upload Blume App
