@@ -150,13 +150,14 @@ jobs:
             -DQT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/macos \
             -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios \
             -DQT_IOS_TEAM_ID=${{ secrets.IOS_TEAM_ID }} \
+            -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=${{ secrets.IOS_TEAM_ID }} \
             -B ./build/ -S .
 
       # - name: 🔨 Build Blume
       #   run: cmake --build build --target Blume --config "${{ matrix.build-type }}"
       - name: 🔨 Build Blume Archive
         run: |
-          cmake --build build --target BlumeArchive --config "${{ matrix.build-type }}" -- PROVISIONING_PROFILE="${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }}" CODE_SIGN_STYLE=Manual
+          cmake --build build --target BlumeArchive --config Release -- PROVISIONING_PROFILE="${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }}" CODE_SIGN_STYLE=Manual
       # - name: 🚀 Deploy Blume Ipa
       #   run: cmake --build build --target BlumeIpa --config "${{ matrix.build-type }}"
       # - name: 📦 Upload Blume App
