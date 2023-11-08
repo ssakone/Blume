@@ -106,24 +106,22 @@ jobs:
           api-key-id: ${{ secrets.IOS_APPSTORE_KEY_ID }}
           api-private-key: ${{ secrets.IOS_APPSTORE_PRIVATE_KEY }}
 
-      - name: ⬆ Install Qt
-        uses: jurplel/install-qt-action@v3
-        with:
-          aqtversion: "==3.1.*"
-          version: ${{ matrix.qt-version }}
-          target: 'ios'
-          cache: false
-          host: 'mac'
-          dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
-          cache-key-prefix: 'install-qt-action'
-          modules: "qtconnectivity qtimageformats qtmultimedia qtnetworkauth qtpositioning qtsensors qtvirtualkeyboard qtwebsockets qtwebview qt5compat qtcharts qtshadertools"
+      # - name: ⬆ Install Qt
+      #   uses: jurplel/install-qt-action@v3
+      #   with:
+      #     aqtversion: "==3.1.*"
+      #     version: ${{ matrix.qt-version }}
+      #     target: 'ios'
+      #     cache: false
+      #     dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
+      #     cache-key-prefix: 'install-qt-action'
+      #     modules: "qtconnectivity qtimageformats qtmultimedia qtnetworkauth qtpositioning qtsensors qtvirtualkeyboard qtwebsockets qtwebview qt5compat qtcharts qtshadertools"
       - name: ⬆ Install Qt Macos 2
         uses: jurplel/install-qt-action@v3
         with:
           aqtversion: "==3.1.*"
           version: ${{ matrix.qt-version }}
           target: 'desktop'
-          host: 'mac'
           arch: 'clang_64'
           dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
           cache-key-prefix: 'install-qt-action'
