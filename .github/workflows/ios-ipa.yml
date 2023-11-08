@@ -93,7 +93,7 @@ jobs:
 
           ls ~/Library/MobileDevice/Provisioning\ Profiles
           /Users/runner/hostedtoolcache/Python/3.11.6/x64/bin/python3 -m pip install aqtinstall==3.1.*
-          /Users/runner/hostedtoolcache/Python/3.11.6/x64/bin/python3 -m aqt install-qt mac ios 6.4.3 --outputdir /Users/runner/work/Blume/Blume/Qt-macOS-6.4.3/Qt --modules qtconnectivity qtimageformats qtmultimedia qtnetworkauth qtpositioning qtsensors qtvirtualkeyboard qtwebsockets qtwebview qt5compat qtcharts qtshadertools
+          /Users/runner/hostedtoolcache/Python/3.11.6/x64/bin/python3 -m aqt install-qt mac ios 6.4.3 --outputdir /Users/runner/work/Blume/Blume/Qt-macOS-6.4.3/Qt --modules qtconnectivity qtimageformats qtmultimedia qtnetworkauth qtpositioning qtsensors qtvirtualkeyboard qtwebsockets qtwebview qt5compat qtcharts qtshadertools --base https://qtproject.mirror.liquidtelecom.com/
 
       - uses: OlivierLDff/import-codesign-certs@v1
         with:
