@@ -8,13 +8,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
+set(BLUME_PROJECT "Blume" CACHE STRING "Blume Project")
 
-find_package(Qt6 REQUIRED COMPONENTS Core Bluetooth Network Sql Multimedia Xml)
-find_package(Qt6 REQUIRED COMPONENTS Gui Qml Quick QuickControls2 Svg Widgets Charts WebView)
+
+find_package(Qt6 COMPONENTS Core Bluetooth Network Sql Multimedia Xml REQUIRED)
+find_package(Qt6 COMPONENTS Gui Qml Quick QuickControls2 Svg Widgets Charts WebView REQUIRED)
 find_library(UIKIT_LIBRARY UIKit)
 find_library(MOBILE_CORE_SERVICES_LIBRARY MobileCoreServices)
 
-qt_standard_project_setup()
 
 ################################################################################
 include(FetchContent)
@@ -22,7 +23,7 @@ set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 FetchContent_Declare(
   Qaterial
   GIT_REPOSITORY https://github.com/ssakone/Qaterial.git
-  GIT_TAG        qt6_update
+  GIT_TAG        no_qolm
 )
 FetchContent_MakeAvailable(Qaterial)
 
@@ -133,8 +134,8 @@ target_include_directories(Blume PRIVATE src/thirdparty/)
 if(ANDROID)
     #set(QT_ANDROID_ABIS "armeabi-v7a;arm64-v8a;x86;x86_64")
     #set(QT_ANDROID_BUILD_ALL_ABIS "ON")
-#    set(QT_ANDROID_ABIS "arm64-v8a;armeabi-v7a")
-#    set(QT_ANDROID_BUILD_ALL_ABIS "ON")
+    set(QT_ANDROID_ABIS "arm64-v8a;armeabi-v7a")
+    set(QT_ANDROID_BUILD_ALL_ABIS "ON")
 
     set_target_properties(Blume PROPERTIES
         QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets/android"
@@ -157,6 +158,9 @@ endif()
 if(APPLE AND NOT IOS)
     set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64")
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.14")
+
+    set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 endif()
 
 macro(qt_ios_set_xcode_property TARGET XCODE_PROPERTY XCODE_VALUE XCODE_RELVERSION)
@@ -170,25 +174,37 @@ endmacro() # qt_ios_set_xcode_property
 
 ## iOS
 if(IOS)
-    set(asset_catalog_path "${CMAKE_CURRENT_SOURCE_DIR}/assets/ios/Images.xcassets")
+    set(BLUME_VERSION_MAJOR 1)
+    set(BLUME_VERSION_MINOR 2)
+    if(NOT BLUME_VERSION_TAG)
+        set(BLUME_VERSION_TAG 0520000)
+    endif()
+    set(BLUME_TARGET "Blume")
+    set(BLUME_PLATFORMS_DIR ${PROJECT_SOURCE_DIR}/platforms)
+    set(BLUME_VERSION_TAG_HEX 0x${BLUME_VERSION_TAG})
+    set(BLUME_VERSION_TAG ${BLUME_VERSION_TAG} CACHE STRING "Blume")
+    set(BLUME_VERSION ${BLUME_VERSION_MAJOR}.${BLUME_VERSION_MINOR})
+
+    set(BLUME_TARGET ${BLUME_PROJECT} CACHE STRING "Blume")
+    set(asset_catalog_path "${BLUME_PLATFORMS_DIR}/ios/Images.xcassets")
     target_sources(Blume PRIVATE "${asset_catalog_path}")
     set_source_files_properties(
         ${asset_catalog_path}
         PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-    set(launchscreen_storyboard "${CMAKE_CURRENT_SOURCE_DIR}/assets/ios/AppLaunchScreen.storyboard")
+    set(launchscreen_storyboard "${BLUME_PLATFORMS_DIR}/ios/AppLaunchScreen.storyboard")
     target_sources(Blume PRIVATE ${launchscreen_storyboard})
     set_source_files_properties(
         ${launchscreen_storyboard}
         PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
     set_target_properties(Blume PROPERTIES
         XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS
-        "${CMAKE_CURRENT_SOURCE_DIR}/assets/ios/blume.entitlements")
+        "${BLUME_PLATFORMS_DIR}/ios/blume.entitlements")
 
     get_filename_component(STORYBOARD_FILE_NAME ${launchscreen_storyboard} NAME_WE)
     set(MACOSX_BUNDLE_LAUNCHSCREEN_STORYBOARD ${STORYBOARD_FILE_NAME} PARENT_SCOPE)
     set_target_properties(Blume
-            PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/assets/ios/Info.plist")
+            PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${BLUME_PLATFORMS_DIR}/ios/Info.plist")
     set_target_properties(Blume PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "com.mahoutech.blume")
     set_target_properties(Blume PROPERTIES MACOSX_BUNDLE_IDENTIFIER "com.mahoutech.blume")
     qt_ios_set_xcode_property("Blume" ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon" "All")
@@ -301,3 +317,13 @@ message(STATUS "[DEFINE] SOURCE_DIR                    = ${CMAKE_CURRENT_SOURCE_
 message(STATUS "[DEFINE] BUILD_TYPE                    = ${CMAKE_BUILD_TYPE}")
 message(STATUS "[SYSTEM] HOST SYSTEM NAME              = ${CMAKE_HOST_SYSTEM_NAME}")
 message(STATUS "[SYSTEM] (TARGET) SYSTEM NAME          = ${CMAKE_SYSTEM_NAME}")
+
+
+if(IOS)
+    include(platforms/Deploy.cmake)
+endif()
+
+
+
+
+

@@ -1,0 +1,190 @@
+name: 👷 iOs CI
+
+on:
+  push:
+    branches:
+      - ios_cmake_refix
+
+  release:
+    types:
+      - created
+
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  BuildIpa:
+    runs-on: macOS-latest
+    strategy:
+      matrix:
+        deployment-target: ["14.0"]
+        platform: ["OS64"]
+        qt-version: ["6.4.3"]
+        build-type: ["Release"]
+        bitcode: ["FALSE"]
+        # 1 is legacy build system
+        # 12 is new build system
+        build-system: ["1"]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/checkout@v4
+        name: ⬆ Install toolchain
+        with:
+          repository: leetal/ios-cmake
+          path: ios-toolchain
+      # - name: Cache Qt
+      #   id: cache-qt-ios
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
+      #     key: ${{ runner.os }}-QtCache-${{ matrix.qt-version }}-ios
+
+      - name: Install the Apple certificate and provisioning profile
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATES_FILE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.IOS_CERTIFICATES_PASSWORD }}
+          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+          # BUILD_PROVISION_PROFILE_BASE64_2: ${{ secrets.PROVISIONING_PROFILE_BASE64_2 }}
+          # BUILD_PROVISION_PROFILE_BASE64_3: ${{ secrets.PROVISIONING_PROFILE_BASE64_3 }}
+          # BUILD_PROVISION_PROFILE_BASE64_4: ${{ secrets.PROVISIONING_PROFILE_BASE64_4 }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }} 
+        run: |
+          # create variables
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+          # PP_PATH_2=$RUNNER_TEMP/build_pp_2.mobileprovision
+          # PP_PATH_3=$RUNNER_TEMP/build_pp_3.mobileprovision
+          # PP_PATH_4=$RUNNER_TEMP/build_pp_4.mobileprovision
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # import certificate and provisioning profile from secrets
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+          # echo -n "$BUILD_PROVISION_PROFILE_BASE64_2" | base64 --decode -o $PP_PATH_2
+          # echo -n "$BUILD_PROVISION_PROFILE_BASE64_3" | base64 --decode -o $PP_PATH_3
+          # echo -n "$BUILD_PROVISION_PROFILE_BASE64_4" | base64 --decode -o $PP_PATH_4
+
+          # create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # echo $APPLE_API_KEY | base64 --decode > /tmp/api_key.p8
+          # #xcode-select --print-path > /tmp/xcode_path && echo $APPLE_API_KEY | base64 --decode > /tmp/AuthKey_$APPLE_ID.p8 && 
+          # sudo security import /tmp/api_key.p8 -k ~/Library/Keychains/login.keychain -P "$APPLE_API_KEY" && security set-key-partition-list -S apple-tool:,apple: -k "" ~/Library/Keychains/login.keychain
+          # xcode-select --print-path
+
+          # import certificate to keychain
+          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          # apply provisioning profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+          # cp $PP_PATH_2 ~/Library/MobileDevice/Provisioning\ Profiles
+          # cp $PP_PATH_3 ~/Library/MobileDevice/Provisioning\ Profiles
+          # cp $PP_PATH_4 ~/Library/MobileDevice/Provisioning\ Profiles
+
+          ls ~/Library/MobileDevice/Provisioning\ Profiles
+          /Users/runner/hostedtoolcache/Python/3.11.6/x64/bin/python3 -m pip install aqtinstall==3.1.*
+          /Users/runner/hostedtoolcache/Python/3.11.6/x64/bin/python3 -m aqt install-qt mac ios 6.4.3 --outputdir /Users/runner/work/Blume/Blume/Qt-macOS-6.4.3/Qt --modules qtconnectivity qtimageformats qtmultimedia qtnetworkauth qtpositioning qtsensors qtvirtualkeyboard qtwebsockets qtwebview qt5compat qtcharts qtshadertools --base https://qtproject.mirror.liquidtelecom.com/
+
+      - uses: OlivierLDff/import-codesign-certs@v1
+        with:
+          p12-file-base64: ${{ secrets.IOS_CERTIFICATES_FILE_BASE64 }}
+          p12-password: ${{ secrets.IOS_CERTIFICATES_PASSWORD }}
+      - uses: OlivierLDff/download-provisioning-profiles@v1
+        with:
+          bundle-id: com.mahoutech.blume
+          issuer-id: ${{ secrets.IOS_APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.IOS_APPSTORE_KEY_ID }}
+          api-private-key: ${{ secrets.IOS_APPSTORE_PRIVATE_KEY }}
+
+      # - name: ⬆ Install Qt
+      #   uses: jurplel/install-qt-action@v3
+      #   with:
+      #     aqtversion: "==3.1.*"
+      #     version: ${{ matrix.qt-version }}
+      #     target: 'ios'
+      #     cache: false
+      #     dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
+      #     cache-key-prefix: 'install-qt-action'
+      #     modules: "qtconnectivity qtimageformats qtmultimedia qtnetworkauth qtpositioning qtsensors qtvirtualkeyboard qtwebsockets qtwebview qt5compat qtcharts qtshadertools"
+      - name: ⬆ Install Qt Macos 2
+        uses: jurplel/install-qt-action@v3
+        with:
+          aqtversion: "==3.1.*"
+          version: ${{ matrix.qt-version }}
+          target: 'desktop'
+          arch: 'clang_64'
+          dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
+          cache-key-prefix: 'install-qt-action'
+          tools: 'tools_cmake'
+          modules: "qtshadertools"
+
+      # - uses: nickwph/apple-provisioning-profile-action@v1
+      #   with:
+      #     profile-base64: ${{ secrets.PROFILE_BASE64 }}
+      
+      - name: 🔧 Configure
+        run: |
+          mkdir -p build 
+          ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/Tools/CMake/CMake.app/Contents/bin/cmake \
+            -G "Xcode" \
+            -Tbuildsystem=${{ matrix.build-system }} \
+            -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/ios-toolchain/ios.toolchain.cmake \
+            -DCMAKE_CONFIGURATION_TYPES="Release" \
+            -DDEPLOYMENT_TARGET=${{ matrix.deployment-target }} \
+            -DPLATFORM=${{ matrix.platform }} \
+            -DENABLE_VISIBILITY=FALSE \
+            -DENABLE_BITCODE=${{ matrix.bitcode }} \
+            -DENABLE_ARC=TRUE \
+            -DQT_IOS_CODE_SIGN_IDENTITY="${{ secrets.IOS_CODE_SIGN_IDENTITY }}" \
+            -DQT_IOS_PROVISIONING_PROFILE_SPECIFIER=${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }} \
+            -DQT_HOST_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/macos \
+            -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}/Qt/${{ matrix.qt-version }}/ios \
+            -DQT_IOS_TEAM_ID=${{ secrets.IOS_TEAM_ID }} \
+            -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=${{ secrets.IOS_TEAM_ID }} \
+            -B ./build/ -S .
+
+      - name: 🔨 Build Blume
+        run: cmake --build build --target Blume --config Release -- PROVISIONING_PROFILE="${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }}" CODE_SIGN_STYLE=Manual
+      - name: 🚀 Deploy Blume Ipa
+        run: cmake --build build --target BlumeIpa --config Release -- PROVISIONING_PROFILE="${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }}" CODE_SIGN_STYLE=Manual
+      - name: 🔨 Build Blume Archive
+        run: |
+          cmake --build build --target BlumeArchive --config Release -- PROVISIONING_PROFILE="${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }}" CODE_SIGN_STYLE=Manual
+      # - name: 📦 Upload Blume App
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: Blume-${{ matrix.platform }}-${{ matrix.deployment-target }}.app
+      #     path: build/${{ matrix.build-type }}-iphoneos/Blume.app
+      # - name: 📦 Upload Blume Ipa
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: Blume-i${{ matrix.platform }}-${{ matrix.deployment-target }}.ipa
+      #     path: build/BlumeIpa/Blume.ipa
+      # - uses: OlivierLDff/upload-testflight-build@v1
+      #   if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags/v')
+      #   name: 🚀 Release to TestFlight
+      #   with:
+      #     app-path: build/BlumeIpa/Blume.ipa
+      #     issuer-id: ${{ secrets.IOS_APPSTORE_ISSUER_ID }}
+      #     api-key-id: ${{ secrets.IOS_APPSTORE_KEY_ID }}
+      #     api-private-key: ${{ secrets.IOS_APPSTORE_PRIVATE_KEY }}
+      # - name: 🚀 Upload Release Asset
+      #   if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags/v')
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ github.event.release.upload_url }}
+      #     asset_path: build/BlumeIpa/Blume.ipa
+      #     asset_name: Blume-i${{ matrix.platform }}-${{ matrix.deployment-target }}.ipa
+      #     asset_content_type: application/zip
