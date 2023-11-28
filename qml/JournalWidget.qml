@@ -2,7 +2,12 @@ import QtQuick
 
 import ThemeEngine 1.0
 import JournalUtils 1.0
-import "qrc:/js/UtilsPlantJournal.js" as UtilsPlantJournal
+
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+import "components_js/UtilsPlantJournal.js" as UtilsPlantJournal
 
 Item {
     id: journalWidget
@@ -14,7 +19,6 @@ Item {
     property bool selected: (entriesView.entrySelected === index)
 
     ////////
-
     Row {
         id: rowheader
         anchors.left: parent.left
@@ -50,8 +54,13 @@ Item {
                 radius: width
                 z: -1
                 opacity: selected ? 0.5 : 0
-                Behavior on opacity { OpacityAnimator { duration: 133 } }
-                color: (Theme.currentTheme === ThemeEngine.THEME_SNOW) ? Theme.colorPrimary : Theme.colorHeader
+                Behavior on opacity {
+                    OpacityAnimator {
+                        duration: 133
+                    }
+                }
+                color: (Theme.currentTheme
+                        === ThemeEngine.THEME_SNOW) ? Theme.colorPrimary : Theme.colorHeader
             }
 
             Rectangle {
@@ -67,7 +76,6 @@ Item {
     }
 
     ////////
-
     Text {
         id: ttttt
         anchors.left: rowheader.right
@@ -97,11 +105,12 @@ Item {
     }
 
     ////////
-
     MouseArea {
         anchors.fill: parent
         anchors.margins: -8
-/*
+
+
+        /*
         propagateComposedEvents: true
         hoverEnabled: false
         onEntered: buttonrow.opacity = 1
@@ -124,7 +133,11 @@ Item {
         spacing: 8
         enabled: selected
         opacity: selected ? 1 : 0
-        Behavior on opacity { OpacityAnimator { duration: 200 } }
+        Behavior on opacity {
+            OpacityAnimator {
+                duration: 200
+            }
+        }
 
         RoundButtonIcon {
             source: "qrc:/assets/icons_material/duotone-edit-24px.svg"

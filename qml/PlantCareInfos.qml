@@ -2,6 +2,12 @@ import QtQuick
 import QtQuick.Controls
 
 import ThemeEngine 1.0
+import "./pages/Plant"
+
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
 
 Item {
     id: plantCareInfos
@@ -16,7 +22,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     ItemNoPlant {
         visible: !currentDevice.hasPlant
         onClicked: {
@@ -26,7 +31,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Loader {
         id: plantScreenLoader
         anchors.fill: parent
@@ -56,7 +60,9 @@ Item {
 
             // 1: single column (single column view or portrait tablet)
             // 2: wide mode (wide view or landscape tablet)
-            property int uiMode: (singleColumn || (isTablet && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
+            property int uiMode: (singleColumn
+                                  || (isTablet
+                                      && screenOrientation === Qt.PortraitOrientation)) ? 1 : 2
 
             function setPlant() {
                 plantScreen.currentPlant = currentDevice.plant
@@ -66,14 +72,8 @@ Item {
                     itemPlantViewer.contentY = 0
                 }
             }
-
             PlantScreen {
                 id: plantScreen
-                //anchors.left: parent.left
-                //anchors.right: parent.right
-
-                parentHeight: parent.height
-
                 visible: true
             }
         }

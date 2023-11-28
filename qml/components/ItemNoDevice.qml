@@ -1,13 +1,17 @@
 import QtQuick
-
+import QtQuick.Controls
 import ThemeEngine 1.0
+import QtQuick.Layouts
+
+import "../components_generic/"
+import "../components_themed/"
+import "../"
 
 Item {
     id: itemNoDevice
-    anchors.fill: parent
+    property bool hasLaunchedScanOnce: false
 
     ////////////////////////////////////////////////////////////////////////////
-
     Timer {
         id: retryScan
         interval: 333
@@ -17,184 +21,256 @@ Item {
     }
 
     function scan() {
+        hasLaunchedScanOnce = true
         if (!deviceManager.updating) {
             if (deviceManager.scanning) {
                 deviceManager.scanDevices_stop()
             } else {
                 deviceManager.scanDevices_start()
             }
-        }
+        } else
+            console.warn("deviceManager.updating")
+    }
+
+    function stop() {
+        deviceManager.scanDevices_stop()
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
-    Column {
+    ColumnLayout {
         id: column
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
-        anchors.leftMargin: 32
         anchors.right: parent.right
-        anchors.rightMargin: 32
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: -32
 
-        IconSvg { // imageSearch
-            width: (isDesktop || isTablet || (isPhone && appWindow.screenOrientation === Qt.LandscapeOrientation)) ? 256 : (parent.width*0.666)
-            height: width
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            source: "qrc:/assets/icons_material/baseline-search-24px.svg"
-            fillMode: Image.PreserveAspectFit
-            color: Theme.colorIcon
-
-            SequentialAnimation on opacity {
-                id: scanAnimation
-                loops: Animation.Infinite
-                running: deviceManager.scanning
-                alwaysRunToEnd: true
-
-                PropertyAnimation { to: 0.33; duration: 750; }
-                PropertyAnimation { to: 1; duration: 750; }
-            }
-        }
-
-        Column {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            spacing: 24
-
-            ////////
-
+        Flickable {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            contentHeight: _insideCol.height
             Column {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                visible: (Qt.platform.os === "android" || Qt.platform.os === "ios")
-                spacing: 4
+                id: _insideCol
+                width: parent.width
 
-                Text {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    visible: (Qt.platform.os === "android")
+                IconSvg {
+                    // imageSearch
+                    width: parent.width
+                    height: width
+                    anchors.leftMargin: 32
+                    anchors.rightMargin: 32
+                    anchors.topMargin: deviceManager.scanning ? 30 : 0
 
-                    text: qsTr("On Android 6+, scanning for Bluetooth Low Energy devices requires <b>location permission</b>.")
-                    textFormat: Text.StyledText
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorSubText
-                    wrapMode: Text.WordWrap
-                    horizontalAlignment: Text.AlignHCenter
-                }
-                Text {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    visible: (Qt.platform.os === "android" && !utilsApp.isMobileGpsEnabled())
-
-                    text: qsTr("Some Android devices also require the actual <b>GPS to be turned on</b>.")
-                    textFormat: Text.StyledText
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorSubText
-                    wrapMode: Text.WordWrap
-                    horizontalAlignment: Text.AlignHCenter
-                }
-                Text {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    visible: (Qt.platform.os === "android")
-
-                    text: qsTr("The application is neither using nor storing your location. Sorry for the inconvenience.")
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorSubText
-                    wrapMode: Text.WordWrap
-                    horizontalAlignment: Text.AlignHCenter
+                    source: "qrc:/assets/img/scan-in-salon.svg"
+                    fillMode: Image.PreserveAspectFit
                 }
 
-                Text {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    visible: (Qt.platform.os === "ios")
+                Container {
+                    width: parent.width
 
-                    text: qsTr("Authorization to use Bluetooth is required to connect to the sensors.")
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContentSmall
-                    color: Theme.colorSubText
-                    wrapMode: Text.WordWrap
-                    horizontalAlignment: Text.AlignHCenter
-                }
-            }
+                    background: Rectangle {
+                        color: screenDeviceList.backgroundColor
+                    }
 
-            ////////
+                    contentItem: Column {
+                        leftPadding: 32
+                        rightPadding: leftPadding
+                        width: parent.width - 64
+                    }
+                    Column {
+                        spacing: 24
+                        width: parent.width - parent.leftPadding * 2
+                        ////////
+                        Column {
+                            width: parent.width
+                            visible: (Qt.platform.os === "android"
+                                      || Qt.platform.os === "ios")
+                            spacing: 4
 
-            Grid {
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: 16
+                            Text {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                visible: (Qt.platform.os === "android"
+                                          && !utilsApp.checkMobileBleLocationPermission(
+                                              ))
 
-                rows: 2
-                columns: singleColumn ? 1 : 2
+                                text: qsTr("Authorization to use Location is required to connect to the sensors </b>.")
+                                textFormat: Text.StyledText
+                                font.pixelSize: Theme.fontSizeContentSmall
+                                color: Theme.colorSubText
+                                wrapMode: Text.WordWrap
+                                horizontalAlignment: Text.AlignHCenter
+                            }
 
-                Item {
-                    width: singleColumn ? column.width : btn1.width
-                    height: 40
+                            Text {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                visible: (Qt.platform.os === "android")
 
-                    ButtonWireframeIcon {
-                        id: btn1
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        visible: (Qt.platform.os === "android" || Qt.platform.os === "ios")
+                                text: qsTr("The application is neither using nor storing your location")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContentSmall
+                                color: Theme.colorSubText
+                                wrapMode: Text.WordWrap
+                                horizontalAlignment: Text.AlignHCenter
+                            }
 
-                        text: qsTr("Official information")
-                        primaryColor: Theme.colorSubText
-                        sourceSize: 20
-                        source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
+                            Text {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                visible: (Qt.platform.os === "ios")
 
-                        onClicked: {
-                            if (Qt.platform.os === "android") {
-                                Qt.openUrlExternally("https://developer.android.com/guide/topics/connectivity/bluetooth/permissions#declare-android11-or-lower")
-                            } else if (Qt.platform.os === "ios") {
-                                Qt.openUrlExternally("https://support.apple.com/HT210578")
+                                text: qsTr("Authorization to use Bluetooth is required to connect to the sensors.")
+                                textFormat: Text.PlainText
+                                font.pixelSize: Theme.fontSizeContentSmall
+                                color: Theme.colorSubText
+                                wrapMode: Text.WordWrap
+                                horizontalAlignment: Text.AlignHCenter
                             }
                         }
-                    }
-                }
 
-                Item {
-                    width: singleColumn ? column.width : btn2.width
-                    height: 40
+                        ////////
 
-                    ButtonWireframe {
-                        id: btn2
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        //                        Text {
+                        //                            id: labelNoDeviceFound
+                        //                            text: qsTr("Aucun capteurs détectés")
+                        //                            color: $Colors.colorSecondary
+                        //                            font.weight: Font.DemiBold
+                        //                            font.pixelSize: 18
+                        //                            anchors.horizontalCenter: parent.horizontalCenter
+                        //                            visible: hasLaunchedScanOnce && deviceManager.scanning
+                        //                            onVisibleChanged: {
+                        //                                console.log("Visilituy cnahfes ", visible, " --* ",  hasLaunchedScanOnce, !deviceManager.scanning)
+                        //                                if(visible) timerNoDeviceFound.start()
+                        //                            }
 
-                        text: qsTr("Launch detection")
-                        fullColor: true
-                        primaryColor: Theme.colorPrimary
+                        //                            Timer {
+                        //                                id: timerNoDeviceFound
+                        //                                interval: 3000
+                        //                                onTriggered: labelNoDeviceFound.visible = false
+                        //                            }
+                        //                        }
+                        NiceButton {
+                            id: btn2
+                            width: parent.width
+                            height: 60
+                            anchors.horizontalCenter: parent.horizontalCenter
 
-                        onClicked: {
-                            if (utilsApp.checkMobileBleLocationPermission()) {
-                                scan()
-                            } else {
-                                utilsApp.getMobileBleLocationPermission()
-                                retryScan.start()
+                            text: qsTr("Launch detection") // qsTr("Launch detection")
+                            bgGradient: $Colors.gradientPrimary
+                            radius: 10
+                            font.pixelSize: 18
+                            padding: 10
+                            leftPadding: 20
+                            rightPadding: leftPadding
+                            onClicked: {
+                                page_view.push(navigator.deviceScannerPage)
                             }
                         }
+
+                        Rectangle {
+                            width: parent.width
+                            height: 60
+                            visible: !deviceManager.scanning
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            radius: 10
+                            color: "#FFEEE8"
+
+                            Text {
+                                text: qsTr("L'application n'utilise ni ne stocke votre position")
+                                color: "#F28C1C"
+                                font.pixelSize: 16
+                                padding: 10
+                                leftPadding: 20
+                                rightPadding: leftPadding
+                                width: parent.width - leftPadding * 2
+                                wrapMode: Text.Wrap
+                                anchors.verticalCenter: parent.verticalCenter
+                                horizontalAlignment: Text.AlignHCenter
+                            }
+                        }
+
+                        ////////
+                        Text {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            visible: settingsManager.bluetoothLimitScanningRange
+
+                            text: qsTr("Please keep your device close to the sensors you want to scan.")
+                            textFormat: Text.PlainText
+                            font.pixelSize: Theme.fontSizeContentSmall
+                            color: Theme.colorSubText
+                            wrapMode: Text.WordWrap
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignBottom
+                        }
+
+                        Column {
+                            width: parent.width
+                            spacing: 10
+                            visible: !deviceManager.scanning
+                            Text {
+                                text: qsTr("Les derniers capteurs connectés")
+                                color: $Colors.colorPrimary
+                                font.weight: Font.DemiBold
+                                font.pixelSize: 18
+                            }
+
+                            Repeater {
+                                model: 4
+                                Rectangle {
+                                    height: 60
+                                    width: parent.width - 20
+                                    anchors.leftMargin: 10
+                                    anchors.rightMargin: 10
+
+                                    Row {
+                                        spacing: 10
+                                        Image {
+                                            width: 25
+                                            height: width
+                                            source: "qrc:/assets/img/pots-group.png"
+                                        }
+                                        Column {
+                                            spacing: 10
+                                            Text {
+                                                text: "capteur Wangfei"
+                                                font {
+                                                    weight: Font.DemiBold
+                                                    pixelSize: 16
+                                                }
+                                            }
+                                            Row {
+                                                spacing: 10
+                                                Text {
+                                                    text: "Dernière connexion"
+                                                    font {
+                                                        pixelSize: 14
+                                                    }
+                                                }
+
+                                                Text {
+                                                    text: "Aujourd'hui à 16:35"
+                                                    font {
+                                                        weight: Font.DemiBold
+                                                        pixelSize: 14
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        Item {
+                            width: 1
+                            height: 30
+                        }
+
+                        ////////
                     }
                 }
             }
-
-            ////////
-
-            Text {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                visible: settingsManager.bluetoothLimitScanningRange
-
-                text: qsTr("Please keep your device close to the sensors you want to scan.")
-                textFormat: Text.PlainText
-                font.pixelSize: Theme.fontSizeContentSmall
-                color: Theme.colorSubText
-                wrapMode: Text.WordWrap
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignBottom
-            }
-
-            ////////
         }
     }
 }

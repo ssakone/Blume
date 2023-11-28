@@ -3,7 +3,10 @@ import QtQuick.Controls
 import QtQuick.Shapes
 
 import ThemeEngine 1.0
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "../components_js/UtilsNumber.js" as UtilsNumber
+
+import "../components_generic/"
+import "../components_themed/"
 
 Item {
     id: chartHistory
@@ -14,14 +17,16 @@ Item {
     property string color: Theme.colorBlue
     property bool animated: true
 
-    property real valueMin: limitMin - (25 * ((limitMax-limitMin) / 50))
-    property real valueMax: limitMax + (25 * ((limitMax-limitMin) / 50))
+    property real valueMin: limitMin - (25 * ((limitMax - limitMin) / 50))
+    property real valueMax: limitMax + (25 * ((limitMax - limitMin) / 50))
     property real limitMin: -1
     property real limitMax: -1
 
-    property var ddd // ui mode: duo?
-    property var uuu // data mode
+    property var ddd
+    // ui mode: duo?
+    property var uuu
 
+    // data mode
     enum Span {
         Daily = 0,
         Weekly,
@@ -39,7 +44,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Row {
         id: titleArea
         anchors.top: chartHistory.top
@@ -48,7 +52,8 @@ Item {
         anchors.leftMargin: singleColumn ? 2 : 3
         spacing: 12
 
-        Text { // textTitle
+        Text {
+            // textTitle
             text: title
             color: Theme.colorText
             font.bold: true
@@ -57,17 +62,26 @@ Item {
             verticalAlignment: Text.AlignBottom
         }
 
-        Text { // textLegend
+        Text {
+            // textLegend
             text: {
                 var txt = ""
                 if (graphGrid.barSelectionIndex >= 0) {
-                    if (graphRepeater.itemAt(graphGrid.barSelectionIndex).value > -99) {
-                        txt = graphRepeater.itemAt(graphGrid.barSelectionIndex).value.toFixed(floatprecision)
+                    if (graphRepeater.itemAt(
+                                graphGrid.barSelectionIndex).value > -99) {
+                        txt = graphRepeater.itemAt(
+                                    graphGrid.barSelectionIndex).value.toFixed(
+                                    floatprecision)
                         txt += suffix.replace("<br>", "")
                     }
-                    if (graphRepeater.itemAt(graphGrid.barSelectionIndex).value_max > -99 &&
-                        graphRepeater.itemAt(graphGrid.barSelectionIndex).value_max !== graphRepeater.itemAt(graphGrid.barSelectionIndex).value) {
-                        txt += "  (max " + graphRepeater.itemAt(graphGrid.barSelectionIndex).value_max.toFixed(floatprecision)
+                    if (graphRepeater.itemAt(
+                                graphGrid.barSelectionIndex).value_max > -99
+                            && graphRepeater.itemAt(
+                                graphGrid.barSelectionIndex).value_max !== graphRepeater.itemAt(
+                                graphGrid.barSelectionIndex).value) {
+                        txt += "  (max " + graphRepeater.itemAt(
+                                    graphGrid.barSelectionIndex).value_max.toFixed(
+                                    floatprecision)
                         txt += suffix.replace("<br>", "")
                         txt += ")"
                     }
@@ -76,14 +90,15 @@ Item {
             }
             color: Theme.colorIcon
             font.bold: false
-            font.pixelSize: singleColumn ? Theme.fontSizeContentSmall - 1 : Theme.fontSizeContentSmall
+            font.pixelSize: singleColumn ? Theme.fontSizeContentSmall
+                                           - 1 : Theme.fontSizeContentSmall
             verticalAlignment: Text.AlignBottom
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
-    Item { // chart area
+    Item {
+        // chart area
         id: chartArea
         width: parent.width - (singleColumn ? 8 : 24)
 
@@ -94,11 +109,11 @@ Item {
         anchors.rightMargin: 4
 
         ////////////////
-
         Shape {
             id: legendMaxBar
-            y: parent.height - (UtilsNumber.normalize(limitMax, valueMin, valueMax) * parent.height)
-            z: graphRow.z+1
+            y: parent.height - (UtilsNumber.normalize(limitMax, valueMin,
+                                                      valueMax) * parent.height)
+            z: graphRow.z + 1
             opacity: 0.33
             visible: (limitMax > valueMin && limitMax < valueMax)
 
@@ -106,10 +121,13 @@ Item {
                 strokeColor: Theme.colorSubText
                 strokeWidth: singleColumn ? 1 : 2
                 strokeStyle: ShapePath.DashLine
-                dashPattern: [ 1, 4 ]
+                dashPattern: [1, 4]
                 startX: 0
                 startY: 0
-                PathLine { x: chartArea.width; y: 0; }
+                PathLine {
+                    x: chartArea.width
+                    y: 0
+                }
             }
             Text {
                 anchors.right: parent.left
@@ -125,8 +143,9 @@ Item {
         }
         Shape {
             id: legendMinBar
-            y: parent.height - (UtilsNumber.normalize(limitMin, valueMin, valueMax) * parent.height)
-            z: graphRow.z+1
+            y: parent.height - (UtilsNumber.normalize(limitMin, valueMin,
+                                                      valueMax) * parent.height)
+            z: graphRow.z + 1
             opacity: 0.33
             visible: (limitMin > valueMin && limitMin < valueMax)
 
@@ -134,10 +153,13 @@ Item {
                 strokeColor: Theme.colorSubText
                 strokeWidth: singleColumn ? 1 : 2
                 strokeStyle: ShapePath.DashLine
-                dashPattern: [ 1, 4 ]
+                dashPattern: [1, 4]
                 startX: 0
                 startY: 0
-                PathLine { x: chartArea.width; y: 0; }
+                PathLine {
+                    x: chartArea.width
+                    y: 0
+                }
             }
             Text {
                 anchors.right: parent.left
@@ -153,7 +175,6 @@ Item {
         }
 
         ////////////////
-
         Row {
             id: graphRow
             anchors.fill: parent
@@ -161,49 +182,65 @@ Item {
 
             property int barCount: graphRepeater.count
 
-            property real barWidth: ((width - ((barCount-1) * spacing)) / (barCount))
+            property real barWidth: ((width - ((barCount - 1) * spacing)) / (barCount))
             property int barHeight: height
             property int barRadius: singleColumn ? 2 : 4
             property int barSpacing: {
-                if (ddd === ChartHistory.Span.Daily) return 1
-                if (ddd === ChartHistory.Span.Weekly) return 4
-                if (ddd === ChartHistory.Span.Monthly) return 1
+                if (ddd === ChartHistory.Span.Daily)
+                    return 1
+                if (ddd === ChartHistory.Span.Weekly)
+                    return 4
+                if (ddd === ChartHistory.Span.Monthly)
+                    return 1
             }
 
             Repeater {
                 id: graphRepeater
 
                 model: {
-                    if (ddd === ChartHistory.Span.Daily) return currentDevice.aioHistoryData_day
-                    if (ddd === ChartHistory.Span.Weekly) return currentDevice.aioHistoryData_week
-                    if (ddd === ChartHistory.Span.Monthly) return currentDevice.aioHistoryData_month
+                    if (ddd === ChartHistory.Span.Daily)
+                        return currentDevice.aioHistoryData_day
+                    if (ddd === ChartHistory.Span.Weekly)
+                        return currentDevice.aioHistoryData_week
+                    if (ddd === ChartHistory.Span.Monthly)
+                        return currentDevice.aioHistoryData_month
                     return null
                 }
 
-                Item { ////////////////
+                Item {
+                    ////////////////
                     id: graphBar
                     width: graphRow.barWidth
                     height: graphRow.barHeight
 
                     property real value: {
-                        if (uuu === ChartHistory.Data.SoilMoisture) return modelData.soilMoisture
-                        if (uuu === ChartHistory.Data.SoilConductivity) return modelData.soilConductivity
-                        if (uuu === ChartHistory.Data.SoilTemperature) return modelData.soilTemperature
-                        if (uuu === ChartHistory.Data.SoilPH) return modelData.soilPH
-                        if (uuu === ChartHistory.Data.Temperature) return modelData.temperature
-                        if (uuu === ChartHistory.Data.Humidity) return modelData.humidity
-                        if (uuu === ChartHistory.Data.LuminosityLux) return modelData.luminosityLux
-                        if (uuu === ChartHistory.Data.LuminosityMmol) return modelData.luminosityMmol
+                        if (uuu === ChartHistory.Data.SoilMoisture)
+                            return modelData.soilMoisture
+                        if (uuu === ChartHistory.Data.SoilConductivity)
+                            return modelData.soilConductivity
+                        if (uuu === ChartHistory.Data.SoilTemperature)
+                            return modelData.soilTemperature
+                        if (uuu === ChartHistory.Data.SoilPH)
+                            return modelData.soilPH
+                        if (uuu === ChartHistory.Data.Temperature)
+                            return modelData.temperature
+                        if (uuu === ChartHistory.Data.Humidity)
+                            return modelData.humidity
+                        if (uuu === ChartHistory.Data.LuminosityLux)
+                            return modelData.luminosityLux
+                        if (uuu === ChartHistory.Data.LuminosityMmol)
+                            return modelData.luminosityMmol
                         return -99
                     }
                     property real value_max: {
-                        if (uuu === ChartHistory.Data.Temperature) return modelData.temperatureMax
-                        if (uuu === ChartHistory.Data.LuminosityLux) return modelData.luminosityLuxMax
+                        if (uuu === ChartHistory.Data.Temperature)
+                            return modelData.temperatureMax
+                        if (uuu === ChartHistory.Data.LuminosityLux)
+                            return modelData.luminosityLuxMax
                         return -99
                     }
 
                     ////
-
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
@@ -228,39 +265,44 @@ Item {
                     }
 
                     ////
-
                     Rectangle {
                         id: graphBarBg
                         anchors.fill: parent
 
                         color: {
                             if (ddd === ChartHistory.Span.Daily) {
-                                return (graphGrid.barSelectionHours === modelData.hour) ? "#fcea32" : Theme.colorForeground
+                                return (graphGrid.barSelectionHours
+                                        === modelData.hour) ? "#fcea32" : Theme.colorForeground
                             } else {
-                                return (graphGrid.barSelectionDays === modelData.day) ? "#fcea32" : Theme.colorForeground
+                                return (graphGrid.barSelectionDays
+                                        === modelData.day) ? "#fcea32" : Theme.colorForeground
                             }
                         }
-                        Behavior on color { ColorAnimation { duration: animated ? 133 : 0 } }
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: animated ? 133 : 0
+                            }
+                        }
 
                         border.width: (graphRow.barSpacing / 2)
                         border.color: Theme.colorBackground
                     }
 
                     ////
-
                     Rectangle {
                         id: graphBarFg2
                         anchors.bottom: parent.bottom
                         anchors.horizontalCenter: parent.horizontalCenter
 
                         width: parent.width
-                        height: UtilsNumber.normalize(value_max, valueMin, valueMax) * parent.height
+                        height: UtilsNumber.normalize(value_max, valueMin,
+                                                      valueMax) * parent.height
 
                         border.width: (graphRow.barSpacing / 2)
                         border.color: Theme.colorBackground
 
                         clip: false
-                        visible: (value_max > -80 && value_max > value+1)
+                        visible: (value_max > -80 && value_max > value + 1)
                         radius: graphRow.barRadius
                         color: chartHistory.color
                         opacity: 0.33
@@ -272,7 +314,8 @@ Item {
                         anchors.horizontalCenter: parent.horizontalCenter
 
                         width: parent.width
-                        height: UtilsNumber.normalize(value, valueMin, valueMax) * parent.height
+                        height: UtilsNumber.normalize(value, valueMin,
+                                                      valueMax) * parent.height
 
                         border.width: (graphRow.barSpacing / 2)
                         border.color: Theme.colorBackground
@@ -294,7 +337,8 @@ Item {
                             sourceComponent: {
                                 if (ddd === ChartHistory.Span.Weekly)
                                     return legendHorizontal
-                                if (ddd !== ChartHistory.Span.Weekly && !isPhone)
+                                if (ddd !== ChartHistory.Span.Weekly
+                                        && !isPhone)
                                     return legendVertical
                             }
 
@@ -304,7 +348,8 @@ Item {
                     }
 
                     ////
-/*
+
+                    /*
                     Loader {
                         id: imgLoader
                         height: width
@@ -326,7 +371,6 @@ Item {
                     }
 */
                     ////
-
                     Rectangle {
                         anchors.top: parent.bottom
                         anchors.left: parent.left
@@ -354,8 +398,8 @@ Item {
                     }
 
                     ////
-
-                    Text { // bottom legend
+                    Text {
+                        // bottom legend
                         id: legendBottom
                         anchors.top: parent.bottom
                         anchors.topMargin: isPhone ? 3 : 6
@@ -367,9 +411,11 @@ Item {
                             if (ddd === ChartHistory.Span.Monthly) {
                                 return modelData.day
                             } else if (ddd === ChartHistory.Span.Weekly) {
-                                return modelData.datetime.toLocaleString(Qt.locale(), "ddd")
+                                return modelData.datetime.toLocaleString(
+                                            Qt.locale(), "ddd")
                             } else if (ddd === ChartHistory.Span.Daily) {
-                                return modelData.datetime.toLocaleString(Qt.locale(), "HH")
+                                return modelData.datetime.toLocaleString(
+                                            Qt.locale(), "HH")
                             }
                         }
                         color: Theme.colorSubText
@@ -378,14 +424,12 @@ Item {
                         font.bold: false
                         horizontalAlignment: Text.AlignHCenter
                     }
-
                 } ////////////////
             }
         }
     }
 
     // horizontal legend ///////////////////////////////////////////////////////
-
     Component {
         id: legendHorizontal
 
@@ -399,12 +443,14 @@ Item {
             property real value: _value
             property int barHeight: _barHeight
 
-            visible: (barHeight > contentHeight+8)
+            visible: (barHeight > contentHeight + 8)
 
             text: {
-                if (uuu === ChartHistory.Data.Temperature || uuu === ChartHistory.Data.SoilTemperature)
+                if (uuu === ChartHistory.Data.Temperature
+                        || uuu === ChartHistory.Data.SoilTemperature)
                     if (settingsManager.tempUnit === "F")
-                        return UtilsNumber.tempCelsiusToFahrenheit(value).toFixed(floatprecision) + suffix
+                        return UtilsNumber.tempCelsiusToFahrenheit(
+                                    value).toFixed(floatprecision) + suffix
                 return value.toFixed(floatprecision) + suffix
             }
             color: "white"
@@ -415,7 +461,6 @@ Item {
     }
 
     // vertical legend /////////////////////////////////////////////////////////
-
     Component {
         id: legendVertical
 
@@ -428,15 +473,19 @@ Item {
             property real value: _value
             property int barHeight: _barHeight
 
-            visible: (barHeight > contentWidth*1.5)
+            visible: (barHeight > contentWidth * 1.5)
 
             rotation: 90
             color: "white"
             text: {
-                if (uuu === ChartHistory.Data.Temperature || uuu === ChartHistory.Data.SoilTemperature)
+                if (uuu === ChartHistory.Data.Temperature
+                        || uuu === ChartHistory.Data.SoilTemperature)
                     if (settingsManager.tempUnit === "F")
-                        return UtilsNumber.tempCelsiusToFahrenheit(value).toFixed(floatprecision) + suffix.replace("<br>", "")
-                return value.toFixed(floatprecision) + suffix.replace("<br>", "")
+                        return UtilsNumber.tempCelsiusToFahrenheit(
+                                    value).toFixed(
+                                    floatprecision) + suffix.replace("<br>", "")
+                return value.toFixed(floatprecision) + suffix.replace("<br>",
+                                                                      "")
             }
             font.bold: true
             font.pixelSize: Theme.fontSizeContentVeryVerySmall
@@ -444,7 +493,6 @@ Item {
     }
 
     // image legend ////////////////////////////////////////////////////////////
-
     Component {
         id: legendImage
 

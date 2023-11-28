@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/qml">
         <file alias="ActionMenuItem.qml">components_generic/ActionMenuItem.qml</file>
-        <file alias="ButtonCompactable.qml">components_generic/ButtonCompactable.qml</file>
-        <file alias="RoundButtonIcon.qml">components_generic/RoundButtonIcon.qml</file>
         <file alias="ButtonWireframe.qml">components_generic/ButtonWireframe.qml</file>
         <file alias="ButtonWireframeIcon.qml">components_generic/ButtonWireframeIcon.qml</file>
         <file alias="ButtonWireframeIconCentered.qml">components_generic/ButtonWireframeIconCentered.qml</file>
@@ -11,7 +9,9 @@
         <file alias="DatePicker.qml">components_generic/DatePicker6.qml</file>
         <file alias="DesktopHeaderItem.qml">components_generic/DesktopHeaderItem.qml</file>
         <file alias="IconSvg.qml">components_generic/IconSvg.qml</file>
+        <file>components_generic/IconSvg.qml</file>
         <file alias="ItemTag.qml">components_generic/ItemTag.qml</file>
+        <file>components_generic/ItemTag.qml</file>
         <file alias="MobileMenuItem_horizontal.qml">components_generic/MobileMenuItem_horizontal.qml</file>
         <file alias="ProgressArc.qml">components_generic/ProgressArc.qml</file>
         <file alias="ProgressCircle.qml">components_generic/ProgressCircle.qml</file>
@@ -19,20 +19,40 @@
         <file alias="SelectorMenu.qml">components_generic/SelectorMenu.qml</file>
         <file alias="SelectorMenuItem.qml">components_generic/SelectorMenuItem.qml</file>
         <file alias="SliderValueSolid.qml">components_generic/SliderValueSolid.qml</file>
-        <file alias="ToolTipFlat.qml">components_generic/ToolTipFlat.qml</file>
-
+        <file alias="Carousel.qml">components_generic/Carousel.qml</file>
         <file alias="CheckBoxThemed.qml">components_themed/CheckBoxThemed.qml</file>
         <file alias="ComboBoxThemed.qml">components_themed/ComboBoxThemed.qml</file>
         <file alias="PageIndicatorThemed.qml">components_themed/PageIndicatorThemed.qml</file>
         <file alias="RadioButtonThemed.qml">components_themed/RadioButtonThemed.qml</file>
         <file alias="SpinBoxThemed.qml">components_themed/SpinBoxThemed.qml</file>
-        <file alias="SwitchThemedDesktop.qml">components_themed/SwitchThemed_desktop.qml</file>
-        <file alias="SwitchThemedMobile.qml">components_themed/SwitchThemed_mobile.qml</file>
+        <file alias="SwitchThemedDesktop.qml">components_themed/SwitchThemedDesktop.qml</file>
+        <file alias="SwitchThemedMobile.qml">components_themed/SwitchThemedMobile.qml</file>
         <file alias="TextAreaThemed.qml">components_themed/TextAreaThemed.qml</file>
         <file alias="TextFieldThemed.qml">components_themed/TextFieldThemed.qml</file>
+        <file alias="TumblerThemed.qml">components_themed/TumblerThemed.qml</file>
+        <file>components/Icons.qml</file>
+        <file>components/NiceButton.qml</file>
+        <file>components/ClipRRect.qml</file>
+        <file>components/AppBarButton.qml</file>
+        <file>components/AppBar.qml</file>
+        <file>components/GardenActivityLine.qml</file>
+        <file>components/SearchBar.qml</file>
+        <file>components/GardenPlantLine.qml</file>
+        <file>components/GardenSpaceLine.qml</file>
+        <file>components/ItemNoImage.qml</file>
+        <file>components/SensorDataMeasureLine.qml</file>
+        <file>components_generic/Alert.qml</file>
+        <file>NotAuthenticated.qml</file>
+        <file>components/BottomTabBar.qml</file>
+        <file>components/SearchPlants.qml</file>
+        <file>components/SpaceSearchPopup.qml</file>
+        <file>components/BottomTabDevices.qml</file>
+        <file>components/FullScreenPopup.qml</file>
+        <file>pages/Garden/GardenSpaceLinePreview.qml</file>
+        <file>components/GardenPlantLineWide.qml</file>
     </qresource>
-
     <qresource prefix="/js">
+        <file alias="Http.js">components_js/Http.js</file>
         <file alias="UtilsNumber.js">components_js/UtilsNumber.js</file>
         <file alias="UtilsDeviceSensors.js">components_js/UtilsDeviceSensors.js</file>
         <file alias="UtilsPlantDatabase.js">components_js/UtilsPlantDatabase.js</file>

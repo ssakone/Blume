@@ -1,7 +1,10 @@
 import QtQuick
 
 import ThemeEngine 1.0
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "../components_js/UtilsNumber.js" as UtilsNumber
+
+import "../components_generic/"
+import "../components_themed/"
 
 Item {
     id: indicatorAirQuality
@@ -18,13 +21,13 @@ Item {
     property string color: Theme.colorIcon
 
     ////////////////////////////////////////////////////////////////////////////
-
     Item {
         id: legend
         anchors.fill: parent
         anchors.margins: 0
 
-        ProgressCircle { // arcSafe
+        ProgressCircle {
+            // arcSafe
             anchors.fill: parent
             value: 100
 
@@ -34,12 +37,14 @@ Item {
 
             arcWidth: (isMobile ? 7 : 10)
             arcBegin: 0
-            arcEnd: ((indicatorAirQuality.limitMin/indicatorAirQuality.valueMax) * 270) - 1
+            arcEnd: ((indicatorAirQuality.limitMin / indicatorAirQuality.valueMax) * 270) - 1
             arcOffset: 225
-            arcColor: (Theme.currentTheme === ThemeEngine.THEME_PLANT ? Theme.colorLightGreen : Theme.colorGreen)
+            arcColor: (Theme.currentTheme
+                       === ThemeEngine.THEME_PLANT ? Theme.colorLightGreen : Theme.colorGreen)
             arcOpacity: 1
         }
-        ProgressCircle { // arcWarning
+        ProgressCircle {
+            // arcWarning
             anchors.fill: parent
             value: 100
 
@@ -48,13 +53,14 @@ Item {
             animationValue: false
 
             arcWidth: (isMobile ? 7 : 10)
-            arcBegin: ((indicatorAirQuality.limitMin/indicatorAirQuality.valueMax) * 270) + 1
-            arcEnd: ((indicatorAirQuality.limitMax/indicatorAirQuality.valueMax) * 270) - 1
+            arcBegin: ((indicatorAirQuality.limitMin / indicatorAirQuality.valueMax) * 270) + 1
+            arcEnd: ((indicatorAirQuality.limitMax / indicatorAirQuality.valueMax) * 270) - 1
             arcOffset: 225
             arcColor: Theme.colorOrange
             arcOpacity: 1
         }
-        ProgressCircle { // arcDanger
+        ProgressCircle {
+            // arcDanger
             anchors.fill: parent
             value: 100
 
@@ -63,7 +69,7 @@ Item {
             animationValue: false
 
             arcWidth: (isMobile ? 7 : 10)
-            arcBegin: ((indicatorAirQuality.limitMax/indicatorAirQuality.valueMax) * 270) + 1
+            arcBegin: ((indicatorAirQuality.limitMax / indicatorAirQuality.valueMax) * 270) + 1
             arcEnd: 270
             arcOffset: 225
             arcColor: Theme.colorRed
@@ -72,8 +78,8 @@ Item {
     }
 
     ////////////////
-
-    ProgressCircle { // actual indicator
+    ProgressCircle {
+        // actual indicator
         id: indicator
         anchors.fill: parent
         anchors.margins: (isMobile ? 11 : 16)
@@ -94,7 +100,6 @@ Item {
     }
 
     ////////////////
-
     IconSvg {
         id: lungsIcon
         width: indicator.width * 0.58
@@ -112,9 +117,11 @@ Item {
         property real maxOpacity: 0.85
         property int minDuration: 250
         property int maxDuration: 2000
-        property int duration: UtilsNumber.mapNumber(indicatorAirQuality.value,
-                                                     indicatorAirQuality.valueMin, indicatorAirQuality.valueMax,
-                                                     maxDuration, minDuration)
+        property int duration: UtilsNumber.mapNumber(
+                                   indicatorAirQuality.value,
+                                   indicatorAirQuality.valueMin,
+                                   indicatorAirQuality.valueMax, maxDuration,
+                                   minDuration)
 
         Connections {
             target: indicatorAirQuality
@@ -128,8 +135,16 @@ Item {
             loops: Animation.Infinite
             running: visible
             //alwaysRunToEnd: true
-            OpacityAnimator { from: lungsIcon.minOpacity; to: lungsIcon.maxOpacity; duration: lungsIcon.duration }
-            OpacityAnimator { from: lungsIcon.maxOpacity; to: lungsIcon.minOpacity; duration: lungsIcon.duration }
+            OpacityAnimator {
+                from: lungsIcon.minOpacity
+                to: lungsIcon.maxOpacity
+                duration: lungsIcon.duration
+            }
+            OpacityAnimator {
+                from: lungsIcon.maxOpacity
+                to: lungsIcon.minOpacity
+                duration: lungsIcon.duration
+            }
         }
     }
 

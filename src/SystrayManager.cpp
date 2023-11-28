@@ -122,9 +122,9 @@ void SystrayManager::initSystray()
         }
 
 #if defined(Q_OS_MACOS)
-        m_sysTrayIcon = new QIcon(":/assets/logos/watchflower_tray_dark.svg");
+        m_sysTrayIcon = new QIcon(":/assets/logos/blume_tray_dark.svg");
 #else
-        m_sysTrayIcon = new QIcon(":/assets/logos/watchflower_tray_dark.svg");
+        m_sysTrayIcon = new QIcon(":/assets/logos/blume_tray_dark.svg");
 #endif
     }
 }
@@ -158,7 +158,7 @@ bool SystrayManager::installSystray()
             connect(m_saved_view, &QQuickWindow::visibilityChanged, this, &SystrayManager::visibilityChanged);
 
             // Show greetings
-            //m_sysTray->showMessage("WatchFlower", tr("WatchFlower is running in the background!"));
+            //m_sysTray->showMessage("Blume", tr("Blume is running in the background!"));
 
             status = true;
         }
@@ -228,7 +228,7 @@ void SystrayManager::sendNotification(QString &text)
 {
     if (m_sysTray && QSystemTrayIcon::isSystemTrayAvailable())
     {
-        m_sysTray->showMessage("WatchFlower", text);
+        m_sysTray->showMessage("Blume", text);
     }
 }
 

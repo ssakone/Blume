@@ -4,6 +4,9 @@ import QtQuick.Shapes
 
 import ThemeEngine 1.0
 
+import "../components_generic/"
+import "../components_themed/"
+
 Item {
     id: chartEnvironmentalVoc
     width: 640
@@ -19,19 +22,21 @@ Item {
     property int daysVisible: 0
 
     ////////////////////////////////////////////////////////////////////////////
-
     function loadGraph() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        //console.log("chartEnvironmentalVoc // loadGraph() >> " + currentDevice)
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
 
+        //console.log("chartEnvironmentalVoc // loadGraph() >> " + currentDevice)
         daysVisible = 0
     }
 
     function updateGraph() {
-        if (typeof currentDevice === "undefined" || !currentDevice) return
-        //console.log("chartEnvironmentalVoc // updateGraph() >> " + currentDevice)
+        if (typeof currentDevice === "undefined" || !currentDevice)
+            return
 
-        if (itemDeviceEnvironmental.primary === "voc" || itemDeviceEnvironmental.primary === "hcho") {
+        //console.log("chartEnvironmentalVoc // updateGraph() >> " + currentDevice)
+        if (itemDeviceEnvironmental.primary === "voc"
+                || itemDeviceEnvironmental.primary === "hcho") {
             limitMin = 500
             limitMax = 1000
             scaleMax = 1500
@@ -39,19 +44,19 @@ Item {
             limitMin = 850
             limitMax = 1500
             scaleMax = 2000
-        } else if (itemDeviceEnvironmental.primary === "pm1" ||
-                   itemDeviceEnvironmental.primary === "pm25" ||
-                   itemDeviceEnvironmental.primary === "pm10") {
+        } else if (itemDeviceEnvironmental.primary === "pm1"
+                   || itemDeviceEnvironmental.primary === "pm25"
+                   || itemDeviceEnvironmental.primary === "pm10") {
             limitMin = 250
             limitMax = 750
             scaleMax = 1000
         }
 
-        chartEnvironmentalVoc.visible = currentDevice.countDataNamed("temperature", daysTarget)
+        chartEnvironmentalVoc.visible = currentDevice.countDataNamed(
+                    "temperature", daysTarget)
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Item {
         anchors.fill: parent
         anchors.topMargin: 0
@@ -68,14 +73,18 @@ Item {
 
             color: Theme.colorSeparator
 
-            Rectangle { // top
-                width: 6; height: 2;
+            Rectangle {
+                // top
+                width: 6
+                height: 2
                 color: Theme.colorSeparator
                 anchors.top: parent.top
                 anchors.right: parent.right
             }
-            Rectangle { // limitMin
-                width: 6; height: 2;
+            Rectangle {
+                // limitMin
+                width: 6
+                height: 2
                 color: Theme.colorSeparator
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
@@ -88,15 +97,20 @@ Item {
                         strokeColor: Theme.colorSeparator
                         strokeWidth: isPhone ? 1 : 2
                         strokeStyle: ShapePath.DashLine
-                        dashPattern: [ 1, 4 ]
+                        dashPattern: [1, 4]
                         startX: 0
                         startY: 0
-                        PathLine { x: chartEnvironmentalVoc.width; y: 0; }
+                        PathLine {
+                            x: chartEnvironmentalVoc.width
+                            y: 0
+                        }
                     }
                 }
             }
-            Rectangle { // limitMax
-                width: 6; height: 2;
+            Rectangle {
+                // limitMax
+                width: 6
+                height: 2
                 color: Theme.colorSeparator
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
@@ -109,15 +123,20 @@ Item {
                         strokeColor: Theme.colorSeparator
                         strokeWidth: isPhone ? 1 : 2
                         strokeStyle: ShapePath.DashLine
-                        dashPattern: [ 1, 4 ]
+                        dashPattern: [1, 4]
                         startX: 0
                         startY: 0
-                        PathLine { x: chartEnvironmentalVoc.width; y: 0; }
+                        PathLine {
+                            x: chartEnvironmentalVoc.width
+                            y: 0
+                        }
                     }
                 }
             }
-            Rectangle { // bottom
-                width: 6; height: 2;
+            Rectangle {
+                // bottom
+                width: 6
+                height: 2
                 color: Theme.colorSeparator
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
@@ -125,7 +144,6 @@ Item {
         }
 
         ////////////////
-
         Rectangle {
             id: vocLegendHor
             height: 2
@@ -137,17 +155,18 @@ Item {
         }
 
         ////////////////
-
         Item {
             anchors.fill: parent
             anchors.bottomMargin: -24
             clip: true
 
-            Item { // Flickable
+            Item {
+                // Flickable
                 id: vocFlickable
                 anchors.fill: parent
                 anchors.bottomMargin: 26
-/*
+
+                /*
                 contentWidth: vocRow.width
                 flickableDirection: Flickable.HorizontalFlick
                 boundsBehavior: Flickable.StopAtBounds
@@ -173,8 +192,8 @@ Item {
 
                             Component.onCompleted: loadValues()
                             function loadValues() {
-                                if (itemDeviceEnvironmental.primary === "voc" ||
-                                    itemDeviceEnvironmental.primary === "hcho") {
+                                if (itemDeviceEnvironmental.primary === "voc"
+                                        || itemDeviceEnvironmental.primary === "hcho") {
                                     valueMin = modelData.vocMin
                                     valueMean = modelData.vocMean
                                     valueMax = modelData.vocMax
@@ -192,13 +211,17 @@ Item {
                                     valueMax = modelData.pm10Max
                                 }
 
-                                if (valueMax > scaleMax) valueMax = scaleMax
-                                if (valueMean > scaleMax) valueMean = scaleMax
+                                if (valueMax > scaleMax)
+                                    valueMax = scaleMax
+                                if (valueMean > scaleMax)
+                                    valueMean = scaleMax
                             }
 
                             Connections {
                                 target: itemDeviceEnvironmental
-                                function onPrimaryChanged() { loadValues() }
+                                function onPrimaryChanged() {
+                                    loadValues()
+                                }
                             }
 
                             Rectangle {
@@ -216,7 +239,11 @@ Item {
                                 radius: 13
                                 width: 13
                                 height: (valueMax / scaleMax) * barItem.height
-                                Behavior on height { NumberAnimation { duration: 333 } }
+                                Behavior on height {
+                                    NumberAnimation {
+                                        duration: 333
+                                    }
+                                }
 
                                 color: {
                                     if (valueMax > limitMax)
@@ -226,14 +253,20 @@ Item {
                                     else
                                         return Theme.colorGreen
                                 }
-                                Behavior on color { ColorAnimation { duration: 333 } }
+                                Behavior on color {
+                                    ColorAnimation {
+                                        duration: 333
+                                    }
+                                }
 
                                 Rectangle {
                                     anchors.horizontalCenter: parent.horizontalCenter
 
                                     y: {
-                                        if (valueMean >= scaleMax) return 1
-                                        return (parent.height - ((valueMean / scaleMax) * parent.height))
+                                        if (valueMean >= scaleMax)
+                                            return 1
+                                        return (parent.height - ((valueMean / scaleMax)
+                                                                 * parent.height))
                                     }
                                     visible: (valueMean > 0)
                                     width: parent.width - 2
@@ -242,7 +275,8 @@ Item {
                                     color: "white"
                                     opacity: 0.8
                                 }
-/*
+
+                                /*
                                 Rectangle {
                                     anchors.top: parent.top
                                     anchors.topMargin: 1

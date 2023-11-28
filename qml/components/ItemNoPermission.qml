@@ -2,6 +2,9 @@ import QtQuick
 
 import ThemeEngine 1.0
 
+import "../components_generic/"
+import "../components_themed/"
+
 Item {
     id: itemNoPermission
     anchors.fill: parent
@@ -10,16 +13,16 @@ Item {
         anchors.centerIn: parent
         anchors.verticalCenterOffset: -32
 
-        width: appWindow.singleColumn ? (parent.width*0.5) : (parent.height*0.4)
+        width: appWindow.singleColumn ? (parent.width * 0.5) : (parent.height * 0.4)
         height: width
         radius: width
         color: Theme.colorForeground
 
-        signal clicked()
+        signal clicked
 
         IconSvg {
             anchors.centerIn: parent
-            width: parent.width*0.8
+            width: parent.width * 0.8
             height: width
 
             source: "qrc:/assets/icons_material/outline-lock-24px.svg"
@@ -45,8 +48,10 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 fullColor: true
-                text: (Qt.platform.os === "android") ? qsTr("Get permission") : qsTr("Check permission")
-                onClicked: (Qt.platform.os === "android") ? utilsApp.getMobileBleLocationPermission() : deviceManager.checkBluetooth()
+                text: (Qt.platform.os === "android") ? qsTr("Get permission") : qsTr(
+                                                           "Check permission")
+                onClicked: (Qt.platform.os === "android") ? utilsApp.getMobileBleLocationPermission(
+                                                                ) : deviceManager.checkBluetooth()
             }
         }
     }

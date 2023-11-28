@@ -2,7 +2,12 @@ import QtQuick
 import QtQuick.Controls
 
 import ThemeEngine 1.0
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
+
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+import "components_js/UtilsNumber.js" as UtilsNumber
 
 Loader {
     id: aboutScreen
@@ -21,7 +26,6 @@ Loader {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     active: false
     asynchronous: false
 
@@ -31,7 +35,9 @@ Loader {
         contentHeight: column.height
 
         boundsBehavior: isDesktop ? Flickable.OvershootBounds : Flickable.DragAndOvershootBounds
-        ScrollBar.vertical: ScrollBar { visible: false }
+        ScrollBar.vertical: ScrollBar {
+            visible: false
+        }
 
         Column {
             id: column
@@ -45,8 +51,8 @@ Loader {
             spacing: 8
 
             ////////////////
-
-            Rectangle { // header
+            Rectangle {
+                // header
                 anchors.left: parent.left
                 anchors.leftMargin: -(screenPaddingLeft + 16)
                 anchors.right: parent.right
@@ -64,7 +70,8 @@ Loader {
                     height: 92
                     spacing: 16
 
-                    Image { // logo
+                    Image {
+                        // logo
                         width: 92
                         height: 92
                         anchors.verticalCenter: parent.verticalCenter
@@ -79,13 +86,15 @@ Loader {
                         spacing: 0
 
                         Text {
-                            text: "WatchFlower"
+                            text: "Blume"
                             color: Theme.colorText
                             font.pixelSize: 28
                         }
                         Text {
                             color: Theme.colorSubText
-                            text: qsTr("version %1 %2").arg(utilsApp.appVersion()).arg(utilsApp.appBuildMode())
+                            text: qsTr("version %1 %2").arg(
+                                      utilsApp.appVersion()).arg(
+                                      utilsApp.appBuildMode())
                             font.pixelSize: Theme.fontSizeContentBig
                         }
                     }
@@ -103,34 +112,25 @@ Loader {
                         width: 160
                         sourceSize: 28
                         fullColor: true
-                        primaryColor: (Theme.currentTheme === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
+                        primaryColor: (Theme.currentTheme
+                                       === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
 
                         text: qsTr("WEBSITE")
                         source: "qrc:/assets/icons_material/baseline-insert_link-24px.svg"
-                        onClicked: Qt.openUrlExternally("https://emeric.io/WatchFlower")
+                        onClicked: Qt.openUrlExternally("https://mahoudev.com")
                     }
 
                     ButtonWireframeIconCentered {
                         width: 160
                         sourceSize: 22
                         fullColor: true
-                        primaryColor: (Theme.currentTheme === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
+                        primaryColor: (Theme.currentTheme
+                                       === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
 
                         text: qsTr("SUPPORT")
                         source: "qrc:/assets/icons_material/baseline-support-24px.svg"
-                        onClicked: Qt.openUrlExternally("https://emeric.io/WatchFlower/support.html")
-                    }
-
-                    ButtonWireframeIconCentered {
-                        visible: (appWindow.width > 800)
-                        width: 160
-                        sourceSize: 22
-                        fullColor: true
-                        primaryColor: (Theme.currentTheme === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
-
-                        text: qsTr("GitHub")
-                        source: "qrc:/assets/logos/github.svg"
-                        onClicked: Qt.openUrlExternally("https://github.com/emericg/WatchFlower")
+                        onClicked: Qt.openUrlExternally(
+                                       "https://mahoudev.com/contact")
                     }
                 }
 
@@ -145,7 +145,6 @@ Loader {
             }
 
             ////////////////
-
             Row {
                 id: buttonsRow
                 height: 56
@@ -164,11 +163,12 @@ Loader {
 
                     sourceSize: 28
                     fullColor: true
-                    primaryColor: (Theme.currentTheme === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
+                    primaryColor: (Theme.currentTheme
+                                   === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
 
                     text: qsTr("WEBSITE")
                     source: "qrc:/assets/icons_material/baseline-insert_link-24px.svg"
-                    onClicked: Qt.openUrlExternally("https://emeric.io/WatchFlower")
+                    onClicked: Qt.openUrlExternally("https://mahoudev.com")
                 }
                 ButtonWireframeIconCentered {
                     width: ((parent.width - 16) / 2)
@@ -176,21 +176,27 @@ Loader {
 
                     sourceSize: 22
                     fullColor: true
-                    primaryColor: (Theme.currentTheme === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
+                    primaryColor: (Theme.currentTheme
+                                   === ThemeEngine.THEME_NIGHT) ? Theme.colorHeader : "#5483EF"
 
                     text: qsTr("SUPPORT")
                     source: "qrc:/assets/icons_material/baseline-support-24px.svg"
-                    onClicked: Qt.openUrlExternally("https://emeric.io/WatchFlower/support.html")
+                    onClicked: Qt.openUrlExternally(
+                                   "https://mahoudev.com/contact")
                 }
             }
 
             ////////////////
-
-            Item { height: 1; width: 1; visible: isDesktop; } // spacer
+            Item {
+                height: 1
+                width: 1
+                visible: isDesktop
+            } // spacer
 
             Item {
                 id: desc
-                height: Math.max(UtilsNumber.alignTo(description.contentHeight, 8), 48)
+                height: Math.max(UtilsNumber.alignTo(description.contentHeight,
+                                                     8), 48)
                 anchors.left: parent.left
                 anchors.leftMargin: 0
                 anchors.right: parent.right
@@ -225,7 +231,6 @@ Loader {
             }
 
             ////////
-
             Item {
                 id: authors
                 height: 48
@@ -254,7 +259,7 @@ Loader {
                     anchors.rightMargin: 0
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: qsTr("Application by <a href=\"https://emeric.io\">Emeric Grange</a><br>Visual design by <a href=\"https://dribbble.com/chrisdiaz\">Chris Díaz</a>")
+                    text: qsTr("Application by <a href=\"https://mahoudev.com.io\">Mahoudev</a>")
                     textFormat: Text.StyledText
                     onLinkActivated: Qt.openUrlExternally(link)
                     font.pixelSize: Theme.fontSizeContent
@@ -283,73 +288,6 @@ Loader {
             }
 
             ////////
-
-            Item {
-                id: rate
-                height: 48
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-
-                visible: (Qt.platform.os === "android" || Qt.platform.os === "ios")
-
-                IconSvg {
-                    id: rateImg
-                    width: 32
-                    height: 32
-                    anchors.left: parent.left
-                    anchors.leftMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    source: "qrc:/assets/icons_material/baseline-stars-24px.svg"
-                    color: Theme.colorIcon
-                }
-
-                Text {
-                    id: rateTxt
-                    anchors.left: parent.left
-                    anchors.leftMargin: 48
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: qsTr("Rate the application")
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContent
-                    color: Theme.colorText
-                }
-
-                IconSvg {
-                    width: 20
-                    height: 20
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-                    visible: singleColumn
-
-                    source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
-                    color: Theme.colorIcon
-                }
-
-                MouseArea {
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: singleColumn ? parent.right : rateTxt.right
-                    anchors.rightMargin: singleColumn ? 0 : -24
-                    anchors.bottom: parent.bottom
-
-                    onClicked: {
-                        if (Qt.platform.os === "android")
-                            Qt.openUrlExternally("market://details?id=com.emeric.watchflower")
-                        else if (Qt.platform.os === "ios")
-                            Qt.openUrlExternally("itms-apps://itunes.apple.com/app/1476046123")
-                        else
-                            Qt.openUrlExternally("https://github.com/emericg/WatchFlower/stargazers")
-                    }
-                }
-            }
-
-            ////////
-
             Item {
                 id: tuto
                 height: 48
@@ -404,7 +342,6 @@ Loader {
             }
 
             ////////
-
             Item {
                 id: permissions
                 height: 48
@@ -460,8 +397,8 @@ Loader {
                     onClicked: screenPermissions.loadScreenFrom("About")
                 }
             }
-            ////////
 
+            ////////
             IconSvg {
                 id: imageDevices
                 height: 96
@@ -478,79 +415,6 @@ Loader {
             }
 
             ////////
-
-            Item {
-                height: 16
-                anchors.left: parent.left
-                anchors.right: parent.right
-
-                Rectangle {
-                    height: 1
-                    color: Theme.colorSeparator
-                    anchors.left: parent.left
-                    anchors.leftMargin: -(screenPaddingLeft + 16)
-                    anchors.right: parent.right
-                    anchors.rightMargin: -(screenPaddingRight + 16)
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-            }
-
-            Item {
-                id: releasenotes
-                height: 32
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-
-                IconSvg {
-                    id: releasenotesImg
-                    width: 24
-                    height: 24
-                    anchors.left: parent.left
-                    anchors.leftMargin: 4
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    source: "qrc:/assets/icons_material/outline-new_releases-24px.svg"
-                    color: Theme.colorIcon
-                }
-
-                Text {
-                    id: releasenotesTxt
-                    anchors.left: parent.left
-                    anchors.leftMargin: 48
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: qsTr("Release notes")
-                    textFormat: Text.PlainText
-                    font.pixelSize: Theme.fontSizeContent
-                    color: Theme.colorText
-                }
-
-                IconSvg {
-                    width: 20
-                    height: 20
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
-                    color: Theme.colorIcon
-                }
-
-                MouseArea {
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: singleColumn ? parent.right : releasenotesTxt.right
-                    anchors.rightMargin: singleColumn ? 0 : -24
-                    anchors.bottom: parent.bottom
-
-                    onClicked: Qt.openUrlExternally("https://github.com/emericg/WatchFlower/releases")
-                }
-            }
-
-            ////////
-
             Item {
                 height: 16
                 anchors.left: parent.left
@@ -617,12 +481,12 @@ Loader {
                     anchors.rightMargin: singleColumn ? 0 : -24
                     anchors.bottom: parent.bottom
 
-                    onClicked: Qt.openUrlExternally("https://github.com/emericg/WatchFlower/blob/master/docs/README.md")
+                    onClicked: Qt.openUrlExternally(
+                                   "https://mahoudev.com/app-blume")
                 }
             }
 
             ////////
-
             Item {
                 height: 16
                 anchors.left: parent.left
@@ -735,139 +599,6 @@ Loader {
                         anchors.rightMargin: 12
 
                         text: "- Google Material Icons (MIT)"
-                        textFormat: Text.PlainText
-                        color: Theme.colorText
-                        font.pixelSize: Theme.fontSizeContent
-                        wrapMode: Text.WordWrap
-                    }
-                }
-            }
-
-            ////////
-
-            Item {
-                height: 16
-                anchors.left: parent.left
-                anchors.right: parent.right
-
-                Rectangle {
-                    height: 1
-                    color: Theme.colorSeparator
-                    anchors.left: parent.left
-                    anchors.leftMargin: -(screenPaddingLeft + 16)
-                    anchors.right: parent.right
-                    anchors.rightMargin: -(screenPaddingRight + 16)
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-            }
-
-            Item {
-                id: translators
-                height: 24 + translatorsLabel.height + translatorsColumn.height
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-
-                IconSvg {
-                    id: translatorsImg
-                    width: 24
-                    height: 24
-                    anchors.left: parent.left
-                    anchors.leftMargin: 4
-                    anchors.verticalCenter: translatorsLabel.verticalCenter
-
-                    source: "qrc:/assets/icons_material/duotone-translate-24px.svg"
-                    color: Theme.colorIcon
-                }
-
-                Text {
-                    id: translatorsLabel
-                    anchors.top: parent.top
-                    anchors.topMargin: 8
-                    anchors.left: parent.left
-                    anchors.leftMargin: 48
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-
-                    text: qsTr("Special thanks to our translators:")
-                    textFormat: Text.PlainText
-                    color: Theme.colorText
-                    font.pixelSize: Theme.fontSizeContent
-                    wrapMode: Text.WordWrap
-                }
-
-                Column {
-                    id: translatorsColumn
-                    anchors.top: translatorsLabel.bottom
-                    anchors.topMargin: 8
-                    anchors.left: parent.left
-                    anchors.leftMargin: 48
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    spacing: 4
-
-                    Text {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.rightMargin: 12
-
-                        text: "- Chris Díaz (Español)"
-                        textFormat: Text.PlainText
-                        color: Theme.colorText
-                        font.pixelSize: Theme.fontSizeContent
-                        wrapMode: Text.WordWrap
-                    }
-                    Text {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.rightMargin: 12
-
-                        text: "- FYr76 (Nederlands, Frysk, Dansk)"
-                        textFormat: Text.PlainText
-                        color: Theme.colorText
-                        font.pixelSize: Theme.fontSizeContent
-                        wrapMode: Text.WordWrap
-                    }
-                    Text {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.rightMargin: 12
-
-                        text: "- Megachip (Deutsch)"
-                        textFormat: Text.PlainText
-                        color: Theme.colorText
-                        font.pixelSize: Theme.fontSizeContent
-                        wrapMode: Text.WordWrap
-                    }
-                    Text {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.rightMargin: 12
-
-                        text: "- Pavel Markin (Russian)"
-                        textFormat: Text.PlainText
-                        color: Theme.colorText
-                        font.pixelSize: Theme.fontSizeContent
-                        wrapMode: Text.WordWrap
-                    }
-                    Text {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.rightMargin: 12
-
-                        text: "- Guttorm Flatabø (Norwegian)"
-                        textFormat: Text.PlainText
-                        color: Theme.colorText
-                        font.pixelSize: Theme.fontSizeContent
-                        wrapMode: Text.WordWrap
-                    }
-                    Text {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.rightMargin: 12
-
-                        text: "- Vic L. (Chinese)"
                         textFormat: Text.PlainText
                         color: Theme.colorText
                         font.pixelSize: Theme.fontSizeContent

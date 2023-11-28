@@ -7,8 +7,7 @@
         <file>MobilePermissions.qml</file>
         <file>DesktopApplication.qml</file>
         <file>DesktopHeader.qml</file>
-        <file>PlantBrowser.qml</file>
-        <file>PlantScreen.qml</file>
+        <file>PlantBrowserOld.qml</file>
         <file>About.qml</file>
         <file>Settings.qml</file>
         <file>Tutorial.qml</file>
@@ -31,14 +30,30 @@
         <file>DeviceEnvironmental.qml</file>
         <file>ThemeEngine.qml</file>
         <file>WindowGeometrySaver.qml</file>
-
+        <file>NavigationPage.qml</file>
+        <file>pages/Insect/InsectIdentifier.qml</file>
+        <file>pages/Plant/PlantBrowser.qml</file>
+        <file>pages/Plant/PlantScreen.qml</file>
+        <file>pages/Plant/PlantIdentifier.qml</file>
+        <file>pages/Plant/PlantIdentifierDetails.qml</file>
+        <file>pages/Plant/PlantDesease.qml</file>
+        <file>pages/Plant/PlantDeseaseDetails.qml</file>
+        <file>pages/Plant/PlantDeseaseEncylopedie.qml</file>
+        <file>pages/Garden/GardenScreen.qml</file>
+        <file>pages/Garden/GardenPlantsList.qml</file>
+        <file>pages/Garden/GardenSpacesList.qml</file>
+        <file>pages/Plant/PlantSearch.qml</file>
+        <file>pages/Posometre.qml</file>
+        <file>pages/Faq.qml</file>
+        <file>pages/AskHelp.qml</file>
         <file alias="PopupBackgroundUpdates.qml">popups/PopupBackgroundUpdates.qml</file>
         <file alias="PopupBlacklistDevice.qml">popups/PopupBlacklistDevice.qml</file>
         <file alias="PopupCalibration.qml">popups/PopupCalibration.qml</file>
         <file alias="PopupDate.qml">popups/PopupDate.qml</file>
         <file alias="PopupDeleteData.qml">popups/PopupDeleteData.qml</file>
+        <file alias="PopupLocationNotification.qml">popups/PopupLocationNotification.qml</file>
         <file alias="PopupDeleteDevice.qml">popups/PopupDeleteDevice.qml</file>
-
+        <file alias="DrawerItem.qml">components/DrawerItem.qml</file>
         <file alias="ActionMenuFixed.qml">components/ActionMenuFixed.qml</file>
         <file alias="AirQualityIndicator.qml">components/AirQualityIndicator.qml</file>
         <file alias="ButtonExperimental.qml">components/ButtonExperimental.qml</file>
@@ -59,8 +74,60 @@
         <file alias="ItemNoDeviceNearby.qml">components/ItemNoDeviceNearby.qml</file>
         <file alias="ItemNoPermission.qml">components/ItemNoPermission.qml</file>
         <file alias="ItemNoPlant.qml">components/ItemNoPlant.qml</file>
+        <file alias="NiceButton.qml">components/NiceButton.qml</file>
         <file alias="ItemNoPlants.qml">components/ItemNoPlants.qml</file>
         <file alias="ItemNoJournal.qml">components/ItemNoJournal.qml</file>
         <file alias="SectionTitle.qml">components/SectionTitle.qml</file>
+        <file alias="TableLine.qml">components/TableLine.qml</file>
+        <file>components/ActionMenuFixedDevices.qml</file>
+        <file>popups/PopupLocationNotification.qml</file>
+        <file>PlantBrowseCategory.qml</file>
+        <file>PlantScreenDetails.qml</file>
+        <file>components/Accordion.qml</file>
+        <file>components/FormGroup.qml</file>
+        <file>components/ImagePickerArea.qml</file>
+        <file>components/PlantSearchPopup.qml</file>
+        <file>components_js/Http.js</file>
+        <file>components_generic/ActionMenuItem.qml</file>
+        <file>components_generic/ButtonCompactable.qml</file>
+        <file>components_generic/ButtonWireframe.qml</file>
+        <file>components_generic/ButtonWireframeIcon.qml</file>
+        <file>components_generic/ButtonWireframeIconCentered.qml</file>
+        <file>components_generic/BPage.qml</file>
+        <file>components_generic/ToolTipFlat.qml</file>
+        <file>components_generic/RoundButtonIcon.qml</file>
+        <file>pages/Garden/GardenSpaceDetails.qml</file>
+        <file>components_js/Http.js</file>
+        <file>components_js/Utils.js</file>
+        <file>components_js/Colors.qml</file>
+        <file>components_js/Signaler.qml</file>
+        <file>services/SqlClient.qml</file>
+        <file>models/AlarmModel.qml</file>
+        <file>models/Model.qml</file>
+        <file>models/PlantModel.qml</file>
+        <file>models/SpaceModel.qml</file>
+        <file>models/ModelManager.qml</file>
+        <file>pages/Insect/InsectDetailsScreen.qml</file>
+        <file>pages/Auth/Login.qml</file>
+        <file>pages/Auth/Register.qml</file>
+        <file>pages/Garden/AlarmsCalendar.qml</file>
+        <file>StackPage.qml</file>
+        <file>models/DeviceModel.qml</file>
+        <file>pages/Plant/PlantShortDescriptions.qml</file>
+        <file>pages/Plant/Plant.qml</file>
+        <file>pages/Plant/PlantFrequencies.qml</file>
+        <file>pages/Garden/GardenEditSpace.qml</file>
+        <file>Constants.qml</file>
+        <file>pages/Feed.qml</file>
+        <file>components_generic/Avatar.qml</file>
+        <file>pages/Auth/SignIn.qml</file>
+        <file>pages/TutorialNew.qml</file>
+        <file>pages/Device/DeviceScanPage.qml</file>
+        <file>components/WeatherCard.qml</file>
+        <file>pages/Plant/DetailsLineScreen.qml</file>
+        <file>pages/Plant/PlantFlowerchecker.qml</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>PosometreDialog.qml</file>
     </qresource>
 </RCC>

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-echo "> WatchFlower packager (Linux x86_64)"
+echo "> Blume packager (Linux x86_64)"
 
-export APP_NAME="WatchFlower";
+export APP_NAME="Blume";
 export APP_VERSION=5.0;
 export GIT_VERSION=$(git rev-parse --short HEAD);
 
@@ -13,8 +13,8 @@ if [ "$(id -u)" == "0" ]; then
   exit 1
 fi
 
-if [ ${PWD##*/} != "WatchFlower" ]; then
-  echo "This script MUST be run from the WatchFlower/ directory"
+if [ ${PWD##*/} != "Blume" ]; then
+  echo "This script MUST be run from the Blume/ directory"
   exit 1
 fi
 

@@ -1,15 +1,16 @@
 # Binaries and build artifacts
 build/*
+build-*
 bin/*
 contribs/*
 appdir/*
 
 # QtCreator temporary project files
-WatchFlower.config
-WatchFlower.creator*
-WatchFlower.files
-WatchFlower.includes
-WatchFlower.pro.*
+Blume.config
+Blume.creator*
+Blume.files
+Blume.includes
+Blume.pro.*
 
 # Qt Quick Compiler
 qrc_resources.cpp
@@ -26,7 +27,7 @@ CMakeLists.txt.user
 # XCode related
 Debug/*
 Release/*
-WatchFlower.xcodeproj/*
+Blume.xcodeproj/*
 asset_catalog_compiler.Info.plist
 
 # XCode signatures

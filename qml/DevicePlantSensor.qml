@@ -3,18 +3,68 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+
 Loader {
     id: devicePlantSensor
 
     property var currentDevice: null
 
+    property variant linkedPlant
+    property variant linkedSpaceName
+
     ////////
+    onFocusChanged: {
+        if (focus && currentDevice) {
+            console.log("FOCUS Changed ", focus)
+            $Model.device.sqlGetByDeviceAddress(
+                        currentDevice.deviceAddress).then(function (rs) {
+                            console.log("\n\n START ", rs, rs?.plant_name,
+                                        rs?.space_name, rs?.device_address)
+                            if (rs) {
+                                linkedPlant = JSON.parse(rs.plant_json)
+                                linkedSpaceName = rs?.space_name
+                                $Model.plant.sqlGetWhere({
+                                                             "remote_id": `${linkedPlant.id}`
+                                                         }).then(
+                                            function (res) {
+                                                console.log("\n My STARTER ",
+                                                            linkedSpaceName,
+                                                            res)
+                                                if (res?.length > 0) {
+                                                    // This plant has at least one Room
+                                                    console.log("\n\n // This plant has at least one Room",
+                                                                res)
+                                                    save()
+                                                    console.log("\n end")
+                                                } else {
+                                                    console.log("\n\n Gonna add new plant to garden")
+                                                    plantScreenDetailsPopup.addToGarden(
+                                                                save)
+                                                }
+                                            }).catch(function (err) {
+                                                console.warn(
+                                                            JSON.stringify(err))
+                                            })
+                            }
+                        })
+        } else {
+            linkedPlant = undefined
+            linkedSpaceName = undefined
+        }
+    }
 
     function loadDevice(clickedDevice) {
         // set device
-        if (typeof clickedDevice === "undefined" || !clickedDevice) return
-        if (!clickedDevice.isPlantSensor) return
-        if (clickedDevice === currentDevice) return
+        if (typeof clickedDevice === "undefined" || !clickedDevice)
+            return
+        if (!clickedDevice.isPlantSensor)
+            return
+        if (clickedDevice === currentDevice)
+            return
         currentDevice = clickedDevice
 
         // load screen
@@ -26,14 +76,12 @@ Loader {
     }
 
     ////////
-
     function backAction() {
         if (devicePlantSensor.status === Loader.Ready)
             devicePlantSensor.item.backAction()
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     active: false
     asynchronous: false
 
@@ -45,7 +93,6 @@ Loader {
         focus: parent.focus
 
         ////////
-
         Connections {
             target: currentDevice
 
@@ -144,31 +191,33 @@ Loader {
         }
 
         ////////
-
-        Keys.onPressed: (event) => {
-            if (event.key === Qt.Key_Left) {
-                event.accepted = true
-                if (plantSensorPages.currentIndex > 0)
-                    plantSensorPages.currentIndex--
-            } else if (event.key === Qt.Key_Right) {
-                event.accepted = true
-                if (plantSensorPages.currentIndex+1 < plantSensorPages.count)
-                    plantSensorPages.currentIndex++
-            } else if (event.key === Qt.Key_F5) {
-                event.accepted = true
-                deviceManager.updateDevice(currentDevice.deviceAddress)
-            } else if (event.key === Qt.Key_Backspace) {
-                event.accepted = true
-                backAction()
-            }
-        }
+        Keys.onPressed: event => {
+                            if (event.key === Qt.Key_Left) {
+                                event.accepted = true
+                                if (plantSensorPages.currentIndex > 0)
+                                plantSensorPages.currentIndex--
+                            } else if (event.key === Qt.Key_Right) {
+                                event.accepted = true
+                                if (plantSensorPages.currentIndex + 1 < plantSensorPages.count)
+                                plantSensorPages.currentIndex++
+                            } else if (event.key === Qt.Key_F5) {
+                                event.accepted = true
+                                deviceManager.updateDevice(
+                                    currentDevice.deviceAddress)
+                            } else if (event.key === Qt.Key_Backspace) {
+                                event.accepted = true
+                                backAction()
+                            }
+                        }
 
         function backAction() {
-            if (plantSensorPages.currentIndex === 0) { // data
+            if (plantSensorPages.currentIndex === 0) {
+                // data
                 plantSensorData.backAction()
                 return
             }
-            if (plantSensorPages.currentIndex === 1) { // history
+            if (plantSensorPages.currentIndex === 1) {
+                // history
                 if (plantSensorHistory.isHistoryMode()) {
                     plantSensorHistory.resetHistoryMode()
                     return
@@ -176,20 +225,22 @@ Loader {
 
                 appContent.state = "DeviceList"
             }
-            if (plantSensorPages.currentIndex === 2) { // plant care
+            if (plantSensorPages.currentIndex === 2) {
+                // plant care
                 plantSensorCare.backAction()
                 return
             }
-            if (plantSensorPages.currentIndex === 3) { // sensor settings
+            if (plantSensorPages.currentIndex === 3) {
+                // sensor settings
                 appContent.state = "DeviceList"
                 return
             }
         }
 
         ////////
-
         function isHistoryMode() {
-            return (plantSensorData.isHistoryMode() || plantSensorHistory.isHistoryMode())
+            return (plantSensorData.isHistoryMode()
+                    || plantSensorHistory.isHistoryMode())
         }
         function resetHistoryMode() {
             plantSensorData.resetHistoryMode()
@@ -197,8 +248,8 @@ Loader {
         }
 
         function loadDevice() {
-            //console.log("DevicePlantSensor // loadDevice() >> " + currentDevice)
 
+            //console.log("DevicePlantSensor // loadDevice() >> " + currentDevice)
             plantSensorPages.disableAnimation()
             plantSensorPages.currentIndex = 0
             plantSensorPages.interactive = isPhone
@@ -217,7 +268,6 @@ Loader {
         }
 
         ////////////////////////////////////////////////////////////////////////
-
         ItemBannerSync {
             id: bannerSync
             anchors.top: parent.top

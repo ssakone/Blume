@@ -3,6 +3,11 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+
 Rectangle {
     width: 480
     height: 720
@@ -13,9 +18,8 @@ Rectangle {
     property string entryPoint: "DeviceList"
 
     ////////////////////////////////////////////////////////////////////////////
-
     function loadScreen() {
-        entryPoint = "DeviceList"
+        entryPoint = "Navigator"
         appContent.state = "Tutorial"
     }
 
@@ -25,7 +29,6 @@ Rectangle {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Loader {
         id: tutorialLoader
         anchors.fill: parent
@@ -43,7 +46,6 @@ Rectangle {
             }
 
             ////////////////
-
             SwipeView {
                 id: tutorialPages
                 anchors.fill: parent
@@ -54,8 +56,9 @@ Rectangle {
 
                 currentIndex: 0
                 onCurrentIndexChanged: {
-                    if (currentIndex < 0) currentIndex = 0
-                    if (currentIndex > count-1) {
+                    if (currentIndex < 0)
+                        currentIndex = 0
+                    if (currentIndex > count - 1) {
                         currentIndex = 0 // reset
                         appContent.state = entryPoint
                     }
@@ -69,7 +72,6 @@ Rectangle {
                 }
 
                 ////////
-
                 Item {
                     id: page1
 
@@ -85,7 +87,7 @@ Rectangle {
                             anchors.left: parent.left
                             anchors.leftMargin: tutorialPages.margins
 
-                            text: qsTr("<b>WatchFlower</b> is a plant monitoring application for Xiaomi '<b>Flower Care</b>' or Parrot '<b>Flower Power</b>' sensors.")
+                            text: qsTr("<b>Blume</b> is a plant monitoring application for these following sensors.")
                             textFormat: Text.StyledText
                             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                             font.pixelSize: Theme.fontSizeContentBig
@@ -93,8 +95,9 @@ Rectangle {
                             horizontalAlignment: Text.AlignHCenter
                         }
                         IconSvg {
-                            width: tutorialPages.width * (tutorialPages.height > tutorialPages.width ? 0.8 : 0.4)
-                            height: width*0.229
+                            width: tutorialPages.width * (tutorialPages.height
+                                                          > tutorialPages.width ? 0.8 : 0.4)
+                            height: width * 0.229
                             anchors.horizontalCenter: parent.horizontalCenter
 
                             source: "qrc:/assets/tutorial/welcome-devices.svg"
@@ -121,12 +124,81 @@ Rectangle {
                             primaryColor: Theme.colorHeaderHighlight
                             text: qsTr("Supported sensors")
                             source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
+                            onClicked: Qt.openUrlExternally(
+                                           "https://mahoudev.com/shop")
+                        }
+                    }
+                }
+
+                Item {
+                    id: page5
+
+                    Column {
+                        anchors.right: parent.right
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 32
+
+                        Text {
+                            anchors.right: parent.right
+                            anchors.rightMargin: tutorialPages.margins
+                            anchors.left: parent.left
+                            anchors.leftMargin: tutorialPages.margins
+
+                            text: qsTr("<b>Blume</b> offers plant identification service.")
+                            textFormat: Text.StyledText
+                            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                            font.pixelSize: Theme.fontSizeContentBig
+                            color: Theme.colorHeaderContent
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                        IconSvg {
+                            width: tutorialPages.width * (tutorialPages.height
+                                                          > tutorialPages.width ? 0.95 : 0.5)
+                            height: width * 0.55
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            source: "qrc:/assets/tutorial/api-identity.svg"
+                            fillMode: Image.PreserveAspectFit
+                        }
+                    }
+                }
+
+                Item {
+                    id: page6
+
+                    Column {
+                        anchors.right: parent.right
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 32
+
+                        Text {
+                            anchors.right: parent.right
+                            anchors.rightMargin: tutorialPages.margins
+                            anchors.left: parent.left
+                            anchors.leftMargin: tutorialPages.margins
+
+                            text: qsTr("<b>Blume</b> also offers plant health status detection service.")
+                            textFormat: Text.StyledText
+                            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                            font.pixelSize: Theme.fontSizeContentBig
+                            color: Theme.colorHeaderContent
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                        IconSvg {
+                            width: tutorialPages.width * (tutorialPages.height
+                                                          > tutorialPages.width ? 0.95 : 0.5)
+                            height: width * 0.55
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            source: "qrc:/assets/tutorial/api-health-status.svg"
+                            fillMode: Image.PreserveAspectFit
                         }
                     }
                 }
 
                 ////////
-
                 Item {
                     id: page2
 
@@ -142,7 +214,7 @@ Rectangle {
                             anchors.left: parent.left
                             anchors.leftMargin: tutorialPages.margins
 
-                            text: qsTr("To start using WatchFlower, you'll need to <b>scan</b> for <b>compatible Bluetooth sensors</b> around you.")
+                            text: qsTr("To start using Blume, you'll need to <b>scan</b> for <b>compatible Bluetooth sensors</b> around you.")
                             textFormat: Text.StyledText
                             color: Theme.colorHeaderContent
                             font.pixelSize: Theme.fontSizeContentBig
@@ -150,8 +222,9 @@ Rectangle {
                             horizontalAlignment: Text.AlignHCenter
                         }
                         IconSvg {
-                            width: tutorialPages.width * (tutorialPages.height > tutorialPages.width ? 0.8 : 0.4)
-                            height: width*0.777
+                            width: tutorialPages.width * (tutorialPages.height
+                                                          > tutorialPages.width ? 0.8 : 0.4)
+                            height: width * 0.777
                             anchors.horizontalCenter: parent.horizontalCenter
 
                             source: "qrc:/assets/tutorial/welcome-bluetooth-searching.svg"
@@ -175,7 +248,6 @@ Rectangle {
                 }
 
                 ////////
-
                 Item {
                     id: page3
 
@@ -191,7 +263,7 @@ Rectangle {
                             anchors.left: parent.left
                             anchors.leftMargin: tutorialPages.margins
 
-                            text: qsTr("Once <b>paired</b>, sensors will periodically <b>sync</b> their data when you use WatchFlower.")
+                            text: qsTr("Once <b>paired</b>, sensors will periodically <b>sync</b> their data when you use Blume.")
                             textFormat: Text.StyledText
                             color: Theme.colorHeaderContent
                             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -205,7 +277,7 @@ Rectangle {
                             anchors.leftMargin: tutorialPages.margins
 
                             visible: (Qt.platform.os !== "ios")
-                            text: qsTr("WatchFlower <b>might</b> be able to sync sensors in the background. Check out the <b>settings</b> page for instructions.")
+                            text: qsTr("Blume <b>might</b> be able to sync sensors in the background. Check out the <b>settings</b> page for instructions.")
                             textFormat: Text.StyledText
                             color: Theme.colorHeaderContent
                             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -213,8 +285,9 @@ Rectangle {
                             font.pixelSize: singleColumn ? Theme.fontSizeContent : Theme.fontSizeContentBig
                         }
                         IconSvg {
-                            width: tutorialPages.width * (tutorialPages.height > tutorialPages.width ? 0.8 : 0.4)
-                            height: width*0.229
+                            width: tutorialPages.width * (tutorialPages.height
+                                                          > tutorialPages.width ? 0.8 : 0.4)
+                            height: width * 0.229
                             anchors.horizontalCenter: parent.horizontalCenter
 
                             source: "qrc:/assets/tutorial/welcome-app-connected.svg"
@@ -238,7 +311,6 @@ Rectangle {
                 }
 
                 ////////
-
                 Item {
                     id: page4
 
@@ -254,8 +326,8 @@ Rectangle {
                             anchors.left: parent.left
                             anchors.leftMargin: tutorialPages.margins
 
-                            text: qsTr("Click on sensors to access <b>historical data</b>, <b>graphs</b> and <b>detailed infos</b>.") + "<br>" +
-                                  qsTr("You can set a custom <b>name</b> and a <b>location</b> for each sensor.")
+                            text: qsTr("Click on sensors to access <b>historical data</b>, <b>graphs</b> and <b>detailed infos</b>.") + "<br>" + qsTr(
+                                      "You can set a custom <b>name</b> and a <b>location</b> for each sensor.")
                             textFormat: Text.StyledText
                             color: Theme.colorHeaderContent
                             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -263,8 +335,9 @@ Rectangle {
                             font.pixelSize: singleColumn ? Theme.fontSizeContent : Theme.fontSizeContentBig
                         }
                         IconSvg {
-                            width: tutorialPages.width * (tutorialPages.height > tutorialPages.width ? 0.66 : 0.3)
-                            height: width*0.2
+                            width: tutorialPages.width * (tutorialPages.height
+                                                          > tutorialPages.width ? 0.66 : 0.3)
+                            height: width * 0.2
                             anchors.horizontalCenter: parent.horizontalCenter
 
                             source: "qrc:/assets/tutorial/welcome-plants.svg"
@@ -285,8 +358,9 @@ Rectangle {
                             font.pixelSize: singleColumn ? Theme.fontSizeContent : Theme.fontSizeContentBig
                         }
                         IconSvg {
-                            width: tutorialPages.width * (tutorialPages.height > tutorialPages.width ? 0.66 : 0.3)
-                            height: width*0.1797
+                            width: tutorialPages.width * (tutorialPages.height
+                                                          > tutorialPages.width ? 0.66 : 0.3)
+                            height: width * 0.1797
                             anchors.horizontalCenter: parent.horizontalCenter
 
                             source: "qrc:/assets/tutorial/welcome-limits.svg"
@@ -320,7 +394,6 @@ Rectangle {
             }
 
             ////////////////
-
             Text {
                 id: pagePrevious
                 anchors.left: parent.left
@@ -336,7 +409,11 @@ Rectangle {
                 font.pixelSize: Theme.fontSizeContent
 
                 opacity: 0.8
-                Behavior on opacity { OpacityAnimator { duration: 133 } }
+                Behavior on opacity {
+                    OpacityAnimator {
+                        duration: 133
+                    }
+                }
 
                 MouseArea {
                     anchors.fill: parent
@@ -352,7 +429,7 @@ Rectangle {
                 id: pageIndicator
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: tutorialPages.margins/2
+                anchors.bottomMargin: tutorialPages.margins / 2
 
                 count: tutorialPages.count
                 currentIndex: tutorialPages.currentIndex
@@ -364,14 +441,19 @@ Rectangle {
                 anchors.rightMargin: tutorialPages.margins
                 anchors.verticalCenter: pageIndicator.verticalCenter
 
-                text: (tutorialPages.currentIndex === tutorialPages.count-1) ? qsTr("Start") : qsTr("Next")
+                text: (tutorialPages.currentIndex === tutorialPages.count
+                       - 1) ? qsTr("Start") : qsTr("Next")
                 textFormat: Text.PlainText
                 color: Theme.colorHeaderContent
                 font.bold: true
                 font.pixelSize: Theme.fontSizeContent
 
                 opacity: 0.8
-                Behavior on opacity { OpacityAnimator { duration: 133 } }
+                Behavior on opacity {
+                    OpacityAnimator {
+                        duration: 133
+                    }
+                }
 
                 MouseArea {
                     anchors.fill: parent

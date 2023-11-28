@@ -3,6 +3,9 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
+import "../components_generic/"
+import "../components_themed/"
+
 Rectangle {
     id: control
     anchors.left: parent.left

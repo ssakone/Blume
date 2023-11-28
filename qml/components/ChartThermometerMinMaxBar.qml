@@ -1,7 +1,10 @@
 import QtQuick
 
 import ThemeEngine 1.0
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "../components_js/UtilsNumber.js" as UtilsNumber
+
+import "../components_generic/"
+import "../components_themed/"
 
 Item {
     id: chartThermometerMinMaxBar
@@ -17,13 +20,16 @@ Item {
 
     Connections {
         target: settingsManager
-        function onTempUnitChanged() { setTemp() }
+        function onTempUnitChanged() {
+            setTemp()
+        }
     }
 
     onHeightChanged: computeSize()
 
     function computeSize() {
-        if (typeof modelData === "undefined" || !modelData) return
+        if (typeof modelData === "undefined" || !modelData)
+            return
 
         if (modelData.tempMean < -40) {
             rectangle_temp.visible = false
@@ -34,9 +40,12 @@ Item {
             var bbb = graphMin > 0 ? 0.85 : 1.15
             var base = containerbar.height
             var base2 = containerbar.height - rectangle_temp_mean.height
-            var h = UtilsNumber.normalize(modelData.tempMax, graphMin*bbb, graphMax*ttt)
-            var m = UtilsNumber.normalize(modelData.tempMean, graphMin*bbb, graphMax*ttt)
-            var l = UtilsNumber.normalize(modelData.tempMin, graphMin*bbb, graphMax*ttt)
+            var h = UtilsNumber.normalize(modelData.tempMax, graphMin * bbb,
+                                          graphMax * ttt)
+            var m = UtilsNumber.normalize(modelData.tempMean, graphMin * bbb,
+                                          graphMax * ttt)
+            var l = UtilsNumber.normalize(modelData.tempMin, graphMin * bbb,
+                                          graphMax * ttt)
 
             rectangle_temp.visible = true
             rectangle_temp.y = base - (base * h)
@@ -50,7 +59,8 @@ Item {
             rectangle_temp_mean.visible = ((modelData.tempMax - modelData.tempMin) > 0.5)
             rectangle_temp_mean.y = base2 - ((base2) * m) - rectangle_temp.y
 
-            if ((modelData.tempMax === modelData.tempMin && modelData.hygroMax === modelData.hygroMin)) {
+            if ((modelData.tempMax === modelData.tempMin
+                 && modelData.hygroMax === modelData.hygroMin)) {
                 text_temp_low.visible = false
                 rectangle_water_low.visible = false
             } else {
@@ -62,7 +72,8 @@ Item {
     }
 
     function setTemp() {
-        if (typeof modelData === "undefined" || !modelData) return
+        if (typeof modelData === "undefined" || !modelData)
+            return
 
         var th = modelData.tempMax
         var tl = modelData.tempMin
@@ -77,14 +88,14 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Rectangle {
         id: background
         anchors.fill: parent
         color: (index % 2 === 0) ? Theme.colorBackground : Theme.colorForeground
     }
 
-    Loader { // 'no data' indicator
+    Loader {
+        // 'no data' indicator
         anchors.bottom: dayoftheweek.top
         anchors.bottomMargin: 12
         anchors.horizontalCenter: parent.horizontalCenter
@@ -93,7 +104,8 @@ Item {
         asynchronous: true
 
         sourceComponent: IconSvg {
-            width: 20; height: 20;
+            width: 20
+            height: 20
             color: Theme.colorSubText
             source: "qrc:/assets/icons_material/baseline-bluetooth_disabled-24px.svg"
         }
@@ -113,7 +125,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Item {
         id: containerbar
         width: parent.width
@@ -138,7 +149,7 @@ Item {
 
             Rectangle {
                 id: rectangle_temp_mean
-                width: UtilsNumber.alignTo(www*0.666, 2)
+                width: UtilsNumber.alignTo(www * 0.666, 2)
                 height: width
                 radius: width
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -170,7 +181,6 @@ Item {
         }
 
         ////////
-
         Rectangle {
             id: rectangle_water_high
             width: 32

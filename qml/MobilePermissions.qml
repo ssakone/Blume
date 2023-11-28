@@ -3,6 +3,11 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+
 Item {
     id: permissionsScreen
     width: 480
@@ -14,7 +19,6 @@ Item {
     property string entryPoint: "About"
 
     ////////////////////////////////////////////////////////////////////////////
-
     function loadScreen() {
         // Refresh permissions
         refreshPermissions()
@@ -31,7 +35,8 @@ Item {
     function refreshPermissions() {
         // Refresh permissions
         button_location_test.validperm = utilsApp.checkMobileBleLocationPermission()
-        button_location_background_test.validperm = utilsApp.checkMobileBackgroundLocationPermission()
+        button_location_background_test.validperm
+                = utilsApp.checkMobileBackgroundLocationPermission()
         button_gps_test.validperm = utilsApp.isMobileGpsEnabled()
     }
 
@@ -43,7 +48,6 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Flickable {
         anchors.fill: parent
 
@@ -60,7 +64,6 @@ Item {
             spacing: 8
 
             ////////
-
             Item {
                 id: element_bluetooth
                 height: 24
@@ -107,7 +110,7 @@ Item {
                 anchors.right: parent.right
                 anchors.rightMargin: 12
 
-                text: qsTr("WatchFlower can activate your device's Bluetooth in order to operate.")
+                text: qsTr("Blume can activate your device's Bluetooth in order to operate.")
                 textFormat: Text.PlainText
                 wrapMode: Text.WordWrap
                 color: Theme.colorSubText
@@ -115,8 +118,8 @@ Item {
             }
 
             ////////
-
-            Item { // separator
+            Item {
+                // separator
                 height: 16
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -133,7 +136,6 @@ Item {
             }
 
             ////////
-
             Item {
                 id: element_location
                 height: 24
@@ -186,8 +188,8 @@ Item {
                 anchors.right: parent.right
                 anchors.rightMargin: 12
 
-                text: qsTr("The Android operating system requires applications to ask for device location permission in order to scan for nearby Bluetooth Low Energy sensors.") + "<br>" +
-                      qsTr("WatchFlower doesn't use, store nor communicate your location to anyone or anything.")
+                text: qsTr("The Android operating system requires applications to ask for device location permission in order to scan for nearby Bluetooth Low Energy sensors.") + "<br>" + qsTr(
+                          "Blume doesn't use, store nor communicate your location to anyone or anything.")
                 textFormat: Text.StyledText
                 wrapMode: Text.WordWrap
                 color: Theme.colorSubText
@@ -205,12 +207,13 @@ Item {
                 source: "qrc:/assets/icons_material/duotone-launch-24px.svg"
                 sourceSize: 20
 
-                onClicked: Qt.openUrlExternally("https://developer.android.com/guide/topics/connectivity/bluetooth/permissions#declare-android11-or-lower")
+                onClicked: Qt.openUrlExternally(
+                               "https://developer.android.com/guide/topics/connectivity/bluetooth/permissions#declare-android11-or-lower")
             }
 
             ////////
-
-            Item { // separator
+            Item {
+                // separator
                 height: 16
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -227,7 +230,6 @@ Item {
             }
 
             ////////
-
             Item {
                 id: element_location_background
                 height: 24
@@ -288,8 +290,8 @@ Item {
             }
 
             ////////
-
-            Item { // separator
+            Item {
+                // separator
                 height: 16
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -306,7 +308,6 @@ Item {
             }
 
             ////////
-
             Item {
                 id: element_gps
                 height: 24
@@ -367,8 +368,8 @@ Item {
             }
 
             ////////
-
-            Item { // separator
+            Item {
+                // separator
                 height: 16
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -385,7 +386,6 @@ Item {
             }
 
             ////////
-
             Text {
                 anchors.left: parent.left
                 anchors.leftMargin: 64
@@ -416,8 +416,8 @@ Item {
                 anchors.right: parent.right
                 anchors.rightMargin: 12
 
-                text: qsTr("If it has no effect, you may have previously refused a permission and clicked on \"don't ask again\".") + "<br>" +
-                      qsTr("You can go to the Android \"application info\" panel to change a permission manually.")
+                text: qsTr("If it has no effect, you may have previously refused a permission and clicked on \"don't ask again\".") + "<br>" + qsTr(
+                          "You can go to the Android \"application info\" panel to change a permission manually.")
                 textFormat: Text.StyledText
                 wrapMode: Text.WordWrap
                 color: Theme.colorSubText

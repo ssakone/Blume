@@ -1,0 +1,43 @@
+# File auto generated with CMake qt_generate_qmldir. Run CMake to regenerate if files changed.
+
+module Blume
+
+About 1.0 About.qml
+Constants 1.0 Constants.qml
+DesktopApplication 1.0 DesktopApplication.qml
+DesktopHeader 1.0 DesktopHeader.qml
+DeviceBrowser 1.0 DeviceBrowser.qml
+DeviceEnvironmental 1.0 DeviceEnvironmental.qml
+DeviceList 1.0 DeviceList.qml
+DeviceListSplit 1.0 DeviceListSplit.qml
+DeviceListUnified 1.0 DeviceListUnified.qml
+DeviceNearbyWidget 1.0 DeviceNearbyWidget.qml
+DevicePlantSensor 1.0 DevicePlantSensor.qml
+DevicePlantSensorCare 1.0 DevicePlantSensorCare.qml
+DevicePlantSensorData 1.0 DevicePlantSensorData.qml
+DevicePlantSensorHistory 1.0 DevicePlantSensorHistory.qml
+DevicePlantSensorSettings 1.0 DevicePlantSensorSettings.qml
+DeviceThermometer 1.0 DeviceThermometer.qml
+DeviceWidget 1.0 DeviceWidget.qml
+JournalWidget 1.0 JournalWidget.qml
+Loadere 1.0 Loadere.qml
+MobileApplication 1.0 MobileApplication.qml
+MobileDrawer 1.0 MobileDrawer.qml
+MobileHeader 1.0 MobileHeader.qml
+MobileMenu 1.0 MobileMenu.qml
+MobilePermissions 1.0 MobilePermissions.qml
+NavigationPage 1.0 NavigationPage.qml
+NotAuthenticated 1.0 NotAuthenticated.qml
+PlantBrowseCategory 1.0 PlantBrowseCategory.qml
+PlantBrowserOld 1.0 PlantBrowserOld.qml
+PlantCareInfos 1.0 PlantCareInfos.qml
+PlantCareJournal 1.0 PlantCareJournal.qml
+PlantCareLimits 1.0 PlantCareLimits.qml
+PlantScreenDetails 1.0 PlantScreenDetails.qml
+PosometreDialog 1.0 PosometreDialog.qml
+Settings 1.0 Settings.qml
+SettingsAdvanced 1.0 SettingsAdvanced.qml
+StackPage 1.0 StackPage.qml
+singleton ThemeEngine 1.0 ThemeEngine.qml
+Tutorial 1.0 Tutorial.qml
+WindowGeometrySaver 1.0 WindowGeometrySaver.qml

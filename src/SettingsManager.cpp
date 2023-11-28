@@ -128,6 +128,9 @@ bool SettingsManager::readSettings()
         if (settings.contains("settings/appLanguage"))
             m_appLanguage = settings.value("settings/appLanguage").toString();
 
+        if (settings.contains("settings/authAccessToken"))
+            m_authAccessToken = settings.value("settings/authAccessToken").toString();
+
         if (settings.contains("settings/bluetoothControl"))
             m_bluetoothControl = settings.value("settings/bluetoothControl").toBool();
 
@@ -261,6 +264,7 @@ bool SettingsManager::writeSettings()
         settings.setValue("settings/appTheme", m_appTheme);
         settings.setValue("settings/appThemeAuto", m_appThemeAuto);
         settings.setValue("settings/appLanguage", m_appLanguage);
+        settings.setValue("settings/authAccessToken", m_authAccessToken);
         settings.setValue("settings/bluetoothControl", m_bluetoothControl);
         settings.setValue("settings/bluetoothLimitScanningRange", m_bluetoothLimitScanningRange);
         settings.setValue("settings/bluetoothSimUpdates", m_bluetoothSimUpdates);
@@ -328,8 +332,11 @@ void SettingsManager::resetSettings()
     Q_EMIT appThemeCSDChanged();
     m_appUnits = 0;
     Q_EMIT appUnitsChanged();
-    m_appLanguage = "auto";
+    m_appLanguage = "en";
     Q_EMIT appLanguageChanged();
+
+    m_authAccessToken = "";
+    Q_EMIT authAccessTokenChanged();
 
     m_startMinimized = false;
     Q_EMIT minimizedChanged();
@@ -475,6 +482,16 @@ void SettingsManager::setAppLanguage(const QString &value)
         m_appLanguage = value;
         writeSettings();
         Q_EMIT appLanguageChanged();
+    }
+}
+
+void SettingsManager::setAuthAccessToken(const QString &value)
+{
+    if (m_authAccessToken != value)
+    {
+        m_authAccessToken = value;
+        writeSettings();
+        Q_EMIT authAccessTokenChanged();
     }
 }
 

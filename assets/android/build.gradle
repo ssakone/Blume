@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.2'
+        classpath 'com.android.tools.build:gradle:7.3.0'
     }
 }
 
@@ -79,8 +79,8 @@ android {
 
     defaultConfig {
         resConfig "en"
-        minSdkVersion qtMinSdkVersion
-        targetSdkVersion qtTargetSdkVersion
+        minSdkVersion 28 //qtMinSdkVersion
+        targetSdkVersion 33 //qtTargetSdkVersion
         ndk.abiFilters = qtTargetAbiList.split(",")
     }
 }

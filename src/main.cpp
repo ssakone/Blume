@@ -1,5 +1,5 @@
 /*!
- * This file is part of WatchFlower.
+ * This file is part of Blume.
  * Copyright (c) 2022 Emeric Grange - All Rights Reserved
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,8 +31,19 @@
 #include "utils_app.h"
 #include "utils_screen.h"
 #include "utils_language.h"
+#include "image2base64.h"
+#include "posometrecamera.h"
+#include "database/sqlplugin.h"
 #if defined(Q_OS_MACOS)
 #include "utils_os_macosdock.h"
+#endif
+
+#if defined(Q_OS_IOS)
+#include "imagepicker.h"
+#endif
+
+#if defined(Q_OS_ANDROID)
+#include "android_tools/QtAndroidTools.h"
 #endif
 
 #include <MobileUI/MobileUI.h>
@@ -47,6 +58,10 @@
 #include <QQmlContext>
 #include <QQuickWindow>
 #include <QSurfaceFormat>
+#include <QQuickStyle>
+#include <HotWatch.h>
+#include <Qaterial/Qaterial.hpp>
+#include <QtWebView>
 
 #if defined(Q_OS_ANDROID)
 #include "AndroidService.h"
@@ -83,9 +98,9 @@ int main(int argc, char *argv[])
     if (refresh_only)
     {
         QCoreApplication app(argc, argv);
-        app.setApplicationName("WatchFlower");
-        app.setOrganizationName("WatchFlower");
-        app.setOrganizationDomain("WatchFlower");
+        app.setApplicationName("Blume");
+        app.setOrganizationName("Blume");
+        app.setOrganizationDomain("Blume");
 
         SettingsManager *sm = SettingsManager::getInstance();
         DatabaseManager *db = DatabaseManager::getInstance();
@@ -100,15 +115,18 @@ int main(int argc, char *argv[])
 
         return app.exec();
     }
+#if defined(Q_OS_MACOS) || defined (Q_OS_IOS)
+     QQuickStyle::setStyle("Material");
+#endif
 
     // Android daemon
     if (background_service)
     {
 #if defined(Q_OS_ANDROID)
         QAndroidService app(argc, argv);
-        app.setApplicationName("WatchFlower");
-        app.setOrganizationName("WatchFlower");
-        app.setOrganizationDomain("WatchFlower");
+        app.setApplicationName("Blume");
+        app.setOrganizationName("Blume");
+        app.setOrganizationDomain("Blume");
 
         SettingsManager *sm = SettingsManager::getInstance();
         if (sm && sm->getSysTray())
@@ -122,6 +140,7 @@ int main(int argc, char *argv[])
         return EXIT_SUCCESS;
 #endif
     }
+
 
     // GUI application /////////////////////////////////////////////////////////
 
@@ -140,13 +159,13 @@ int main(int argc, char *argv[])
     SingleApplication app(argc, argv);
 
     // Application name
-    app.setApplicationName("WatchFlower");
-    app.setApplicationDisplayName("WatchFlower");
-    app.setOrganizationName("WatchFlower");
-    app.setOrganizationDomain("WatchFlower");
+    app.setApplicationName("Blume");
+    app.setApplicationDisplayName("Blume");
+    app.setOrganizationName("Blume");
+    app.setOrganizationDomain("Blume");
 
 #if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
-    QIcon appIcon(":/assets/logos/watchflower.svg");
+    QIcon appIcon(":/assets/logos/blume.svg");
     app.setWindowIcon(appIcon);
 #endif
 
@@ -158,7 +177,7 @@ int main(int argc, char *argv[])
     DeviceManager *dm = new DeviceManager;
     if (!sm || !st || !mb || !nm || !dm)
     {
-        qWarning() << "Cannot init WatchFlower components!";
+        qWarning() << "Cannot init Blume components!";
         return EXIT_FAILURE;
     }
 
@@ -171,24 +190,42 @@ int main(int argc, char *argv[])
     UtilsLanguage *utilsLanguage = UtilsLanguage::getInstance();
     if (!utilsScreen || !utilsApp || !utilsLanguage)
     {
-        qWarning() << "Cannot init WatchFlower utils!";
+        qWarning() << "Cannot init Blume utils!";
         return EXIT_FAILURE;
     }
 
     // Translate the application
     utilsLanguage->loadLanguage(sm->getAppLanguage());
+#if defined(Q_OS_ANDROID)
+    QtAndroidTools::initializeQmlTools();
+#else
+    qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "QtAndroidTools", 1, 0, "Theme");
+#endif
 
     // ThemeEngine
     qmlRegisterSingletonType(QUrl("qrc:/qml/ThemeEngine.qml"), "ThemeEngine", 1, 0, "Theme");
+    qmlRegisterType<Image2Base64>("ImageTools", 1, 0, "Image2Base64");
+    qmlRegisterType<PosometreCamera>("PosometreCalculator", 1, 0, "PosometreCamera");
+    qmlRegisterSingletonType(QUrl("qrc:/qml/components/Icons.qml"), "MaterialIcons", 1, 0, "MaterialIcons");
+
 
     MobileUI::registerQML();
     DeviceUtils::registerQML();
     JournalUtils::registerQML();
 
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+    QtWebView::initialize();
     // Then we start the UI
     QQmlApplicationEngine engine;
+    engine.addImportPath("qrc:/qml/");
     QQmlContext *engine_context = engine.rootContext();
+    HotWatch::registerSingleton();
 
+    engine.addImportPath("qrc:///");
+    qaterial::registerQmlTypes();
+    qaterial::loadQmlResources();
+
+    engine_context->setContextProperty("notificationManagers", nm);
     engine_context->setContextProperty("deviceManager", dm);
     engine_context->setContextProperty("settingsManager", sm);
     engine_context->setContextProperty("systrayManager", st);
@@ -198,20 +235,25 @@ int main(int argc, char *argv[])
     engine_context->setContextProperty("utilsLanguage", utilsLanguage);
     engine_context->setContextProperty("utilsScreen", utilsScreen);
     engine_context->setContextProperty("startMinimized", (start_minimized || sm->getMinimized()));
-
+#if defined(Q_OS_IOS)
+    qmlRegisterType<ImagePicker>("ImagePicker", 1, 0, "ImagePicker");
+#else
+    qmlRegisterType<Image2Base64>("ImagePicker", 1, 0, "ImagePicker");
+#endif
     // Load the main view
 #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS) || defined(FORCE_MOBILE_UI)
     ShareUtils *utilsShare = new ShareUtils();
     engine_context->setContextProperty("utilsShare", utilsShare);
-    engine.load(QUrl(QStringLiteral("qrc:/qml/MobileApplication.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:/qml/Loadere.qml")));
+    //engine.load(QUrl(QStringLiteral("qrc:/qml/MobileApplication.qml")));
 #else
     engine.load(QUrl(QStringLiteral("qrc:/qml/DesktopApplication.qml")));
 #endif
-    if (engine.rootObjects().isEmpty())
-    {
-        qWarning() << "Cannot init QmlApplicationEngine!";
-        return EXIT_FAILURE;
-    }
+//    if (engine.rootObjects().isEmpty())
+//    {
+//        qWarning() << "Cannot init QmlApplicationEngine!";
+//        return EXIT_FAILURE;
+//    }
 
     // For i18n retranslate
     utilsLanguage->setQmlEngine(&engine);

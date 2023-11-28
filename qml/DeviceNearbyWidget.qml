@@ -1,7 +1,12 @@
 import QtQuick
 
 import ThemeEngine 1.0
-import "qrc:/js/UtilsDeviceSensors.js" as UtilsDeviceSensors
+
+import "components"
+import "components_generic"
+import "components_themed"
+import "popups"
+import "components_js/UtilsDeviceSensors.js" as UtilsDeviceSensors
 
 Rectangle {
     id: deviceNearbyWidget
@@ -12,13 +17,16 @@ Rectangle {
     color: (device.selected) ? Theme.colorForeground : Theme.colorBackground
 
     property var device: pointer
-    property bool deviceSupported: UtilsDeviceSensors.isDeviceSupported(device.deviceName)
-    property bool deviceBlacklisted: deviceManager.isBleDeviceBlacklisted(device.deviceAddress)
+    property bool deviceSupported: UtilsDeviceSensors.isDeviceSupported(
+                                       device.deviceName)
+    property bool deviceBlacklisted: deviceManager.isBleDeviceBlacklisted(
+                                         device.deviceAddress)
 
     Connections {
         target: deviceManager
         function onDevicesBlacklistUpdated() {
-            deviceNearbyWidget.deviceBlacklisted = deviceManager.isBleDeviceBlacklisted(device.deviceAddress)
+            deviceNearbyWidget.deviceBlacklisted = deviceManager.isBleDeviceBlacklisted(
+                        device.deviceAddress)
         }
     }
 
@@ -29,7 +37,6 @@ Rectangle {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Column {
         anchors.left: parent.left
         anchors.leftMargin: 12
@@ -54,7 +61,6 @@ Rectangle {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Row {
         anchors.right: parent.right
         anchors.rightMargin: 12
@@ -62,7 +68,6 @@ Rectangle {
         spacing: 12
 
         ////////
-
         IconSvg {
             anchors.verticalCenter: parent.verticalCenter
 
@@ -71,11 +76,12 @@ Rectangle {
             visible: deviceSupported
             enabled: true
 
-            source: deviceBlacklisted ? "qrc:/assets/icons_material/outline-remove_circle-24px.svg"
-                                      : "qrc:/assets/icons_material/outline-add_circle-24px.svg"
+            source: deviceBlacklisted ? "qrc:/assets/icons_material/outline-remove_circle-24px.svg" : "qrc:/assets/icons_material/outline-add_circle-24px.svg"
             color: {
-                if (ma.hovered) return Theme.colorPrimary
-                if (deviceBlacklisted) return Theme.colorRed
+                if (ma.hovered)
+                    return Theme.colorPrimary
+                if (deviceBlacklisted)
+                    return Theme.colorRed
                 return Theme.colorIcon
             }
 
@@ -98,7 +104,6 @@ Rectangle {
         }
 
         ////////
-
         IconSvg {
             anchors.verticalCenter: parent.verticalCenter
             visible: !singleColumn
@@ -106,12 +111,10 @@ Rectangle {
             width: 20
             height: 20
             color: deviceSupported ? Theme.colorGreen : Theme.colorSubText
-            source: deviceSupported ? "qrc:/assets/icons_material/baseline-check_circle-24px.svg"
-                                    : "qrc:/assets/icons_material/baseline-help-24px.svg"
+            source: deviceSupported ? "qrc:/assets/icons_material/baseline-check_circle-24px.svg" : "qrc:/assets/icons_material/baseline-help-24px.svg"
         }
 
         ////////
-
         Rectangle {
             id: barbg
             anchors.verticalCenter: parent.verticalCenter
@@ -128,9 +131,12 @@ Rectangle {
                 width: parent.width * Math.abs(device.rssi / 100)
                 radius: 3
                 color: {
-                    if (Math.abs(device.rssi) < 65) return Theme.colorGreen
-                    if (Math.abs(device.rssi) < 85) return Theme.colorOrange
-                    if (Math.abs(device.rssi) < 100) return Theme.colorRed
+                    if (Math.abs(device.rssi) < 65)
+                        return Theme.colorGreen
+                    if (Math.abs(device.rssi) < 85)
+                        return Theme.colorOrange
+                    if (Math.abs(device.rssi) < 100)
+                        return Theme.colorRed
                     return Theme.colorRed
                 }
 
@@ -160,7 +166,6 @@ Rectangle {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right

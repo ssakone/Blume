@@ -2,6 +2,9 @@ import QtQuick
 
 import ThemeEngine 1.0
 
+import "../components_generic/"
+import "../components_themed/"
+
 Item {
     id: itemNoBluetooth
 
@@ -9,16 +12,16 @@ Item {
         anchors.centerIn: parent
         anchors.verticalCenterOffset: -32
 
-        width: appWindow.singleColumn ? (parent.width*0.5) : (parent.height*0.4)
+        width: appWindow.singleColumn ? (parent.width * 0.5) : (parent.height * 0.4)
         height: width
         radius: width
         color: Theme.colorForeground
 
-        signal clicked()
+        signal clicked
 
         IconSvg {
             anchors.centerIn: parent
-            width: parent.width*0.8
+            width: parent.width * 0.8
             height: width
 
             source: "qrc:/assets/icons_material/baseline-bluetooth_disabled-24px.svg"
@@ -44,8 +47,10 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 fullColor: true
-                text: (Qt.platform.os === "android") ? qsTr("Enable") : qsTr("Retry")
-                onClicked: (Qt.platform.os === "android") ? deviceManager.enableBluetooth() : deviceManager.checkBluetooth()
+                text: (Qt.platform.os === "android") ? qsTr("Enable") : qsTr(
+                                                           "Retry")
+                onClicked: (Qt.platform.os === "android") ? deviceManager.enableBluetooth(
+                                                                ) : deviceManager.checkBluetooth()
             }
         }
     }

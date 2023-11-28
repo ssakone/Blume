@@ -5,8 +5,8 @@ Unicode True
 !include "FileFunc.nsh"
 !include "LogicLib.nsh"
 
-!define APPNAME                      "WatchFlower"
-!define EXECNAME                     "WatchFlower"
+!define APPNAME                      "Blume"
+!define EXECNAME                     "Blume"
 !define COMPANYNAME                  "Emeric Grange"
 !define DESCRIPTION                  "A plant monitoring application that reads and plots data from compatible Bluetooth sensors and thermometers like Xiaomi 'Flower Care' or Parrot 'Flower Power'"
 !define VERSIONMAJOR                 5
@@ -20,7 +20,7 @@ Unicode True
 !define MUI_FINISHPAGE_LINK          "Visit project website"
 !define MUI_FINISHPAGE_LINK_LOCATION "https://emeric.io/${APPNAME}/"
 !define MUI_WELCOMEPAGE_TITLE        "Welcome to the ${APPNAME} installer!"
-!define MUI_ICON                     "watchflower.ico"
+!define MUI_ICON                     "blume.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "nsis-banner.bmp"
 
 !insertmacro MUI_PAGE_WELCOME

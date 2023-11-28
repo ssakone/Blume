@@ -3,23 +3,26 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
+import "../components_generic/"
+import "../components_themed/"
+
 Popup {
     id: popupDeleteDevice
     x: (appWindow.width / 2) - (width / 2)
-    y: singleColumn ? (appWindow.height - height) : ((appWindow.height / 2) - (height / 2) - (appHeader.height))
+    y: singleColumn ? (appWindow.height - height) : ((appWindow.height / 2)
+                                                     - (height / 2) - (appHeader.height))
 
     width: singleColumn ? parent.width : 640
-    height: columnContent.height + padding*2
+    height: columnContent.height + padding * 2
     padding: singleColumn ? 20 : 24
 
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    signal confirmed()
+    signal confirmed
 
     ////////////////////////////////////////////////////////////////////////////
-
     background: Rectangle {
         color: Theme.colorBackground
         border.color: Theme.colorSeparator
@@ -35,7 +38,6 @@ Popup {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     contentItem: Item {
         Column {
             id: columnContent
@@ -45,7 +47,8 @@ Popup {
             Text {
                 width: parent.width
 
-                text: qsTr("Are you sure you want to delete selected sensor(s)?", "", screenDeviceList.selectionCount)
+                text: qsTr("Are you sure you want to delete selected sensor(s)?",
+                           "", screenDeviceList.selectionCount)
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContentVeryBig
                 color: Theme.colorText
@@ -55,7 +58,8 @@ Popup {
             Text {
                 width: parent.width
 
-                text: qsTr("Data from the sensor(s) are kept for an additional 90 days, in case you would like to re-add a sensor later.", "", screenDeviceList.selectionCount)
+                text: qsTr("Data from the sensor(s) are kept for an additional 90 days, in case you would like to re-add a sensor later.",
+                           "", screenDeviceList.selectionCount)
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContent
                 color: Theme.colorSubText
@@ -65,9 +69,9 @@ Popup {
             Flow {
                 id: flowContent
                 width: parent.width
-                height: singleColumn ? 120+40 : 40
+                height: singleColumn ? 120 + 40 : 40
 
-                property var btnSize: singleColumn ? width : ((width-spacing) / 2)
+                property var btnSize: singleColumn ? width : ((width - spacing) / 2)
                 spacing: 16
 
                 ButtonWireframe {

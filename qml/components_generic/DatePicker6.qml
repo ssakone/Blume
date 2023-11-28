@@ -3,6 +3,8 @@ import QtQuick.Controls
 
 import ThemeEngine 1.0
 
+import "../components_generic/"
+
 Item {
     id: datePicker
     implicitWidth: 320
@@ -11,7 +13,6 @@ Item {
     ////////////////////////////////////////////////////////////////////////////
 
     //property var locale: Qt.locale()
-
     property var today: new Date()
     property bool isToday: false
 
@@ -52,7 +53,9 @@ Item {
         var thismonth = new Date(grid.year, grid.month)
         bigMonth.text = thismonth.toLocaleString(locale, "MMMM")
 
-        isToday = (today.toLocaleString(locale, "dd MMMM yyyy") === currentDate.toLocaleString(locale, "dd MMMM yyyy"))
+        isToday = (today.toLocaleString(
+                       locale, "dd MMMM yyyy") === currentDate.toLocaleString(
+                       locale, "dd MMMM yyyy"))
     }
 
     Component.onCompleted: {
@@ -60,19 +63,17 @@ Item {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     Rectangle {
         id: background
         anchors.fill: parent
 
         clip: false
-        radius: Theme.componentRadius*2
+        radius: Theme.componentRadius * 2
         color: Theme.colorBackground
         border.width: Theme.componentBorderWidth
         border.color: Theme.colorSeparator
 
         ////////
-
         Rectangle {
             id: motw
             anchors.left: parent.left
@@ -80,7 +81,7 @@ Item {
 
             z: 3
             height: 48
-            radius: Theme.componentRadius*2
+            radius: Theme.componentRadius * 2
             color: Theme.colorSeparator
 
             Rectangle {
@@ -92,7 +93,8 @@ Item {
             }
 
             RoundButtonIcon {
-                width: 48; height: 48;
+                width: 48
+                height: 48
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 source: "qrc:/assets/icons_material/baseline-chevron_left-24px.svg"
@@ -118,7 +120,8 @@ Item {
             }
             RoundButtonIcon {
                 anchors.right: parent.right
-                width: 48; height: 48;
+                width: 48
+                height: 48
                 anchors.verticalCenter: parent.verticalCenter
                 source: "qrc:/assets/icons_material/baseline-chevron_right-24px.svg"
 
@@ -135,7 +138,6 @@ Item {
         }
 
         ////////
-
         Rectangle {
             id: dow
             anchors.top: motw.bottom
@@ -156,7 +158,6 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
 
                 //locale: datePicker.locale
-
                 delegate: Text {
                     anchors.bottom: parent.bottom
                     text: model.shortName.substring(0, 1).toUpperCase()
@@ -169,7 +170,6 @@ Item {
         }
 
         ////////
-
         MonthGrid {
             id: grid
             anchors.top: dow.bottom
@@ -180,7 +180,6 @@ Item {
             anchors.bottom: parent.bottom
 
             //locale: datePicker.locale
-
             delegate: Text {
                 width: ((grid.width - 8) / 7)
                 height: (grid.height / 6)
@@ -193,9 +192,10 @@ Item {
                 //font.bold: model.isToday
                 color: selected ? "white" : Theme.colorSubText
 
-                property bool selected: (model.day === currentDate.getDate() &&
-                                         model.month === currentDate.getMonth() &&
-                                         model.year === currentDate.getFullYear())
+                property bool selected: (model.day === currentDate.getDate()
+                                         && model.month === currentDate.getMonth()
+                                         && model.year === currentDate.getFullYear(
+                                             ))
 
                 Rectangle {
                     z: -1
@@ -209,42 +209,45 @@ Item {
                 }
             }
 
-            onClicked: (date) => {
-                if (date.getMonth() === grid.month) {
-                    // validate date (min / max)
-                    if (minDate && maxDate) {
-                        const diffMinTime = (minDate - date)
-                        const diffMinDays = -Math.ceil(diffMinTime / (1000 * 60 * 60 * 24) - 1)
-                        //console.log(diffMinDays + " diffMinDays")
-                        const diffMaxTime = (minDate - date)
-                        const diffMaxDays = -Math.ceil(diffMaxTime / (1000 * 60 * 60 * 24) - 1)
-                        //console.log(diffMaxDays + " diffMaxDays")
+            onClicked: date => {
+                           if (date.getMonth() === grid.month) {
+                               // validate date (min / max)
+                               if (minDate && maxDate) {
+                                   const diffMinTime = (minDate - date)
+                                   const diffMinDays = -Math.ceil(
+                                       diffMinTime / (1000 * 60 * 60 * 24) - 1)
+                                   //console.log(diffMinDays + " diffMinDays")
+                                   const diffMaxTime = (minDate - date)
+                                   const diffMaxDays = -Math.ceil(
+                                       diffMaxTime / (1000 * 60 * 60 * 24) - 1)
 
-                        if (diffMinDays > -1 && diffMaxDays < 1) {
-                            date.setHours(currentDate.getHours(),
-                                          currentDate.getMinutes(),
-                                          currentDate.getSeconds())
-                            currentDate = date
-                            updateDate(currentDate)
-                        }
-                    } else {
-                        const diffTime = (today - date);
-                        const diffDays = -Math.ceil(diffTime / (1000 * 60 * 60 * 24) - 1)
-                        //console.log(diffDays + " days")
+                                   //console.log(diffMaxDays + " diffMaxDays")
+                                   if (diffMinDays > -1 && diffMaxDays < 1) {
+                                       date.setHours(currentDate.getHours(),
+                                                     currentDate.getMinutes(),
+                                                     currentDate.getSeconds())
+                                       currentDate = date
+                                       updateDate(currentDate)
+                                   }
+                               } else {
+                                   const diffTime = (today - date)
+                                   const diffDays = -Math.ceil(
+                                       diffTime / (1000 * 60 * 60 * 24) - 1)
+                                   //console.log(diffDays + " days")
 
-                        // validate date (-15 / today)
-                        if (diffDays > -15 && diffDays < 1) {
-                            date.setHours(currentDate.getHours(),
-                                          currentDate.getMinutes(),
-                                          currentDate.getSeconds())
-                            currentDate = date
-                            updateDate(currentDate)
-                        }
-                    }
+                                   // validate date (-15 / today)
+                                   if (diffDays > -15 && diffDays < 1) {
+                                       date.setHours(currentDate.getHours(),
+                                                     currentDate.getMinutes(),
+                                                     currentDate.getSeconds())
+                                       currentDate = date
+                                       updateDate(currentDate)
+                                   }
+                               }
 
-                    printDate()
-                }
-            }
+                               printDate()
+                           }
+                       }
         }
 
         ////////

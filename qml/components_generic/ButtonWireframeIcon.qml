@@ -7,7 +7,7 @@ import QtQuick.Layouts 1.15
 import Qt5Compat.GraphicalEffects // Qt6
 
 import ThemeEngine 1.0
-import "qrc:/js/UtilsNumber.js" as UtilsNumber
+import "../components_js/UtilsNumber.js" as UtilsNumber
 
 T.Button {
     id: control
@@ -33,9 +33,9 @@ T.Button {
     // colors
     property bool fullColor: false
     property string fulltextColor: "white"
-    property string primaryColor: Theme.colorPrimary
+    property string primaryColor: $Colors.colorPrimary
     property string secondaryColor: Theme.colorComponentBackground
-
+    property int backgroundBorderWidth: Theme.componentBorderWidth
     // animation
     property bool hoverAnimation: isDesktop
 
@@ -83,9 +83,8 @@ T.Button {
         opacity: enabled ? (control.down && !control.hoverAnimation ? 0.8 : 1.0) : 0.4
         color: control.fullColor ? control.primaryColor : control.secondaryColor
 
-        border.width: Theme.componentBorderWidth
+        border.width: control.backgroundBorderWidth
         border.color: control.fullColor ? control.primaryColor : Theme.colorComponentBorder
-
         Rectangle { // mouseBackground
             id: mouseBackground
             width: 0; height: width; radius: width;

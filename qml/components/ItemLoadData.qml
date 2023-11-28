@@ -2,11 +2,14 @@ import QtQuick
 
 import ThemeEngine 1.0
 
+import "../components_generic/"
+import "../components_themed/"
+
 Rectangle {
     id: itemLoadData
     anchors.centerIn: parent
 
-    width: singleColumn ? (parent.width*0.26) : (parent.height*0.26)
+    width: singleColumn ? (parent.width * 0.26) : (parent.height * 0.26)
     height: width
     radius: width
     color: Theme.colorForeground
@@ -14,7 +17,7 @@ Rectangle {
 
     IconSvg {
         anchors.centerIn: parent
-        width: parent.width*0.8
+        width: parent.width * 0.8
         height: width
 
         source: "qrc:/assets/icons_material/baseline-autorenew-24px.svg"

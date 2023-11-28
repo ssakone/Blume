@@ -2,19 +2,69 @@ cmake_minimum_required(VERSION 3.19)
 
 # On n'utilise plus la version 5.0 de WatchFlower
 # On recommence le projet à la version 0.1
-project(Blume VERSION 0.1 LANGUAGES CXX)
+project(Blume VERSION 1.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
+set(BLUME_PROJECT "Blume" CACHE STRING "Blume Project")
 
-find_package(Qt6 REQUIRED COMPONENTS Core Bluetooth Network Sql)
-find_package(Qt6 REQUIRED COMPONENTS Gui Qml Quick QuickControls2 Svg Widgets Charts)
 
-qt_standard_project_setup()
+find_package(Qt6 REQUIRED COMPONENTS Core Bluetooth Network Sql Multimedia Xml)
+find_package(Qt6 REQUIRED COMPONENTS Gui Qml Quick QuickControls2 Svg Widgets Charts WebView)
+find_library(UIKIT_LIBRARY UIKit)
+find_library(MOBILE_CORE_SERVICES_LIBRARY MobileCoreServices)
+
 
 ################################################################################
+include(FetchContent)
+set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
+FetchContent_Declare(
+  Qaterial
+  GIT_REPOSITORY https://github.com/ssakone/Qaterial.git
+  GIT_TAG        qt6_update
+)
+FetchContent_MakeAvailable(Qaterial)
+
+add_subdirectory(HotWatch)
+
+set(android_sources)
+if (ANDROID)
+    set(android_sources
+        src/android_tools/QAndroidAppPermissions.cpp
+        src/android_tools/QtAndroidTools.cpp
+        src/android_tools/QAndroidAppPermissions.h
+        src/android_tools/QtAndroidTools.h
+    )
+endif()
+
+set(ios_sources)
+
+if (IOS)
+    set(ios_sources
+        src/imagepicker.mm
+        src/imagepicker.h
+    )
+endif()
+
+qt_generate_qrc(MahoudQML
+  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/qml
+  DEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}
+  NAME "blume.qrc"
+  PREFIX "qml/"
+  RECURSE
+  ALWAYS_OVERWRITE
+  GLOB_EXPRESSION "*.qml" "qmldir" "*.frag" "*.vert" "*.js"
+)
+
+qt6_add_resources(MahoudQML_UI_QML_RES ${MahoudQML})
+qt_generate_qmldir(BUMA_QML_DIR
+ SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/qml
+ MODULE "Blume"
+ RECURSE)
+
+###############################################################################
 
 qt_add_executable(Blume
     src/AndroidService.cpp src/AndroidService.h
@@ -55,17 +105,25 @@ qt_add_executable(Blume
     src/devices/device_jqjcy01ym.cpp src/devices/device_jqjcy01ym.h
     src/devices/device_parrotpot.cpp src/devices/device_parrotpot.h
     src/devices/device_ropot.cpp src/devices/device_ropot.h
+    src/devices/device_cgdn1.cpp src/devices/device_cgdn1.h
     src/devices/device_thermobeacon.cpp src/devices/device_thermobeacon.h
     src/devices/device_wp6003.cpp src/devices/device_wp6003.h
     src/thirdparty/RC4/rc4.cpp src/thirdparty/RC4/rc4.h
+    ${android_sources}
+    ${ios_sources}
+    
+    src/database/sqlplugin.cpp src/database/sqlplugin.h
     src/main.cpp
-    qml/qml.qrc
-    qml/components.qrc
+    src/posometrecamera.cpp src/posometrecamera.h
+    src/image2base64.cpp src/image2base64.h
     i18n/i18n.qrc
     assets/assets.qrc
     assets/devices.qrc
     assets/plants.qrc
+    ${MahoudQML_UI_QML_RES}
 )
+
+add_subdirectory(SortFilterProxyModel)
 
 target_include_directories(Blume PRIVATE src/)
 target_include_directories(Blume PRIVATE src/thirdparty/)
@@ -76,6 +134,8 @@ target_include_directories(Blume PRIVATE src/thirdparty/)
 if(ANDROID)
     #set(QT_ANDROID_ABIS "armeabi-v7a;arm64-v8a;x86;x86_64")
     #set(QT_ANDROID_BUILD_ALL_ABIS "ON")
+    set(QT_ANDROID_ABIS "arm64-v8a;armeabi-v7a")
+    set(QT_ANDROID_BUILD_ALL_ABIS "ON")
 
     set_target_properties(Blume PROPERTIES
         QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets/android"
@@ -84,20 +144,80 @@ if(ANDROID)
     #target_compile_definitions(Blume PRIVATE QT_CONNECTIVITY_PATCHED)
 
     target_link_libraries(Blume PRIVATE Qt::CorePrivate)
+
+    FetchContent_Declare(
+      android_openssl
+      DOWNLOAD_EXTRACT_TIMESTAMP true
+      URL      https://github.com/KDAB/android_openssl/archive/refs/heads/master.zip
+    )
+    FetchContent_MakeAvailable(android_openssl)
+    include(${android_openssl_SOURCE_DIR}/android_openssl.cmake)
 endif()
 
 ## macOS
 if(APPLE AND NOT IOS)
     set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64")
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.14")
+
+    set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 endif()
+
+macro(qt_ios_set_xcode_property TARGET XCODE_PROPERTY XCODE_VALUE XCODE_RELVERSION)
+  set(XCODE_RELVERSION_I "${XCODE_RELVERSION}")
+  if(XCODE_RELVERSION_I STREQUAL "All")
+    set_property(TARGET ${TARGET} PROPERTY XCODE_ATTRIBUTE_${XCODE_PROPERTY} "${XCODE_VALUE}")
+  else()
+    set_property(TARGET ${TARGET} PROPERTY XCODE_ATTRIBUTE_${XCODE_PROPERTY}[variant=${XCODE_RELVERSION_I}] "${XCODE_VALUE}")
+  endif()
+endmacro() # qt_ios_set_xcode_property
 
 ## iOS
 if(IOS)
-    target_link_libraries(QmlAppTemplate PRIVATE
+    set(BLUNE_VERSION_MAJOR 1)
+    set(BLUNE_VERSION_MINOR 2)
+    if(NOT BLUNE_VERSION_TAG)
+        set(BLUNE_VERSION_TAG 0520000)
+    endif()
+    set(BLUME_TARGET "Blume")
+    set(BLUME_PLATFORMS_DIR ${PROJECT_SOURCE_DIR}/platforms)
+    set(BLUNE_VERSION_TAG_HEX 0x${BLUNE_VERSION_TAG})
+    set(BLUNE_VERSION_TAG ${BLUNE_VERSION_TAG} CACHE STRING "Git Tag of Qaterial")
+    set(BLUNE_VERSION ${BLUNE_VERSION_MAJOR}.${BLUNE_VERSION_MINOR})
+
+    set(BLUNE_TARGET ${BLUME_PROJECT} CACHE STRING "Qaterial Gallery Target Name")
+    set(asset_catalog_path "${BLUME_PLATFORMS_DIR}/ios/Images.xcassets")
+    target_sources(Blume PRIVATE "${asset_catalog_path}")
+    set_source_files_properties(
+        ${asset_catalog_path}
+        PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+    set(launchscreen_storyboard "${BLUME_PLATFORMS_DIR}/ios/AppLaunchScreen.storyboard")
+    target_sources(Blume PRIVATE ${launchscreen_storyboard})
+    set_source_files_properties(
+        ${launchscreen_storyboard}
+        PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    set_target_properties(Blume PROPERTIES
+        XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS
+        "${BLUME_PLATFORMS_DIR}/ios/blume.entitlements")
+
+    get_filename_component(STORYBOARD_FILE_NAME ${launchscreen_storyboard} NAME_WE)
+    set(MACOSX_BUNDLE_LAUNCHSCREEN_STORYBOARD ${STORYBOARD_FILE_NAME} PARENT_SCOPE)
+    set_target_properties(Blume
+            PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${BLUME_PLATFORMS_DIR}/ios/Info.plist")
+    set_target_properties(Blume PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "com.mahoutech.blume")
+    set_target_properties(Blume PROPERTIES MACOSX_BUNDLE_IDENTIFIER "com.mahoutech.blume")
+    qt_ios_set_xcode_property("Blume" ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon" "All")
+
+    target_compile_options(Blume PRIVATE
+    -x objective-c++
+    -fobjc-arc)
+    target_link_libraries(Blume PRIVATE
         Qt::GuiPrivate
-        "-framework UIKit"
+        ${UIKIT_LIBRARY}
+        ${MOBILE_CORE_SERVICES_LIBRARY}
     )
+
 endif()
 
 ## Windows
@@ -139,6 +259,13 @@ target_link_libraries(Blume PRIVATE
     Qt::Svg
     Qt::Widgets
     Qt::Charts
+    Qt::Multimedia
+    Qt::Xml
+    Qt::WebView
+    SortFilterProxyModel
+    HotWatch
+    HotWatchplugin
+    Qaterial
 )
 
 ################################################################################
@@ -172,14 +299,14 @@ install(TARGETS Blume
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-qt_generate_deploy_qml_app_script(
-    TARGET Blume
-    FILENAME_VARIABLE deploy_script
-    NO_UNSUPPORTED_PLATFORM_ERROR
-    DEPLOY_USER_QML_MODULES_ON_UNSUPPORTED_PLATFORM
-    MACOS_BUNDLE_POST_BUILD
-)
-install(SCRIPT ${deploy_script})
+#qt_generate_deploy_qml_app_script(
+#    TARGET Blume
+#    FILENAME_VARIABLE deploy_script
+#    NO_UNSUPPORTED_PLATFORM_ERROR
+#    DEPLOY_USER_QML_MODULES_ON_UNSUPPORTED_PLATFORM
+#    MACOS_BUNDLE_POST_BUILD
+#)
+#install(SCRIPT ${deploy_script})
 
 ################################################################################
 
@@ -190,3 +317,13 @@ message(STATUS "[DEFINE] SOURCE_DIR                    = ${CMAKE_CURRENT_SOURCE_
 message(STATUS "[DEFINE] BUILD_TYPE                    = ${CMAKE_BUILD_TYPE}")
 message(STATUS "[SYSTEM] HOST SYSTEM NAME              = ${CMAKE_HOST_SYSTEM_NAME}")
 message(STATUS "[SYSTEM] (TARGET) SYSTEM NAME          = ${CMAKE_SYSTEM_NAME}")
+
+
+if(IOS)
+    include(platforms/Deploy.cmake)
+endif()
+
+
+
+
+

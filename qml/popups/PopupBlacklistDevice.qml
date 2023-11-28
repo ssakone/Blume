@@ -4,31 +4,35 @@ import QtQuick.Layouts
 
 import ThemeEngine 1.0
 
+import "../components_generic/"
+import "../components_themed/"
+
 Popup {
     id: popupBlacklistDevice
     x: (appWindow.width / 2) - (width / 2)
-    y: singleColumn ? (appWindow.height - height) : ((appWindow.height / 2) - (height / 2) - (appHeader.height))
+    y: singleColumn ? (appWindow.height - height) : ((appWindow.height / 2)
+                                                     - (height / 2) - (appHeader.height))
 
     width: singleColumn ? parent.width : 640
-    height: columnContent.height + padding*2
+    height: columnContent.height + padding * 2
     padding: singleColumn ? 20 : 24
 
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    signal confirmed()
+    signal confirmed
 
     property string deviceName
     property string deviceAddress
     property bool deviceIsBlacklisted: false
 
     onAboutToShow: {
-        deviceIsBlacklisted = deviceManager.isBleDeviceBlacklisted(deviceAddress)
+        deviceIsBlacklisted = deviceManager.isBleDeviceBlacklisted(
+                    deviceAddress)
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     background: Rectangle {
         color: Theme.colorBackground
         border.color: Theme.colorSeparator
@@ -44,7 +48,6 @@ Popup {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
     contentItem: Item {
         Column {
             id: columnContent
@@ -54,9 +57,8 @@ Popup {
             Text {
                 width: parent.width
 
-                text: !deviceIsBlacklisted ?
-                          qsTr("Are you sure you want to blacklist the selected sensor?") :
-                          qsTr("Are you sure you want to whitelist the selected sensor?")
+                text: !deviceIsBlacklisted ? qsTr("Are you sure you want to blacklist the selected sensor?") : qsTr(
+                                                 "Are you sure you want to whitelist the selected sensor?")
                 textFormat: Text.PlainText
                 font.pixelSize: Theme.fontSizeContentVeryBig
                 color: Theme.colorText
@@ -131,9 +133,9 @@ Popup {
             Flow {
                 id: flowContent
                 width: parent.width
-                height: singleColumn ? 120+40 : 40
+                height: singleColumn ? 120 + 40 : 40
 
-                property var btnSize: singleColumn ? width : ((width-spacing) / 2)
+                property var btnSize: singleColumn ? width : ((width - spacing) / 2)
                 spacing: 16
 
                 ButtonWireframe {
@@ -148,7 +150,8 @@ Popup {
                 ButtonWireframe {
                     width: parent.btnSize
 
-                    text: !deviceIsBlacklisted ? qsTr("Blacklist") : qsTr("Whitelist")
+                    text: !deviceIsBlacklisted ? qsTr("Blacklist") : qsTr(
+                                                     "Whitelist")
                     primaryColor: !deviceIsBlacklisted ? Theme.colorRed : Theme.colorGreen
                     fullColor: true
 
